@@ -32,3 +32,7 @@ export const throw_if_aborted: typeof $abortSignal.throw_if_aborted = (
     return undefined;
   });
 };
+
+export const on_abort: typeof $abortSignal.on_abort = (signal, handler) => {
+  signal.onabort = () => handler();
+};

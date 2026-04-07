@@ -12,6 +12,22 @@ export const byte_length: typeof $arrayBuffer.byte_length = (
   return arrayBuffer.byteLength;
 };
 
+export const is_view: typeof $arrayBuffer.is_view = (value) => {
+  return ArrayBuffer.isView(value);
+};
+
+export const is_detached: typeof $arrayBuffer.is_detached = (
+  arrayBuffer: ArrayBuffer,
+) => {
+  return arrayBuffer.detached;
+};
+
+export const transfer: typeof $arrayBuffer.transfer = (
+  arrayBuffer: ArrayBuffer,
+) => {
+  return arrayBuffer.transfer();
+};
+
 export const slice: typeof $arrayBuffer.slice = (
   arrayBuffer: ArrayBuffer,
   begin,

@@ -98,10 +98,10 @@ browsers.
 
 ### Data Types
 
-| Interface | Status | Module          | Notes                                                  |
-| --------- | ------ | --------------- | ------------------------------------------------------ |
-| Blob      | ✅     | `gossamer/blob` |                                                        |
-| File      | 🚧     | `gossamer/file` | Missing constructor options, no inherited Blob methods |
+| Interface | Status | Module          | Notes |
+| --------- | ------ | --------------- | ----- |
+| Blob      | ✅     | `gossamer/blob` |       |
+| File      | ✅     | `gossamer/file` |       |
 
 ### Events & DOM
 
@@ -116,10 +116,10 @@ browsers.
 
 ### Cancellation
 
-| Interface       | Status | Module                      | Notes             |
-| --------------- | ------ | --------------------------- | ----------------- |
-| AbortController | ✅     | `gossamer/abort_controller` |                   |
-| AbortSignal     | 🚧     | `gossamer/abort_signal`     | Missing `onabort` |
+| Interface       | Status | Module                      | Notes |
+| --------------- | ------ | --------------------------- | ----- |
+| AbortController | ✅     | `gossamer/abort_controller` |       |
+| AbortSignal     | ✅     | `gossamer/abort_signal`     |       |
 
 ### Messaging
 
@@ -158,17 +158,17 @@ browsers.
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface     | Status | Module                    | Notes                                                             |
-| ------------- | ------ | ------------------------- | ----------------------------------------------------------------- |
-| Promise       | ✅     | `gossamer/promise`        |                                                                   |
-| Uint8Array    | 🚧     | `gossamer/uint8_array`    | Missing `from()`, `of()`, `entries()`, `keys()`, `values()`       |
-| ArrayBuffer   | 🚧     | `gossamer/array_buffer`   | Missing `isView()`, `detached`, `resize()`, `transfer()` and more |
-| Iterator      | ✅     | `gossamer/iterator`       |                                                                   |
-| AsyncIterator | ✅     | `gossamer/async_iterator` |                                                                   |
-| JSON          | ✅     | `gossamer/json`           |                                                                   |
-| Date          | 🚧     | `gossamer` (type only)    |                                                                   |
-| RegExp        | ❌     | —                         |                                                                   |
-| Error types   | ❌     | —                         |                                                                   |
+| Interface     | Status | Module                    | Notes                                               |
+| ------------- | ------ | ------------------------- | --------------------------------------------------- |
+| Promise       | ✅     | `gossamer/promise`        |                                                     |
+| Uint8Array    | 🚧     | `gossamer/uint8_array`    | Missing `entries()`, `keys()`, `values()` iterators |
+| ArrayBuffer   | 🚧     | `gossamer/array_buffer`   | Missing `resize()`, resizable/maxByteLength props   |
+| Iterator      | ✅     | `gossamer/iterator`       |                                                     |
+| AsyncIterator | ✅     | `gossamer/async_iterator` |                                                     |
+| JSON          | ✅     | `gossamer/json`           |                                                     |
+| Date          | 🚧     | `gossamer` (type only)    |                                                     |
+| RegExp        | ❌     | —                         |                                                     |
+| Error types   | ❌     | —                         |                                                     |
 
 ## Out of Scope
 

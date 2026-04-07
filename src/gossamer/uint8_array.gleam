@@ -13,6 +13,9 @@ pub fn from_length(length: Int) -> Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Uint8Array
 
+@external(javascript, "./uint8_array.ffi.mjs", "from_list_mapped")
+pub fn from_list_mapped(list: List(a), mapper: fn(a) -> Int) -> Uint8Array
+
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
 
