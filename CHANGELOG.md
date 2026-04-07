@@ -1,3 +1,9 @@
+## 3.1.0 (2026-04-07)
+
+### Features
+
+- add formData(), structuredClone, atob, btoa, TextEncoder.encoding
+
 ## 3.0.0 (2026-04-07)
 
 ### Breaking Changes
