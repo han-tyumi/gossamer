@@ -1,3 +1,9 @@
+## 3.0.0 (2026-04-07)
+
+### Breaking Changes
+
+- add missing API members, ready state type, abort variants
+
 ## 2.0.0 (2026-04-07)
 
 ### Breaking Changes
