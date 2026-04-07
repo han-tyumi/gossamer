@@ -1,0 +1,16 @@
+{
+  "Import associated Gleam generated file": {
+    "scope": "typescript",
+    "prefix": "import",
+    "body": "import type * as \\$${TM_FILENAME_BASE/(.+)\\.ffi/${1:/camelcase}/} from \"${RELATIVE_FILEPATH/^src\\/(.+)\\.ffi\\.ts/$\\/gossamer\\/$1.mjs/}\";"
+  },
+  "Create exported FFI function": {
+    "scope": "typescript",
+    "prefix": "ffi",
+    "body": [
+      "export const $1: typeof \\$${TM_FILENAME_BASE/(.+)\\.ffi/${1:/camelcase}/}.$1 = ($2) => {",
+      "\treturn $0;",
+      "}"
+    ]
+  }
+}

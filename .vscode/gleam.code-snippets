@@ -1,0 +1,20 @@
+{
+  "External": {
+    "scope": "gleam",
+    "prefix": "@external",
+    "body": "@external(javascript, \"${TM_DIRECTORY/([^\\/]+\\/)+src\\/[^\\/]+|[^\\/]+/../g}/${RELATIVE_FILEPATH/src\\/([^\\/]+)\\/(?:[^\\/]+\\.gleam)?|\\/[^\\/]+$|\\//$1__/g}${TM_FILENAME_BASE}.ffi.mjs\", \"$1\")"
+  },
+  "JavaScript FFI": {
+    "scope": "gleam",
+    "prefix": "ffi",
+    "body": [
+      "@external(javascript, \"${TM_DIRECTORY/([^\\/]+\\/)+src\\/[^\\/]+|[^\\/]+/../g}/${RELATIVE_FILEPATH/src\\/([^\\/]+)\\/(?:[^\\/]+\\.gleam)?|\\/[^\\/]+$|\\//$1__/g}${TM_FILENAME_BASE}.ffi.mjs\", \"$1\")",
+      "pub fn $1($2) -> $0"
+    ]
+  },
+  "Documention Link": {
+    "scope": "gleam",
+    "prefix": "linkcode",
+    "body": "[`$1`](.$2.html#$3)$0"
+  }
+}

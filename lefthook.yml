@@ -1,0 +1,30 @@
+# https://github.com/evilmartians/lefthook/blob/master/docs/configuration.md
+
+pre-commit:
+  parallel: true
+  commands:
+    gleam-check:
+      glob: "*.gleam"
+      run: gleam check
+
+    gleam-format:
+      glob: "*.gleam"
+      run: gleam format {staged_files}
+      stage_fixed: true
+
+    deno-check:
+      glob: "*.ts"
+      run: deno check {staged_files}
+
+    deno-lint:
+      glob: "*.ts"
+      run: deno lint {staged_files}
+
+    deno-format:
+      glob: "*.{ts,md,json,yml}"
+      run: deno fmt {staged_files}
+      stage_fixed: true
+
+    test:
+      glob: "*.{gleam,ts}"
+      run: just test

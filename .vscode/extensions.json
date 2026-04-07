@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "denoland.vscode-deno",
+    "gleam.gleam",
+    "tombi-toml.tombi"
+  ]
+}

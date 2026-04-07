@@ -1,6 +1,7 @@
 set dotenv-load := true
 
 bootstrap:
+  lefthook install
   deno install
   gleam deps download
   just build
