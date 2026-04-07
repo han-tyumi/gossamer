@@ -80,6 +80,10 @@ export const json_body: typeof $response.json_body = (response) => {
   return toResult.fromPromise(response.json());
 };
 
+export const form_data: typeof $response.form_data = (response) => {
+  return toResult.fromPromise(response.formData());
+};
+
 export const text: typeof $response.text = (response) => {
   return toResult.fromPromise(response.text());
 };

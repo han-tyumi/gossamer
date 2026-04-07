@@ -18,6 +18,15 @@ pub fn fetch_with_init(
 @external(javascript, "./gossamer.ffi.mjs", "fetch_request")
 pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
 
+@external(javascript, "./gossamer.ffi.mjs", "structured_clone")
+pub fn structured_clone(value: a) -> a
+
+@external(javascript, "./gossamer.ffi.mjs", "atob")
+pub fn atob(encoded: String) -> Result(String, String)
+
+@external(javascript, "./gossamer.ffi.mjs", "btoa")
+pub fn btoa(data: String) -> Result(String, String)
+
 @external(javascript, "./gossamer.ffi.mjs", "alert")
 pub fn alert(message: String) -> Nil
 

@@ -5,6 +5,18 @@ import { toResult } from "~/utils/result.ts";
 
 export type Date$ = Date;
 
+export const structured_clone: typeof $gossamer.structured_clone = (value) => {
+  return globalThis.structuredClone(value);
+};
+
+export const atob: typeof $gossamer.atob = (encoded) => {
+  return toResult.fromThrows(() => globalThis.atob(encoded));
+};
+
+export const btoa: typeof $gossamer.btoa = (data) => {
+  return toResult.fromThrows(() => globalThis.btoa(data));
+};
+
 export const alert: typeof $gossamer.alert = (message) => {
   globalThis.alert(message);
 };

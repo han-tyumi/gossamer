@@ -3,6 +3,10 @@ import { EncodeIntoResult$EncodeIntoResult } from "$/gossamer/gossamer/text_enco
 
 const sharedEncoder = new TextEncoder();
 
+export const encoding: typeof $textEncoder.encoding = () => {
+  return sharedEncoder.encoding;
+};
+
 export const encode: typeof $textEncoder.encode = (
   input,
 ) => {

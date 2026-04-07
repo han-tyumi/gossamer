@@ -72,6 +72,10 @@ export const json: typeof $request.json = (request) => {
   return toResult.fromPromise(request.json());
 };
 
+export const form_data: typeof $request.form_data = (request) => {
+  return toResult.fromPromise(request.formData());
+};
+
 export const text: typeof $request.text = (request) => {
   return toResult.fromPromise(request.text());
 };

@@ -40,13 +40,13 @@ browsers.
 
 ### Fetch & HTTP
 
-| Interface | Status | Module               | Notes                |
-| --------- | ------ | -------------------- | -------------------- |
-| fetch()   | ✅     | `gossamer`           |                      |
-| Headers   | ✅     | `gossamer/headers`   |                      |
-| Request   | 🚧     | `gossamer/request`   | Missing `formData()` |
-| Response  | 🚧     | `gossamer/response`  | Missing `formData()` |
-| FormData  | ✅     | `gossamer/form_data` |                      |
+| Interface | Status | Module               | Notes |
+| --------- | ------ | -------------------- | ----- |
+| fetch()   | ✅     | `gossamer`           |       |
+| Headers   | ✅     | `gossamer/headers`   |       |
+| Request   | ✅     | `gossamer/request`   |       |
+| Response  | ✅     | `gossamer/response`  |       |
+| FormData  | ✅     | `gossamer/form_data` |       |
 
 ### URL
 
@@ -81,12 +81,12 @@ browsers.
 
 ### Text Encoding
 
-| Interface         | Status | Module                         | Notes                   |
-| ----------------- | ------ | ------------------------------ | ----------------------- |
-| TextEncoder       | 🚧     | `gossamer/text_encoder`        | Missing `encoding` prop |
-| TextDecoder       | ✅     | `gossamer/text_decoder`        |                         |
-| TextEncoderStream | ✅     | `gossamer/text_encoder_stream` |                         |
-| TextDecoderStream | ✅     | `gossamer/text_decoder_stream` |                         |
+| Interface         | Status | Module                         | Notes |
+| ----------------- | ------ | ------------------------------ | ----- |
+| TextEncoder       | ✅     | `gossamer/text_encoder`        |       |
+| TextDecoder       | ✅     | `gossamer/text_decoder`        |       |
+| TextEncoderStream | ✅     | `gossamer/text_encoder_stream` |       |
+| TextDecoderStream | ✅     | `gossamer/text_decoder_stream` |       |
 
 ### Crypto
 
@@ -143,8 +143,8 @@ browsers.
 
 | Interface           | Status | Module     | Notes |
 | ------------------- | ------ | ---------- | ----- |
-| structuredClone     | ❌     | —          |       |
-| atob / btoa         | ❌     | —          |       |
+| structuredClone     | ✅     | `gossamer` |       |
+| atob / btoa         | ✅     | `gossamer` |       |
 | reportError         | ✅     | `gossamer` |       |
 | console             | ❌     | —          |       |
 | Performance         | ❌     | —          |       |

@@ -2,6 +2,7 @@ import gleam/dynamic.{type Dynamic}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
@@ -79,6 +80,9 @@ pub fn bytes(request: Request) -> Promise(Result(Uint8Array, String))
 
 @external(javascript, "./request.ffi.mjs", "json")
 pub fn json(request: Request) -> Promise(Result(Dynamic, String))
+
+@external(javascript, "./request.ffi.mjs", "form_data")
+pub fn form_data(request: Request) -> Promise(Result(FormData, String))
 
 @external(javascript, "./request.ffi.mjs", "text")
 pub fn text(request: Request) -> Promise(Result(String, String))
