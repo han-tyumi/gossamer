@@ -1,3 +1,9 @@
+## 3.2.0 (2026-04-07)
+
+### Features
+
+- complete File, add ArrayBuffer/Uint8Array/AbortSignal members
+
 ## 3.1.0 (2026-04-07)
 
 ### Features
