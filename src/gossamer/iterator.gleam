@@ -1,7 +1,7 @@
 import gossamer/iterator_result.{type IteratorResult}
 import gleam/option.{type Option}
 
-@external(javascript, "./iterator.ffi.ts", "Iterator$")
+@external(javascript, "./iterator.type.ts", "Iterator$")
 pub type Iterator(a, return, next)
 
 @external(javascript, "./iterator.ffi.mjs", "new_")

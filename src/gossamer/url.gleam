@@ -4,7 +4,7 @@ import gleam/option.{type Option}
 /// The URL interface represents an object providing static methods used for
 /// creating, parsing, and manipulating URLs.
 ///
-@external(javascript, "./url.ffi.ts", "URL$")
+@external(javascript, "./url.type.ts", "URL$")
 pub type URL
 
 /// Creates a new URL object by parsing the specified URL string. Throws a

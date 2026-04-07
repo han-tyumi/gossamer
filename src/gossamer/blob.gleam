@@ -8,7 +8,7 @@ import gossamer/uint8_array.{type Uint8Array}
 /// based on Blob, inheriting blob functionality and expanding it to
 /// support files on the user's system.
 ///
-@external(javascript, "./blob.ffi.ts", "Blob$")
+@external(javascript, "./blob.type.ts", "Blob$")
 pub type Blob
 
 /// Creates a new `Blob` with no content.

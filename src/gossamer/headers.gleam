@@ -5,7 +5,7 @@ import gleam/option.{type Option}
 /// adding to, and removing. A Headers object has an associated header list,
 /// which is initially empty and consists of zero or more name and value pairs.
 ///
-@external(javascript, "./headers.ffi.ts", "Headers$")
+@external(javascript, "./headers.type.ts", "Headers$")
 pub type Headers
 
 @external(javascript, "./headers.ffi.mjs", "new_")

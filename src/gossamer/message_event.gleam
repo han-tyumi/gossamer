@@ -1,6 +1,6 @@
 import gleam/dynamic.{type Dynamic}
 
-@external(javascript, "./message_event.ffi.ts", "MessageEvent$")
+@external(javascript, "./message_event.type.ts", "MessageEvent$")
 pub type MessageEvent
 
 /// Returns the data of the message.

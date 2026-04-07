@@ -2,7 +2,7 @@ import gleam/option.{type Option}
 
 /// URLSearchParams provides methods for working with the query string of a URL.
 ///
-@external(javascript, "./url_search_params.ffi.ts", "URLSearchParams$")
+@external(javascript, "./url_search_params.type.ts", "URLSearchParams$")
 pub type URLSearchParams
 
 @external(javascript, "./url_search_params.ffi.mjs", "new_")

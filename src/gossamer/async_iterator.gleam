@@ -2,7 +2,7 @@ import gossamer/iterator_result.{type IteratorResult}
 import gossamer/promise.{type Promise}
 import gleam/option.{type Option}
 
-@external(javascript, "./async_iterator.ffi.ts", "AsyncIterator$")
+@external(javascript, "./async_iterator.type.ts", "AsyncIterator$")
 pub type AsyncIterator(a, return, next)
 
 @external(javascript, "./async_iterator.ffi.mjs", "new_")

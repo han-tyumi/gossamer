@@ -21,7 +21,7 @@ import gossamer/writable_stream.{type WritableStream}
 /// |> readable_stream.pipe_to(stdout.writable(), [])
 /// ```
 ///
-@external(javascript, "./compression_stream.ffi.ts", "CompressionStream$")
+@external(javascript, "./compression_stream.type.ts", "CompressionStream$")
 pub type CompressionStream
 
 /// Creates a new `CompressionStream` object which compresses a stream of

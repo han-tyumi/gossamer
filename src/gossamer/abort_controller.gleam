@@ -1,6 +1,6 @@
 import gossamer/abort_signal.{type AbortSignal}
 
-@external(javascript, "./abort_controller.ffi.ts", "AbortController$")
+@external(javascript, "./abort_controller.type.ts", "AbortController$")
 pub type AbortController
 
 @external(javascript, "./abort_controller.ffi.mjs", "new_")

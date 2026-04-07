@@ -1,4 +1,4 @@
-@external(javascript, "./abort_signal.ffi.ts", "AbortSignal$")
+@external(javascript, "./abort_signal.type.ts", "AbortSignal$")
 pub type AbortSignal
 
 @external(javascript, "./abort_signal.ffi.mjs", "abort")

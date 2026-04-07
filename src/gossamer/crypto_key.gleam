@@ -5,7 +5,7 @@ import gleam/dynamic.{type Dynamic}
 /// The CryptoKey dictionary of the Web Crypto API represents a
 /// cryptographic key.
 ///
-@external(javascript, "./crypto_key.ffi.ts", "CryptoKey$")
+@external(javascript, "./crypto_key.type.ts", "CryptoKey$")
 pub type CryptoKey
 
 @external(javascript, "./crypto_key.ffi.mjs", "algorithm")

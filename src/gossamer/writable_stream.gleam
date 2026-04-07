@@ -3,7 +3,7 @@ import gossamer/writable_stream/default_controller.{type DefaultController}
 import gossamer/writable_stream/underlying_sink.{type UnderlyingSink}
 import gossamer/writable_stream/writer.{type Writer}
 
-@external(javascript, "./writable_stream.ffi.ts", "WritableStream$")
+@external(javascript, "./writable_stream.type.ts", "WritableStream$")
 pub type WritableStream(a)
 
 @external(javascript, "./writable_stream.ffi.mjs", "new_")

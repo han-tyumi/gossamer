@@ -1,7 +1,7 @@
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/read_result.{type ReadResult}
 
-@external(javascript, "./reader.ffi.ts", "Reader$")
+@external(javascript, "./reader.type.ts", "Reader$")
 pub type Reader(a)
 
 @external(javascript, "./reader.ffi.mjs", "closed")

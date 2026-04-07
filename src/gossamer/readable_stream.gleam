@@ -7,7 +7,7 @@ import gossamer/readable_stream/stream_pipe_option.{type StreamPipeOption}
 import gossamer/readable_stream/underlying_source.{type UnderlyingSource}
 import gossamer/writable_stream.{type WritableStream}
 
-@external(javascript, "./readable_stream.ffi.ts", "ReadableStream$")
+@external(javascript, "./readable_stream.type.ts", "ReadableStream$")
 pub type ReadableStream(a)
 
 @external(javascript, "./readable_stream.ffi.mjs", "new_")

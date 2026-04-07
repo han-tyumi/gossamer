@@ -6,7 +6,7 @@ import gleam/order.{type Order}
 /// to 0. If the requested number of bytes could not be allocated an exception
 /// is raised.
 ///
-@external(javascript, "./uint8_array.ffi.ts", "Uint8Array$")
+@external(javascript, "./uint8_array.type.ts", "Uint8Array$")
 pub type Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "new_")

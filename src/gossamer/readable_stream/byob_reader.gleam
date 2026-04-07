@@ -5,7 +5,7 @@ import gossamer/readable_stream/byob_reader_read_option.{
 }
 import gossamer/readable_stream/read_result.{type ReadResult}
 
-@external(javascript, "./byob_reader.ffi.ts", "ByobReader$")
+@external(javascript, "./byob_reader.type.ts", "ByobReader$")
 pub type ByobReader(a)
 
 @external(javascript, "./byob_reader.ffi.mjs", "closed")

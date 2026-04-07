@@ -4,7 +4,7 @@ import gossamer/text_decoder/text_decoder_option.{type TextDecoderOption}
 /// Represents a decoder for a specific text encoding, allowing you to convert
 /// binary data into a string given the encoding.
 ///
-@external(javascript, "./text_decoder.ffi.ts", "TextDecoder$")
+@external(javascript, "./text_decoder.type.ts", "TextDecoder$")
 pub type TextDecoder
 
 @external(javascript, "./text_decoder.ffi.mjs", "new_")

@@ -2,7 +2,7 @@ import gossamer/blob.{type Blob}
 import gossamer/file.{type File}
 import gleam/option.{type Option}
 
-@external(javascript, "./form_data.ffi.ts", "FormData$")
+@external(javascript, "./form_data.type.ts", "FormData$")
 pub type FormData
 
 @external(javascript, "./form_data.ffi.mjs", "new_")

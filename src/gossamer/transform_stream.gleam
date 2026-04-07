@@ -4,7 +4,7 @@ import gossamer/transform_stream/default_controller.{type DefaultController}
 import gossamer/transform_stream/transformer.{type Transformer}
 import gossamer/writable_stream.{type WritableStream}
 
-@external(javascript, "./transform_stream.ffi.ts", "TransformStream$")
+@external(javascript, "./transform_stream.type.ts", "TransformStream$")
 pub type TransformStream(input, output)
 
 @external(javascript, "./transform_stream.ffi.mjs", "new_")

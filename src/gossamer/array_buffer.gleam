@@ -3,7 +3,7 @@
 /// directly, but can be passed to a typed array or DataView Object to interpret
 /// the raw buffer as needed.
 ///
-@external(javascript, "./array_buffer.ffi.ts", "ArrayBuffer$")
+@external(javascript, "./array_buffer.type.ts", "ArrayBuffer$")
 pub type ArrayBuffer
 
 @external(javascript, "./array_buffer.ffi.mjs", "new_")

@@ -1,7 +1,7 @@
 import gossamer/promise.{type Promise}
 import gleam/option.{type Option}
 
-@external(javascript, "./writer.ffi.ts", "Writer$")
+@external(javascript, "./writer.type.ts", "Writer$")
 pub type Writer(a)
 
 @external(javascript, "./writer.ffi.mjs", "closed")

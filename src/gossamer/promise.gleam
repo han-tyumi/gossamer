@@ -2,7 +2,7 @@ import gossamer/promise_settled_result.{type PromiseSettledResult}
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
 
-@external(javascript, "./promise.ffi.ts", "Promise$")
+@external(javascript, "./promise.type.ts", "Promise$")
 pub type Promise(a)
 
 pub type PromiseWithResolvers(a) {

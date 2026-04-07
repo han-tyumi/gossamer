@@ -23,7 +23,7 @@ import gossamer/writable_stream.{type WritableStream}
 /// |> readable_stream.pipe_to(fs_file.writable(output), [])
 /// ```
 ///
-@external(javascript, "./decompression_stream.ffi.ts", "DecompressionStream$")
+@external(javascript, "./decompression_stream.type.ts", "DecompressionStream$")
 pub type DecompressionStream
 
 /// Creates a new `DecompressionStream` object which decompresses a stream of

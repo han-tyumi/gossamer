@@ -10,7 +10,7 @@ import gleam/option.{type Option}
 
 /// This Fetch API interface represents a resource request.
 ///
-@external(javascript, "./request.ffi.ts", "Request$")
+@external(javascript, "./request.type.ts", "Request$")
 pub type Request
 
 @external(javascript, "./request.ffi.mjs", "new_")

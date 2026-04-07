@@ -2,7 +2,7 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
 
-@external(javascript, "./text_encoder_stream.ffi.ts", "TextEncoderStream$")
+@external(javascript, "./text_encoder_stream.type.ts", "TextEncoderStream$")
 pub type TextEncoderStream
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "new_")

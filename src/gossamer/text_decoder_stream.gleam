@@ -2,7 +2,7 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/text_decoder/text_decoder_option.{type TextDecoderOption}
 import gossamer/writable_stream.{type WritableStream}
 
-@external(javascript, "./text_decoder_stream.ffi.ts", "TextDecoderStream$")
+@external(javascript, "./text_decoder_stream.type.ts", "TextDecoderStream$")
 pub type TextDecoderStream
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "new_")

@@ -3,7 +3,7 @@ import gossamer/blob.{type Blob}
 /// Provides information about files and allows JavaScript in a web page
 /// to access their content.
 ///
-@external(javascript, "./file.ffi.ts", "File$")
+@external(javascript, "./file.type.ts", "File$")
 pub type File
 
 /// Creates a new `File` from a list of strings.

@@ -4,7 +4,7 @@ import gossamer/request_init.{type RequestInit}
 import gossamer/response.{type Response}
 import gleam/option.{type Option}
 
-@external(javascript, "./gossamer.ffi.ts", "Date$")
+@external(javascript, "./gossamer.type.ts", "Date$")
 pub type Date
 
 /// Fetch a resource from the network. It returns a `Promise` that resolves to

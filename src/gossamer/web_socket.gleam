@@ -6,7 +6,7 @@ import gleam/dynamic.{type Dynamic}
 /// Provides the API for creating and managing a WebSocket connection to a
 /// server, as well as for sending and receiving data on the connection.
 ///
-@external(javascript, "./web_socket.ffi.ts", "WebSocket$")
+@external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket
 
 /// Creates a new `WebSocket` connection to the given URL.
