@@ -60,6 +60,10 @@ export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
   return globalThis.setTimeout(callback, delay);
 };
 
+export const user_agent: typeof $gossamer.user_agent = () => {
+  return globalThis.navigator.userAgent;
+};
+
 export const fetch_: typeof $gossamer.fetch = (url) => {
   return toResult.fromPromise(globalThis.fetch(url));
 };

@@ -141,14 +141,14 @@ browsers.
 
 ### Utilities
 
-| Interface           | Status | Module     | Notes |
-| ------------------- | ------ | ---------- | ----- |
-| structuredClone     | ✅     | `gossamer` |       |
-| atob / btoa         | ✅     | `gossamer` |       |
-| reportError         | ✅     | `gossamer` |       |
-| console             | ❌     | —          |       |
-| Performance         | ❌     | —          |       |
-| navigator.userAgent | ❌     | —          |       |
+| Interface           | Status | Module                 | Notes |
+| ------------------- | ------ | ---------------------- | ----- |
+| structuredClone     | ✅     | `gossamer`             |       |
+| atob / btoa         | ✅     | `gossamer`             |       |
+| reportError         | ✅     | `gossamer`             |       |
+| console             | ✅     | `gossamer/console`     |       |
+| Performance         | ✅     | `gossamer/performance` |       |
+| navigator.userAgent | ✅     | `gossamer`             |       |
 
 ## Cross-Runtime Web APIs (beyond WinterTC minimum)
 

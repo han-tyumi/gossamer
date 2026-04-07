@@ -65,3 +65,6 @@ pub fn set_interval(delay: Int, callback: fn() -> Nil) -> Int
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_timeout")
 pub fn set_timeout(delay: Int, callback: fn() -> Nil) -> Int
+
+@external(javascript, "./gossamer.ffi.mjs", "user_agent")
+pub fn user_agent() -> String
