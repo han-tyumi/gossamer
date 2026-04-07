@@ -1,6 +1,6 @@
+import gleeunit/should
 import gossamer/url
 import gossamer/url_search_params
-import gleeunit/should
 
 pub fn new_test() {
   let assert Ok(parsed) = url.new("https://example.org/foo")

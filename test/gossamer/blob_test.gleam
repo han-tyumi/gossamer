@@ -1,9 +1,9 @@
+import gleam/string
+import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/promise
 import gossamer/uint8_array
-import gleam/string
-import gleeunit/should
 
 pub fn blob_from_string_test() {
   let b = blob.from_string("hello")

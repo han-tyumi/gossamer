@@ -1,7 +1,7 @@
+import gleeunit/should
 import gossamer/blob
 import gossamer/file
 import gossamer/promise
-import gleeunit/should
 
 pub fn file_from_strings_test() {
   let f = file.from_strings(["hello", " ", "world"], "test.txt")

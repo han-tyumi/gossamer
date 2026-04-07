@@ -1,5 +1,5 @@
-import gossamer/abort_signal.{type AbortSignal}
 import gleam/dynamic.{type Dynamic}
+import gossamer/abort_signal.{type AbortSignal}
 
 @external(javascript, "./default_controller.type.ts", "DefaultController$")
 pub type DefaultController

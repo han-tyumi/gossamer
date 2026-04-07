@@ -5,7 +5,9 @@ import { toResult } from "~/utils/result.ts";
 export type CompressionStream$ = CompressionStream;
 
 export const new_: typeof $compressionStream.new$ = (format) => {
-  return toResult.fromThrows(() => new CompressionStream(toCompressionFormat(format)));
+  return toResult.fromThrows(() =>
+    new CompressionStream(toCompressionFormat(format))
+  );
 };
 
 export const readable: typeof $compressionStream.readable = (stream) => {

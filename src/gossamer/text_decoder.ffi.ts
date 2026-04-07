@@ -22,7 +22,9 @@ export const encoding: typeof $textDecoder.encoding = (
   return decoder.encoding;
 };
 
-export const is_fatal: typeof $textDecoder.is_fatal = (decoder: TextDecoder) => {
+export const is_fatal: typeof $textDecoder.is_fatal = (
+  decoder: TextDecoder,
+) => {
   return decoder.fatal;
 };
 

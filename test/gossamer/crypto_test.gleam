@@ -1,3 +1,5 @@
+import gleam/string
+import gleeunit/should
 import gossamer/array_buffer
 import gossamer/crypto
 import gossamer/crypto_key
@@ -13,8 +15,6 @@ import gossamer/subtle_crypto/key_gen_algorithm
 import gossamer/subtle_crypto/key_pair_gen_algorithm
 import gossamer/subtle_crypto/sign_algorithm
 import gossamer/uint8_array
-import gleam/string
-import gleeunit/should
 
 pub fn get_random_values_test() {
   let array = uint8_array.from_length(16)

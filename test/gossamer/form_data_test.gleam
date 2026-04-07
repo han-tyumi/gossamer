@@ -1,7 +1,7 @@
+import gleeunit/should
 import gossamer/blob
 import gossamer/file
 import gossamer/form_data
-import gleeunit/should
 
 pub fn form_data_append_get_test() {
   let fd =

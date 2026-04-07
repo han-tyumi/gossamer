@@ -100,7 +100,6 @@ pub fn response_new_with_init_test() {
   response.is_ok(resp) |> should.be_false()
 }
 
-
 pub fn response_text_test() {
   let assert Ok(resp) = response.new("hello world")
   use text <- promise.then(response.text(resp))

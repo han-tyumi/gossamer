@@ -10,7 +10,9 @@ export const new_: typeof $request.new$ = (input) => {
 };
 
 export const new_with_init: typeof $request.new_with_init = (input, init) => {
-  return toResult.fromThrows(() => new Request(input, toRequestInit(toArray(init))));
+  return toResult.fromThrows(() =>
+    new Request(input, toRequestInit(toArray(init)))
+  );
 };
 
 export const method: typeof $request.method = (request) => request.method;

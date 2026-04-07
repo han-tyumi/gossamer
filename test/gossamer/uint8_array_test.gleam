@@ -1,6 +1,6 @@
-import gossamer/uint8_array
 import gleam/order
 import gleeunit/should
+import gossamer/uint8_array
 
 pub fn new_test() {
   uint8_array.new()

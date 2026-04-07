@@ -1,8 +1,8 @@
+import gleam/dynamic/decode
+import gleeunit/should
 import gossamer
 import gossamer/promise
 import gossamer/promise_settled_result
-import gleam/dynamic/decode
-import gleeunit/should
 
 pub fn resolve_promise_test() {
   let promise = promise.resolve(42)
@@ -78,4 +78,3 @@ pub fn promise_all_settled_test() {
     _ -> should.fail()
   }
 }
-

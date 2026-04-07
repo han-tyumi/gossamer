@@ -1,6 +1,6 @@
+import gleam/dynamic.{type Dynamic}
 import gossamer/key_type.{type KeyType}
 import gossamer/key_usage.{type KeyUsage}
-import gleam/dynamic.{type Dynamic}
 
 /// The CryptoKey dictionary of the Web Crypto API represents a
 /// cryptographic key.

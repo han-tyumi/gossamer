@@ -1,3 +1,6 @@
+import gleam/int
+import gleam/option.{None}
+import gleeunit/should
 import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
@@ -9,9 +12,6 @@ import gossamer/transform_stream/default_controller as transform_controller
 import gossamer/writable_stream
 import gossamer/writable_stream/underlying_sink
 import gossamer/writable_stream/writer
-import gleam/int
-import gleam/option.{None}
-import gleeunit/should
 
 pub fn readable_stream_from_start_test() {
   let stream =

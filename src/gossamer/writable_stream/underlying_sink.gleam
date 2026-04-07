@@ -1,6 +1,6 @@
+import gleam/dynamic.{type Dynamic}
 import gossamer/promise.{type Promise}
 import gossamer/writable_stream/default_controller.{type DefaultController}
-import gleam/dynamic.{type Dynamic}
 
 pub type UnderlyingSink(a) {
   Start(fn(DefaultController) -> Nil)

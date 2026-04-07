@@ -1,3 +1,4 @@
+import gleam/dynamic.{type Dynamic}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/crypto_key_pair.{type CryptoKeyPair}
@@ -13,14 +14,16 @@ import gossamer/subtle_crypto/key_pair_gen_algorithm.{type KeyPairGenAlgorithm}
 import gossamer/subtle_crypto/sign_algorithm.{type SignAlgorithm}
 import gossamer/subtle_crypto/wrap_algorithm.{type WrapAlgorithm}
 import gossamer/uint8_array.{type Uint8Array}
-import gleam/dynamic.{type Dynamic}
 
 /// Computes a cryptographic hash (digest) of the given data.
 ///
 /// This method is commonly used for verifying data integrity.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
-pub fn digest(algorithm: String, data: Uint8Array) -> Promise(Result(ArrayBuffer, String))
+pub fn digest(
+  algorithm: String,
+  data: Uint8Array,
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Encrypts data using a cryptographic key.
 ///
@@ -121,7 +124,10 @@ pub fn import_key_jwk(
 /// (PKCS8), or public keys (SPKI) in binary form.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
-pub fn export_key(format: KeyFormat, key: CryptoKey) -> Promise(Result(ArrayBuffer, String))
+pub fn export_key(
+  format: KeyFormat,
+  key: CryptoKey,
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Exports a cryptographic key in JSON Web Key (JWK) format.
 ///

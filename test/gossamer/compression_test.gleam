@@ -1,3 +1,4 @@
+import gleeunit/should
 import gossamer/compression_format
 import gossamer/compression_stream
 import gossamer/decompression_stream
@@ -9,7 +10,6 @@ import gossamer/readable_stream/reader
 import gossamer/text_decoder
 import gossamer/text_encoder
 import gossamer/uint8_array
-import gleeunit/should
 
 pub fn gzip_round_trip_test() {
   let data = text_encoder.encode("Hello, compression!")

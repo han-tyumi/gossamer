@@ -37,7 +37,10 @@ export const report_error: typeof $gossamer.report_error = (error) => {
   globalThis.reportError(error);
 };
 
-export const set_interval: typeof $gossamer.set_interval = (delay, callback) => {
+export const set_interval: typeof $gossamer.set_interval = (
+  delay,
+  callback,
+) => {
   return globalThis.setInterval(callback, delay);
 };
 
@@ -49,7 +52,10 @@ export const fetch_: typeof $gossamer.fetch = (url) => {
   return toResult.fromPromise(globalThis.fetch(url));
 };
 
-export const fetch_with_init: typeof $gossamer.fetch_with_init = (url, init) => {
+export const fetch_with_init: typeof $gossamer.fetch_with_init = (
+  url,
+  init,
+) => {
   return toResult.fromPromise(
     globalThis.fetch(url, toRequestInit(toArray(init))),
   );
