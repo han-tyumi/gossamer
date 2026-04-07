@@ -8,14 +8,14 @@ pub fn now() -> Float
 pub fn time_origin() -> Float
 
 @external(javascript, "./performance.ffi.mjs", "mark")
-pub fn mark(name: String) -> PerformanceEntry
+pub fn mark(name: String) -> Result(PerformanceEntry, String)
 
 @external(javascript, "./performance.ffi.mjs", "measure")
 pub fn measure(
   name: String,
   start_mark: String,
   end_mark: String,
-) -> PerformanceEntry
+) -> Result(PerformanceEntry, String)
 
 @external(javascript, "./performance.ffi.mjs", "clear_marks")
 pub fn clear_marks() -> Nil

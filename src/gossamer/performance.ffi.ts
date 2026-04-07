@@ -1,5 +1,6 @@
 import type * as $performance from "$/gossamer/gossamer/performance.mjs";
 import { fromArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export const now: typeof $performance.now = () => {
   return performance.now();
@@ -10,7 +11,7 @@ export const time_origin: typeof $performance.time_origin = () => {
 };
 
 export const mark: typeof $performance.mark = (name) => {
-  return performance.mark(name);
+  return toResult.fromThrows(() => performance.mark(name));
 };
 
 export const measure: typeof $performance.measure = (
@@ -18,7 +19,9 @@ export const measure: typeof $performance.measure = (
   startMark,
   endMark,
 ) => {
-  return performance.measure(name, startMark, endMark);
+  return toResult.fromThrows(() =>
+    performance.measure(name, startMark, endMark)
+  );
 };
 
 export const clear_marks: typeof $performance.clear_marks = () => {

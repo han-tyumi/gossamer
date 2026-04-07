@@ -6,7 +6,7 @@ import { toResult } from "~/utils/result.ts";
 export type Date$ = Date;
 
 export const structured_clone: typeof $gossamer.structured_clone = (value) => {
-  return globalThis.structuredClone(value);
+  return toResult.fromThrows(() => globalThis.structuredClone(value));
 };
 
 export const atob: typeof $gossamer.atob = (encoded) => {
@@ -61,7 +61,7 @@ export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
 };
 
 export const user_agent: typeof $gossamer.user_agent = () => {
-  return globalThis.navigator.userAgent;
+  return toResult(globalThis.navigator?.userAgent);
 };
 
 export const fetch_: typeof $gossamer.fetch = (url) => {

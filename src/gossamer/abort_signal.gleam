@@ -16,7 +16,7 @@ pub fn timeout(milliseconds: Int) -> AbortSignal
 pub fn is_aborted(signal: AbortSignal) -> Bool
 
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
-pub fn reason(signal: AbortSignal) -> Dynamic
+pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 
 @external(javascript, "./abort_signal.ffi.mjs", "throw_if_aborted")
 pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, String)

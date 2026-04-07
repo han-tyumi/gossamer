@@ -1,11 +1,10 @@
-import gleam/dynamic.{type Dynamic}
 import gossamer/message_event.{type MessageEvent}
 
 @external(javascript, "./message_port.type.ts", "MessagePort$")
 pub type MessagePort
 
 @external(javascript, "./message_port.ffi.mjs", "post_message")
-pub fn post_message(port: MessagePort, message: Dynamic) -> Nil
+pub fn post_message(port: MessagePort, message: a) -> Nil
 
 @external(javascript, "./message_port.ffi.mjs", "start")
 pub fn start(port: MessagePort) -> Nil

@@ -1,4 +1,5 @@
 import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
+import { toResult } from "~/utils/result.ts";
 
 export type PerformanceEntry$ = PerformanceEntry;
 
@@ -19,7 +20,7 @@ export const duration: typeof $performanceEntry.duration = (entry) => {
 };
 
 export const detail: typeof $performanceEntry.detail = (entry) => {
-  return (entry as PerformanceMark).detail;
+  return toResult((entry as PerformanceMark).detail);
 };
 
 export const to_json: typeof $performanceEntry.to_json = (entry) => {

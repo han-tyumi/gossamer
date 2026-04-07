@@ -16,7 +16,7 @@ pub fn start_time(entry: PerformanceEntry) -> Float
 pub fn duration(entry: PerformanceEntry) -> Float
 
 @external(javascript, "./performance_entry.ffi.mjs", "detail")
-pub fn detail(entry: PerformanceEntry) -> Dynamic
+pub fn detail(entry: PerformanceEntry) -> Result(Dynamic, Nil)
 
 @external(javascript, "./performance_entry.ffi.mjs", "to_json")
 pub fn to_json(entry: PerformanceEntry) -> Dynamic

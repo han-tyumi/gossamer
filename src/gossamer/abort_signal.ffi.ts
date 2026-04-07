@@ -21,7 +21,7 @@ export const is_aborted: typeof $abortSignal.is_aborted = (signal) => {
 };
 
 export const reason: typeof $abortSignal.reason = (signal) => {
-  return signal.reason;
+  return toResult(signal.reason);
 };
 
 export const throw_if_aborted: typeof $abortSignal.throw_if_aborted = (

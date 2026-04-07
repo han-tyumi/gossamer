@@ -19,7 +19,7 @@ pub fn fetch_with_init(
 pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
 
 @external(javascript, "./gossamer.ffi.mjs", "structured_clone")
-pub fn structured_clone(value: a) -> a
+pub fn structured_clone(value: a) -> Result(a, String)
 
 @external(javascript, "./gossamer.ffi.mjs", "atob")
 pub fn atob(encoded: String) -> Result(String, String)
@@ -67,4 +67,4 @@ pub fn set_interval(delay: Int, callback: fn() -> Nil) -> Int
 pub fn set_timeout(delay: Int, callback: fn() -> Nil) -> Int
 
 @external(javascript, "./gossamer.ffi.mjs", "user_agent")
-pub fn user_agent() -> String
+pub fn user_agent() -> Result(String, Nil)
