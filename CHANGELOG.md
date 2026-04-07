@@ -1,3 +1,9 @@
+## 3.4.0 (2026-04-07)
+
+### Features
+
+- add MessageChannel, MessagePort, and queuing strategy modules
+
 ## 3.3.0 (2026-04-07)
 
 ### Features
