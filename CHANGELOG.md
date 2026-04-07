@@ -1,3 +1,9 @@
+## 3.3.0 (2026-04-07)
+
+### Features
+
+- add console, performance, and navigator.userAgent modules
+
 ## 3.2.0 (2026-04-07)
 
 ### Features
