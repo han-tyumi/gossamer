@@ -1,5 +1,6 @@
 import type * as $abortSignal from "$/gossamer/gossamer/abort_signal.mjs";
 import { toArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type AbortSignal$ = AbortSignal;
 
@@ -13,4 +14,21 @@ export const any: typeof $abortSignal.any = (signals) => {
 
 export const timeout: typeof $abortSignal.timeout = (milliseconds) => {
   return AbortSignal.timeout(milliseconds);
+};
+
+export const is_aborted: typeof $abortSignal.is_aborted = (signal) => {
+  return signal.aborted;
+};
+
+export const reason: typeof $abortSignal.reason = (signal) => {
+  return signal.reason;
+};
+
+export const throw_if_aborted: typeof $abortSignal.throw_if_aborted = (
+  signal,
+) => {
+  return toResult.fromThrows(() => {
+    signal.throwIfAborted();
+    return undefined;
+  });
 };

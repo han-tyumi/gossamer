@@ -1,6 +1,7 @@
 import * as $promise from "$/gossamer/gossamer/promise.mjs";
 import * as $promiseSettledResult from "$/gossamer/gossamer/promise_settled_result.mjs";
 import { fromArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Promise$<T> = Promise<T>;
 
@@ -47,6 +48,10 @@ export const all_settled: typeof $promise.all_settled = async (values) => {
 
 export const any: typeof $promise.any = (values) => {
   return Promise.any(values);
+};
+
+export const try_: typeof $promise.try$ = (func) => {
+  return toResult.fromPromise(Promise.try(func));
 };
 
 export const with_resolvers: typeof $promise.with_resolvers = () => {

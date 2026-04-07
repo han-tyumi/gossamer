@@ -40,13 +40,13 @@ browsers.
 
 ### Fetch & HTTP
 
-| Interface | Status | Module               | Notes                          |
-| --------- | ------ | -------------------- | ------------------------------ |
-| fetch()   | ✅     | `gossamer`           |                                |
-| Headers   | ✅     | `gossamer/headers`   |                                |
-| Request   | 🚧     | `gossamer/request`   | Missing `blob()`, `formData()` |
-| Response  | 🚧     | `gossamer/response`  | Missing `blob()`, `formData()` |
-| FormData  | ✅     | `gossamer/form_data` |                                |
+| Interface | Status | Module               | Notes                |
+| --------- | ------ | -------------------- | -------------------- |
+| fetch()   | ✅     | `gossamer`           |                      |
+| Headers   | ✅     | `gossamer/headers`   |                      |
+| Request   | 🚧     | `gossamer/request`   | Missing `formData()` |
+| Response  | 🚧     | `gossamer/response`  | Missing `formData()` |
+| FormData  | ✅     | `gossamer/form_data` |                      |
 
 ### URL
 
@@ -116,10 +116,10 @@ browsers.
 
 ### Cancellation
 
-| Interface       | Status | Module                      | Notes                                                      |
-| --------------- | ------ | --------------------------- | ---------------------------------------------------------- |
-| AbortController | ✅     | `gossamer/abort_controller` |                                                            |
-| AbortSignal     | 🚧     | `gossamer/abort_signal`     | Missing `aborted`, `reason`, `throwIfAborted()`, `onabort` |
+| Interface       | Status | Module                      | Notes             |
+| --------------- | ------ | --------------------------- | ----------------- |
+| AbortController | ✅     | `gossamer/abort_controller` |                   |
+| AbortSignal     | 🚧     | `gossamer/abort_signal`     | Missing `onabort` |
 
 ### Messaging
 
@@ -152,15 +152,15 @@ browsers.
 
 ## Cross-Runtime Web APIs (beyond WinterTC minimum)
 
-| Interface | Status | Module                | Notes                         |
-| --------- | ------ | --------------------- | ----------------------------- |
-| WebSocket | 🚧     | `gossamer/web_socket` | Missing ready state constants |
+| Interface | Status | Module                | Notes |
+| --------- | ------ | --------------------- | ----- |
+| WebSocket | ✅     | `gossamer/web_socket` |       |
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
 | Interface     | Status | Module                    | Notes                                                             |
 | ------------- | ------ | ------------------------- | ----------------------------------------------------------------- |
-| Promise       | 🚧     | `gossamer/promise`        | Missing `try()`                                                   |
+| Promise       | ✅     | `gossamer/promise`        |                                                                   |
 | Uint8Array    | 🚧     | `gossamer/uint8_array`    | Missing `from()`, `of()`, `entries()`, `keys()`, `values()`       |
 | ArrayBuffer   | 🚧     | `gossamer/array_buffer`   | Missing `isView()`, `detached`, `resize()`, `transfer()` and more |
 | Iterator      | ✅     | `gossamer/iterator`       |                                                                   |

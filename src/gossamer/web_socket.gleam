@@ -2,6 +2,7 @@ import gleam/dynamic.{type Dynamic}
 import gossamer/binary_type.{type BinaryType}
 import gossamer/close_event.{type CloseEvent}
 import gossamer/message_event.{type MessageEvent}
+import gossamer/ready_state.{type ReadyState}
 
 /// Provides the API for creating and managing a WebSocket connection to a
 /// server, as well as for sending and receiving data on the connection.
@@ -59,7 +60,7 @@ pub fn extensions(socket: WebSocket) -> String
 pub fn protocol(socket: WebSocket) -> String
 
 @external(javascript, "./web_socket.ffi.mjs", "ready_state")
-pub fn ready_state(socket: WebSocket) -> Int
+pub fn ready_state(socket: WebSocket) -> ReadyState
 
 @external(javascript, "./web_socket.ffi.mjs", "url")
 pub fn url(socket: WebSocket) -> String

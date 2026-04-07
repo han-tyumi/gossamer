@@ -64,6 +64,10 @@ export const is_body_used: typeof $response.is_body_used = (response) => {
   return response.bodyUsed;
 };
 
+export const blob: typeof $response.blob = (response) => {
+  return toResult.fromPromise(response.blob());
+};
+
 export const array_buffer: typeof $response.array_buffer = (response) => {
   return toResult.fromPromise(response.arrayBuffer());
 };

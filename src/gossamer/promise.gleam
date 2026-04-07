@@ -48,6 +48,9 @@ pub fn all_settled(
 @external(javascript, "./promise.ffi.mjs", "any")
 pub fn any(values: List(Promise(a))) -> Promise(a)
 
+@external(javascript, "./promise.ffi.mjs", "try_")
+pub fn try(func: fn() -> a) -> Promise(Result(a, String))
+
 @external(javascript, "./promise.ffi.mjs", "with_resolvers")
 pub fn with_resolvers() -> PromiseWithResolvers(a)
 

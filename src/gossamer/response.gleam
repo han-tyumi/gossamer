@@ -1,5 +1,6 @@
 import gleam/dynamic.{type Dynamic}
 import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/blob.{type Blob}
 import gossamer/headers.{type Headers}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
@@ -59,6 +60,9 @@ pub fn body(response: Response) -> Result(ReadableStream(Uint8Array), Nil)
 
 @external(javascript, "./response.ffi.mjs", "is_body_used")
 pub fn is_body_used(response: Response) -> Bool
+
+@external(javascript, "./response.ffi.mjs", "blob")
+pub fn blob(response: Response) -> Promise(Result(Blob, String))
 
 @external(javascript, "./response.ffi.mjs", "array_buffer")
 pub fn array_buffer(response: Response) -> Promise(Result(ArrayBuffer, String))

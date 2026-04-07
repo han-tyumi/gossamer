@@ -56,6 +56,10 @@ export const is_body_used: typeof $request.is_body_used = (request) => {
   return request.bodyUsed;
 };
 
+export const blob: typeof $request.blob = (request) => {
+  return toResult.fromPromise(request.blob());
+};
+
 export const array_buffer: typeof $request.array_buffer = (request) => {
   return toResult.fromPromise(request.arrayBuffer());
 };

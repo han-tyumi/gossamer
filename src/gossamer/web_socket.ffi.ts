@@ -1,6 +1,7 @@
 import type * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
 import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ts";
 import { toCloseEvent } from "~/gossamer/close_event.ts";
+import { toReadyState } from "~/gossamer/ready_state.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
@@ -41,7 +42,7 @@ export const protocol: typeof $webSocket.protocol = (socket) => {
 };
 
 export const ready_state: typeof $webSocket.ready_state = (socket) => {
-  return socket.readyState;
+  return toReadyState(socket.readyState);
 };
 
 export const url: typeof $webSocket.url = (socket) => {
