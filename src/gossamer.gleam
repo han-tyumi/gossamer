@@ -6,9 +6,6 @@ import gossamer/response.{type Response}
 @external(javascript, "./gossamer.type.ts", "Date$")
 pub type Date
 
-/// Fetch a resource from the network. It returns a `Promise` that resolves to
-/// the `Response` to that `Request`, whether it is successful or not.
-///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_")
 pub fn fetch(url: String) -> Promise(Result(Response, String))
 

@@ -1,8 +1,6 @@
 pub type TextDecoderOption {
-  /// Indicates that [`decode`](./text_decoder.html#decode) must throw a
-  /// TypeError when decoding invalid data. It defaults to false, which means
-  /// that the decoder will substitute malformed data with a replacement
-  /// character.
+  /// When set, decoding invalid data returns an error instead of substituting
+  /// malformed data with a replacement character.
   ///
   Fatal
 

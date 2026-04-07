@@ -8,7 +8,7 @@ import gossamer/writable_stream.{type WritableStream}
 /// ## Examples
 ///
 /// ```gleam
-/// let compressor = compression_stream.new(compression_format.Gzip)
+/// let assert Ok(compressor) = compression_stream.new(compression_format.Gzip)
 ///
 /// stdin.readable()
 /// |> readable_stream.pipe_through(

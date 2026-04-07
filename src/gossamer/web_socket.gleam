@@ -1,7 +1,7 @@
+import gleam/dynamic.{type Dynamic}
 import gossamer/binary_type.{type BinaryType}
 import gossamer/close_event.{type CloseEvent}
 import gossamer/message_event.{type MessageEvent}
-import gleam/dynamic.{type Dynamic}
 
 /// Provides the API for creating and managing a WebSocket connection to a
 /// server, as well as for sending and receiving data on the connection.
@@ -14,7 +14,7 @@ pub type WebSocket
 /// ## Examples
 ///
 /// ```gleam
-/// let ws = web_socket.new("ws://localhost:8080")
+/// let assert Ok(ws) = web_socket.new("ws://localhost:8080")
 /// ```
 ///
 @external(javascript, "./web_socket.ffi.mjs", "new_")
@@ -26,7 +26,7 @@ pub fn new(url: String) -> Result(WebSocket, String)
 /// ## Examples
 ///
 /// ```gleam
-/// let ws = web_socket.new_with_protocols("ws://localhost:8080", ["json"])
+/// let assert Ok(ws) = web_socket.new_with_protocols("ws://localhost:8080", ["json"])
 /// ```
 ///
 @external(javascript, "./web_socket.ffi.mjs", "new_with_protocols")

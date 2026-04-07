@@ -1,3 +1,4 @@
+import gleam/dynamic.{type Dynamic}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/headers.{type Headers}
@@ -5,10 +6,7 @@ import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/request_init.{type RequestInit}
 import gossamer/uint8_array.{type Uint8Array}
-import gleam/dynamic.{type Dynamic}
 
-/// This Fetch API interface represents a resource request.
-///
 @external(javascript, "./request.type.ts", "Request$")
 pub type Request
 
@@ -102,37 +100,20 @@ pub fn integrity(request: Request) -> String
 @external(javascript, "./request.ffi.mjs", "clone")
 pub fn clone(request: Request) -> Request
 
-/// A simple getter used to expose a `ReadableStream` of the body contents.
-///
 @external(javascript, "./request.ffi.mjs", "body")
 pub fn body(request: Request) -> Result(ReadableStream(Uint8Array), Nil)
 
-/// Stores a `Boolean` that declares whether the body has been used in a
-/// response yet.
-///
 @external(javascript, "./request.ffi.mjs", "is_body_used")
 pub fn is_body_used(request: Request) -> Bool
 
-/// Takes a `Request` stream and reads it to completion. It returns a promise
-/// that resolves with an `ArrayBuffer`.
-///
 @external(javascript, "./request.ffi.mjs", "array_buffer")
 pub fn array_buffer(request: Request) -> Promise(Result(ArrayBuffer, String))
 
-/// Takes a `Request` stream and reads it to completion. It returns a promise
-/// that resolves with a `Uint8Array`.
-///
 @external(javascript, "./request.ffi.mjs", "bytes")
 pub fn bytes(request: Request) -> Promise(Result(Uint8Array, String))
 
-/// Takes a `Request` stream and reads it to completion. It returns a promise
-/// that resolves with the result of parsing the body text as JSON.
-///
 @external(javascript, "./request.ffi.mjs", "json")
 pub fn json(request: Request) -> Promise(Result(Dynamic, String))
 
-/// Takes a `Request` stream and reads it to completion. It returns a promise
-/// that resolves with a `USVString` (text).
-///
 @external(javascript, "./request.ffi.mjs", "text")
 pub fn text(request: Request) -> Promise(Result(String, String))

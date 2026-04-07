@@ -1,10 +1,6 @@
-import gossamer/array_buffer.{type ArrayBuffer}
 import gleam/order.{type Order}
+import gossamer/array_buffer.{type ArrayBuffer}
 
-/// A typed array of 8-bit unsigned integer values. The contents are initialized
-/// to 0. If the requested number of bytes could not be allocated an exception
-/// is raised.
-///
 @external(javascript, "./uint8_array.type.ts", "Uint8Array$")
 pub type Uint8Array
 
@@ -199,13 +195,13 @@ pub fn some(array: Uint8Array, predicate: fn(Int) -> Bool) -> Bool
 pub fn index_some(array: Uint8Array, predicate: fn(Int, Int) -> Bool) -> Bool
 
 /// Returns the value of the first element in the array where predicate is
-/// true, and `None` otherwise.
+/// true.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "find")
 pub fn find(array: Uint8Array, predicate: fn(Int) -> Bool) -> Result(Int, Nil)
 
 /// Returns the value of the first element in the array where predicate is
-/// true, and `None` otherwise. The predicate receives the value and its index.
+/// true. The predicate receives the value and its index.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "index_find")
 pub fn index_find(
@@ -229,13 +225,16 @@ pub fn index_find_index(
 ) -> Int
 
 /// Returns the value of the last element in the array where predicate is
-/// true, and `None` otherwise.
+/// true.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "find_last")
-pub fn find_last(array: Uint8Array, predicate: fn(Int) -> Bool) -> Result(Int, Nil)
+pub fn find_last(
+  array: Uint8Array,
+  predicate: fn(Int) -> Bool,
+) -> Result(Int, Nil)
 
 /// Returns the value of the last element in the array where predicate is
-/// true, and `None` otherwise. The predicate receives the value and its index.
+/// true. The predicate receives the value and its index.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "index_find_last")
 pub fn index_find_last(
