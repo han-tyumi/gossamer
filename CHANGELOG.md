@@ -1,3 +1,10 @@
+## 2.0.0 (2026-04-07)
+
+### Breaking Changes
+
+- use Result for unsafe APIs, rename boolean getters, remove non-standard
+  properties
+
 ## 1.0.1 (2026-04-07)
 
 ### Fixes
