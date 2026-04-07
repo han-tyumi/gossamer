@@ -54,7 +54,7 @@ browsers.
 | --------------- | ------ | ---------------------------- | ------------------------------------------------------------- |
 | URL             | 🚧     | `gossamer/url`               | Missing `createObjectURL()`, `revokeObjectURL()` (verify Bun) |
 | URLSearchParams | ✅     | `gossamer/url_search_params` |                                                               |
-| URLPattern      | ❌     | —                            |                                                               |
+| URLPattern      | ✅     | `gossamer/url_pattern`       |                                                               |
 
 ### Streams
 
@@ -105,14 +105,14 @@ browsers.
 
 ### Events & DOM
 
-| Interface             | Status | Module | Notes |
-| --------------------- | ------ | ------ | ----- |
-| Event                 | ❌     | —      |       |
-| EventTarget           | ❌     | —      |       |
-| CustomEvent           | ❌     | —      |       |
-| ErrorEvent            | ❌     | —      |       |
-| PromiseRejectionEvent | ❌     | —      |       |
-| DOMException          | ❌     | —      |       |
+| Interface             | Status | Module                   | Notes |
+| --------------------- | ------ | ------------------------ | ----- |
+| Event                 | ❌     | —                        |       |
+| EventTarget           | ❌     | —                        |       |
+| CustomEvent           | ❌     | —                        |       |
+| ErrorEvent            | ❌     | —                        |       |
+| PromiseRejectionEvent | ❌     | —                        |       |
+| DOMException          | ✅     | `gossamer/dom_exception` |       |
 
 ### Cancellation
 
@@ -168,7 +168,7 @@ browsers.
 | JSON          | ✅     | `gossamer/json`           |                                                     |
 | Date          | 🚧     | `gossamer` (type only)    |                                                     |
 | RegExp        | ❌     | —                         |                                                     |
-| Error types   | ❌     | —                         |                                                     |
+| Error types   | ✅     | `gossamer/error`          |                                                     |
 
 ## Out of Scope
 
