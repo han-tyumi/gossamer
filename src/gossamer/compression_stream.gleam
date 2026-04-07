@@ -24,9 +24,6 @@ import gossamer/writable_stream.{type WritableStream}
 @external(javascript, "./compression_stream.type.ts", "CompressionStream$")
 pub type CompressionStream
 
-/// Creates a new `CompressionStream` object which compresses a stream of
-/// data.
-///
 /// Returns an error if the format is not supported.
 ///
 @external(javascript, "./compression_stream.ffi.mjs", "new_")

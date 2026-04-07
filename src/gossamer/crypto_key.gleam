@@ -2,9 +2,6 @@ import gleam/dynamic.{type Dynamic}
 import gossamer/key_type.{type KeyType}
 import gossamer/key_usage.{type KeyUsage}
 
-/// The CryptoKey dictionary of the Web Crypto API represents a
-/// cryptographic key.
-///
 @external(javascript, "./crypto_key.type.ts", "CryptoKey$")
 pub type CryptoKey
 

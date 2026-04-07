@@ -1,43 +1,27 @@
 import gossamer/url_search_params.{type URLSearchParams}
 
-/// The URL interface represents an object providing static methods used for
-/// creating, parsing, and manipulating URLs.
-///
 @external(javascript, "./url.type.ts", "URL$")
 pub type URL
 
-/// Creates a new URL object by parsing the specified URL string. Returns an
-/// error if the URL is invalid.
+/// Returns an error if the URL is invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "new_")
 pub fn new(url: String) -> Result(URL, String)
 
-/// Creates a new URL object by parsing the specified URL string with a base
-/// URL. Returns an error if the URL is invalid.
+/// Returns an error if the URL is invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "new_with_base")
 pub fn new_with_base(url: String, base: String) -> Result(URL, String)
 
-/// Parses a URL string and returns a URL object, or an error if invalid.
-///
 @external(javascript, "./url.ffi.mjs", "parse")
 pub fn parse(url: String) -> Result(URL, Nil)
 
-/// Parses a URL string relative to a base URL and returns a URL object, or
-/// an error if invalid.
-///
 @external(javascript, "./url.ffi.mjs", "parse_with_base")
 pub fn parse_with_base(url: String, base: String) -> Result(URL, Nil)
 
-/// Returns a boolean value indicating if a URL string is valid and can be
-/// parsed.
-///
 @external(javascript, "./url.ffi.mjs", "can_parse")
 pub fn can_parse(url: String) -> Bool
 
-/// Returns a boolean value indicating if a URL string with a base is valid
-/// and can be parsed.
-///
 @external(javascript, "./url.ffi.mjs", "can_parse_with_base")
 pub fn can_parse_with_base(url: String, base: String) -> Bool
 
@@ -65,8 +49,6 @@ pub fn href(url: URL) -> String
 @external(javascript, "./url.ffi.mjs", "set_href")
 pub fn set_href(url: URL, href: String) -> URL
 
-/// The origin of the URL.
-///
 @external(javascript, "./url.ffi.mjs", "origin")
 pub fn origin(url: URL) -> String
 

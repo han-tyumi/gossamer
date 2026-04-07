@@ -9,16 +9,12 @@ pub type Date
 @external(javascript, "./gossamer.ffi.mjs", "fetch_")
 pub fn fetch(url: String) -> Promise(Result(Response, String))
 
-/// Fetch a resource from the network with options.
-///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_with_init")
 pub fn fetch_with_init(
   url: String,
   init: List(RequestInit),
 ) -> Promise(Result(Response, String))
 
-/// Fetch a resource from the network using a `Request` object.
-///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_request")
 pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
 
@@ -28,8 +24,6 @@ pub fn alert(message: String) -> Nil
 @external(javascript, "./gossamer.ffi.mjs", "clear_interval")
 pub fn clear_interval(id: Int) -> Nil
 
-/// Cancels a scheduled action initiated by `set_timeout`.
-///
 @external(javascript, "./gossamer.ffi.mjs", "clear_timeout")
 pub fn clear_timeout(id: Int) -> Nil
 

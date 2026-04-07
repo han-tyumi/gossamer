@@ -13,22 +13,16 @@ pub type ReadableStream(a)
 @external(javascript, "./readable_stream.ffi.mjs", "new_")
 pub fn new(source: List(UnderlyingSource(a))) -> ReadableStream(a)
 
-/// Creates a ReadableStream that pushes data from a start callback.
-///
 pub fn from_start(start: fn(DefaultController(a)) -> Nil) -> ReadableStream(a) {
   new([underlying_source.Start(start)])
 }
 
-/// Creates a ReadableStream that produces data on demand via a pull callback.
-///
 pub fn from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
 ) -> ReadableStream(a) {
   new([underlying_source.Pull(pull)])
 }
 
-/// Creates a ReadableStream from an async or sync iterable.
-///
 @external(javascript, "./readable_stream.ffi.mjs", "from")
 pub fn from(iterable: a) -> ReadableStream(b)
 

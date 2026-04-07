@@ -9,8 +9,6 @@ pub type WritableStream(a)
 @external(javascript, "./writable_stream.ffi.mjs", "new_")
 pub fn new(sink: List(UnderlyingSink(a))) -> WritableStream(a)
 
-/// Creates a WritableStream that processes each chunk via a write callback.
-///
 pub fn from_write(
   write: fn(a, DefaultController) -> Promise(Nil),
 ) -> WritableStream(a) {

@@ -12,8 +12,6 @@ pub fn new(
   transformer: List(Transformer(input, output)),
 ) -> TransformStream(input, output)
 
-/// Creates a TransformStream that transforms each chunk via a callback.
-///
 pub fn from_transform(
   transform: fn(input, DefaultController(output)) -> Promise(Nil),
 ) -> TransformStream(input, output) {

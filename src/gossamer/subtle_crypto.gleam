@@ -15,21 +15,12 @@ import gossamer/subtle_crypto/sign_algorithm.{type SignAlgorithm}
 import gossamer/subtle_crypto/wrap_algorithm.{type WrapAlgorithm}
 import gossamer/uint8_array.{type Uint8Array}
 
-/// Computes a cryptographic hash (digest) of the given data.
-///
-/// This method is commonly used for verifying data integrity.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(
   algorithm: String,
   data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Encrypts data using a cryptographic key.
-///
-/// This method is used with both symmetric (AES) and asymmetric (RSA)
-/// encryption.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "encrypt")
 pub fn encrypt(
   algorithm: EncryptAlgorithm,
@@ -37,8 +28,6 @@ pub fn encrypt(
   data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Decrypts previously encrypted data using a cryptographic key.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "decrypt")
 pub fn decrypt(
   algorithm: EncryptAlgorithm,
@@ -46,11 +35,6 @@ pub fn decrypt(
   data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Generates a digital signature using a private cryptographic key.
-///
-/// This method is used to sign data with an asymmetric key (e.g.,
-/// RSA-PSS, ECDSA).
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "sign")
 pub fn sign(
   algorithm: SignAlgorithm,
@@ -58,10 +42,6 @@ pub fn sign(
   data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Verifies a digital signature using a public cryptographic key.
-///
-/// This method checks whether a signature is valid for the given data.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "verify")
 pub fn verify(
   algorithm: SignAlgorithm,
@@ -70,9 +50,6 @@ pub fn verify(
   data: Uint8Array,
 ) -> Promise(Result(Bool, String))
 
-/// Generates a symmetric cryptographic key for encryption,
-/// authentication, or hashing.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key")
 pub fn generate_key(
   algorithm: KeyGenAlgorithm,
@@ -80,9 +57,6 @@ pub fn generate_key(
   usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Generates an asymmetric cryptographic key pair for encryption,
-/// signing, or key exchange.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key_pair")
 pub fn generate_key_pair(
   algorithm: KeyPairGenAlgorithm,
@@ -90,11 +64,6 @@ pub fn generate_key_pair(
   usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKeyPair, String))
 
-/// Imports a cryptographic key in raw, PKCS8, or SPKI format.
-///
-/// This method is used to import symmetric keys (e.g., AES), private
-/// keys (PKCS8), or public keys (SPKI).
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
 pub fn import_key(
   format: KeyFormat,
@@ -104,12 +73,6 @@ pub fn import_key(
   usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Imports a cryptographic key in JSON Web Key (JWK) format.
-///
-/// This method is used to import an asymmetric key (e.g., RSA or ECDSA)
-/// from a JWK object. JWK allows structured representation of keys,
-/// making them portable across different systems.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(
   key_data: Dynamic,
@@ -118,29 +81,15 @@ pub fn import_key_jwk(
   usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Exports a cryptographic key in raw, PKCS8, or SPKI format.
-///
-/// This method is used to export symmetric keys (AES), private keys
-/// (PKCS8), or public keys (SPKI) in binary form.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
 pub fn export_key(
   format: KeyFormat,
   key: CryptoKey,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Exports a cryptographic key in JSON Web Key (JWK) format.
-///
-/// This method allows exporting an asymmetric key (e.g., RSA, ECDSA)
-/// into a JSON-based representation, making it easy to store and
-/// transfer across systems.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
 pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(Dynamic, String))
 
-/// Derives an array of bits from a base key using a cryptographic
-/// algorithm.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_bits")
 pub fn derive_bits(
   algorithm: DeriveAlgorithm,
@@ -148,9 +97,6 @@ pub fn derive_bits(
   length: Int,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Derives a secret key from a base or master key using a cryptographic
-/// algorithm.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_key")
 pub fn derive_key(
   algorithm: DeriveAlgorithm,
@@ -160,9 +106,6 @@ pub fn derive_key(
   usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Wraps (encrypts) a cryptographic key for secure storage or
-/// transmission.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key")
 pub fn wrap_key(
   format: KeyFormat,
@@ -171,9 +114,6 @@ pub fn wrap_key(
   algorithm: WrapAlgorithm,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Wraps (encrypts) a cryptographic key to JWK format for secure storage
-/// or transmission.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key_jwk")
 pub fn wrap_key_jwk(
   key: CryptoKey,
@@ -181,8 +121,6 @@ pub fn wrap_key_jwk(
   algorithm: WrapAlgorithm,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Unwraps (decrypts) a previously wrapped key.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
   format: KeyFormat,
@@ -194,8 +132,6 @@ pub fn unwrap_key(
   usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Unwraps (decrypts) a previously wrapped key from JWK format.
-///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
   wrapped_key: Uint8Array,
