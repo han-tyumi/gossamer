@@ -17,9 +17,6 @@ build:
 
 test:
   gleam test --runtime deno
-
-test-all:
-  gleam test --runtime deno
   gleam test --runtime nodejs
   gleam test --runtime bun
 
