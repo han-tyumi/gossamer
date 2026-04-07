@@ -69,8 +69,8 @@ browsers.
 | WritableStreamDefaultController  | ✅     | `gossamer/writable_stream/default_controller`  |       |
 | TransformStream                  | ✅     | `gossamer/transform_stream`                    |       |
 | TransformStreamDefaultController | ✅     | `gossamer/transform_stream/default_controller` |       |
-| ByteLengthQueuingStrategy        | ❌     | —                                              |       |
-| CountQueuingStrategy             | ❌     | —                                              |       |
+| ByteLengthQueuingStrategy        | ✅     | `gossamer/byte_length_queuing_strategy`        |       |
+| CountQueuingStrategy             | ✅     | `gossamer/count_queuing_strategy`              |       |
 
 ### Compression
 
@@ -123,11 +123,11 @@ browsers.
 
 ### Messaging
 
-| Interface      | Status | Module                   | Notes |
-| -------------- | ------ | ------------------------ | ----- |
-| MessageChannel | ❌     | —                        |       |
-| MessagePort    | ❌     | —                        |       |
-| MessageEvent   | ✅     | `gossamer/message_event` |       |
+| Interface      | Status | Module                     | Notes |
+| -------------- | ------ | -------------------------- | ----- |
+| MessageChannel | ✅     | `gossamer/message_channel` |       |
+| MessagePort    | ✅     | `gossamer/message_port`    |       |
+| MessageEvent   | ✅     | `gossamer/message_event`   |       |
 
 ### Timers & Scheduling
 
