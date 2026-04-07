@@ -1,0 +1,21 @@
+import gossamer/key_type.{type KeyType}
+import gossamer/key_usage.{type KeyUsage}
+import gleam/dynamic.{type Dynamic}
+
+/// The CryptoKey dictionary of the Web Crypto API represents a
+/// cryptographic key.
+///
+@external(javascript, "./crypto_key.ffi.ts", "CryptoKey$")
+pub type CryptoKey
+
+@external(javascript, "./crypto_key.ffi.mjs", "algorithm")
+pub fn algorithm(key: CryptoKey) -> Dynamic
+
+@external(javascript, "./crypto_key.ffi.mjs", "extractable")
+pub fn extractable(key: CryptoKey) -> Bool
+
+@external(javascript, "./crypto_key.ffi.mjs", "type_")
+pub fn type_(key: CryptoKey) -> KeyType
+
+@external(javascript, "./crypto_key.ffi.mjs", "usages")
+pub fn usages(key: CryptoKey) -> List(KeyUsage)

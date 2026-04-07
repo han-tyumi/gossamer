@@ -1,0 +1,17 @@
+name = "gossamer"
+version = "0.0.0"
+gleam = ">= 1.14.0"
+description = "Web API bindings for Gleam"
+licences = ["Apache-2.0"]
+repository = { type = "github", user = "han-tyumi", repo = "gossamer" }
+
+target = "javascript"
+
+[javascript]
+typescript_declarations = true
+
+[dependencies]
+gleam_stdlib = ">= 0.34.0 and < 2.0.0"
+
+[dev-dependencies]
+gleeunit = ">= 1.0.0 and < 2.0.0"

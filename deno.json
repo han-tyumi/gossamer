@@ -1,0 +1,50 @@
+{
+  "imports": {
+    "@std/fs": "jsr:@std/fs@^1.0.17",
+    "@std/path": "jsr:@std/path@^1.0.9",
+    "~/": "./src/",
+    "$/": "./build/dev/javascript/",
+    "esbuild": "npm:esbuild@~0.28.0"
+  },
+
+  "compilerOptions": {
+    "types": ["./prelude.d.ts"]
+  },
+
+  "tasks": {
+    "build": "deno run -A build.ts",
+    "clean": "find src -name '*.ffi.mjs' -delete"
+  },
+
+  "fmt": {
+    "exclude": ["./src/**/*.ffi.mjs", "./build/"]
+  },
+
+  "lint": {
+    "rules": {
+      "tags": ["recommended"],
+      "include": [
+        "ban-untagged-todo",
+        "default-param-last",
+        "eqeqeq",
+        "guard-for-in",
+        "no-await-in-loop",
+        "no-const-assign",
+        "no-eval",
+        "no-external-import",
+        "no-implicit-declare-namespace-export",
+        "no-inferrable-types",
+        "no-non-null-asserted-optional-chain",
+        "no-non-null-assertion",
+        "no-self-compare",
+        "no-sparse-arrays",
+        "no-sync-fn-in-async-fn",
+        "no-throw-literal",
+        "prefer-ascii",
+        "single-var-declarator",
+        "triple-slash-reference",
+        "verbatim-module-syntax"
+      ]
+    }
+  }
+}

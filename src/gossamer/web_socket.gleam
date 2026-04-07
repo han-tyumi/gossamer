@@ -1,0 +1,111 @@
+import gossamer/binary_type.{type BinaryType}
+import gossamer/close_event.{type CloseEvent}
+import gossamer/message_event.{type MessageEvent}
+import gleam/dynamic.{type Dynamic}
+
+/// Provides the API for creating and managing a WebSocket connection to a
+/// server, as well as for sending and receiving data on the connection.
+///
+@external(javascript, "./web_socket.ffi.ts", "WebSocket$")
+pub type WebSocket
+
+/// Creates a new `WebSocket` connection to the given URL.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let ws = web_socket.new("ws://localhost:8080")
+/// ```
+///
+@external(javascript, "./web_socket.ffi.mjs", "new_")
+pub fn new(url: String) -> WebSocket
+
+/// Creates a new `WebSocket` connection to the given URL with the
+/// specified sub-protocols.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let ws = web_socket.new_with_protocols("ws://localhost:8080", ["json"])
+/// ```
+///
+@external(javascript, "./web_socket.ffi.mjs", "new_with_protocols")
+pub fn new_with_protocols(url: String, protocols: List(String)) -> WebSocket
+
+/// Returns a value that indicates how binary data from the WebSocket object
+/// is exposed to scripts.
+///
+@external(javascript, "./web_socket.ffi.mjs", "binary_type")
+pub fn binary_type(socket: WebSocket) -> BinaryType
+
+/// Can be set, to change how binary data is returned. The default is `Blob`.
+///
+@external(javascript, "./web_socket.ffi.mjs", "set_binary_type")
+pub fn set_binary_type(socket: WebSocket, value: BinaryType) -> Nil
+
+/// Returns the number of bytes of application data (UTF-8 text and binary
+/// data) that have been queued using `send` but not yet been transmitted to
+/// the network.
+///
+/// If the WebSocket connection is closed, this attribute's value will only
+/// increase with each call to the `send` method. (The number does not reset
+/// to zero once the connection closes.)
+///
+@external(javascript, "./web_socket.ffi.mjs", "buffered_amount")
+pub fn buffered_amount(socket: WebSocket) -> Int
+
+/// Returns the extensions selected by the server, if any.
+///
+@external(javascript, "./web_socket.ffi.mjs", "extensions")
+pub fn extensions(socket: WebSocket) -> String
+
+/// Returns the subprotocol selected by the server, if any. It can be used
+/// in conjunction with the protocols parameter to perform subprotocol
+/// negotiation.
+///
+@external(javascript, "./web_socket.ffi.mjs", "protocol")
+pub fn protocol(socket: WebSocket) -> String
+
+/// Returns the state of the WebSocket object's connection.
+///
+@external(javascript, "./web_socket.ffi.mjs", "ready_state")
+pub fn ready_state(socket: WebSocket) -> Int
+
+/// Returns the URL that was used to establish the WebSocket connection.
+///
+@external(javascript, "./web_socket.ffi.mjs", "url")
+pub fn url(socket: WebSocket) -> String
+
+/// Closes the WebSocket connection.
+///
+@external(javascript, "./web_socket.ffi.mjs", "close")
+pub fn close(socket: WebSocket) -> Nil
+
+/// Closes the WebSocket connection, using the given code as the WebSocket
+/// connection close code and reason as the WebSocket connection close reason.
+///
+@external(javascript, "./web_socket.ffi.mjs", "close_with")
+pub fn close_with(socket: WebSocket, code: Int, reason: String) -> Nil
+
+/// Transmits string data using the WebSocket connection.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send")
+pub fn send(socket: WebSocket, data: String) -> Nil
+
+/// Transmits data using the WebSocket connection. Data can be a string, a
+/// Blob, an ArrayBuffer, or an ArrayBufferView.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_dynamic")
+pub fn send_dynamic(socket: WebSocket, data: Dynamic) -> Nil
+
+@external(javascript, "./web_socket.ffi.mjs", "on_open")
+pub fn on_open(socket: WebSocket, handler: fn() -> Nil) -> Nil
+
+@external(javascript, "./web_socket.ffi.mjs", "on_message")
+pub fn on_message(socket: WebSocket, handler: fn(MessageEvent) -> Nil) -> Nil
+
+@external(javascript, "./web_socket.ffi.mjs", "on_error")
+pub fn on_error(socket: WebSocket, handler: fn() -> Nil) -> Nil
+
+@external(javascript, "./web_socket.ffi.mjs", "on_close")
+pub fn on_close(socket: WebSocket, handler: fn(CloseEvent) -> Nil) -> Nil
