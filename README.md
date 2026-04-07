@@ -1,10 +1,26 @@
-# gossamer
+# gossamer 🕸️
 
-Web API bindings for [Gleam](https://gleam.run/), targeting JavaScript runtimes
-(Deno, Node.js, Bun, and browsers).
+Cross-runtime JavaScript API bindings for [Gleam](https://gleam.run/).
 
 [![Package Version](https://img.shields.io/hexpm/v/gossamer)](https://hex.pm/packages/gossamer)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/gossamer/)
+
+gossamer covers Web Platform APIs
+([WinterTC](https://min-common-api.proposal.wintertc.org/)) and ECMAScript
+built-ins that have no direct equivalent in Gleam's standard library. All APIs
+work across Deno, Node.js, Bun, and browsers.
+
+APIs mirror their JavaScript counterparts in structure and naming, adapted to
+Gleam conventions — snake_case naming, pipeable signatures, `Result` for
+throwing/nullable APIs, and `Promise(Result(a, e))` for rejectable promises.
+
+For higher-level Gleam-idiomatic abstractions, see
+[gleam_javascript](https://hexdocs.pm/gleam_javascript/),
+[gleam_fetch](https://hexdocs.pm/gleam_fetch/), and
+[gleam_json](https://hexdocs.pm/gleam_json/).
+
+See [COVERAGE.md](COVERAGE.md) for the full list of implemented and planned
+APIs.
 
 ## Installation
 
@@ -21,64 +37,44 @@ import gossamer/response
 import gossamer/url
 
 pub fn main() {
-  let parsed = url.new("https://example.com/path?q=gleam")
+  let assert Ok(parsed) = url.new("https://example.com/path?q=gleam")
   let hostname = url.hostname(parsed)  // "example.com"
 
-  use resp <- promise.then(gossamer.fetch("https://example.com"))
-  use body <- promise.then(response.text(resp))
+  use result <- promise.then(gossamer.fetch("https://example.com"))
+  let assert Ok(resp) = result
+  use result <- promise.then(response.text(resp))
+  let assert Ok(body) = result
   promise.resolve(body)
 }
 ```
 
-## Modules
+Further documentation can be found at <https://hexdocs.pm/gossamer>.
 
-### Core Types
+## Contributing
 
-- **promise** — `Promise` with `then`, `catch`, `all`, `race`, `any`,
-  `all_settled`, `with_resolvers`
-- **uint8_array** — Complete `Uint8Array` API including base64/hex encoding
-- **array_buffer** — `ArrayBuffer` bindings
-- **blob** — `Blob` creation and reading
-- **file** — `File` type (extends Blob)
-- **json** — JSON parse/stringify with Gleam types
+### Prerequisites
 
-### Networking & HTTP
+- [Deno](https://docs.deno.com/runtime/getting_started/installation/)
+- [Erlang](https://www.erlang.org/downloads)
+- [Gleam](https://gleam.run/install/)
+- [Just](https://just.systems/man/en/installation.html)
+- [Lefthook](https://lefthook.dev/#how-to-install-lefthook)
+- [Rebar3](https://rebar3.org/docs/getting-started/)
+- [Watchexec](https://github.com/watchexec/watchexec#install)
 
-- **headers** — `Headers` with get/set/append/delete/keys/values/entries
-- **request** — `Request` construction and properties
-- **response** — `Response` construction, reading, and cloning
-- **url** — `URL` parsing and manipulation
-- **url_search_params** — Query string handling
-- **web_socket** — `WebSocket` client with typed events
-- **form_data** — `FormData` for multipart form handling
+_Tip_: These can also be installed via
+[mise](https://mise.jdx.dev/getting-started.html) or
+[asdf](https://asdf-vm.com/guide/getting-started.html), which read from
+`.tool-versions`.
 
-### Streams
+### Initial Setup
 
-- **readable_stream** — `ReadableStream` with reader/controller/piping
-- **writable_stream** — `WritableStream` with writer/controller
-- **transform_stream** — `TransformStream` with transformer
-- **compression_stream** / **decompression_stream** — gzip/deflate/brotli
+```sh
+just
+```
 
-### Crypto
+### Development
 
-- **crypto** — `getRandomValues`, `randomUUID`
-- **subtle_crypto** — digest, encrypt/decrypt, sign/verify, key
-  generation/import/export, derive, wrap/unwrap
-- **crypto_key** / **crypto_key_pair** — Key types and properties
-
-### Text Encoding
-
-- **text_encoder** / **text_decoder** — UTF-8 encoding/decoding
-- **text_encoder_stream** / **text_decoder_stream** — Streaming variants
-
-### Other
-
-- **abort_controller** / **abort_signal** — Cancellation
-- **iterator** / **async_iterator** — JS iterator protocol
-
-### Top-level (`gossamer`)
-
-- `fetch`, `fetch_with_init`, `fetch_request`
-- `set_timeout`, `clear_timeout`, `set_interval`, `clear_interval`
-- `queue_microtask`, `report_error`
-- `alert`, `confirm`, `prompt`, `close`
+```sh
+just watch build test
+```
