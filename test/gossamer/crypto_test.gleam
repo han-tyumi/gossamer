@@ -30,49 +30,54 @@ pub fn random_uuid_test() {
 pub fn digest_test() {
   let data = uint8_array.from_list([1, 2, 3])
   use result <- promise.then(subtle_crypto.digest("SHA-256", data))
-  should.equal(array_buffer.byte_length(result), 32)
+  let assert Ok(buffer) = result
+  should.equal(array_buffer.byte_length(buffer), 32)
   promise.resolve(Nil)
 }
 
 pub fn generate_key_and_encrypt_decrypt_test() {
-  use key <- promise.then(
+  use result <- promise.then(
     subtle_crypto.generate_key(key_gen_algorithm.Aes("AES-GCM", 256), True, [
       key_usage.Encrypt,
       key_usage.Decrypt,
     ]),
   )
+  let assert Ok(key) = result
 
-  should.equal(crypto_key.extractable(key), True)
+  should.equal(crypto_key.is_extractable(key), True)
   should.equal(crypto_key.type_(key), key_type.Secret)
 
   let iv = crypto.get_random_values(uint8_array.from_length(12))
   let plaintext = uint8_array.from_list([72, 101, 108, 108, 111])
 
-  use ciphertext <- promise.then(subtle_crypto.encrypt(
+  use result <- promise.then(subtle_crypto.encrypt(
     encrypt_algorithm.AesGcm(iv),
     key,
     plaintext,
   ))
+  let assert Ok(ciphertext) = result
   should.be_true(array_buffer.byte_length(ciphertext) > 0)
 
-  use decrypted <- promise.then(subtle_crypto.decrypt(
+  use result <- promise.then(subtle_crypto.decrypt(
     encrypt_algorithm.AesGcm(iv),
     key,
     uint8_array.from_buffer(ciphertext),
   ))
-  let result = uint8_array.from_buffer(decrypted)
-  should.equal(uint8_array.byte_length(result), 5)
+  let assert Ok(decrypted) = result
+  let decrypted_bytes = uint8_array.from_buffer(decrypted)
+  should.equal(uint8_array.byte_length(decrypted_bytes), 5)
   promise.resolve(Nil)
 }
 
 pub fn generate_key_pair_sign_verify_test() {
-  use pair <- promise.then(
+  use result <- promise.then(
     subtle_crypto.generate_key_pair(
       key_pair_gen_algorithm.Ec("ECDSA", "P-256"),
       True,
       [key_usage.Sign, key_usage.Verify],
     ),
   )
+  let assert Ok(pair) = result
 
   let crypto_key_pair.CryptoKeyPair(public_key:, private_key:) = pair
   should.equal(crypto_key.type_(public_key), key_type.Public)
@@ -80,19 +85,21 @@ pub fn generate_key_pair_sign_verify_test() {
 
   let data = uint8_array.from_list([1, 2, 3])
 
-  use signature <- promise.then(subtle_crypto.sign(
+  use result <- promise.then(subtle_crypto.sign(
     sign_algorithm.Ecdsa("SHA-256"),
     private_key,
     data,
   ))
+  let assert Ok(signature) = result
   should.be_true(array_buffer.byte_length(signature) > 0)
 
-  use verified <- promise.then(subtle_crypto.verify(
+  use result <- promise.then(subtle_crypto.verify(
     sign_algorithm.Ecdsa("SHA-256"),
     public_key,
     uint8_array.from_buffer(signature),
     data,
   ))
+  let assert Ok(verified) = result
   should.be_true(verified)
   promise.resolve(Nil)
 }
@@ -100,7 +107,7 @@ pub fn generate_key_pair_sign_verify_test() {
 pub fn import_export_key_test() {
   let raw_key = crypto.get_random_values(uint8_array.from_length(16))
 
-  use key <- promise.then(
+  use result <- promise.then(
     subtle_crypto.import_key(
       key_format.Raw,
       raw_key,
@@ -109,10 +116,12 @@ pub fn import_export_key_test() {
       [key_usage.Encrypt, key_usage.Decrypt],
     ),
   )
+  let assert Ok(key) = result
 
-  should.equal(crypto_key.extractable(key), True)
+  should.equal(crypto_key.is_extractable(key), True)
 
-  use exported <- promise.then(subtle_crypto.export_key(key_format.Raw, key))
+  use result <- promise.then(subtle_crypto.export_key(key_format.Raw, key))
+  let assert Ok(exported) = result
   should.equal(array_buffer.byte_length(exported), 16)
   promise.resolve(Nil)
 }

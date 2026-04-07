@@ -11,8 +11,8 @@ pub type CryptoKey
 @external(javascript, "./crypto_key.ffi.mjs", "algorithm")
 pub fn algorithm(key: CryptoKey) -> Dynamic
 
-@external(javascript, "./crypto_key.ffi.mjs", "extractable")
-pub fn extractable(key: CryptoKey) -> Bool
+@external(javascript, "./crypto_key.ffi.mjs", "is_extractable")
+pub fn is_extractable(key: CryptoKey) -> Bool
 
 @external(javascript, "./crypto_key.ffi.mjs", "type_")
 pub fn type_(key: CryptoKey) -> KeyType

@@ -2,18 +2,19 @@ import type * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
 import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ts";
 import { toCloseEvent } from "~/gossamer/close_event.ts";
 import { toArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type WebSocket$ = WebSocket;
 
 export const new_: typeof $webSocket.new$ = (url) => {
-  return new WebSocket(url);
+  return toResult.fromThrows(() => new WebSocket(url));
 };
 
 export const new_with_protocols: typeof $webSocket.new_with_protocols = (
   url,
   protocols,
 ) => {
-  return new WebSocket(url, toArray(protocols));
+  return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
 };
 
 export const binary_type: typeof $webSocket.binary_type = (socket) => {

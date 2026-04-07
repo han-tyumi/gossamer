@@ -20,7 +20,7 @@ import gleam/dynamic.{type Dynamic}
 /// This method is commonly used for verifying data integrity.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
-pub fn digest(algorithm: String, data: Uint8Array) -> Promise(ArrayBuffer)
+pub fn digest(algorithm: String, data: Uint8Array) -> Promise(Result(ArrayBuffer, String))
 
 /// Encrypts data using a cryptographic key.
 ///
@@ -32,7 +32,7 @@ pub fn encrypt(
   algorithm: EncryptAlgorithm,
   key: CryptoKey,
   data: Uint8Array,
-) -> Promise(ArrayBuffer)
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Decrypts previously encrypted data using a cryptographic key.
 ///
@@ -41,7 +41,7 @@ pub fn decrypt(
   algorithm: EncryptAlgorithm,
   key: CryptoKey,
   data: Uint8Array,
-) -> Promise(ArrayBuffer)
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Generates a digital signature using a private cryptographic key.
 ///
@@ -53,7 +53,7 @@ pub fn sign(
   algorithm: SignAlgorithm,
   key: CryptoKey,
   data: Uint8Array,
-) -> Promise(ArrayBuffer)
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Verifies a digital signature using a public cryptographic key.
 ///
@@ -65,7 +65,7 @@ pub fn verify(
   key: CryptoKey,
   signature: Uint8Array,
   data: Uint8Array,
-) -> Promise(Bool)
+) -> Promise(Result(Bool, String))
 
 /// Generates a symmetric cryptographic key for encryption,
 /// authentication, or hashing.
@@ -75,7 +75,7 @@ pub fn generate_key(
   algorithm: KeyGenAlgorithm,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKey)
+) -> Promise(Result(CryptoKey, String))
 
 /// Generates an asymmetric cryptographic key pair for encryption,
 /// signing, or key exchange.
@@ -85,7 +85,7 @@ pub fn generate_key_pair(
   algorithm: KeyPairGenAlgorithm,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKeyPair)
+) -> Promise(Result(CryptoKeyPair, String))
 
 /// Imports a cryptographic key in raw, PKCS8, or SPKI format.
 ///
@@ -99,7 +99,7 @@ pub fn import_key(
   algorithm: ImportAlgorithm,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKey)
+) -> Promise(Result(CryptoKey, String))
 
 /// Imports a cryptographic key in JSON Web Key (JWK) format.
 ///
@@ -113,7 +113,7 @@ pub fn import_key_jwk(
   algorithm: ImportAlgorithm,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKey)
+) -> Promise(Result(CryptoKey, String))
 
 /// Exports a cryptographic key in raw, PKCS8, or SPKI format.
 ///
@@ -121,7 +121,7 @@ pub fn import_key_jwk(
 /// (PKCS8), or public keys (SPKI) in binary form.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
-pub fn export_key(format: KeyFormat, key: CryptoKey) -> Promise(ArrayBuffer)
+pub fn export_key(format: KeyFormat, key: CryptoKey) -> Promise(Result(ArrayBuffer, String))
 
 /// Exports a cryptographic key in JSON Web Key (JWK) format.
 ///
@@ -130,7 +130,7 @@ pub fn export_key(format: KeyFormat, key: CryptoKey) -> Promise(ArrayBuffer)
 /// transfer across systems.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
-pub fn export_key_jwk(key: CryptoKey) -> Promise(Dynamic)
+pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(Dynamic, String))
 
 /// Derives an array of bits from a base key using a cryptographic
 /// algorithm.
@@ -140,7 +140,7 @@ pub fn derive_bits(
   algorithm: DeriveAlgorithm,
   base_key: CryptoKey,
   length: Int,
-) -> Promise(ArrayBuffer)
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Derives a secret key from a base or master key using a cryptographic
 /// algorithm.
@@ -152,7 +152,7 @@ pub fn derive_key(
   derived_key_type: DerivedKeyType,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKey)
+) -> Promise(Result(CryptoKey, String))
 
 /// Wraps (encrypts) a cryptographic key for secure storage or
 /// transmission.
@@ -163,7 +163,7 @@ pub fn wrap_key(
   key: CryptoKey,
   wrapping_key: CryptoKey,
   algorithm: WrapAlgorithm,
-) -> Promise(ArrayBuffer)
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Wraps (encrypts) a cryptographic key to JWK format for secure storage
 /// or transmission.
@@ -173,7 +173,7 @@ pub fn wrap_key_jwk(
   key: CryptoKey,
   wrapping_key: CryptoKey,
   algorithm: WrapAlgorithm,
-) -> Promise(ArrayBuffer)
+) -> Promise(Result(ArrayBuffer, String))
 
 /// Unwraps (decrypts) a previously wrapped key.
 ///
@@ -186,7 +186,7 @@ pub fn unwrap_key(
   unwrapped_key_algorithm: ImportAlgorithm,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKey)
+) -> Promise(Result(CryptoKey, String))
 
 /// Unwraps (decrypts) a previously wrapped key from JWK format.
 ///
@@ -198,4 +198,4 @@ pub fn unwrap_key_jwk(
   unwrapped_key_algorithm: ImportAlgorithm,
   extractable: Bool,
   usages: List(KeyUsage),
-) -> Promise(CryptoKey)
+) -> Promise(Result(CryptoKey, String))

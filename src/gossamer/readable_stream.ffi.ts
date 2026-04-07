@@ -13,7 +13,7 @@ export const from: typeof $readableStream.from = (iterable) => {
   return ReadableStream.from(iterable);
 };
 
-export const locked: typeof $readableStream.locked = (
+export const is_locked: typeof $readableStream.is_locked = (
   stream: ReadableStream,
 ) => {
   return stream.locked;

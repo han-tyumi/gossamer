@@ -1,15 +1,14 @@
 import gossamer/blob
 import gossamer/file
 import gossamer/form_data
-import gleam/option.{None, Some}
 import gleeunit/should
 
 pub fn form_data_append_get_test() {
   let fd =
     form_data.new()
     |> form_data.append("name", "value")
-  should.equal(form_data.get(fd, "name"), Some("value"))
-  should.equal(form_data.get(fd, "missing"), None)
+  should.equal(form_data.get(fd, "name"), Ok("value"))
+  should.equal(form_data.get(fd, "missing"), Error(Nil))
 }
 
 pub fn form_data_has_delete_test() {
@@ -46,8 +45,8 @@ pub fn form_data_blob_test() {
     form_data.new()
     |> form_data.append_blob_with_filename("upload", b, "test.txt")
   case form_data.get_file(fd, "upload") {
-    Some(f) -> should.equal(file.name(f), "test.txt")
-    None -> should.fail()
+    Ok(f) -> should.equal(file.name(f), "test.txt")
+    Error(Nil) -> should.fail()
   }
 }
 

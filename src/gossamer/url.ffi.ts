@@ -1,22 +1,22 @@
 import type * as $url from "$/gossamer/gossamer/url.mjs";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type URL$ = URL;
 
 export const new_: typeof $url.new$ = (url) => {
-  return new URL(url);
+  return toResult.fromThrows(() => new URL(url));
 };
 
 export const new_with_base: typeof $url.new_with_base = (url, base) => {
-  return new URL(url, base);
+  return toResult.fromThrows(() => new URL(url, base));
 };
 
 export const parse: typeof $url.parse = (url) => {
-  return toOption(URL.parse(url));
+  return toResult(URL.parse(url));
 };
 
 export const parse_with_base: typeof $url.parse_with_base = (url, base) => {
-  return toOption(URL.parse(url, base));
+  return toResult(URL.parse(url, base));
 };
 
 export const can_parse: typeof $url.can_parse = (url) => {

@@ -29,11 +29,10 @@ pub type DecompressionStream
 /// Creates a new `DecompressionStream` object which decompresses a stream of
 /// data.
 ///
-/// Throws a `TypeError` if the format passed to the constructor is not
-/// supported.
+/// Returns an error if the format is not supported.
 ///
 @external(javascript, "./decompression_stream.ffi.mjs", "new_")
-pub fn new(format: CompressionFormat) -> DecompressionStream
+pub fn new(format: CompressionFormat) -> Result(DecompressionStream, String)
 
 @external(javascript, "./decompression_stream.ffi.mjs", "readable")
 pub fn readable(stream: DecompressionStream) -> ReadableStream(Uint8Array)

@@ -1,6 +1,6 @@
 import type * as $formData from "$/gossamer/gossamer/form_data.mjs";
 import { fromArray } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type FormData$ = FormData;
 
@@ -40,12 +40,12 @@ export const delete_: typeof $formData.delete$ = (formData, name) => {
 
 export const get: typeof $formData.get = (formData, name) => {
   const value = formData.get(name);
-  return toOption(typeof value === "string" ? value : null);
+  return toResult(typeof value === "string" ? value : null);
 };
 
 export const get_file: typeof $formData.get_file = (formData, name) => {
   const value = formData.get(name);
-  return toOption(value instanceof File ? value : null);
+  return toResult(value instanceof File ? value : null);
 };
 
 export const get_all: typeof $formData.get_all = (formData, name) => {

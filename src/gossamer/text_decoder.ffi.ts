@@ -1,5 +1,6 @@
 import type * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder/text_decoder_option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type TextDecoder$ = TextDecoder;
 
@@ -10,9 +11,8 @@ export const new_: typeof $textDecoder.new$ = () => {
 };
 
 export const new_with: typeof $textDecoder.new_with = (label, options) => {
-  return new TextDecoder(
-    label,
-    toTextDecoderOptions(options),
+  return toResult.fromThrows(
+    () => new TextDecoder(label, toTextDecoderOptions(options)),
   );
 };
 
@@ -22,11 +22,11 @@ export const encoding: typeof $textDecoder.encoding = (
   return decoder.encoding;
 };
 
-export const fatal: typeof $textDecoder.fatal = (decoder: TextDecoder) => {
+export const is_fatal: typeof $textDecoder.is_fatal = (decoder: TextDecoder) => {
   return decoder.fatal;
 };
 
-export const ignore_bom: typeof $textDecoder.ignore_bom = (
+export const is_ignore_bom: typeof $textDecoder.is_ignore_bom = (
   decoder: TextDecoder,
 ) => {
   return decoder.ignoreBOM;
@@ -36,11 +36,11 @@ export const decode_chunk: typeof $textDecoder.decode_chunk = (
   decoder: TextDecoder,
   input: ArrayBuffer,
 ) => {
-  return decoder.decode(input, { stream: true });
+  return toResult.fromThrows(() => decoder.decode(input, { stream: true }));
 };
 
 export const flush: typeof $textDecoder.flush = (decoder: TextDecoder) => {
-  return decoder.decode();
+  return toResult.fromThrows(() => decoder.decode());
 };
 
 export const decode: typeof $textDecoder.decode = (
@@ -54,5 +54,7 @@ export const decode_with: typeof $textDecoder.decode_with = (
   label,
   options,
 ) => {
-  return new TextDecoder(label, toTextDecoderOptions(options)).decode(input);
+  return toResult.fromThrows(
+    () => new TextDecoder(label, toTextDecoderOptions(options)).decode(input),
+  );
 };

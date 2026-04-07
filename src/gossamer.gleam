@@ -2,7 +2,6 @@ import gossamer/promise.{type Promise}
 import gossamer/request.{type Request}
 import gossamer/request_init.{type RequestInit}
 import gossamer/response.{type Response}
-import gleam/option.{type Option}
 
 @external(javascript, "./gossamer.type.ts", "Date$")
 pub type Date
@@ -11,7 +10,7 @@ pub type Date
 /// the `Response` to that `Request`, whether it is successful or not.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_")
-pub fn fetch(url: String) -> Promise(Response)
+pub fn fetch(url: String) -> Promise(Result(Response, String))
 
 /// Fetch a resource from the network with options.
 ///
@@ -19,12 +18,12 @@ pub fn fetch(url: String) -> Promise(Response)
 pub fn fetch_with_init(
   url: String,
   init: List(RequestInit),
-) -> Promise(Response)
+) -> Promise(Result(Response, String))
 
 /// Fetch a resource from the network using a `Request` object.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_request")
-pub fn fetch_request(request: Request) -> Promise(Response)
+pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
 
 @external(javascript, "./gossamer.ffi.mjs", "alert")
 pub fn alert(message: String) -> Nil
@@ -44,7 +43,7 @@ pub fn close() -> Nil
 pub fn confirm(message: String) -> Bool
 
 @external(javascript, "./gossamer.ffi.mjs", "prompt")
-pub fn prompt(message: String, default: String) -> Option(String)
+pub fn prompt(message: String, default: String) -> Result(String, Nil)
 
 /// A microtask is a short function which is executed after the function or
 /// module which created it exits and only if the JavaScript execution stack is

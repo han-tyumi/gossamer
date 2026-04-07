@@ -18,7 +18,7 @@ pub type WebSocket
 /// ```
 ///
 @external(javascript, "./web_socket.ffi.mjs", "new_")
-pub fn new(url: String) -> WebSocket
+pub fn new(url: String) -> Result(WebSocket, String)
 
 /// Creates a new `WebSocket` connection to the given URL with the
 /// specified sub-protocols.
@@ -30,7 +30,10 @@ pub fn new(url: String) -> WebSocket
 /// ```
 ///
 @external(javascript, "./web_socket.ffi.mjs", "new_with_protocols")
-pub fn new_with_protocols(url: String, protocols: List(String)) -> WebSocket
+pub fn new_with_protocols(
+  url: String,
+  protocols: List(String),
+) -> Result(WebSocket, String)
 
 /// Returns a value that indicates how binary data from the WebSocket object
 /// is exposed to scripts.

@@ -29,7 +29,7 @@ function gleamJsonReviver(_key: string, value: unknown) {
 }
 
 export const parse: typeof $json.parse = (text) => {
-  return toResult.fromThrows(() => JSON.parse(text, gleamJsonReviver), String);
+  return toResult.fromThrows(() => JSON.parse(text, gleamJsonReviver));
 };
 
 function jsonToObject(json: $json.Json$): Json {

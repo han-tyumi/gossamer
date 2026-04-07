@@ -1,7 +1,7 @@
 import type * as $gossamer from "$/gossamer/gossamer.mjs";
 import { toRequestInit } from "~/gossamer/request_init.ts";
 import { toArray } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Date$ = Date;
 
@@ -26,7 +26,7 @@ export const confirm: typeof $gossamer.confirm = (message) => {
 };
 
 export const prompt: typeof $gossamer.prompt = (message, defaultValue) => {
-  return toOption(globalThis.prompt(message, defaultValue));
+  return toResult(globalThis.prompt(message, defaultValue));
 };
 
 export const queue_microtask: typeof $gossamer.queue_microtask = (func) => {
@@ -46,13 +46,15 @@ export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
 };
 
 export const fetch_: typeof $gossamer.fetch = (url) => {
-  return globalThis.fetch(url);
+  return toResult.fromPromise(globalThis.fetch(url));
 };
 
 export const fetch_with_init: typeof $gossamer.fetch_with_init = (url, init) => {
-  return globalThis.fetch(url, toRequestInit(toArray(init)));
+  return toResult.fromPromise(
+    globalThis.fetch(url, toRequestInit(toArray(init))),
+  );
 };
 
 export const fetch_request: typeof $gossamer.fetch_request = (request) => {
-  return globalThis.fetch(request);
+  return toResult.fromPromise(globalThis.fetch(request));
 };

@@ -5,7 +5,6 @@ import gossamer/request_init
 import gossamer/response
 import gossamer/response_init
 
-import gleam/option.{Some}
 import gleeunit/should
 
 pub fn headers_new_test() {
@@ -15,7 +14,7 @@ pub fn headers_new_test() {
 
 pub fn headers_from_pairs_test() {
   let hdrs = headers.from_pairs([#("content-type", "text/plain")])
-  headers.get(hdrs, "content-type") |> should.equal(Some("text/plain"))
+  headers.get(hdrs, "content-type") |> should.equal(Ok("text/plain"))
 }
 
 pub fn headers_append_test() {
@@ -23,14 +22,14 @@ pub fn headers_append_test() {
   headers.append(hdrs, "x-custom", "value1")
   headers.append(hdrs, "x-custom", "value2")
   headers.get(hdrs, "x-custom")
-  |> should.equal(Some("value1, value2"))
+  |> should.equal(Ok("value1, value2"))
 }
 
 pub fn headers_set_test() {
   let hdrs = headers.new()
   headers.set(hdrs, "x-custom", "value1")
   headers.set(hdrs, "x-custom", "value2")
-  headers.get(hdrs, "x-custom") |> should.equal(Some("value2"))
+  headers.get(hdrs, "x-custom") |> should.equal(Ok("value2"))
 }
 
 pub fn headers_delete_test() {
@@ -50,13 +49,13 @@ pub fn headers_entries_test() {
 }
 
 pub fn request_new_test() {
-  let req = request.new("https://example.org/foo")
+  let assert Ok(req) = request.new("https://example.org/foo")
   request.method(req) |> should.equal("GET")
   request.url(req) |> should.equal("https://example.org/foo")
 }
 
 pub fn request_new_with_init_test() {
-  let req =
+  let assert Ok(req) =
     request.new_with_init("https://example.org", [
       request_init.Method("POST"),
     ])
@@ -64,48 +63,48 @@ pub fn request_new_with_init_test() {
 }
 
 pub fn request_headers_test() {
-  let req =
+  let assert Ok(req) =
     request.new_with_init("https://example.org", [
       request_init.Headers(
         headers.from_pairs([#("content-type", "application/json")]),
       ),
     ])
   headers.get(request.headers(req), "content-type")
-  |> should.equal(Some("application/json"))
+  |> should.equal(Ok("application/json"))
 }
 
 pub fn request_text_test() {
-  let req =
+  let assert Ok(req) =
     request.new_with_init("https://example.org", [
       request_init.Method("POST"),
       request_init.Body("hello"),
     ])
   use text <- promise.then(request.text(req))
-  should.equal(text, "hello")
+  should.equal(text, Ok("hello"))
 }
 
 pub fn response_new_test() {
-  let resp = response.new("hello")
+  let assert Ok(resp) = response.new("hello")
   response.status(resp) |> should.equal(200)
-  response.ok(resp) |> should.be_true()
+  response.is_ok(resp) |> should.be_true()
 }
 
 pub fn response_new_with_init_test() {
-  let resp =
+  let assert Ok(resp) =
     response.new_with_init("not found", [
       response_init.Status(404),
       response_init.StatusText("Not Found"),
     ])
   response.status(resp) |> should.equal(404)
   response.status_text(resp) |> should.equal("Not Found")
-  response.ok(resp) |> should.be_false()
+  response.is_ok(resp) |> should.be_false()
 }
 
 
 pub fn response_text_test() {
-  let resp = response.new("hello world")
+  let assert Ok(resp) = response.new("hello world")
   use text <- promise.then(response.text(resp))
-  should.equal(text, "hello world")
+  should.equal(text, Ok("hello world"))
 }
 
 pub fn response_error_test() {
@@ -119,14 +118,14 @@ pub fn response_redirect_test() {
 }
 
 pub fn response_clone_test() {
-  let resp = response.new("hello")
+  let assert Ok(resp) = response.new("hello")
   let cloned = response.clone(resp)
   use text <- promise.then(response.text(cloned))
-  should.equal(text, "hello")
+  should.equal(text, Ok("hello"))
 }
 
 pub fn response_get_not_found_test() {
-  let resp = response.new_with_init("", [response_init.Status(404)])
-  response.ok(resp) |> should.be_false()
+  let assert Ok(resp) = response.new_with_init("", [response_init.Status(404)])
+  response.is_ok(resp) |> should.be_false()
   response.status(resp) |> should.equal(404)
 }

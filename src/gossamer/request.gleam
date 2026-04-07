@@ -6,7 +6,6 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/request_init.{type RequestInit}
 import gossamer/uint8_array.{type Uint8Array}
 import gleam/dynamic.{type Dynamic}
-import gleam/option.{type Option}
 
 /// This Fetch API interface represents a resource request.
 ///
@@ -14,10 +13,13 @@ import gleam/option.{type Option}
 pub type Request
 
 @external(javascript, "./request.ffi.mjs", "new_")
-pub fn new(input: String) -> Request
+pub fn new(input: String) -> Result(Request, String)
 
 @external(javascript, "./request.ffi.mjs", "new_with_init")
-pub fn new_with_init(input: String, init: List(RequestInit)) -> Request
+pub fn new_with_init(
+  input: String,
+  init: List(RequestInit),
+) -> Result(Request, String)
 
 /// Returns request's HTTP method, which is "GET" by default.
 ///
@@ -89,20 +91,8 @@ pub fn mode(request: Request) -> String
 /// Returns a boolean indicating whether or not request can outlive the global
 /// in which it was created.
 ///
-@external(javascript, "./request.ffi.mjs", "keepalive")
-pub fn keepalive(request: Request) -> Bool
-
-/// Returns a boolean indicating whether or not request is for a history
-/// navigation (a.k.a. back-forward navigation).
-///
-@external(javascript, "./request.ffi.mjs", "is_history_navigation")
-pub fn is_history_navigation(request: Request) -> Bool
-
-/// Returns a boolean indicating whether or not request is for a reload
-/// navigation.
-///
-@external(javascript, "./request.ffi.mjs", "is_reload_navigation")
-pub fn is_reload_navigation(request: Request) -> Bool
+@external(javascript, "./request.ffi.mjs", "is_keepalive")
+pub fn is_keepalive(request: Request) -> Bool
 
 /// Returns request's subresource integrity metadata.
 ///
@@ -115,34 +105,34 @@ pub fn clone(request: Request) -> Request
 /// A simple getter used to expose a `ReadableStream` of the body contents.
 ///
 @external(javascript, "./request.ffi.mjs", "body")
-pub fn body(request: Request) -> Option(ReadableStream(Uint8Array))
+pub fn body(request: Request) -> Result(ReadableStream(Uint8Array), Nil)
 
 /// Stores a `Boolean` that declares whether the body has been used in a
 /// response yet.
 ///
-@external(javascript, "./request.ffi.mjs", "body_used")
-pub fn body_used(request: Request) -> Bool
+@external(javascript, "./request.ffi.mjs", "is_body_used")
+pub fn is_body_used(request: Request) -> Bool
 
-/// Takes a `Response` stream and reads it to completion. It returns a promise
+/// Takes a `Request` stream and reads it to completion. It returns a promise
 /// that resolves with an `ArrayBuffer`.
 ///
 @external(javascript, "./request.ffi.mjs", "array_buffer")
-pub fn array_buffer(request: Request) -> Promise(ArrayBuffer)
+pub fn array_buffer(request: Request) -> Promise(Result(ArrayBuffer, String))
 
-/// Takes a `Response` stream and reads it to completion. It returns a promise
+/// Takes a `Request` stream and reads it to completion. It returns a promise
 /// that resolves with a `Uint8Array`.
 ///
 @external(javascript, "./request.ffi.mjs", "bytes")
-pub fn bytes(request: Request) -> Promise(Uint8Array)
+pub fn bytes(request: Request) -> Promise(Result(Uint8Array, String))
 
-/// Takes a `Response` stream and reads it to completion. It returns a promise
+/// Takes a `Request` stream and reads it to completion. It returns a promise
 /// that resolves with the result of parsing the body text as JSON.
 ///
 @external(javascript, "./request.ffi.mjs", "json")
-pub fn json(request: Request) -> Promise(Dynamic)
+pub fn json(request: Request) -> Promise(Result(Dynamic, String))
 
-/// Takes a `Response` stream and reads it to completion. It returns a promise
+/// Takes a `Request` stream and reads it to completion. It returns a promise
 /// that resolves with a `USVString` (text).
 ///
 @external(javascript, "./request.ffi.mjs", "text")
-pub fn text(request: Request) -> Promise(String)
+pub fn text(request: Request) -> Promise(Result(String, String))

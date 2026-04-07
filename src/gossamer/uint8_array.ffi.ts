@@ -2,7 +2,7 @@ import type * as $uint8Array from "$/gossamer/gossamer/uint8_array.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import { fromArray, toArray } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Uint8Array$ = Uint8Array;
 
@@ -39,7 +39,7 @@ export const length: typeof $uint8Array.length = (array) => {
 };
 
 export const at: typeof $uint8Array.at = (array, index) => {
-  return toOption(array.at(index));
+  return toResult(array.at(index));
 };
 
 export const includes: typeof $uint8Array.includes = (array, value) => {
@@ -175,11 +175,11 @@ export const index_some: typeof $uint8Array.index_some = (array, predicate) => {
 };
 
 export const find: typeof $uint8Array.find = (array, predicate) => {
-  return toOption(array.find((value) => predicate(value)));
+  return toResult(array.find((value) => predicate(value)));
 };
 
 export const index_find: typeof $uint8Array.index_find = (array, predicate) => {
-  return toOption(array.find((value, index) => predicate(value, index)));
+  return toResult(array.find((value, index) => predicate(value, index)));
 };
 
 export const find_index: typeof $uint8Array.find_index = (array, predicate) => {
@@ -194,14 +194,14 @@ export const index_find_index: typeof $uint8Array.index_find_index = (
 };
 
 export const find_last: typeof $uint8Array.find_last = (array, predicate) => {
-  return toOption(array.findLast((value) => predicate(value)));
+  return toResult(array.findLast((value) => predicate(value)));
 };
 
 export const index_find_last: typeof $uint8Array.index_find_last = (
   array,
   predicate,
 ) => {
-  return toOption(array.findLast((value, index) => predicate(value, index)));
+  return toResult(array.findLast((value, index) => predicate(value, index)));
 };
 
 export const find_last_index: typeof $uint8Array.find_last_index = (

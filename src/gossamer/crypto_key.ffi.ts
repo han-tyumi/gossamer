@@ -9,7 +9,7 @@ export const algorithm: typeof $cryptoKey.algorithm = (key) => {
   return key.algorithm;
 };
 
-export const extractable: typeof $cryptoKey.extractable = (key) => {
+export const is_extractable: typeof $cryptoKey.is_extractable = (key) => {
   return key.extractable;
 };
 

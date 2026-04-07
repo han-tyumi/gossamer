@@ -25,20 +25,22 @@ pub fn blob_from_bytes_test() {
 pub fn blob_text_test() {
   let b = blob.from_string("hello world")
   use text <- promise.then(blob.text(b))
-  should.equal(text, "hello world")
+  should.equal(text, Ok("hello world"))
   promise.resolve(Nil)
 }
 
 pub fn blob_array_buffer_test() {
   let b = blob.from_string("hi")
-  use buffer <- promise.then(blob.array_buffer(b))
+  use result <- promise.then(blob.array_buffer(b))
+  let assert Ok(buffer) = result
   should.equal(array_buffer.byte_length(buffer), 2)
   promise.resolve(Nil)
 }
 
 pub fn blob_bytes_test() {
   let b = blob.from_bytes(uint8_array.from_list([10, 20, 30]))
-  use bytes <- promise.then(blob.bytes(b))
+  use result <- promise.then(blob.bytes(b))
+  let assert Ok(bytes) = result
   should.equal(uint8_array.byte_length(bytes), 3)
   promise.resolve(Nil)
 }
@@ -47,7 +49,7 @@ pub fn blob_slice_test() {
   let b = blob.from_string("hello world")
   let sliced = blob.slice(b, 0, 5)
   use text <- promise.then(blob.text(sliced))
-  should.equal(text, "hello")
+  should.equal(text, Ok("hello"))
   promise.resolve(Nil)
 }
 

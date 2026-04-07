@@ -1,5 +1,4 @@
 import gossamer/promise.{type Promise}
-import gleam/option.{type Option}
 
 @external(javascript, "./writer.type.ts", "Writer$")
 pub type Writer(a)
@@ -8,7 +7,7 @@ pub type Writer(a)
 pub fn closed(writer: Writer(a)) -> Promise(Nil)
 
 @external(javascript, "./writer.ffi.mjs", "desired_size")
-pub fn desired_size(writer: Writer(a)) -> Option(Int)
+pub fn desired_size(writer: Writer(a)) -> Result(Int, Nil)
 
 @external(javascript, "./writer.ffi.mjs", "ready")
 pub fn ready(writer: Writer(a)) -> Promise(Nil)

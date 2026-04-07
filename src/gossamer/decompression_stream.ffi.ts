@@ -1,10 +1,11 @@
 import type * as $decompressionStream from "$/gossamer/gossamer/decompression_stream.mjs";
 import { toCompressionFormat } from "~/gossamer/compression_format.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type DecompressionStream$ = DecompressionStream;
 
 export const new_: typeof $decompressionStream.new$ = (format) => {
-  return new DecompressionStream(toCompressionFormat(format));
+  return toResult.fromThrows(() => new DecompressionStream(toCompressionFormat(format)));
 };
 
 export const readable: typeof $decompressionStream.readable = (stream) => {

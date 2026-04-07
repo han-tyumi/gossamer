@@ -1,5 +1,6 @@
 import type * as $textDecoderStream from "$/gossamer/gossamer/text_decoder_stream.mjs";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder/text_decoder_option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type TextDecoderStream$ = TextDecoderStream;
 
@@ -11,7 +12,9 @@ export const new_with: typeof $textDecoderStream.new_with = (
   label,
   options,
 ) => {
-  return new TextDecoderStream(label, toTextDecoderOptions(options));
+  return toResult.fromThrows(
+    () => new TextDecoderStream(label, toTextDecoderOptions(options)),
+  );
 };
 
 export const readable: typeof $textDecoderStream.readable = (
@@ -32,13 +35,13 @@ export const encoding: typeof $textDecoderStream.encoding = (
   return decoder.encoding;
 };
 
-export const fatal: typeof $textDecoderStream.fatal = (
+export const is_fatal: typeof $textDecoderStream.is_fatal = (
   decoder: TextDecoderStream,
 ) => {
   return decoder.fatal;
 };
 
-export const ignore_bom: typeof $textDecoderStream.ignore_bom = (
+export const is_ignore_bom: typeof $textDecoderStream.is_ignore_bom = (
   decoder: TextDecoderStream,
 ) => {
   return decoder.ignoreBOM;

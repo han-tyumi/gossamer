@@ -32,8 +32,8 @@ pub fn from_pull(
 @external(javascript, "./readable_stream.ffi.mjs", "from")
 pub fn from(iterable: a) -> ReadableStream(b)
 
-@external(javascript, "./readable_stream.ffi.mjs", "locked")
-pub fn locked(stream: ReadableStream(a)) -> Bool
+@external(javascript, "./readable_stream.ffi.mjs", "is_locked")
+pub fn is_locked(stream: ReadableStream(a)) -> Bool
 
 @external(javascript, "./readable_stream.ffi.mjs", "cancel")
 pub fn cancel(stream: ReadableStream(a), reason: r) -> Promise(Nil)

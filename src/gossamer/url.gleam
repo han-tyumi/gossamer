@@ -1,5 +1,4 @@
 import gossamer/url_search_params.{type URLSearchParams}
-import gleam/option.{type Option}
 
 /// The URL interface represents an object providing static methods used for
 /// creating, parsing, and manipulating URLs.
@@ -7,28 +6,28 @@ import gleam/option.{type Option}
 @external(javascript, "./url.type.ts", "URL$")
 pub type URL
 
-/// Creates a new URL object by parsing the specified URL string. Throws a
-/// TypeError if the URL is invalid.
+/// Creates a new URL object by parsing the specified URL string. Returns an
+/// error if the URL is invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "new_")
-pub fn new(url: String) -> URL
+pub fn new(url: String) -> Result(URL, String)
 
 /// Creates a new URL object by parsing the specified URL string with a base
-/// URL. Throws a TypeError if the URL is invalid.
+/// URL. Returns an error if the URL is invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "new_with_base")
-pub fn new_with_base(url: String, base: String) -> URL
+pub fn new_with_base(url: String, base: String) -> Result(URL, String)
 
-/// Parses a URL string and returns a URL object, or `None` if invalid.
+/// Parses a URL string and returns a URL object, or an error if invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "parse")
-pub fn parse(url: String) -> Option(URL)
+pub fn parse(url: String) -> Result(URL, Nil)
 
 /// Parses a URL string relative to a base URL and returns a URL object, or
-/// `None` if invalid.
+/// an error if invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "parse_with_base")
-pub fn parse_with_base(url: String, base: String) -> Option(URL)
+pub fn parse_with_base(url: String, base: String) -> Result(URL, Nil)
 
 /// Returns a boolean value indicating if a URL string is valid and can be
 /// parsed.

@@ -1,5 +1,4 @@
 import gossamer/array_buffer.{type ArrayBuffer}
-import gleam/option.{type Option}
 import gleam/order.{type Order}
 
 /// A typed array of 8-bit unsigned integer values. The contents are initialized
@@ -55,7 +54,7 @@ pub fn length(array: Uint8Array) -> Int
 /// count back from the last item.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "at")
-pub fn at(array: Uint8Array, index: Int) -> Option(Int)
+pub fn at(array: Uint8Array, index: Int) -> Result(Int, Nil)
 
 /// Determines whether an array includes a certain element, returning true or
 /// false as appropriate.
@@ -203,7 +202,7 @@ pub fn index_some(array: Uint8Array, predicate: fn(Int, Int) -> Bool) -> Bool
 /// true, and `None` otherwise.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "find")
-pub fn find(array: Uint8Array, predicate: fn(Int) -> Bool) -> Option(Int)
+pub fn find(array: Uint8Array, predicate: fn(Int) -> Bool) -> Result(Int, Nil)
 
 /// Returns the value of the first element in the array where predicate is
 /// true, and `None` otherwise. The predicate receives the value and its index.
@@ -212,7 +211,7 @@ pub fn find(array: Uint8Array, predicate: fn(Int) -> Bool) -> Option(Int)
 pub fn index_find(
   array: Uint8Array,
   predicate: fn(Int, Int) -> Bool,
-) -> Option(Int)
+) -> Result(Int, Nil)
 
 /// Returns the index of the first element in the array where predicate is
 /// true, and -1 otherwise.
@@ -233,7 +232,7 @@ pub fn index_find_index(
 /// true, and `None` otherwise.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "find_last")
-pub fn find_last(array: Uint8Array, predicate: fn(Int) -> Bool) -> Option(Int)
+pub fn find_last(array: Uint8Array, predicate: fn(Int) -> Bool) -> Result(Int, Nil)
 
 /// Returns the value of the last element in the array where predicate is
 /// true, and `None` otherwise. The predicate receives the value and its index.
@@ -242,7 +241,7 @@ pub fn find_last(array: Uint8Array, predicate: fn(Int) -> Bool) -> Option(Int)
 pub fn index_find_last(
   array: Uint8Array,
   predicate: fn(Int, Int) -> Bool,
-) -> Option(Int)
+) -> Result(Int, Nil)
 
 /// Returns the index of the last element in the array where predicate is
 /// true, and -1 otherwise.

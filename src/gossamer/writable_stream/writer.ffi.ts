@@ -1,5 +1,5 @@
 import type * as $writer from "$/gossamer/gossamer/writable_stream/writer.mjs";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Writer$<T> = WritableStreamDefaultWriter<T>;
 
@@ -12,7 +12,7 @@ export const closed: typeof $writer.closed = (
 export const desired_size: typeof $writer.desired_size = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toOption(writer.desiredSize);
+  return toResult(writer.desiredSize);
 };
 
 export const ready: typeof $writer.ready = (

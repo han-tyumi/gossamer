@@ -1,24 +1,23 @@
 import gossamer/url
 import gossamer/url_search_params
-import gleam/option.{None, Some}
 import gleeunit/should
 
 pub fn new_test() {
-  let parsed = url.new("https://example.org/foo")
+  let assert Ok(parsed) = url.new("https://example.org/foo")
   url.href(parsed) |> should.equal("https://example.org/foo")
 }
 
 pub fn new_with_base_test() {
-  let parsed = url.new_with_base("/bar", "https://example.org")
+  let assert Ok(parsed) = url.new_with_base("/bar", "https://example.org")
   url.href(parsed) |> should.equal("https://example.org/bar")
 }
 
 pub fn parse_test() {
-  url.parse("https://example.org") |> should.be_some
+  url.parse("https://example.org") |> should.be_ok
 }
 
 pub fn parse_invalid_test() {
-  url.parse("not a url") |> should.equal(None)
+  url.parse("not a url") |> should.equal(Error(Nil))
 }
 
 pub fn can_parse_test() {
@@ -27,7 +26,8 @@ pub fn can_parse_test() {
 }
 
 pub fn properties_test() {
-  let parsed = url.new("https://user:pass@example.org:8080/path?q=1#hash")
+  let assert Ok(parsed) =
+    url.new("https://user:pass@example.org:8080/path?q=1#hash")
   url.hash(parsed) |> should.equal("#hash")
   url.host(parsed) |> should.equal("example.org:8080")
   url.hostname(parsed) |> should.equal("example.org")
@@ -43,20 +43,20 @@ pub fn properties_test() {
 }
 
 pub fn set_pathname_test() {
-  let parsed = url.new("https://example.org/foo")
+  let assert Ok(parsed) = url.new("https://example.org/foo")
   url.set_pathname(parsed, "/bar")
   url.pathname(parsed) |> should.equal("/bar")
 }
 
 pub fn search_params_test() {
-  let parsed = url.new("https://example.org?a=1&b=2")
+  let assert Ok(parsed) = url.new("https://example.org?a=1&b=2")
   let params = url.search_params(parsed)
-  url_search_params.get(params, "a") |> should.equal(Some("1"))
-  url_search_params.get(params, "b") |> should.equal(Some("2"))
+  url_search_params.get(params, "a") |> should.equal(Ok("1"))
+  url_search_params.get(params, "b") |> should.equal(Ok("2"))
 }
 
 pub fn to_string_test() {
-  let parsed = url.new("https://example.org/foo")
+  let assert Ok(parsed) = url.new("https://example.org/foo")
   url.to_string(parsed) |> should.equal("https://example.org/foo")
 }
 
@@ -67,8 +67,8 @@ pub fn url_search_params_new_test() {
 
 pub fn url_search_params_from_string_test() {
   let params = url_search_params.from_string("foo=bar&baz=qux")
-  url_search_params.get(params, "foo") |> should.equal(Some("bar"))
-  url_search_params.get(params, "baz") |> should.equal(Some("qux"))
+  url_search_params.get(params, "foo") |> should.equal(Ok("bar"))
+  url_search_params.get(params, "baz") |> should.equal(Ok("qux"))
 }
 
 pub fn url_search_params_from_pairs_test() {
@@ -93,7 +93,7 @@ pub fn url_search_params_delete_test() {
 pub fn url_search_params_set_test() {
   let params = url_search_params.from_string("a=1")
   url_search_params.set(params, "a", "2")
-  url_search_params.get(params, "a") |> should.equal(Some("2"))
+  url_search_params.get(params, "a") |> should.equal(Ok("2"))
 }
 
 pub fn url_search_params_sort_test() {

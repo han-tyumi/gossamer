@@ -1,5 +1,3 @@
-import gleam/option.{type Option}
-
 /// This Fetch API interface allows you to perform various actions on HTTP
 /// request and response headers. These actions include retrieving, setting,
 /// adding to, and removing. A Headers object has an associated header list,
@@ -29,7 +27,7 @@ pub fn delete(headers: Headers, name: String) -> Headers
 /// `Headers` object with a given name.
 ///
 @external(javascript, "./headers.ffi.mjs", "get")
-pub fn get(headers: Headers, name: String) -> Option(String)
+pub fn get(headers: Headers, name: String) -> Result(String, Nil)
 
 /// Returns a boolean stating whether a `Headers` object contains a certain
 /// header.

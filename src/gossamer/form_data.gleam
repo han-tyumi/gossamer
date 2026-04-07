@@ -1,6 +1,5 @@
 import gossamer/blob.{type Blob}
 import gossamer/file.{type File}
-import gleam/option.{type Option}
 
 @external(javascript, "./form_data.type.ts", "FormData$")
 pub type FormData
@@ -26,10 +25,10 @@ pub fn append_blob_with_filename(
 pub fn delete(form_data: FormData, name: String) -> FormData
 
 @external(javascript, "./form_data.ffi.mjs", "get")
-pub fn get(form_data: FormData, name: String) -> Option(String)
+pub fn get(form_data: FormData, name: String) -> Result(String, Nil)
 
 @external(javascript, "./form_data.ffi.mjs", "get_file")
-pub fn get_file(form_data: FormData, name: String) -> Option(File)
+pub fn get_file(form_data: FormData, name: String) -> Result(File, Nil)
 
 @external(javascript, "./form_data.ffi.mjs", "get_all")
 pub fn get_all(form_data: FormData, name: String) -> List(String)

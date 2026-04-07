@@ -20,8 +20,9 @@ pub fn gzip_round_trip_test() {
       default_controller.close(controller)
     })
 
-  let compressor = compression_stream.new(compression_format.Gzip)
-  let decompressor = decompression_stream.new(compression_format.Gzip)
+  let assert Ok(compressor) = compression_stream.new(compression_format.Gzip)
+  let assert Ok(decompressor) =
+    decompression_stream.new(compression_format.Gzip)
 
   let output =
     input

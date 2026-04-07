@@ -1,4 +1,5 @@
 import type * as $blob from "$/gossamer/gossamer/blob.mjs";
+import { toResult } from "~/utils/result.ts";
 
 export type Blob$ = Blob;
 
@@ -37,11 +38,11 @@ export const type_: typeof $blob.type_ = (blob) => {
 };
 
 export const array_buffer: typeof $blob.array_buffer = (blob) => {
-  return blob.arrayBuffer();
+  return toResult.fromPromise(blob.arrayBuffer());
 };
 
 export const bytes: typeof $blob.bytes = (blob) => {
-  return blob.bytes();
+  return toResult.fromPromise(blob.bytes());
 };
 
 export const slice: typeof $blob.slice = (blob, start, end) => {
@@ -62,5 +63,5 @@ export const stream: typeof $blob.stream = (blob) => {
 };
 
 export const text: typeof $blob.text = (blob) => {
-  return blob.text();
+  return toResult.fromPromise(blob.text());
 };

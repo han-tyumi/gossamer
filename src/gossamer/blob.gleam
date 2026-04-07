@@ -43,10 +43,10 @@ pub fn size(blob: Blob) -> Int
 pub fn type_(blob: Blob) -> String
 
 @external(javascript, "./blob.ffi.mjs", "array_buffer")
-pub fn array_buffer(blob: Blob) -> Promise(ArrayBuffer)
+pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./blob.ffi.mjs", "bytes")
-pub fn bytes(blob: Blob) -> Promise(Uint8Array)
+pub fn bytes(blob: Blob) -> Promise(Result(Uint8Array, String))
 
 @external(javascript, "./blob.ffi.mjs", "slice")
 pub fn slice(blob: Blob, start: Int, end: Int) -> Blob
@@ -63,4 +63,4 @@ pub fn slice_with_type(
 pub fn stream(blob: Blob) -> ReadableStream(Uint8Array)
 
 @external(javascript, "./blob.ffi.mjs", "text")
-pub fn text(blob: Blob) -> Promise(String)
+pub fn text(blob: Blob) -> Promise(Result(String, String))

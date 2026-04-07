@@ -12,7 +12,7 @@ pub fn new() -> TextDecoderStream
 pub fn new_with(
   label: String,
   options: List(TextDecoderOption),
-) -> TextDecoderStream
+) -> Result(TextDecoderStream, String)
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "readable")
 pub fn readable(decoder: TextDecoderStream) -> ReadableStream(String)
@@ -23,11 +23,11 @@ pub fn writable(decoder: TextDecoderStream) -> WritableStream(w)
 @external(javascript, "./text_decoder_stream.ffi.mjs", "encoding")
 pub fn encoding(decoder: TextDecoderStream) -> String
 
-@external(javascript, "./text_decoder_stream.ffi.mjs", "fatal")
-pub fn fatal(decoder: TextDecoderStream) -> Bool
+@external(javascript, "./text_decoder_stream.ffi.mjs", "is_fatal")
+pub fn is_fatal(decoder: TextDecoderStream) -> Bool
 
-@external(javascript, "./text_decoder_stream.ffi.mjs", "ignore_bom")
-pub fn ignore_bom(decoder: TextDecoderStream) -> Bool
+@external(javascript, "./text_decoder_stream.ffi.mjs", "is_ignore_bom")
+pub fn is_ignore_bom(decoder: TextDecoderStream) -> Bool
 
 pub fn read_write_pair(
   decoder: TextDecoderStream,

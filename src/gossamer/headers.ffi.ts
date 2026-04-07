@@ -1,6 +1,6 @@
 import type * as $headers from "$/gossamer/gossamer/headers.mjs";
 import { fromArray, toArray } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Headers$ = Headers;
 
@@ -23,7 +23,7 @@ export const delete_: typeof $headers.delete$ = (headers, name) => {
 };
 
 export const get: typeof $headers.get = (headers, name) => {
-  return toOption(headers.get(name));
+  return toResult(headers.get(name));
 };
 
 export const has: typeof $headers.has = (headers, name) => {

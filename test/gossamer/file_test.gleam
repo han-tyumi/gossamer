@@ -9,7 +9,7 @@ pub fn file_from_strings_test() {
 
   let b = file.to_blob(f)
   use text <- promise.then(blob.text(b))
-  should.equal(text, "hello world")
+  should.equal(text, Ok("hello world"))
   promise.resolve(Nil)
 }
 
@@ -20,7 +20,7 @@ pub fn file_from_blob_test() {
 
   let converted = file.to_blob(f)
   use text <- promise.then(blob.text(converted))
-  should.equal(text, "blob content")
+  should.equal(text, Ok("blob content"))
   promise.resolve(Nil)
 }
 

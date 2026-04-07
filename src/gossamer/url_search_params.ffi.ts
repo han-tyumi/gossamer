@@ -1,6 +1,6 @@
 import type * as $urlSearchParams from "$/gossamer/gossamer/url_search_params.mjs";
 import { fromArray, toArray } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type URLSearchParams$ = URLSearchParams;
 
@@ -36,7 +36,7 @@ export const delete_value: typeof $urlSearchParams.delete_value = (
 };
 
 export const get: typeof $urlSearchParams.get = (params, name) => {
-  return toOption(params.get(name));
+  return toResult(params.get(name));
 };
 
 export const get_all: typeof $urlSearchParams.get_all = (params, name) => {

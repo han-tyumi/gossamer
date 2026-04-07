@@ -1,5 +1,3 @@
-import gleam/option.{type Option}
-
 /// URLSearchParams provides methods for working with the query string of a URL.
 ///
 @external(javascript, "./url_search_params.type.ts", "URLSearchParams$")
@@ -42,7 +40,7 @@ pub fn delete_value(
 /// Returns the first value associated to the given search parameter.
 ///
 @external(javascript, "./url_search_params.ffi.mjs", "get")
-pub fn get(params: URLSearchParams, name: String) -> Option(String)
+pub fn get(params: URLSearchParams, name: String) -> Result(String, Nil)
 
 /// Returns all the values associated with a given search parameter as a
 /// list.

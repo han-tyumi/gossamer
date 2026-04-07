@@ -17,8 +17,8 @@ pub fn from_write(
   new([underlying_sink.Write(write)])
 }
 
-@external(javascript, "./writable_stream.ffi.mjs", "locked")
-pub fn locked(stream: WritableStream(a)) -> Bool
+@external(javascript, "./writable_stream.ffi.mjs", "is_locked")
+pub fn is_locked(stream: WritableStream(a)) -> Bool
 
 @external(javascript, "./writable_stream.ffi.mjs", "abort")
 pub fn abort(stream: WritableStream(a), reason: r) -> Promise(Nil)

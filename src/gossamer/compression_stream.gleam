@@ -27,11 +27,10 @@ pub type CompressionStream
 /// Creates a new `CompressionStream` object which compresses a stream of
 /// data.
 ///
-/// Throws a `TypeError` if the format passed to the constructor is not
-/// supported.
+/// Returns an error if the format is not supported.
 ///
 @external(javascript, "./compression_stream.ffi.mjs", "new_")
-pub fn new(format: CompressionFormat) -> CompressionStream
+pub fn new(format: CompressionFormat) -> Result(CompressionStream, String)
 
 @external(javascript, "./compression_stream.ffi.mjs", "readable")
 pub fn readable(stream: CompressionStream) -> ReadableStream(Uint8Array)

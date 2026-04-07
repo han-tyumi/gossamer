@@ -8,7 +8,7 @@ export const new_: typeof $writableStream.new$ = (sink) => {
   return new WritableStream(toUnderlyingSink(toArray(sink)));
 };
 
-export const locked: typeof $writableStream.locked = (
+export const is_locked: typeof $writableStream.is_locked = (
   stream: WritableStream,
 ) => {
   return stream.locked;
