@@ -1,5 +1,5 @@
 name = "gossamer"
-version = "4.0.0"
+version = "4.0.1"
 gleam = ">= 1.14.0"
 description = "Web API bindings for Gleam"
 licences = ["Apache-2.0"]

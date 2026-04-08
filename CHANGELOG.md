@@ -1,3 +1,9 @@
+## 4.0.1 (2026-04-08)
+
+### Fixes
+
+- widen Uint8Array type to accept ArrayBufferLike
+
 ## 4.0.0 (2026-04-08)
 
 ### Breaking Changes
