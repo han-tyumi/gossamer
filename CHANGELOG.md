@@ -1,3 +1,20 @@
+## 4.0.0 (2026-04-08)
+
+### Breaking Changes
+
+- correct types and error handling from audit
+- Removes alert, close, confirm, prompt, report_error. Changes return types on
+  console, response.json, crypto_key.algorithm, subtle_crypto.digest,
+  user_agent, async_iterator return/throw, and reader.read.
+
+### Features
+
+- add URLPattern, DOMException, and Error types modules
+
+### Fixes
+
+- improve type safety, add tests, and remove non-cross-runtime APIs
+
 ## 3.4.0 (2026-04-07)
 
 ### Features
