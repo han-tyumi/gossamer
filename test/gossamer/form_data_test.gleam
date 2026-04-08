@@ -66,3 +66,59 @@ pub fn form_data_get_all_files_test() {
     _ -> should.fail()
   }
 }
+
+pub fn form_data_append_blob_test() {
+  let b = blob.from_string("blob data")
+  let fd =
+    form_data.new()
+    |> form_data.append_blob("upload", b)
+  form_data.has(fd, "upload") |> should.be_true
+}
+
+pub fn form_data_set_blob_test() {
+  let b = blob.from_string("blob data")
+  let fd =
+    form_data.new()
+    |> form_data.set_blob("field", b)
+  form_data.has(fd, "field") |> should.be_true
+}
+
+pub fn form_data_set_blob_with_filename_test() {
+  let b = blob.from_string("named blob")
+  let fd =
+    form_data.new()
+    |> form_data.set_blob_with_filename("upload", b, "named.txt")
+  let assert Ok(f) = form_data.get_file(fd, "upload")
+  file.name(f) |> should.equal("named.txt")
+}
+
+pub fn form_data_get_all_test() {
+  let fd =
+    form_data.new()
+    |> form_data.append("key", "first")
+    |> form_data.append("key", "second")
+  form_data.get_all(fd, "key") |> should.equal(["first", "second"])
+}
+
+pub fn form_data_values_test() {
+  let fd =
+    form_data.new()
+    |> form_data.append("a", "1")
+    |> form_data.append("b", "2")
+  form_data.values(fd) |> should.equal(["1", "2"])
+}
+
+pub fn form_data_entries_test() {
+  let fd =
+    form_data.new()
+    |> form_data.append("a", "1")
+    |> form_data.append("b", "2")
+  form_data.entries(fd) |> should.equal([#("a", "1"), #("b", "2")])
+}
+
+pub fn form_data_for_each_test() {
+  let fd =
+    form_data.new()
+    |> form_data.append("x", "10")
+  form_data.for_each(fd, fn(_value, _name) { Nil })
+}

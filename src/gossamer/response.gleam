@@ -21,7 +21,7 @@ pub fn new_with_init(
 ) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "json")
-pub fn json(data: Dynamic, init: List(ResponseInit)) -> Response
+pub fn json(data: a, init: List(ResponseInit)) -> Response
 
 @external(javascript, "./response.ffi.mjs", "error")
 pub fn error() -> Response

@@ -4,6 +4,10 @@ import gossamer/close_event.{type CloseEvent}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
 
+// TODO: Most WebSocket functions are untested — requires a live WebSocket
+// server which can't be created cross-runtime from pure Gleam. Only `new`,
+// `new_with_protocols`, `ready_state`, and `close` are tested.
+
 /// Provides the API for creating and managing a WebSocket connection to a
 /// server, as well as for sending and receiving data on the connection.
 ///

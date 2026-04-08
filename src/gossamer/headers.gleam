@@ -7,9 +7,16 @@ pub fn new() -> Headers
 @external(javascript, "./headers.ffi.mjs", "from_pairs")
 pub fn from_pairs(pairs: List(#(String, String))) -> Headers
 
+/// Appends a new value onto an existing header, or adds the header if it does
+/// not already exist. Mutates the headers in-place and returns them for
+/// chaining.
+///
 @external(javascript, "./headers.ffi.mjs", "append")
 pub fn append(headers: Headers, name: String, value: String) -> Headers
 
+/// Deletes a header. Mutates the headers in-place and returns them for
+/// chaining.
+///
 @external(javascript, "./headers.ffi.mjs", "delete_")
 pub fn delete(headers: Headers, name: String) -> Headers
 
@@ -19,6 +26,9 @@ pub fn get(headers: Headers, name: String) -> Result(String, Nil)
 @external(javascript, "./headers.ffi.mjs", "has")
 pub fn has(headers: Headers, name: String) -> Bool
 
+/// Sets a new value for an existing header, or adds the header if it does not
+/// already exist. Mutates the headers in-place and returns them for chaining.
+///
 @external(javascript, "./headers.ffi.mjs", "set")
 pub fn set(headers: Headers, name: String, value: String) -> Headers
 

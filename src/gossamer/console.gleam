@@ -1,7 +1,5 @@
-import gleam/dynamic.{type Dynamic}
-
 @external(javascript, "./console.ffi.mjs", "assert_")
-pub fn assert_(condition: Bool, data: Dynamic) -> Nil
+pub fn assert_(condition: Bool, data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "clear")
 pub fn clear() -> Nil
@@ -13,13 +11,13 @@ pub fn count(label: String) -> Nil
 pub fn count_reset(label: String) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "debug")
-pub fn debug(data: Dynamic) -> Nil
+pub fn debug(data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "dir")
-pub fn dir(item: Dynamic) -> Nil
+pub fn dir(item: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "error")
-pub fn error(data: Dynamic) -> Nil
+pub fn error(data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "group")
 pub fn group(label: String) -> Nil
@@ -31,13 +29,13 @@ pub fn group_collapsed(label: String) -> Nil
 pub fn group_end() -> Nil
 
 @external(javascript, "./console.ffi.mjs", "info")
-pub fn info(data: Dynamic) -> Nil
+pub fn info(data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "log")
-pub fn log(data: Dynamic) -> Nil
+pub fn log(data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "table")
-pub fn table(data: Dynamic) -> Nil
+pub fn table(data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "time")
 pub fn time(label: String) -> Nil
@@ -52,4 +50,4 @@ pub fn time_log(label: String) -> Nil
 pub fn trace() -> Nil
 
 @external(javascript, "./console.ffi.mjs", "warn")
-pub fn warn(data: Dynamic) -> Nil
+pub fn warn(data: a) -> Nil

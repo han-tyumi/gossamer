@@ -1,3 +1,6 @@
+// TODO: Untested — requires a byte stream (UnderlyingSource with type: "bytes")
+// which gossamer doesn't expose yet. Add tests once byte stream support lands.
+
 import gossamer/array_buffer_view.{type ArrayBufferView}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/byob_reader_read_option.{

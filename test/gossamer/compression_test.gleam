@@ -44,7 +44,8 @@ pub fn gzip_round_trip_test() {
   let reader = readable_stream.get_reader(output)
 
   use result <- promise.then(reader.read(reader))
-  case result {
+  let assert Ok(read) = result
+  case read {
     read_result.Value(chunk) -> {
       let text = text_decoder.decode(uint8_array.buffer(chunk))
       should.equal(text, "Hello, compression!")

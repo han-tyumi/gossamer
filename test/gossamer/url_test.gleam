@@ -112,3 +112,102 @@ pub fn url_search_params_entries_test() {
   url_search_params.entries(params)
   |> should.equal([#("a", "1"), #("b", "2")])
 }
+
+// URL setter tests
+
+pub fn set_hash_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_hash(parsed, "#section")
+  url.hash(parsed) |> should.equal("#section")
+}
+
+pub fn set_host_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_host(parsed, "other.org:9090")
+  url.host(parsed) |> should.equal("other.org:9090")
+}
+
+pub fn set_hostname_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_hostname(parsed, "other.org")
+  url.hostname(parsed) |> should.equal("other.org")
+}
+
+pub fn set_href_test() {
+  let assert Ok(parsed) = url.new("https://example.org/old")
+  url.set_href(parsed, "https://other.org/new")
+  url.href(parsed) |> should.equal("https://other.org/new")
+}
+
+pub fn set_password_test() {
+  let assert Ok(parsed) = url.new("https://user@example.org")
+  url.set_password(parsed, "secret")
+  url.password(parsed) |> should.equal("secret")
+}
+
+pub fn set_port_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_port(parsed, "8080")
+  url.port(parsed) |> should.equal("8080")
+}
+
+pub fn set_protocol_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_protocol(parsed, "http:")
+  url.protocol(parsed) |> should.equal("http:")
+}
+
+pub fn set_search_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_search(parsed, "?q=hello")
+  url.search(parsed) |> should.equal("?q=hello")
+}
+
+pub fn set_username_test() {
+  let assert Ok(parsed) = url.new("https://example.org")
+  url.set_username(parsed, "admin")
+  url.username(parsed) |> should.equal("admin")
+}
+
+pub fn parse_with_base_test() {
+  url.parse_with_base("/bar", "https://example.org") |> should.be_ok
+}
+
+pub fn parse_with_base_invalid_test() {
+  url.parse_with_base("://bad", "also bad") |> should.equal(Error(Nil))
+}
+
+pub fn can_parse_with_base_test() {
+  url.can_parse_with_base("/path", "https://example.org") |> should.be_true
+  url.can_parse_with_base("://bad", "also bad") |> should.be_false
+}
+
+pub fn to_json_test() {
+  let assert Ok(parsed) = url.new("https://example.org/foo")
+  url.to_json(parsed) |> should.equal("https://example.org/foo")
+}
+
+// URLSearchParams additional tests
+
+pub fn url_search_params_delete_value_test() {
+  let params = url_search_params.from_string("a=1&a=2&b=3")
+  url_search_params.delete_value(params, "a", "1")
+  url_search_params.get_all(params, "a") |> should.equal(["2"])
+  url_search_params.has(params, "b") |> should.be_true
+}
+
+pub fn url_search_params_has_value_test() {
+  let params = url_search_params.from_string("a=1&a=2")
+  url_search_params.has_value(params, "a", "1") |> should.be_true
+  url_search_params.has_value(params, "a", "3") |> should.be_false
+}
+
+pub fn url_search_params_values_test() {
+  let params = url_search_params.from_string("a=1&b=2")
+  url_search_params.values(params) |> should.equal(["1", "2"])
+}
+
+pub fn url_search_params_for_each_test() {
+  let params = url_search_params.from_string("a=1")
+  url_search_params.for_each(params, fn(_value, _name) { Nil })
+}

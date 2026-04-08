@@ -23,6 +23,11 @@ pub fn from_pull(
   new([underlying_source.Pull(pull)])
 }
 
+/// Creates a `ReadableStream` from an iterable or async iterable.
+///
+/// Note: Not available on Bun.
+/// See https://github.com/oven-sh/bun/issues/3700
+///
 @external(javascript, "./readable_stream.ffi.mjs", "from")
 pub fn from(iterable: a) -> ReadableStream(b)
 

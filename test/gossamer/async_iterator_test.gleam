@@ -1,0 +1,112 @@
+import gleam/option.{None, Some}
+import gleeunit/should
+import gossamer/async_iterator
+import gossamer/iterator_result
+import gossamer/promise
+
+pub fn new_and_next_test() {
+  let iter =
+    async_iterator.new(fn(_next) {
+      promise.resolve(iterator_result.Return(Nil))
+    })
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Return(Nil))
+  promise.resolve(Nil)
+}
+
+pub fn stateful_iterator_test() {
+  let iter =
+    async_iterator.new(fn(next) {
+      case next {
+        None -> promise.resolve(iterator_result.Yield(0))
+        Some(value) ->
+          case value < 2 {
+            True -> promise.resolve(iterator_result.Yield(value + 1))
+            False -> promise.resolve(iterator_result.Return(Nil))
+          }
+      }
+    })
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Yield(0))
+
+  use result <- promise.then(async_iterator.next_with(iter, 0))
+  should.equal(result, iterator_result.Yield(1))
+
+  use result <- promise.then(async_iterator.next_with(iter, 1))
+  should.equal(result, iterator_result.Yield(2))
+
+  use result <- promise.then(async_iterator.next_with(iter, 2))
+  should.equal(result, iterator_result.Return(Nil))
+  promise.resolve(Nil)
+}
+
+pub fn return_no_handler_test() {
+  let iter =
+    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+
+  use result <- promise.then(async_iterator.return(iter))
+  should.be_error(result)
+  promise.resolve(Nil)
+}
+
+pub fn return_with_handler_test() {
+  let iter =
+    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    |> async_iterator.with_return(fn(_value) {
+      promise.resolve(iterator_result.Return(Nil))
+    })
+
+  use result <- promise.then(async_iterator.return(iter))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
+  promise.resolve(Nil)
+}
+
+pub fn return_with_value_test() {
+  let iter =
+    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    |> async_iterator.with_return(fn(value) {
+      case value {
+        Some(val) -> promise.resolve(iterator_result.Return(val))
+        None -> promise.resolve(iterator_result.Return(99))
+      }
+    })
+
+  use result <- promise.then(async_iterator.return_with(iter, 42))
+  should.equal(result, Ok(iterator_result.Return(42)))
+  promise.resolve(Nil)
+}
+
+pub fn throw_no_handler_test() {
+  let iter =
+    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+
+  use result <- promise.then(async_iterator.throw(iter, "error"))
+  should.be_error(result)
+  promise.resolve(Nil)
+}
+
+pub fn throw_with_handler_test() {
+  let iter =
+    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    |> async_iterator.with_throw(fn(_err) {
+      promise.resolve(iterator_result.Return(Nil))
+    })
+
+  use result <- promise.then(async_iterator.throw(iter, "error"))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
+  promise.resolve(Nil)
+}
+
+pub fn for_await_test() {
+  // for_await calls next() without arguments (next is always None).
+  // Use a finite iterator that returns done immediately.
+  let iter =
+    async_iterator.new(fn(_next) {
+      promise.resolve(iterator_result.Return(Nil))
+    })
+
+  use _ <- promise.then(async_iterator.for_await(iter, fn(_value) { Nil }))
+  promise.resolve(Nil)
+}

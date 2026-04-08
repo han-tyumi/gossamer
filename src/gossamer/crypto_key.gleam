@@ -1,4 +1,4 @@
-import gleam/dynamic.{type Dynamic}
+import gossamer/key_algorithm.{type KeyAlgorithm}
 import gossamer/key_type.{type KeyType}
 import gossamer/key_usage.{type KeyUsage}
 
@@ -6,7 +6,7 @@ import gossamer/key_usage.{type KeyUsage}
 pub type CryptoKey
 
 @external(javascript, "./crypto_key.ffi.mjs", "algorithm")
-pub fn algorithm(key: CryptoKey) -> Dynamic
+pub fn algorithm(key: CryptoKey) -> KeyAlgorithm
 
 @external(javascript, "./crypto_key.ffi.mjs", "is_extractable")
 pub fn is_extractable(key: CryptoKey) -> Bool

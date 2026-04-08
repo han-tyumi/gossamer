@@ -311,3 +311,109 @@ pub fn set_from_hex_test() {
   read |> should.equal(10)
   written |> should.equal(5)
 }
+
+pub fn from_list_mapped_test() {
+  let array =
+    uint8_array.from_list_mapped(["a", "bb", "ccc"], fn(str) {
+      case str {
+        "a" -> 1
+        "bb" -> 2
+        "ccc" -> 3
+        _ -> 0
+      }
+    })
+  uint8_array.to_list(array) |> should.equal([1, 2, 3])
+}
+
+pub fn from_buffer_test() {
+  let buffer = uint8_array.from_list([10, 20, 30]) |> uint8_array.buffer
+  let array = uint8_array.from_buffer(buffer)
+  uint8_array.to_list(array) |> should.equal([10, 20, 30])
+}
+
+pub fn copy_within_range_test() {
+  let array = uint8_array.from_list([1, 2, 3, 4, 5])
+  uint8_array.copy_within_range(array, 0, 3, 5)
+  uint8_array.at(array, 0) |> should.equal(Ok(4))
+  uint8_array.at(array, 1) |> should.equal(Ok(5))
+  uint8_array.at(array, 2) |> should.equal(Ok(3))
+}
+
+pub fn index_every_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_every(array, fn(value, index) {
+    value == { index + 1 } * 10
+  })
+  |> should.be_true
+}
+
+pub fn index_some_test() {
+  let array = uint8_array.from_list([1, 2, 3])
+  uint8_array.index_some(array, fn(_value, index) { index == 2 })
+  |> should.be_true
+  uint8_array.index_some(array, fn(_value, index) { index == 5 })
+  |> should.be_false
+}
+
+pub fn index_find_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_find(array, fn(_value, index) { index == 1 })
+  |> should.equal(Ok(20))
+}
+
+pub fn index_find_index_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_find_index(array, fn(value, _index) { value > 15 })
+  |> should.equal(1)
+}
+
+pub fn index_find_last_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_find_last(array, fn(value, _index) { value > 15 })
+  |> should.equal(Ok(30))
+}
+
+pub fn index_find_last_index_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_find_last_index(array, fn(value, _index) { value > 15 })
+  |> should.equal(2)
+}
+
+pub fn index_filter_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  let filtered =
+    uint8_array.index_filter(array, fn(_value, index) { index != 1 })
+  uint8_array.to_list(filtered) |> should.equal([10, 30])
+}
+
+pub fn index_for_each_test() {
+  let array = uint8_array.from_list([1, 2, 3])
+  uint8_array.index_for_each(array, fn(_value, _index) { Nil })
+}
+
+pub fn index_reduce_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_reduce(array, 0, fn(acc, value, index) {
+    acc + value + index
+  })
+  |> should.equal(63)
+}
+
+pub fn index_reduce_right_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.index_reduce_right(array, 0, fn(acc, value, _index) {
+    acc + value
+  })
+  |> should.equal(60)
+}
+
+pub fn index_of_from_test() {
+  let array = uint8_array.from_list([1, 2, 3, 2])
+  uint8_array.index_of_from(array, 2, 2) |> should.equal(3)
+  uint8_array.index_of_from(array, 1, 1) |> should.equal(-1)
+}
+
+pub fn last_index_of_from_test() {
+  let array = uint8_array.from_list([1, 2, 3, 2])
+  uint8_array.last_index_of_from(array, 2, 2) |> should.equal(1)
+}

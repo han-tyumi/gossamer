@@ -30,12 +30,27 @@ pub fn url(request: Request) -> String
 @external(javascript, "./request.ffi.mjs", "headers")
 pub fn headers(request: Request) -> Headers
 
+/// Returns the cache mode associated with the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "cache")
 pub fn cache(request: Request) -> String
 
+/// Returns the credentials mode associated with the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "credentials")
 pub fn credentials(request: Request) -> String
 
+/// Returns the kind of resource requested by the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "destination")
 pub fn destination(request: Request) -> String
 
@@ -45,18 +60,43 @@ pub fn redirect(request: Request) -> String
 @external(javascript, "./request.ffi.mjs", "signal")
 pub fn signal(request: Request) -> AbortSignal
 
+/// Returns the referrer of the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "referrer")
 pub fn referrer(request: Request) -> String
 
+/// Returns the referrer policy associated with the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
 pub fn referrer_policy(request: Request) -> String
 
+/// Returns the mode associated with the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "mode")
 pub fn mode(request: Request) -> String
 
+/// Returns whether the request can outlive the global in which it was created.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "is_keepalive")
 pub fn is_keepalive(request: Request) -> Bool
 
+/// Returns the subresource integrity metadata of the request.
+///
+/// Note: Not available on Deno (returns `undefined`).
+/// See https://github.com/denoland/deno/issues/27763
+///
 @external(javascript, "./request.ffi.mjs", "integrity")
 pub fn integrity(request: Request) -> String
 

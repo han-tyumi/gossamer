@@ -1,4 +1,5 @@
 import gleam/dynamic/decode
+import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer
 import gossamer/promise
@@ -77,4 +78,80 @@ pub fn promise_all_settled_test() {
       Nil
     _ -> should.fail()
   }
+}
+
+pub fn try_success_test() {
+  let result_promise = promise.try(fn() { 42 })
+  use result <- promise.then(result_promise)
+  should.equal(result, Ok(42))
+  promise.resolve(Nil)
+}
+
+pub fn try_sync_value_test() {
+  let result_promise = promise.try(fn() { "hello" })
+  use result <- promise.then(result_promise)
+  should.equal(result, Ok("hello"))
+  promise.resolve(Nil)
+}
+
+pub fn try_throwing_test() {
+  let result_promise =
+    promise.try(fn() {
+      let assert Ok(decoded) = gossamer.atob("!!!invalid!!!")
+      decoded
+    })
+  use result <- promise.then(result_promise)
+  should.be_error(result)
+  promise.resolve(Nil)
+}
+
+pub fn finally_test() {
+  let resolvers = promise.with_resolvers()
+  let finally_ran = promise.with_resolvers()
+
+  promise.finally(resolvers.promise, fn() {
+    finally_ran.resolve(True)
+    Nil
+  })
+
+  resolvers.resolve(42)
+
+  use ran <- promise.then(finally_ran.promise)
+  should.be_true(ran)
+  promise.resolve(Nil)
+}
+
+pub fn from_result_ok_test() {
+  let p = promise.from_result(Ok(42))
+  use value <- promise.then(p)
+  should.equal(value, 42)
+  promise.resolve(Nil)
+}
+
+pub fn from_result_error_test() {
+  let p: promise.Promise(String) = promise.from_result(Error("bad"))
+  let recovered =
+    promise.catch(p, fn(reason) {
+      let assert Ok(msg) = decode.run(reason, decode.string)
+      should.equal(msg, "bad")
+      "recovered"
+    })
+  use value <- promise.then(recovered)
+  should.equal(value, "recovered")
+  promise.resolve(Nil)
+}
+
+pub fn from_option_some_test() {
+  let p = promise.from_option(Some(99))
+  use value <- promise.then(p)
+  should.equal(value, 99)
+  promise.resolve(Nil)
+}
+
+pub fn from_option_none_test() {
+  let p: promise.Promise(String) = promise.from_option(None)
+  let recovered = promise.catch(p, fn(_reason) { "caught" })
+  use value <- promise.then(recovered)
+  should.equal(value, "caught")
+  promise.resolve(Nil)
 }

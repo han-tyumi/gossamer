@@ -1,4 +1,5 @@
 import type * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
+import { toKeyAlgorithm } from "~/gossamer/key_algorithm.ts";
 import { toKeyType } from "~/gossamer/key_type.ts";
 import { fromKeyUsage } from "~/gossamer/key_usage.ts";
 import { fromArrayMapped } from "~/utils/list.ts";
@@ -6,7 +7,7 @@ import { fromArrayMapped } from "~/utils/list.ts";
 export type CryptoKey$ = CryptoKey;
 
 export const algorithm: typeof $cryptoKey.algorithm = (key) => {
-  return key.algorithm;
+  return toKeyAlgorithm(key.algorithm);
 };
 
 export const is_extractable: typeof $cryptoKey.is_extractable = (key) => {

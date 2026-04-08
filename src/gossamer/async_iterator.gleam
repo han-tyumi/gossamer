@@ -36,19 +36,19 @@ pub fn next_with(
 @external(javascript, "./async_iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(IteratorResult(a, return))
+) -> Promise(Result(IteratorResult(a, return), Nil))
 
 @external(javascript, "./async_iterator.ffi.mjs", "return_with")
 pub fn return_with(
   iterator: AsyncIterator(a, return, next),
   value: return,
-) -> Promise(IteratorResult(a, return))
+) -> Promise(Result(IteratorResult(a, return), Nil))
 
 @external(javascript, "./async_iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: AsyncIterator(a, return, next),
   e: e,
-) -> Promise(IteratorResult(a, return))
+) -> Promise(Result(IteratorResult(a, return), Nil))
 
 @external(javascript, "./async_iterator.ffi.mjs", "for_await")
 pub fn for_await(

@@ -17,10 +17,6 @@ export const btoa: typeof $gossamer.btoa = (data) => {
   return toResult.fromThrows(() => globalThis.btoa(data));
 };
 
-export const alert: typeof $gossamer.alert = (message) => {
-  globalThis.alert(message);
-};
-
 export const clear_interval: typeof $gossamer.clear_interval = (id) => {
   globalThis.clearInterval(id);
 };
@@ -29,24 +25,8 @@ export const clear_timeout: typeof $gossamer.clear_timeout = (id) => {
   globalThis.clearTimeout(id);
 };
 
-export const close: typeof $gossamer.close = () => {
-  globalThis.close();
-};
-
-export const confirm: typeof $gossamer.confirm = (message) => {
-  return globalThis.confirm(message);
-};
-
-export const prompt: typeof $gossamer.prompt = (message, defaultValue) => {
-  return toResult(globalThis.prompt(message, defaultValue));
-};
-
 export const queue_microtask: typeof $gossamer.queue_microtask = (func) => {
   globalThis.queueMicrotask(func);
-};
-
-export const report_error: typeof $gossamer.report_error = (error) => {
-  globalThis.reportError(error);
 };
 
 export const set_interval: typeof $gossamer.set_interval = (
@@ -61,7 +41,7 @@ export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
 };
 
 export const user_agent: typeof $gossamer.user_agent = () => {
-  return toResult(globalThis.navigator?.userAgent);
+  return globalThis.navigator.userAgent;
 };
 
 export const fetch_: typeof $gossamer.fetch = (url) => {

@@ -11,7 +11,7 @@ pub fn closed(reader: Reader(a)) -> Promise(Nil)
 pub fn cancel(reader: Reader(a), reason: r) -> Promise(Nil)
 
 @external(javascript, "./reader.ffi.mjs", "read")
-pub fn read(reader: Reader(a)) -> Promise(ReadResult(a))
+pub fn read(reader: Reader(a)) -> Promise(Result(ReadResult(a), String))
 
 @external(javascript, "./reader.ffi.mjs", "release_lock")
 pub fn release_lock(reader: Reader(a)) -> Reader(a)

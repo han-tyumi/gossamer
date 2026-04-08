@@ -1,5 +1,6 @@
 import type * as $asyncIterator from "$/gossamer/gossamer/async_iterator.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   toGleamIteratorResult,
   toIteratorResult,
@@ -70,11 +71,11 @@ export const return_: typeof $asyncIterator.return$ = async <T, TReturn, TNext>(
   iterator: AsyncIterator<T, TReturn, TNext>,
 ) => {
   if (!iterator.return) {
-    throw new Error(undefined);
+    return Result$Error(undefined);
   }
 
   const result = await iterator.return();
-  return toGleamIteratorResult(result);
+  return Result$Ok(toGleamIteratorResult(result));
 };
 
 export const return_with: typeof $asyncIterator.return_with = async <
@@ -86,11 +87,11 @@ export const return_with: typeof $asyncIterator.return_with = async <
   value: Parameters<typeof $asyncIterator.return_with<T, TReturn>>[1],
 ) => {
   if (!iterator.return) {
-    throw new Error(undefined);
+    return Result$Error(undefined);
   }
 
   const result = await iterator.return(value);
-  return toGleamIteratorResult(result);
+  return Result$Ok(toGleamIteratorResult(result));
 };
 
 export const throw_: typeof $asyncIterator.throw$ = async <T, TReturn, TNext>(
@@ -98,11 +99,11 @@ export const throw_: typeof $asyncIterator.throw$ = async <T, TReturn, TNext>(
   value: Parameters<typeof $asyncIterator.throw$<T, TReturn>>[1],
 ) => {
   if (!iterator.throw) {
-    throw new Error(undefined);
+    return Result$Error(undefined);
   }
 
   const result = await iterator.throw($option.unwrap(value, undefined));
-  return toGleamIteratorResult(result);
+  return Result$Ok(toGleamIteratorResult(result));
 };
 
 export const for_await: typeof $asyncIterator.for_await = async <

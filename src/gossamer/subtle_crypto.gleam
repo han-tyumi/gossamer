@@ -7,6 +7,7 @@ import gossamer/key_usage.{type KeyUsage}
 import gossamer/promise.{type Promise}
 import gossamer/subtle_crypto/derive_algorithm.{type DeriveAlgorithm}
 import gossamer/subtle_crypto/derived_key_type.{type DerivedKeyType}
+import gossamer/subtle_crypto/digest_algorithm.{type DigestAlgorithm}
 import gossamer/subtle_crypto/encrypt_algorithm.{type EncryptAlgorithm}
 import gossamer/subtle_crypto/import_algorithm.{type ImportAlgorithm}
 import gossamer/subtle_crypto/key_gen_algorithm.{type KeyGenAlgorithm}
@@ -17,7 +18,7 @@ import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(
-  algorithm: String,
+  algorithm: DigestAlgorithm,
   data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 

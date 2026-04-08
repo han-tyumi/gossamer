@@ -27,23 +27,11 @@ pub fn atob(encoded: String) -> Result(String, String)
 @external(javascript, "./gossamer.ffi.mjs", "btoa")
 pub fn btoa(data: String) -> Result(String, String)
 
-@external(javascript, "./gossamer.ffi.mjs", "alert")
-pub fn alert(message: String) -> Nil
-
 @external(javascript, "./gossamer.ffi.mjs", "clear_interval")
 pub fn clear_interval(id: Int) -> Nil
 
 @external(javascript, "./gossamer.ffi.mjs", "clear_timeout")
 pub fn clear_timeout(id: Int) -> Nil
-
-@external(javascript, "./gossamer.ffi.mjs", "close")
-pub fn close() -> Nil
-
-@external(javascript, "./gossamer.ffi.mjs", "confirm")
-pub fn confirm(message: String) -> Bool
-
-@external(javascript, "./gossamer.ffi.mjs", "prompt")
-pub fn prompt(message: String, default: String) -> Result(String, Nil)
 
 /// A microtask is a short function which is executed after the function or
 /// module which created it exits and only if the JavaScript execution stack is
@@ -52,9 +40,6 @@ pub fn prompt(message: String, default: String) -> Result(String, Nil)
 ///
 @external(javascript, "./gossamer.ffi.mjs", "queue_microtask")
 pub fn queue_microtask(func: fn() -> Nil) -> Nil
-
-@external(javascript, "./gossamer.ffi.mjs", "report_error")
-pub fn report_error(error: e) -> Nil
 
 @external(javascript, "./gossamer.ffi.mjs", "set_interval")
 pub fn set_interval(delay: Int, callback: fn() -> Nil) -> Int
@@ -67,4 +52,4 @@ pub fn set_interval(delay: Int, callback: fn() -> Nil) -> Int
 pub fn set_timeout(delay: Int, callback: fn() -> Nil) -> Int
 
 @external(javascript, "./gossamer.ffi.mjs", "user_agent")
-pub fn user_agent() -> Result(String, Nil)
+pub fn user_agent() -> String

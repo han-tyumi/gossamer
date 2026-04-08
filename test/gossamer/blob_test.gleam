@@ -14,6 +14,7 @@ pub fn blob_from_string_test() {
 pub fn blob_from_string_with_type_test() {
   let b = blob.from_string_with_type("hello", "text/plain")
   should.equal(blob.size(b), 5)
+  // Bun may append charset info (e.g., "text/plain;charset=utf-8").
   should.be_true(string.starts_with(blob.type_(b), "text/plain"))
 }
 
@@ -56,4 +57,29 @@ pub fn blob_slice_test() {
 pub fn blob_empty_test() {
   let b = blob.new()
   should.equal(blob.size(b), 0)
+}
+
+pub fn blob_from_bytes_with_type_test() {
+  let b =
+    blob.from_bytes_with_type(
+      uint8_array.from_list([72, 101, 108, 108, 111]),
+      "application/octet-stream",
+    )
+  should.equal(blob.size(b), 5)
+  should.equal(blob.type_(b), "application/octet-stream")
+}
+
+pub fn blob_slice_with_type_test() {
+  let b = blob.from_string("hello world")
+  let sliced = blob.slice_with_type(b, 0, 5, "text/plain")
+  should.equal(blob.size(sliced), 5)
+  should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
+  use text <- promise.then(blob.text(sliced))
+  should.equal(text, Ok("hello"))
+  promise.resolve(Nil)
+}
+
+pub fn blob_stream_test() {
+  let b = blob.from_string("stream me")
+  let _stream = blob.stream(b)
 }

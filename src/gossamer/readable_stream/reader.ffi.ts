@@ -1,5 +1,6 @@
 import type * as $reader from "$/gossamer/gossamer/readable_stream/reader.mjs";
 import { toReadResult } from "~/gossamer/readable_stream/read_result.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Reader$<T> = ReadableStreamDefaultReader<T>;
 
@@ -19,7 +20,9 @@ export const cancel: typeof $reader.cancel = (
 export const read: typeof $reader.read = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  return reader.read().then((result) => toReadResult(result));
+  return toResult.fromPromise(
+    reader.read().then((result) => toReadResult(result)),
+  );
 };
 
 export const release_lock: typeof $reader.release_lock = (
