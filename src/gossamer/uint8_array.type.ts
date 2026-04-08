@@ -1,1 +1,1 @@
-export type Uint8Array$ = Uint8Array;
+export type Uint8Array$ = Uint8Array<ArrayBufferLike>;
