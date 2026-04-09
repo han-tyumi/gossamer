@@ -1,4 +1,6 @@
 import * as $type from "$/gossamer/gossamer/subtle_crypto/derived_key_type.mjs";
+import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 
 export function toDerivedKeyType(
   derivedKeyType: $type.DerivedKeyType$,
@@ -8,12 +10,16 @@ export function toDerivedKeyType(
   }
   if ($type.DerivedKeyType$isAesDerived(derivedKeyType)) {
     return {
-      name: $type.DerivedKeyType$AesDerived$name(derivedKeyType),
+      name: toAesAlgorithm(
+        $type.DerivedKeyType$AesDerived$name(derivedKeyType),
+      ),
       length: $type.DerivedKeyType$AesDerived$length(derivedKeyType),
     };
   }
   return {
     name: "HMAC",
-    hash: $type.DerivedKeyType$HmacDerived$hash(derivedKeyType),
+    hash: toHashAlgorithm(
+      $type.DerivedKeyType$HmacDerived$hash(derivedKeyType),
+    ),
   };
 }

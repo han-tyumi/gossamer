@@ -1,4 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/sign_algorithm.mjs";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 
 export function toSignAlgorithm(
   algorithm: $alg.SignAlgorithm$,
@@ -18,6 +19,6 @@ export function toSignAlgorithm(
   }
   return {
     name: "ECDSA",
-    hash: $alg.SignAlgorithm$Ecdsa$hash(algorithm),
+    hash: toHashAlgorithm($alg.SignAlgorithm$Ecdsa$hash(algorithm)),
   };
 }

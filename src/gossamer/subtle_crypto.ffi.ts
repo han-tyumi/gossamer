@@ -3,9 +3,9 @@ import { toCryptoKeyPair } from "~/gossamer/crypto_key_pair.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ts";
 import { toKeyFormat } from "~/gossamer/key_format.ts";
 import { toKeyUsageArray } from "~/gossamer/key_usage.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 import { toDeriveAlgorithm } from "~/gossamer/subtle_crypto/derive_algorithm.ts";
 import { toDerivedKeyType } from "~/gossamer/subtle_crypto/derived_key_type.ts";
-import { toDigestAlgorithm } from "~/gossamer/subtle_crypto/digest_algorithm.ts";
 import { toEncryptAlgorithm } from "~/gossamer/subtle_crypto/encrypt_algorithm.ts";
 import { toImportAlgorithm } from "~/gossamer/subtle_crypto/import_algorithm.ts";
 import { toWrapAlgorithm } from "~/gossamer/subtle_crypto/wrap_algorithm.ts";
@@ -19,7 +19,7 @@ const subtle = globalThis.crypto.subtle;
 export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
   return toResult.fromPromise(
     subtle.digest(
-      toDigestAlgorithm(algorithm),
+      toHashAlgorithm(algorithm),
       data as unknown as BufferSource,
     ),
   );

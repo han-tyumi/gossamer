@@ -1,4 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/derive_algorithm.mjs";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 
 export function toDeriveAlgorithm(
   algorithm: $alg.DeriveAlgorithm$,
@@ -9,7 +10,7 @@ export function toDeriveAlgorithm(
   if ($alg.DeriveAlgorithm$isHkdf(algorithm)) {
     return {
       name: "HKDF",
-      hash: $alg.DeriveAlgorithm$Hkdf$hash(algorithm),
+      hash: toHashAlgorithm($alg.DeriveAlgorithm$Hkdf$hash(algorithm)),
       info: $alg.DeriveAlgorithm$Hkdf$info(
         algorithm,
       ) as unknown as BufferSource,
@@ -21,7 +22,7 @@ export function toDeriveAlgorithm(
   if ($alg.DeriveAlgorithm$isPbkdf2(algorithm)) {
     return {
       name: "PBKDF2",
-      hash: $alg.DeriveAlgorithm$Pbkdf2$hash(algorithm),
+      hash: toHashAlgorithm($alg.DeriveAlgorithm$Pbkdf2$hash(algorithm)),
       iterations: $alg.DeriveAlgorithm$Pbkdf2$iterations(algorithm),
       salt: $alg.DeriveAlgorithm$Pbkdf2$salt(
         algorithm,

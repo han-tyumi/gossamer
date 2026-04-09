@@ -1,4 +1,9 @@
 import * as $keyAlgorithm from "$/gossamer/gossamer/key_algorithm.mjs";
+import { fromAesAlgorithm } from "~/gossamer/aes_algorithm.ts";
+import { fromEcAlgorithm } from "~/gossamer/ec_algorithm.ts";
+import { fromHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
+import { fromNamedCurve } from "~/gossamer/named_curve.ts";
+import { fromRsaAlgorithm } from "~/gossamer/rsa_algorithm.ts";
 
 interface AesAlgorithm extends KeyAlgorithm {
   length: number;
@@ -30,32 +35,31 @@ export function toKeyAlgorithm(
 
   if ("namedCurve" in algorithm) {
     return $keyAlgorithm.KeyAlgorithm$Ec(
-      name,
-      (algorithm as EcAlgorithm).namedCurve,
+      fromEcAlgorithm(name),
+      fromNamedCurve((algorithm as EcAlgorithm).namedCurve),
     );
   }
 
   if ("modulusLength" in algorithm) {
     const rsa = algorithm as RsaAlgorithm;
     return $keyAlgorithm.KeyAlgorithm$Rsa(
-      name,
+      fromRsaAlgorithm(name),
       rsa.modulusLength,
       new Uint8Array(rsa.publicExponent),
-      hashName(rsa.hash),
+      fromHashAlgorithm(hashName(rsa.hash)),
     );
   }
 
   if ("hash" in algorithm) {
     const hmac = algorithm as HmacAlgorithm;
     return $keyAlgorithm.KeyAlgorithm$Hmac(
-      name,
-      hashName(hmac.hash),
+      fromHashAlgorithm(hashName(hmac.hash)),
       hmac.length,
     );
   }
 
   return $keyAlgorithm.KeyAlgorithm$Aes(
-    name,
+    fromAesAlgorithm(name),
     (algorithm as AesAlgorithm).length,
   );
 }
