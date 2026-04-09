@@ -1,4 +1,5 @@
 import gleam/list
+import gleam/option
 import gleam/string
 import gleeunit/should
 import gossamer/array_buffer
@@ -169,7 +170,12 @@ pub fn export_key_jwk_test() {
   let assert Ok(key) = result
 
   use result <- promise.then(subtle_crypto.export_key_jwk(key))
-  should.be_ok(result)
+  let assert Ok(jwk) = result
+  jwk.kty |> should.equal(option.Some("oct"))
+  jwk.alg |> should.equal(option.Some("A256GCM"))
+  jwk.ext |> should.equal(option.Some(True))
+  option.is_some(jwk.k) |> should.be_true
+  option.is_some(jwk.key_ops) |> should.be_true
   promise.resolve(Nil)
 }
 

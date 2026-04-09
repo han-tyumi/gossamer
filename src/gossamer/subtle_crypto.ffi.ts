@@ -1,5 +1,6 @@
 import type * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
 import { toCryptoKeyPair } from "~/gossamer/crypto_key_pair.ts";
+import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ts";
 import { toKeyFormat } from "~/gossamer/key_format.ts";
 import { toKeyUsageArray } from "~/gossamer/key_usage.ts";
 import { toDeriveAlgorithm } from "~/gossamer/subtle_crypto/derive_algorithm.ts";
@@ -135,7 +136,7 @@ export const import_key_jwk: typeof $subtleCrypto.import_key_jwk = (
   return toResult.fromPromise(
     subtle.importKey(
       "jwk",
-      keyData as JsonWebKey,
+      toJsonWebKey(keyData),
       toImportAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
@@ -151,7 +152,7 @@ export const export_key: typeof $subtleCrypto.export_key = (format, key) => {
 
 export const export_key_jwk: typeof $subtleCrypto.export_key_jwk = (key) => {
   return toResult.fromPromise(
-    subtle.exportKey("jwk", key) as Promise<unknown>,
+    (subtle.exportKey("jwk", key) as Promise<JsonWebKey>).then(fromJsonWebKey),
   );
 };
 

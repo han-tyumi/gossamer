@@ -1,7 +1,7 @@
-import gleam/dynamic.{type Dynamic}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/crypto_key_pair.{type CryptoKeyPair}
+import gossamer/json_web_key.{type JsonWebKey}
 import gossamer/key_format.{type KeyFormat}
 import gossamer/key_usage.{type KeyUsage}
 import gossamer/promise.{type Promise}
@@ -76,7 +76,7 @@ pub fn import_key(
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(
-  key_data data: Dynamic,
+  key_data data: JsonWebKey,
   algorithm algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
@@ -89,7 +89,7 @@ pub fn export_key(
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
-pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(Dynamic, String))
+pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(JsonWebKey, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_bits")
 pub fn derive_bits(
