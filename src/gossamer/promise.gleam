@@ -5,11 +5,11 @@ import gossamer/promise_settled_result.{type PromiseSettledResult}
 @external(javascript, "./promise.type.ts", "Promise$")
 pub type Promise(a)
 
-pub type PromiseWithResolvers(a) {
+pub type PromiseWithResolvers(a, r) {
   PromiseWithResolvers(
     promise: Promise(a),
     resolve: fn(a) -> Nil,
-    reject: fn(Dynamic) -> Nil,
+    reject: fn(r) -> Nil,
   )
 }
 
@@ -52,7 +52,7 @@ pub fn any(values: List(Promise(a))) -> Promise(a)
 pub fn try(func: fn() -> a) -> Promise(Result(a, String))
 
 @external(javascript, "./promise.ffi.mjs", "with_resolvers")
-pub fn with_resolvers() -> PromiseWithResolvers(a)
+pub fn with_resolvers() -> PromiseWithResolvers(a, r)
 
 @external(javascript, "./promise.ffi.mjs", "then")
 pub fn then(promise: Promise(a), apply onfulfilled: fn(a) -> b) -> Promise(b)

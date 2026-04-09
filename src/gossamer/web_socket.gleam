@@ -1,4 +1,3 @@
-import gleam/dynamic.{type Dynamic}
 import gossamer/binary_type.{type BinaryType}
 import gossamer/close_event.{type CloseEvent}
 import gossamer/message_event.{type MessageEvent}
@@ -83,7 +82,7 @@ pub fn close_with(
 pub fn send(to socket: WebSocket, data data: String) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "send_dynamic")
-pub fn send_dynamic(to socket: WebSocket, data data: Dynamic) -> Nil
+pub fn send_dynamic(to socket: WebSocket, data data: a) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")
 pub fn on_open(socket: WebSocket, run handler: fn() -> a) -> Nil
