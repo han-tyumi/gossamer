@@ -15,6 +15,7 @@ import gossamer/key_type
 import gossamer/key_usage
 import gossamer/named_curve
 import gossamer/promise
+import gossamer/rsa_algorithm
 import gossamer/subtle_crypto
 import gossamer/subtle_crypto/derive_algorithm
 import gossamer/subtle_crypto/derived_key_type
@@ -115,6 +116,30 @@ pub fn generate_key_pair_sign_verify_test() {
   ))
   let assert Ok(verified) = result
   should.be_true(verified)
+  promise.resolve(Nil)
+}
+
+pub fn generate_rsa_key_pair_test() {
+  use result <- promise.then(
+    subtle_crypto.generate_key_pair(
+      key_pair_gen_algorithm.Rsa(
+        rsa_algorithm.RsassaPkcs1V15,
+        2048,
+        uint8_array.from_list([1, 0, 1]),
+        hash_algorithm.Sha256,
+      ),
+      True,
+      [key_usage.Sign, key_usage.Verify],
+    ),
+  )
+  let assert Ok(pair) = result
+  let crypto_key_pair.CryptoKeyPair(public_key:, private_key:) = pair
+  should.equal(crypto_key.type_(public_key), key_type.Public)
+  should.equal(crypto_key.type_(private_key), key_type.Private)
+  let algo = crypto_key.algorithm(private_key)
+  let assert key_algorithm.Rsa(name:, modulus_length:, ..) = algo
+  should.equal(name, rsa_algorithm.RsassaPkcs1V15)
+  should.equal(modulus_length, 2048)
   promise.resolve(Nil)
 }
 
