@@ -1,5 +1,6 @@
 import type * as $response from "$/gossamer/gossamer/response.mjs";
 import { toResponseInit } from "~/gossamer/response_init.ts";
+import { fromResponseType } from "~/gossamer/response_type.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
@@ -50,7 +51,9 @@ export const status_text: typeof $response.status_text = (response) => {
   return response.statusText;
 };
 
-export const type_: typeof $response.type_ = (response) => response.type;
+export const type_: typeof $response.type_ = (response) => {
+  return fromResponseType(response.type);
+};
 
 export const url: typeof $response.url = (response) => response.url;
 

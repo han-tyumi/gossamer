@@ -6,7 +6,13 @@ import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
+import gossamer/referrer_policy.{type ReferrerPolicy}
+import gossamer/request_cache.{type RequestCache}
+import gossamer/request_credentials.{type RequestCredentials}
+import gossamer/request_destination.{type RequestDestination}
 import gossamer/request_init.{type RequestInit}
+import gossamer/request_mode.{type RequestMode}
+import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./request.type.ts", "Request$")
@@ -36,7 +42,7 @@ pub fn headers(of request: Request) -> Headers
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "cache")
-pub fn cache(of request: Request) -> String
+pub fn cache(of request: Request) -> RequestCache
 
 /// Returns the credentials mode associated with the request.
 ///
@@ -44,7 +50,7 @@ pub fn cache(of request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "credentials")
-pub fn credentials(of request: Request) -> String
+pub fn credentials(of request: Request) -> RequestCredentials
 
 /// Returns the kind of resource requested by the request.
 ///
@@ -52,10 +58,10 @@ pub fn credentials(of request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "destination")
-pub fn destination(of request: Request) -> String
+pub fn destination(of request: Request) -> RequestDestination
 
 @external(javascript, "./request.ffi.mjs", "redirect")
-pub fn redirect(of request: Request) -> String
+pub fn redirect(of request: Request) -> RequestRedirect
 
 @external(javascript, "./request.ffi.mjs", "signal")
 pub fn signal(of request: Request) -> AbortSignal
@@ -74,7 +80,7 @@ pub fn referrer(of request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
-pub fn referrer_policy(of request: Request) -> String
+pub fn referrer_policy(of request: Request) -> ReferrerPolicy
 
 /// Returns the mode associated with the request.
 ///
@@ -82,7 +88,7 @@ pub fn referrer_policy(of request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
-pub fn mode(of request: Request) -> String
+pub fn mode(of request: Request) -> RequestMode
 
 /// Returns whether the request can outlive the global in which it was created.
 ///

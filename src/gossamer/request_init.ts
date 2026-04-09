@@ -1,4 +1,5 @@
 import * as $requestInit from "$/gossamer/gossamer/request_init.mjs";
+import { toRequestRedirect } from "~/gossamer/request_redirect.ts";
 
 export function toRequestInit(
   options: $requestInit.RequestInit$[],
@@ -12,9 +13,9 @@ export function toRequestInit(
     } else if ($requestInit.RequestInit$isBody(option)) {
       result.body = $requestInit.RequestInit$Body$0(option);
     } else if ($requestInit.RequestInit$isRedirect(option)) {
-      result.redirect = $requestInit.RequestInit$Redirect$0(
-        option,
-      ) as RequestRedirect;
+      result.redirect = toRequestRedirect(
+        $requestInit.RequestInit$Redirect$0(option),
+      );
     } else if ($requestInit.RequestInit$isSignal(option)) {
       result.signal = $requestInit.RequestInit$Signal$0(option);
     } else if ($requestInit.RequestInit$isReferrer(option)) {

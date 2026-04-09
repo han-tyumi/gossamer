@@ -1,0 +1,24 @@
+pub type RequestDestination {
+  Audio
+  AudioWorklet
+  Document
+  Embed
+  Empty
+  Font
+  Frame
+  Iframe
+  Image
+  Json
+  Manifest
+  Object
+  PaintWorklet
+  Report
+  Script
+  SharedWorker
+  Style
+  Track
+  Video
+  Worker
+  Xslt
+  Other(String)
+}

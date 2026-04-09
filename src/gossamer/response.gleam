@@ -6,6 +6,7 @@ import gossamer/headers.{type Headers}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_init.{type ResponseInit}
+import gossamer/response_type.{type ResponseType}
 import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./response.type.ts", "Response$")
@@ -48,7 +49,7 @@ pub fn status(of response: Response) -> Int
 pub fn status_text(of response: Response) -> String
 
 @external(javascript, "./response.ffi.mjs", "type_")
-pub fn type_(of response: Response) -> String
+pub fn type_(of response: Response) -> ResponseType
 
 @external(javascript, "./response.ffi.mjs", "url")
 pub fn url(of response: Response) -> String

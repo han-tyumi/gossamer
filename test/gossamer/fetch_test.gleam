@@ -4,8 +4,10 @@ import gossamer/headers
 import gossamer/promise
 import gossamer/request
 import gossamer/request_init
+import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_init
+import gossamer/response_type
 import gossamer/uint8_array
 
 import gleeunit/should
@@ -111,7 +113,7 @@ pub fn response_text_test() {
 
 pub fn response_error_test() {
   let resp = response.error()
-  response.type_(resp) |> should.equal("error")
+  response.type_(resp) |> should.equal(response_type.Error)
 }
 
 pub fn response_redirect_test() {
@@ -218,7 +220,7 @@ pub fn request_destination_test() {
 
 pub fn request_redirect_test() {
   let assert Ok(req) = request.new("https://example.org")
-  request.redirect(req) |> should.equal("follow")
+  request.redirect(req) |> should.equal(request_redirect.Follow)
 }
 
 pub fn request_signal_test() {
