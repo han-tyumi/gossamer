@@ -1,5 +1,17 @@
 import * as $requestCache from "$/gossamer/gossamer/request_cache.mjs";
 
+export function toRequestCache(value: $requestCache.RequestCache$): string {
+  if ($requestCache.RequestCache$isForceCache(value)) return "force-cache";
+  if ($requestCache.RequestCache$isNoCache(value)) return "no-cache";
+  if ($requestCache.RequestCache$isNoStore(value)) return "no-store";
+  if ($requestCache.RequestCache$isOnlyIfCached(value)) return "only-if-cached";
+  if ($requestCache.RequestCache$isReload(value)) return "reload";
+  if ($requestCache.RequestCache$isOther(value)) {
+    return $requestCache.RequestCache$Other$0(value);
+  }
+  return "default";
+}
+
 export function fromRequestCache(value: string): $requestCache.RequestCache$ {
   switch (value) {
     case "force-cache":

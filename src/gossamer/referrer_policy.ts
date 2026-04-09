@@ -1,5 +1,23 @@
 import * as $rp from "$/gossamer/gossamer/referrer_policy.mjs";
 
+export function toReferrerPolicy(value: $rp.ReferrerPolicy$): string {
+  if ($rp.ReferrerPolicy$isNoReferrer(value)) return "no-referrer";
+  if ($rp.ReferrerPolicy$isNoReferrerWhenDowngrade(value)) {
+    return "no-referrer-when-downgrade";
+  }
+  if ($rp.ReferrerPolicy$isOrigin(value)) return "origin";
+  if ($rp.ReferrerPolicy$isOriginWhenCrossOrigin(value)) {
+    return "origin-when-cross-origin";
+  }
+  if ($rp.ReferrerPolicy$isSameOrigin(value)) return "same-origin";
+  if ($rp.ReferrerPolicy$isStrictOrigin(value)) return "strict-origin";
+  if ($rp.ReferrerPolicy$isUnsafeUrl(value)) return "unsafe-url";
+  if ($rp.ReferrerPolicy$isOther(value)) {
+    return $rp.ReferrerPolicy$Other$0(value);
+  }
+  return "strict-origin-when-cross-origin";
+}
+
 export function fromReferrerPolicy(value: string): $rp.ReferrerPolicy$ {
   switch (value) {
     case "no-referrer":
