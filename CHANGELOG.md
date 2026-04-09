@@ -1,3 +1,30 @@
+## 5.0.0 (2026-04-09)
+
+### Breaking Changes
+
+- import_key_jwk now takes JsonWebKey instead of Dynamic, and export_key_jwk
+  returns JsonWebKey instead of Dynamic.
+- request property getters (cache, credentials, destination, mode, redirect,
+  referrer_policy), response.type_, and RequestInit Redirect now use variant
+  types instead of String.
+- DigestAlgorithm replaced by HashAlgorithm. All crypto algorithm String fields
+  now use variant types. KeyAlgorithm.Hmac loses its name field.
+- request.method returns HttpMethod instead of String. RequestInit.Method takes
+  HttpMethod instead of String. Encoding functions return Encoding instead of
+  String. response.json renamed to response.from_json, response.json_body
+  renamed to response.json. Algorithm type Name(String) variants renamed to
+  Other(String).
+
+### Features
+
+- add JsonWebKey type for typed JWK import/export
+- add types for request and response properties
+- add Other(String) fallback to existing variant types
+- add shared crypto variant types for algorithm strings
+- add forward compatibility variants to existing types
+- add HttpMethod and Encoding types, rename response JSON methods
+- add missing RequestInit options
+
 ## 4.1.0 (2026-04-09)
 
 ### Features
