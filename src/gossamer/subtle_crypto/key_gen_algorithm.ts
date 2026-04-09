@@ -4,7 +4,10 @@ import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 
 export function toKeyGenAlgorithm(
   algorithm: $alg.KeyGenAlgorithm$,
-): AesKeyGenParams | HmacKeyGenParams {
+): AlgorithmIdentifier | AesKeyGenParams | HmacKeyGenParams {
+  if ($alg.KeyGenAlgorithm$isOther(algorithm)) {
+    return $alg.KeyGenAlgorithm$Other$0(algorithm);
+  }
   if ($alg.KeyGenAlgorithm$isAes(algorithm)) {
     return {
       name: toAesAlgorithm($alg.KeyGenAlgorithm$Aes$name(algorithm)),

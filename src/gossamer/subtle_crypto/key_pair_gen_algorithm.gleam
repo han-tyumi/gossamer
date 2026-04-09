@@ -12,4 +12,7 @@ pub type KeyPairGenAlgorithm {
     hash: HashAlgorithm,
   )
   Ec(name: EcAlgorithm, named_curve: NamedCurve)
+  Ed25519
+  X25519
+  Other(String)
 }

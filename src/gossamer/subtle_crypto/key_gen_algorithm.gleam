@@ -4,4 +4,5 @@ import gossamer/hash_algorithm.{type HashAlgorithm}
 pub type KeyGenAlgorithm {
   Aes(name: AesAlgorithm, length: Int)
   HmacGen(hash: HashAlgorithm)
+  Other(String)
 }

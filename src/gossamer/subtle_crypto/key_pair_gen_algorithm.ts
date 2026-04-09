@@ -6,7 +6,10 @@ import { toRsaAlgorithm } from "~/gossamer/rsa_algorithm.ts";
 
 export function toKeyPairGenAlgorithm(
   algorithm: $alg.KeyPairGenAlgorithm$,
-): RsaHashedKeyGenParams | EcKeyGenParams {
+): AlgorithmIdentifier | RsaHashedKeyGenParams | EcKeyGenParams {
+  if ($alg.KeyPairGenAlgorithm$isOther(algorithm)) {
+    return $alg.KeyPairGenAlgorithm$Other$0(algorithm);
+  }
   if ($alg.KeyPairGenAlgorithm$isRsa(algorithm)) {
     return {
       name: toRsaAlgorithm($alg.KeyPairGenAlgorithm$Rsa$name(algorithm)),
@@ -17,6 +20,8 @@ export function toKeyPairGenAlgorithm(
       hash: toHashAlgorithm($alg.KeyPairGenAlgorithm$Rsa$hash(algorithm)),
     };
   }
+  if ($alg.KeyPairGenAlgorithm$isEd25519(algorithm)) return "Ed25519";
+  if ($alg.KeyPairGenAlgorithm$isX25519(algorithm)) return "X25519";
   return {
     name: toEcAlgorithm($alg.KeyPairGenAlgorithm$Ec$name(algorithm)),
     namedCurve: toNamedCurve(
