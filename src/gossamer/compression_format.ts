@@ -8,5 +8,10 @@ export function toCompressionFormat(
     return "deflate-raw";
   }
   if ($compressionFormat.CompressionFormat$isGzip(format)) return "gzip";
+  if ($compressionFormat.CompressionFormat$isOther(format)) {
+    return $compressionFormat.CompressionFormat$Other$0(
+      format,
+    ) as CompressionFormat;
+  }
   return "brotli";
 }

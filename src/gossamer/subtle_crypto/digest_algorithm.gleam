@@ -3,4 +3,5 @@ pub type DigestAlgorithm {
   Sha256
   Sha384
   Sha512
+  Other(String)
 }

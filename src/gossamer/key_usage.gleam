@@ -7,4 +7,5 @@ pub type KeyUsage {
   UnwrapKey
   Verify
   WrapKey
+  Other(String)
 }

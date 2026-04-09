@@ -9,10 +9,13 @@ export function toKeyUsage(value: $keyUsage.KeyUsage$): KeyUsage {
   if ($keyUsage.KeyUsage$isSign(value)) return "sign";
   if ($keyUsage.KeyUsage$isUnwrapKey(value)) return "unwrapKey";
   if ($keyUsage.KeyUsage$isVerify(value)) return "verify";
+  if ($keyUsage.KeyUsage$isOther(value)) {
+    return $keyUsage.KeyUsage$Other$0(value) as KeyUsage;
+  }
   return "wrapKey";
 }
 
-export function fromKeyUsage(value: KeyUsage): $keyUsage.KeyUsage$ {
+export function fromKeyUsage(value: KeyUsage | string): $keyUsage.KeyUsage$ {
   switch (value) {
     case "decrypt":
       return $keyUsage.KeyUsage$Decrypt();
@@ -30,6 +33,8 @@ export function fromKeyUsage(value: KeyUsage): $keyUsage.KeyUsage$ {
       return $keyUsage.KeyUsage$Verify();
     case "wrapKey":
       return $keyUsage.KeyUsage$WrapKey();
+    default:
+      return $keyUsage.KeyUsage$Other(value);
   }
 }
 
