@@ -3,9 +3,6 @@ import gossamer/request.{type Request}
 import gossamer/request_init.{type RequestInit}
 import gossamer/response.{type Response}
 
-@external(javascript, "./gossamer.type.ts", "Date$")
-pub type Date
-
 @external(javascript, "./gossamer.ffi.mjs", "fetch_")
 pub fn fetch(url: String) -> Promise(Result(Response, String))
 

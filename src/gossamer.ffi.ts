@@ -3,8 +3,6 @@ import { toRequestInit } from "~/gossamer/request_init.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
-export type Date$ = Date;
-
 export const structured_clone: typeof $gossamer.structured_clone = (value) => {
   return toResult.fromThrows(() => globalThis.structuredClone(value));
 };
