@@ -56,9 +56,9 @@ export const includes: typeof $uint8Array.includes = (array, value) => {
 export const includes_from: typeof $uint8Array.includes_from = (
   array,
   value,
-  fromIndex,
+  index,
 ) => {
-  return array.includes(value, fromIndex);
+  return array.includes(value, index);
 };
 
 export const index_of: typeof $uint8Array.index_of = (array, value) => {
@@ -68,9 +68,9 @@ export const index_of: typeof $uint8Array.index_of = (array, value) => {
 export const index_of_from: typeof $uint8Array.index_of_from = (
   array,
   value,
-  fromIndex,
+  index,
 ) => {
-  return array.indexOf(value, fromIndex);
+  return array.indexOf(value, index);
 };
 
 export const last_index_of: typeof $uint8Array.last_index_of = (
@@ -83,9 +83,9 @@ export const last_index_of: typeof $uint8Array.last_index_of = (
 export const last_index_of_from: typeof $uint8Array.last_index_of_from = (
   array,
   value,
-  fromIndex,
+  index,
 ) => {
-  return array.lastIndexOf(value, fromIndex);
+  return array.lastIndexOf(value, index);
 };
 
 export const slice: typeof $uint8Array.slice = (array) => {

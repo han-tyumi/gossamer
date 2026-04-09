@@ -13,8 +13,8 @@ pub fn mark(name: String) -> Result(PerformanceEntry, String)
 @external(javascript, "./performance.ffi.mjs", "measure")
 pub fn measure(
   name: String,
-  start_mark: String,
-  end_mark: String,
+  from start_mark: String,
+  to end_mark: String,
 ) -> Result(PerformanceEntry, String)
 
 @external(javascript, "./performance.ffi.mjs", "clear_marks")

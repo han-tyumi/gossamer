@@ -47,11 +47,11 @@ pub fn return_with(
 @external(javascript, "./async_iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: AsyncIterator(a, return, next),
-  e: e,
+  reason reason: e,
 ) -> Promise(Result(IteratorResult(a, return), Nil))
 
 @external(javascript, "./async_iterator.ffi.mjs", "for_await")
 pub fn for_await(
-  iterator: AsyncIterator(a, return, next),
-  fun: fn(a) -> any,
+  in iterator: AsyncIterator(a, return, next),
+  run fun: fn(a) -> any,
 ) -> Promise(Nil)

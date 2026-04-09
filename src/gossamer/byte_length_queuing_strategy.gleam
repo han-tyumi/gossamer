@@ -5,4 +5,4 @@ pub type ByteLengthQueuingStrategy
 pub fn new(high_water_mark: Float) -> ByteLengthQueuingStrategy
 
 @external(javascript, "./byte_length_queuing_strategy.ffi.mjs", "high_water_mark")
-pub fn high_water_mark(strategy: ByteLengthQueuingStrategy) -> Float
+pub fn high_water_mark(of strategy: ByteLengthQueuingStrategy) -> Float

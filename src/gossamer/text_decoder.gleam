@@ -10,11 +10,11 @@ pub fn new() -> TextDecoder
 @external(javascript, "./text_decoder.ffi.mjs", "new_with")
 pub fn new_with(
   label: String,
-  options: List(TextDecoderOption),
+  with options: List(TextDecoderOption),
 ) -> Result(TextDecoder, String)
 
 @external(javascript, "./text_decoder.ffi.mjs", "encoding")
-pub fn encoding(decoder: TextDecoder) -> String
+pub fn encoding(of decoder: TextDecoder) -> String
 
 @external(javascript, "./text_decoder.ffi.mjs", "is_fatal")
 pub fn is_fatal(decoder: TextDecoder) -> Bool
@@ -41,5 +41,5 @@ pub fn decode(input: ArrayBuffer) -> String
 pub fn decode_with(
   input: ArrayBuffer,
   label: String,
-  options: List(TextDecoderOption),
+  with options: List(TextDecoderOption),
 ) -> Result(String, String)

@@ -9,10 +9,10 @@ pub type TextEncoderStream
 pub fn new() -> TextEncoderStream
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "readable")
-pub fn readable(encoder: TextEncoderStream) -> ReadableStream(Uint8Array)
+pub fn readable(of encoder: TextEncoderStream) -> ReadableStream(Uint8Array)
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "writable")
-pub fn writable(encoder: TextEncoderStream) -> WritableStream(String)
+pub fn writable(of encoder: TextEncoderStream) -> WritableStream(String)
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "encoding")
-pub fn encoding(encoder: TextEncoderStream) -> String
+pub fn encoding(of encoder: TextEncoderStream) -> String

@@ -32,7 +32,7 @@ pub type DecompressionStream
 pub fn new(format: CompressionFormat) -> Result(DecompressionStream, String)
 
 @external(javascript, "./decompression_stream.ffi.mjs", "readable")
-pub fn readable(stream: DecompressionStream) -> ReadableStream(Uint8Array)
+pub fn readable(of stream: DecompressionStream) -> ReadableStream(Uint8Array)
 
 @external(javascript, "./decompression_stream.ffi.mjs", "writable")
-pub fn writable(stream: DecompressionStream) -> WritableStream(Uint8Array)
+pub fn writable(of stream: DecompressionStream) -> WritableStream(Uint8Array)

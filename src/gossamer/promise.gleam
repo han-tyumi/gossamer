@@ -55,13 +55,16 @@ pub fn try(func: fn() -> a) -> Promise(Result(a, String))
 pub fn with_resolvers() -> PromiseWithResolvers(a)
 
 @external(javascript, "./promise.ffi.mjs", "then")
-pub fn then(promise: Promise(a), onfulfilled: fn(a) -> b) -> Promise(b)
+pub fn then(promise: Promise(a), apply onfulfilled: fn(a) -> b) -> Promise(b)
 
 @external(javascript, "./promise.ffi.mjs", "catch_")
-pub fn catch(promise: Promise(a), onrejected: fn(Dynamic) -> a) -> Promise(a)
+pub fn catch(
+  promise: Promise(a),
+  apply onrejected: fn(Dynamic) -> a,
+) -> Promise(a)
 
 @external(javascript, "./promise.ffi.mjs", "finally_")
-pub fn finally(promise: Promise(a), onfinally: fn() -> Nil) -> Promise(a)
+pub fn finally(promise: Promise(a), run onfinally: fn() -> Nil) -> Promise(a)
 
 pub fn from_result(result: Result(a, _)) -> Promise(a) {
   case result {

@@ -7,10 +7,13 @@ pub type AbortController
 pub fn new() -> AbortController
 
 @external(javascript, "./abort_controller.ffi.mjs", "signal")
-pub fn signal(controller: AbortController) -> AbortSignal
+pub fn signal(of controller: AbortController) -> AbortSignal
 
 @external(javascript, "./abort_controller.ffi.mjs", "abort")
 pub fn abort(controller: AbortController) -> AbortController
 
 @external(javascript, "./abort_controller.ffi.mjs", "abort_with")
-pub fn abort_with(controller: AbortController, reason: r) -> AbortController
+pub fn abort_with(
+  controller: AbortController,
+  reason reason: r,
+) -> AbortController

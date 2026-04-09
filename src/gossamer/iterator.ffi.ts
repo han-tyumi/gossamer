@@ -80,13 +80,13 @@ export const return_with: typeof $iterator.return_with = <T, TReturn, TNext>(
 
 export const throw_: typeof $iterator.throw$ = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
-  value: Parameters<typeof $iterator.throw$<T, TReturn>>[1],
+  reason: Parameters<typeof $iterator.throw$<T, TReturn>>[1],
 ) => {
   if (!iterator.throw) {
     return Result$Error(undefined);
   }
 
-  const result = iterator.throw($option.unwrap(value, undefined));
+  const result = iterator.throw($option.unwrap(reason, undefined));
   return Result$Ok(toGleamIteratorResult(result));
 };
 

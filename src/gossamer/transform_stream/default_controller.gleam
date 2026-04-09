@@ -4,13 +4,13 @@ import gleam/dynamic.{type Dynamic}
 pub type DefaultController(a)
 
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
-pub fn desired_size(controller: DefaultController(a)) -> Result(Int, Nil)
+pub fn desired_size(of controller: DefaultController(a)) -> Result(Int, Nil)
 
 @external(javascript, "./default_controller.ffi.mjs", "enqueue")
-pub fn enqueue(controller: DefaultController(a), chunk: a) -> Nil
+pub fn enqueue(in controller: DefaultController(a), chunk chunk: a) -> Nil
 
 @external(javascript, "./default_controller.ffi.mjs", "error")
-pub fn error(controller: DefaultController(a), reason: Dynamic) -> Nil
+pub fn error(controller: DefaultController(a), reason reason: Dynamic) -> Nil
 
 @external(javascript, "./default_controller.ffi.mjs", "terminate")
 pub fn terminate(controller: DefaultController(a)) -> Nil

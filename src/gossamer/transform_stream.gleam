@@ -20,8 +20,10 @@ pub fn from_transform(
 
 @external(javascript, "./transform_stream.ffi.mjs", "readable")
 pub fn readable(
-  stream: TransformStream(input, output),
+  of stream: TransformStream(input, output),
 ) -> ReadableStream(output)
 
 @external(javascript, "./transform_stream.ffi.mjs", "writable")
-pub fn writable(stream: TransformStream(input, output)) -> WritableStream(input)
+pub fn writable(
+  of stream: TransformStream(input, output),
+) -> WritableStream(input)

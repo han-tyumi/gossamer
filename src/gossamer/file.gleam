@@ -9,59 +9,59 @@ import gossamer/uint8_array.{type Uint8Array}
 pub type File
 
 @external(javascript, "./file.ffi.mjs", "from_strings")
-pub fn from_strings(parts: List(String), name: String) -> File
+pub fn from_strings(parts: List(String), named name: String) -> File
 
 @external(javascript, "./file.ffi.mjs", "from_strings_with")
 pub fn from_strings_with(
   parts: List(String),
-  name: String,
-  options: List(FileOption),
+  named name: String,
+  with options: List(FileOption),
 ) -> File
 
 @external(javascript, "./file.ffi.mjs", "from_blob")
-pub fn from_blob(blob: Blob, name: String) -> File
+pub fn from_blob(blob: Blob, named name: String) -> File
 
 @external(javascript, "./file.ffi.mjs", "from_blob_with")
 pub fn from_blob_with(
   blob: Blob,
-  name: String,
-  options: List(FileOption),
+  named name: String,
+  with options: List(FileOption),
 ) -> File
 
 @external(javascript, "./file.ffi.mjs", "name")
-pub fn name(file: File) -> String
+pub fn name(of file: File) -> String
 
 @external(javascript, "./file.ffi.mjs", "last_modified")
-pub fn last_modified(file: File) -> Int
+pub fn last_modified(of file: File) -> Int
 
 @external(javascript, "./file.ffi.mjs", "to_blob")
 pub fn to_blob(file: File) -> Blob
 
 @external(javascript, "./file.ffi.mjs", "size")
-pub fn size(file: File) -> Int
+pub fn size(of file: File) -> Int
 
 @external(javascript, "./file.ffi.mjs", "type_")
-pub fn type_(file: File) -> String
+pub fn type_(of file: File) -> String
 
 @external(javascript, "./file.ffi.mjs", "array_buffer")
-pub fn array_buffer(file: File) -> Promise(Result(ArrayBuffer, String))
+pub fn array_buffer(of file: File) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./file.ffi.mjs", "bytes")
-pub fn bytes(file: File) -> Promise(Result(Uint8Array, String))
+pub fn bytes(of file: File) -> Promise(Result(Uint8Array, String))
 
 @external(javascript, "./file.ffi.mjs", "slice")
-pub fn slice(file: File, start: Int, end: Int) -> Blob
+pub fn slice(file: File, from start: Int, to end: Int) -> Blob
 
 @external(javascript, "./file.ffi.mjs", "slice_with_type")
 pub fn slice_with_type(
   file: File,
-  start: Int,
-  end: Int,
-  content_type: String,
+  from start: Int,
+  to end: Int,
+  content_type content_type: String,
 ) -> Blob
 
 @external(javascript, "./file.ffi.mjs", "stream")
-pub fn stream(file: File) -> ReadableStream(Uint8Array)
+pub fn stream(of file: File) -> ReadableStream(Uint8Array)
 
 @external(javascript, "./file.ffi.mjs", "text")
-pub fn text(file: File) -> Promise(Result(String, String))
+pub fn text(of file: File) -> Promise(Result(String, String))

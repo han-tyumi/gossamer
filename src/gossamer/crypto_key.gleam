@@ -6,13 +6,13 @@ import gossamer/key_usage.{type KeyUsage}
 pub type CryptoKey
 
 @external(javascript, "./crypto_key.ffi.mjs", "algorithm")
-pub fn algorithm(key: CryptoKey) -> KeyAlgorithm
+pub fn algorithm(of key: CryptoKey) -> KeyAlgorithm
 
 @external(javascript, "./crypto_key.ffi.mjs", "is_extractable")
 pub fn is_extractable(key: CryptoKey) -> Bool
 
 @external(javascript, "./crypto_key.ffi.mjs", "type_")
-pub fn type_(key: CryptoKey) -> KeyType
+pub fn type_(of key: CryptoKey) -> KeyType
 
 @external(javascript, "./crypto_key.ffi.mjs", "usages")
-pub fn usages(key: CryptoKey) -> List(KeyUsage)
+pub fn usages(of key: CryptoKey) -> List(KeyUsage)

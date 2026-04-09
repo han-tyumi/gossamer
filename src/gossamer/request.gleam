@@ -18,17 +18,17 @@ pub fn new(input: String) -> Result(Request, String)
 @external(javascript, "./request.ffi.mjs", "new_with_init")
 pub fn new_with_init(
   input: String,
-  init: List(RequestInit),
+  with init: List(RequestInit),
 ) -> Result(Request, String)
 
 @external(javascript, "./request.ffi.mjs", "method")
-pub fn method(request: Request) -> String
+pub fn method(of request: Request) -> String
 
 @external(javascript, "./request.ffi.mjs", "url")
-pub fn url(request: Request) -> String
+pub fn url(of request: Request) -> String
 
 @external(javascript, "./request.ffi.mjs", "headers")
-pub fn headers(request: Request) -> Headers
+pub fn headers(of request: Request) -> Headers
 
 /// Returns the cache mode associated with the request.
 ///
@@ -36,7 +36,7 @@ pub fn headers(request: Request) -> Headers
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "cache")
-pub fn cache(request: Request) -> String
+pub fn cache(of request: Request) -> String
 
 /// Returns the credentials mode associated with the request.
 ///
@@ -44,7 +44,7 @@ pub fn cache(request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "credentials")
-pub fn credentials(request: Request) -> String
+pub fn credentials(of request: Request) -> String
 
 /// Returns the kind of resource requested by the request.
 ///
@@ -52,13 +52,13 @@ pub fn credentials(request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "destination")
-pub fn destination(request: Request) -> String
+pub fn destination(of request: Request) -> String
 
 @external(javascript, "./request.ffi.mjs", "redirect")
-pub fn redirect(request: Request) -> String
+pub fn redirect(of request: Request) -> String
 
 @external(javascript, "./request.ffi.mjs", "signal")
-pub fn signal(request: Request) -> AbortSignal
+pub fn signal(of request: Request) -> AbortSignal
 
 /// Returns the referrer of the request.
 ///
@@ -66,7 +66,7 @@ pub fn signal(request: Request) -> AbortSignal
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer")
-pub fn referrer(request: Request) -> String
+pub fn referrer(of request: Request) -> String
 
 /// Returns the referrer policy associated with the request.
 ///
@@ -74,7 +74,7 @@ pub fn referrer(request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
-pub fn referrer_policy(request: Request) -> String
+pub fn referrer_policy(of request: Request) -> String
 
 /// Returns the mode associated with the request.
 ///
@@ -82,7 +82,7 @@ pub fn referrer_policy(request: Request) -> String
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
-pub fn mode(request: Request) -> String
+pub fn mode(of request: Request) -> String
 
 /// Returns whether the request can outlive the global in which it was created.
 ///
@@ -98,31 +98,31 @@ pub fn is_keepalive(request: Request) -> Bool
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "integrity")
-pub fn integrity(request: Request) -> String
+pub fn integrity(of request: Request) -> String
 
 @external(javascript, "./request.ffi.mjs", "clone")
 pub fn clone(request: Request) -> Request
 
 @external(javascript, "./request.ffi.mjs", "body")
-pub fn body(request: Request) -> Result(ReadableStream(Uint8Array), Nil)
+pub fn body(of request: Request) -> Result(ReadableStream(Uint8Array), Nil)
 
 @external(javascript, "./request.ffi.mjs", "is_body_used")
 pub fn is_body_used(request: Request) -> Bool
 
 @external(javascript, "./request.ffi.mjs", "blob")
-pub fn blob(request: Request) -> Promise(Result(Blob, String))
+pub fn blob(of request: Request) -> Promise(Result(Blob, String))
 
 @external(javascript, "./request.ffi.mjs", "array_buffer")
-pub fn array_buffer(request: Request) -> Promise(Result(ArrayBuffer, String))
+pub fn array_buffer(of request: Request) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./request.ffi.mjs", "bytes")
-pub fn bytes(request: Request) -> Promise(Result(Uint8Array, String))
+pub fn bytes(of request: Request) -> Promise(Result(Uint8Array, String))
 
 @external(javascript, "./request.ffi.mjs", "json")
-pub fn json(request: Request) -> Promise(Result(Dynamic, String))
+pub fn json(of request: Request) -> Promise(Result(Dynamic, String))
 
 @external(javascript, "./request.ffi.mjs", "form_data")
-pub fn form_data(request: Request) -> Promise(Result(FormData, String))
+pub fn form_data(of request: Request) -> Promise(Result(FormData, String))
 
 @external(javascript, "./request.ffi.mjs", "text")
-pub fn text(request: Request) -> Promise(Result(String, String))
+pub fn text(of request: Request) -> Promise(Result(String, String))

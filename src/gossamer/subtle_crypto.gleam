@@ -18,74 +18,74 @@ import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(
-  algorithm: DigestAlgorithm,
-  data: Uint8Array,
+  algorithm algorithm: DigestAlgorithm,
+  data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "encrypt")
 pub fn encrypt(
-  algorithm: EncryptAlgorithm,
-  key: CryptoKey,
-  data: Uint8Array,
+  algorithm algorithm: EncryptAlgorithm,
+  key key: CryptoKey,
+  data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "decrypt")
 pub fn decrypt(
-  algorithm: EncryptAlgorithm,
-  key: CryptoKey,
-  data: Uint8Array,
+  algorithm algorithm: EncryptAlgorithm,
+  key key: CryptoKey,
+  data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "sign")
 pub fn sign(
-  algorithm: SignAlgorithm,
-  key: CryptoKey,
-  data: Uint8Array,
+  algorithm algorithm: SignAlgorithm,
+  key key: CryptoKey,
+  data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "verify")
 pub fn verify(
-  algorithm: SignAlgorithm,
-  key: CryptoKey,
-  signature: Uint8Array,
-  data: Uint8Array,
+  algorithm algorithm: SignAlgorithm,
+  key key: CryptoKey,
+  signature signature: Uint8Array,
+  data data: Uint8Array,
 ) -> Promise(Result(Bool, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key")
 pub fn generate_key(
-  algorithm: KeyGenAlgorithm,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  algorithm algorithm: KeyGenAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key_pair")
 pub fn generate_key_pair(
-  algorithm: KeyPairGenAlgorithm,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  algorithm algorithm: KeyPairGenAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKeyPair, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
 pub fn import_key(
-  format: KeyFormat,
-  key_data: Uint8Array,
-  algorithm: ImportAlgorithm,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  format format: KeyFormat,
+  key_data data: Uint8Array,
+  algorithm algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(
-  key_data: Dynamic,
-  algorithm: ImportAlgorithm,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  key_data data: Dynamic,
+  algorithm algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
 pub fn export_key(
-  format: KeyFormat,
-  key: CryptoKey,
+  format format: KeyFormat,
+  key key: CryptoKey,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
@@ -93,52 +93,52 @@ pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(Dynamic, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_bits")
 pub fn derive_bits(
-  algorithm: DeriveAlgorithm,
-  base_key: CryptoKey,
-  length: Int,
+  algorithm algorithm: DeriveAlgorithm,
+  base_key key: CryptoKey,
+  length length: Int,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_key")
 pub fn derive_key(
-  algorithm: DeriveAlgorithm,
-  base_key: CryptoKey,
-  derived_key_type: DerivedKeyType,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  algorithm algorithm: DeriveAlgorithm,
+  base_key key: CryptoKey,
+  derived_key_type type_: DerivedKeyType,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key")
 pub fn wrap_key(
-  format: KeyFormat,
-  key: CryptoKey,
-  wrapping_key: CryptoKey,
-  algorithm: WrapAlgorithm,
+  format format: KeyFormat,
+  key key: CryptoKey,
+  wrapping_key wrapping_key: CryptoKey,
+  algorithm algorithm: WrapAlgorithm,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key_jwk")
 pub fn wrap_key_jwk(
-  key: CryptoKey,
-  wrapping_key: CryptoKey,
-  algorithm: WrapAlgorithm,
+  key key: CryptoKey,
+  wrapping_key wrapping_key: CryptoKey,
+  algorithm algorithm: WrapAlgorithm,
 ) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
-  format: KeyFormat,
-  wrapped_key: Uint8Array,
-  unwrapping_key: CryptoKey,
-  unwrap_algorithm: WrapAlgorithm,
-  unwrapped_key_algorithm: ImportAlgorithm,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  format format: KeyFormat,
+  wrapped_key wrapped_key: Uint8Array,
+  unwrapping_key unwrapping_key: CryptoKey,
+  unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
+  unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
-  wrapped_key: Uint8Array,
-  unwrapping_key: CryptoKey,
-  unwrap_algorithm: WrapAlgorithm,
-  unwrapped_key_algorithm: ImportAlgorithm,
-  extractable: Bool,
-  usages: List(KeyUsage),
+  wrapped_key wrapped_key: Uint8Array,
+  unwrapping_key unwrapping_key: CryptoKey,
+  unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
+  unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))

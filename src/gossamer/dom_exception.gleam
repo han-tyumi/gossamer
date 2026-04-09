@@ -2,13 +2,13 @@
 pub type DOMException
 
 @external(javascript, "./dom_exception.ffi.mjs", "new_")
-pub fn new(message: String, name: String) -> DOMException
+pub fn new(message message: String, named name: String) -> DOMException
 
 @external(javascript, "./dom_exception.ffi.mjs", "message")
-pub fn message(exception: DOMException) -> String
+pub fn message(of exception: DOMException) -> String
 
 @external(javascript, "./dom_exception.ffi.mjs", "name")
-pub fn name(exception: DOMException) -> String
+pub fn name(of exception: DOMException) -> String
 
 @external(javascript, "./dom_exception.ffi.mjs", "code")
-pub fn code(exception: DOMException) -> Int
+pub fn code(of exception: DOMException) -> Int

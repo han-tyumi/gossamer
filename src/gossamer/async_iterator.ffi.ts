@@ -96,13 +96,13 @@ export const return_with: typeof $asyncIterator.return_with = async <
 
 export const throw_: typeof $asyncIterator.throw$ = async <T, TReturn, TNext>(
   iterator: AsyncIterator<T, TReturn, TNext>,
-  value: Parameters<typeof $asyncIterator.throw$<T, TReturn>>[1],
+  reason: Parameters<typeof $asyncIterator.throw$<T, TReturn>>[1],
 ) => {
   if (!iterator.throw) {
     return Result$Error(undefined);
   }
 
-  const result = await iterator.throw($option.unwrap(value, undefined));
+  const result = await iterator.throw($option.unwrap(reason, undefined));
   return Result$Ok(toGleamIteratorResult(result));
 };
 

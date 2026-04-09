@@ -5,4 +5,4 @@ pub type CountQueuingStrategy
 pub fn new(high_water_mark: Float) -> CountQueuingStrategy
 
 @external(javascript, "./count_queuing_strategy.ffi.mjs", "high_water_mark")
-pub fn high_water_mark(strategy: CountQueuingStrategy) -> Float
+pub fn high_water_mark(of strategy: CountQueuingStrategy) -> Float

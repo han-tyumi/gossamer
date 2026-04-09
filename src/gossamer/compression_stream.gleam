@@ -30,7 +30,7 @@ pub type CompressionStream
 pub fn new(format: CompressionFormat) -> Result(CompressionStream, String)
 
 @external(javascript, "./compression_stream.ffi.mjs", "readable")
-pub fn readable(stream: CompressionStream) -> ReadableStream(Uint8Array)
+pub fn readable(of stream: CompressionStream) -> ReadableStream(Uint8Array)
 
 @external(javascript, "./compression_stream.ffi.mjs", "writable")
-pub fn writable(stream: CompressionStream) -> WritableStream(Uint8Array)
+pub fn writable(of stream: CompressionStream) -> WritableStream(Uint8Array)

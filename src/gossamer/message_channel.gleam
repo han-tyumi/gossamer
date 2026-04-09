@@ -7,7 +7,7 @@ pub type MessageChannel
 pub fn new() -> MessageChannel
 
 @external(javascript, "./message_channel.ffi.mjs", "port1")
-pub fn port1(channel: MessageChannel) -> MessagePort
+pub fn port1(of channel: MessageChannel) -> MessagePort
 
 @external(javascript, "./message_channel.ffi.mjs", "port2")
-pub fn port2(channel: MessageChannel) -> MessagePort
+pub fn port2(of channel: MessageChannel) -> MessagePort

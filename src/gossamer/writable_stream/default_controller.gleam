@@ -5,7 +5,7 @@ import gossamer/abort_signal.{type AbortSignal}
 pub type DefaultController
 
 @external(javascript, "./default_controller.ffi.mjs", "signal")
-pub fn signal(controller: DefaultController) -> AbortSignal
+pub fn signal(of controller: DefaultController) -> AbortSignal
 
 @external(javascript, "./default_controller.ffi.mjs", "error")
-pub fn error(controller: DefaultController, reason: Dynamic) -> Nil
+pub fn error(controller: DefaultController, reason reason: Dynamic) -> Nil

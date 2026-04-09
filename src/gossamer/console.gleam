@@ -1,5 +1,5 @@
 @external(javascript, "./console.ffi.mjs", "assert_")
-pub fn assert_(condition: Bool, data: a) -> Nil
+pub fn assert_(that condition: Bool, log data: a) -> Nil
 
 @external(javascript, "./console.ffi.mjs", "clear")
 pub fn clear() -> Nil

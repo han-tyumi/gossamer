@@ -25,13 +25,13 @@ pub fn uri_error(message: String) -> Error
 pub fn eval_error(message: String) -> Error
 
 @external(javascript, "./error.ffi.mjs", "name")
-pub fn name(error: Error) -> String
+pub fn name(of error: Error) -> String
 
 @external(javascript, "./error.ffi.mjs", "message")
-pub fn message(error: Error) -> String
+pub fn message(of error: Error) -> String
 
 @external(javascript, "./error.ffi.mjs", "stack")
-pub fn stack(error: Error) -> Result(String, Nil)
+pub fn stack(of error: Error) -> Result(String, Nil)
 
 @external(javascript, "./error.ffi.mjs", "cause")
-pub fn cause(error: Error) -> Result(Dynamic, Nil)
+pub fn cause(of error: Error) -> Result(Dynamic, Nil)

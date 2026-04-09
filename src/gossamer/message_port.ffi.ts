@@ -2,11 +2,8 @@ import type * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
 
 export type MessagePort$ = MessagePort;
 
-export const post_message: typeof $messagePort.post_message = (
-  port,
-  message,
-) => {
-  port.postMessage(message);
+export const post_message: typeof $messagePort.post_message = (port, data) => {
+  port.postMessage(data);
 };
 
 export const start: typeof $messagePort.start = (port) => {

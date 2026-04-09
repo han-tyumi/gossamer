@@ -37,14 +37,14 @@ pub fn new(url: String) -> Result(WebSocket, String)
 @external(javascript, "./web_socket.ffi.mjs", "new_with_protocols")
 pub fn new_with_protocols(
   url: String,
-  protocols: List(String),
+  with protocols: List(String),
 ) -> Result(WebSocket, String)
 
 @external(javascript, "./web_socket.ffi.mjs", "binary_type")
-pub fn binary_type(socket: WebSocket) -> BinaryType
+pub fn binary_type(of socket: WebSocket) -> BinaryType
 
 @external(javascript, "./web_socket.ffi.mjs", "set_binary_type")
-pub fn set_binary_type(socket: WebSocket, value: BinaryType) -> Nil
+pub fn set_binary_type(of socket: WebSocket, to value: BinaryType) -> Nil
 
 /// Returns the number of bytes of application data (UTF-8 text and binary
 /// data) that have been queued using `send` but not yet been transmitted to
@@ -55,40 +55,47 @@ pub fn set_binary_type(socket: WebSocket, value: BinaryType) -> Nil
 /// to zero once the connection closes.)
 ///
 @external(javascript, "./web_socket.ffi.mjs", "buffered_amount")
-pub fn buffered_amount(socket: WebSocket) -> Int
+pub fn buffered_amount(of socket: WebSocket) -> Int
 
 @external(javascript, "./web_socket.ffi.mjs", "extensions")
-pub fn extensions(socket: WebSocket) -> String
+pub fn extensions(of socket: WebSocket) -> String
 
 @external(javascript, "./web_socket.ffi.mjs", "protocol")
-pub fn protocol(socket: WebSocket) -> String
+pub fn protocol(of socket: WebSocket) -> String
 
 @external(javascript, "./web_socket.ffi.mjs", "ready_state")
-pub fn ready_state(socket: WebSocket) -> ReadyState
+pub fn ready_state(of socket: WebSocket) -> ReadyState
 
 @external(javascript, "./web_socket.ffi.mjs", "url")
-pub fn url(socket: WebSocket) -> String
+pub fn url(of socket: WebSocket) -> String
 
 @external(javascript, "./web_socket.ffi.mjs", "close")
 pub fn close(socket: WebSocket) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "close_with")
-pub fn close_with(socket: WebSocket, code: Int, reason: String) -> Nil
+pub fn close_with(
+  socket: WebSocket,
+  code code: Int,
+  reason reason: String,
+) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "send")
-pub fn send(socket: WebSocket, data: String) -> Nil
+pub fn send(to socket: WebSocket, data data: String) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "send_dynamic")
-pub fn send_dynamic(socket: WebSocket, data: Dynamic) -> Nil
+pub fn send_dynamic(to socket: WebSocket, data data: Dynamic) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")
-pub fn on_open(socket: WebSocket, handler: fn() -> Nil) -> Nil
+pub fn on_open(socket: WebSocket, run handler: fn() -> Nil) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_message")
-pub fn on_message(socket: WebSocket, handler: fn(MessageEvent) -> Nil) -> Nil
+pub fn on_message(
+  socket: WebSocket,
+  run handler: fn(MessageEvent) -> Nil,
+) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_error")
-pub fn on_error(socket: WebSocket, handler: fn() -> Nil) -> Nil
+pub fn on_error(socket: WebSocket, run handler: fn() -> Nil) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_close")
-pub fn on_close(socket: WebSocket, handler: fn(CloseEvent) -> Nil) -> Nil
+pub fn on_close(socket: WebSocket, run handler: fn(CloseEvent) -> Nil) -> Nil

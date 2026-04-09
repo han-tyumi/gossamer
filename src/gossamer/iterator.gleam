@@ -44,8 +44,8 @@ pub fn return_with(
 @external(javascript, "./iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: Iterator(a, return, next),
-  e: e,
+  reason reason: e,
 ) -> Result(IteratorResult(a, return), Nil)
 
 @external(javascript, "./iterator.ffi.mjs", "for_")
-pub fn for(iterator: Iterator(a, return, next), fun: fn(a) -> any) -> Nil
+pub fn for(in iterator: Iterator(a, return, next), run fun: fn(a) -> any) -> Nil

@@ -17,11 +17,11 @@ pub fn new(body: String) -> Result(Response, String)
 @external(javascript, "./response.ffi.mjs", "new_with_init")
 pub fn new_with_init(
   body: String,
-  init: List(ResponseInit),
+  with init: List(ResponseInit),
 ) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "json")
-pub fn json(data: a, init: List(ResponseInit)) -> Response
+pub fn json(data: a, with init: List(ResponseInit)) -> Response
 
 @external(javascript, "./response.ffi.mjs", "error")
 pub fn error() -> Response
@@ -30,10 +30,10 @@ pub fn error() -> Response
 pub fn redirect(url: String) -> Response
 
 @external(javascript, "./response.ffi.mjs", "redirect_with_status")
-pub fn redirect_with_status(url: String, status: Int) -> Response
+pub fn redirect_with_status(url: String, status status: Int) -> Response
 
 @external(javascript, "./response.ffi.mjs", "headers_")
-pub fn headers(response: Response) -> Headers
+pub fn headers(of response: Response) -> Headers
 
 @external(javascript, "./response.ffi.mjs", "is_ok")
 pub fn is_ok(response: Response) -> Bool
@@ -42,40 +42,42 @@ pub fn is_ok(response: Response) -> Bool
 pub fn is_redirected(response: Response) -> Bool
 
 @external(javascript, "./response.ffi.mjs", "status")
-pub fn status(response: Response) -> Int
+pub fn status(of response: Response) -> Int
 
 @external(javascript, "./response.ffi.mjs", "status_text")
-pub fn status_text(response: Response) -> String
+pub fn status_text(of response: Response) -> String
 
 @external(javascript, "./response.ffi.mjs", "type_")
-pub fn type_(response: Response) -> String
+pub fn type_(of response: Response) -> String
 
 @external(javascript, "./response.ffi.mjs", "url")
-pub fn url(response: Response) -> String
+pub fn url(of response: Response) -> String
 
 @external(javascript, "./response.ffi.mjs", "clone")
 pub fn clone(response: Response) -> Response
 
 @external(javascript, "./response.ffi.mjs", "body")
-pub fn body(response: Response) -> Result(ReadableStream(Uint8Array), Nil)
+pub fn body(of response: Response) -> Result(ReadableStream(Uint8Array), Nil)
 
 @external(javascript, "./response.ffi.mjs", "is_body_used")
 pub fn is_body_used(response: Response) -> Bool
 
 @external(javascript, "./response.ffi.mjs", "blob")
-pub fn blob(response: Response) -> Promise(Result(Blob, String))
+pub fn blob(of response: Response) -> Promise(Result(Blob, String))
 
 @external(javascript, "./response.ffi.mjs", "array_buffer")
-pub fn array_buffer(response: Response) -> Promise(Result(ArrayBuffer, String))
+pub fn array_buffer(
+  of response: Response,
+) -> Promise(Result(ArrayBuffer, String))
 
 @external(javascript, "./response.ffi.mjs", "bytes")
-pub fn bytes(response: Response) -> Promise(Result(Uint8Array, String))
+pub fn bytes(of response: Response) -> Promise(Result(Uint8Array, String))
 
 @external(javascript, "./response.ffi.mjs", "json_body")
-pub fn json_body(response: Response) -> Promise(Result(Dynamic, String))
+pub fn json_body(of response: Response) -> Promise(Result(Dynamic, String))
 
 @external(javascript, "./response.ffi.mjs", "form_data")
-pub fn form_data(response: Response) -> Promise(Result(FormData, String))
+pub fn form_data(of response: Response) -> Promise(Result(FormData, String))
 
 @external(javascript, "./response.ffi.mjs", "text")
-pub fn text(response: Response) -> Promise(Result(String, String))
+pub fn text(of response: Response) -> Promise(Result(String, String))
