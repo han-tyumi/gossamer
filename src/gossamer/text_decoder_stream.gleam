@@ -1,3 +1,4 @@
+import gossamer/encoding.{type Encoding}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/text_decoder/text_decoder_option.{type TextDecoderOption}
 import gossamer/writable_stream.{type WritableStream}
@@ -21,7 +22,7 @@ pub fn readable(of decoder: TextDecoderStream) -> ReadableStream(String)
 pub fn writable(of decoder: TextDecoderStream) -> WritableStream(w)
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "encoding")
-pub fn encoding(of decoder: TextDecoderStream) -> String
+pub fn encoding(of decoder: TextDecoderStream) -> Encoding
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "is_fatal")
 pub fn is_fatal(decoder: TextDecoderStream) -> Bool

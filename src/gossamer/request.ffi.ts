@@ -1,6 +1,7 @@
 import type * as $request from "$/gossamer/gossamer/request.mjs";
 import { fromReferrerPolicy } from "~/gossamer/referrer_policy.ts";
 import { fromRequestCache } from "~/gossamer/request_cache.ts";
+import { fromHttpMethod } from "~/gossamer/http_method.ts";
 import { fromRequestCredentials } from "~/gossamer/request_credentials.ts";
 import { fromRequestDestination } from "~/gossamer/request_destination.ts";
 import { toRequestInit } from "~/gossamer/request_init.ts";
@@ -21,7 +22,9 @@ export const new_with_init: typeof $request.new_with_init = (input, init) => {
   );
 };
 
-export const method: typeof $request.method = (request) => request.method;
+export const method: typeof $request.method = (request) => {
+  return fromHttpMethod(request.method);
+};
 export const url: typeof $request.url = (request) => request.url;
 export const headers: typeof $request.headers = (request) => request.headers;
 export const cache: typeof $request.cache = (request) => {

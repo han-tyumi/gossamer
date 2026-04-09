@@ -4,6 +4,7 @@ import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
+import gossamer/http_method.{type HttpMethod}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/referrer_policy.{type ReferrerPolicy}
@@ -28,7 +29,7 @@ pub fn new_with_init(
 ) -> Result(Request, String)
 
 @external(javascript, "./request.ffi.mjs", "method")
-pub fn method(of request: Request) -> String
+pub fn method(of request: Request) -> HttpMethod
 
 @external(javascript, "./request.ffi.mjs", "url")
 pub fn url(of request: Request) -> String

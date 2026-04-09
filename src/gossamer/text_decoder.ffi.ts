@@ -1,4 +1,5 @@
 import type * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
+import { fromEncoding } from "~/gossamer/encoding.ts";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder/text_decoder_option.ts";
 import { toResult } from "~/utils/result.ts";
 
@@ -19,7 +20,7 @@ export const new_with: typeof $textDecoder.new_with = (label, options) => {
 export const encoding: typeof $textDecoder.encoding = (
   decoder: TextDecoder,
 ) => {
-  return decoder.encoding;
+  return fromEncoding(decoder.encoding);
 };
 
 export const is_fatal: typeof $textDecoder.is_fatal = (

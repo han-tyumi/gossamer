@@ -21,8 +21,8 @@ pub fn new_with_init(
   with init: List(ResponseInit),
 ) -> Result(Response, String)
 
-@external(javascript, "./response.ffi.mjs", "json")
-pub fn json(data: a, with init: List(ResponseInit)) -> Response
+@external(javascript, "./response.ffi.mjs", "from_json")
+pub fn from_json(data: a, with init: List(ResponseInit)) -> Response
 
 @external(javascript, "./response.ffi.mjs", "error")
 pub fn error() -> Response
@@ -74,8 +74,8 @@ pub fn array_buffer(
 @external(javascript, "./response.ffi.mjs", "bytes")
 pub fn bytes(of response: Response) -> Promise(Result(Uint8Array, String))
 
-@external(javascript, "./response.ffi.mjs", "json_body")
-pub fn json_body(of response: Response) -> Promise(Result(Dynamic, String))
+@external(javascript, "./response.ffi.mjs", "json")
+pub fn json(of response: Response) -> Promise(Result(Dynamic, String))
 
 @external(javascript, "./response.ffi.mjs", "form_data")
 pub fn form_data(of response: Response) -> Promise(Result(FormData, String))

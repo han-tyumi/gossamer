@@ -125,7 +125,7 @@ pub fn import_export_key_test() {
     subtle_crypto.import_key(
       key_format.Raw,
       raw_key,
-      import_algorithm.Name("AES-GCM"),
+      import_algorithm.Other("AES-GCM"),
       True,
       [key_usage.Encrypt, key_usage.Decrypt],
     ),
@@ -215,7 +215,7 @@ pub fn import_key_jwk_test() {
   let assert Ok(jwk) = result
 
   use result <- promise.then(
-    subtle_crypto.import_key_jwk(jwk, import_algorithm.Name("AES-GCM"), True, [
+    subtle_crypto.import_key_jwk(jwk, import_algorithm.Other("AES-GCM"), True, [
       key_usage.Encrypt,
       key_usage.Decrypt,
     ]),
@@ -233,7 +233,7 @@ pub fn derive_bits_test() {
     subtle_crypto.import_key(
       key_format.Raw,
       password,
-      import_algorithm.Name("PBKDF2"),
+      import_algorithm.Other("PBKDF2"),
       False,
       [key_usage.DeriveBits],
     ),
@@ -258,7 +258,7 @@ pub fn derive_key_test() {
     subtle_crypto.import_key(
       key_format.Raw,
       password,
-      import_algorithm.Name("PBKDF2"),
+      import_algorithm.Other("PBKDF2"),
       False,
       [key_usage.DeriveKey],
     ),
@@ -309,7 +309,7 @@ pub fn wrap_unwrap_key_test() {
     key_format.Raw,
     key_to_wrap,
     wrapping_key,
-    wrap_algorithm.Name("AES-KW"),
+    wrap_algorithm.Other("AES-KW"),
   ))
   let assert Ok(wrapped) = result
   should.be_true(array_buffer.byte_length(wrapped) > 0)
@@ -319,8 +319,8 @@ pub fn wrap_unwrap_key_test() {
       key_format.Raw,
       uint8_array.from_buffer(wrapped),
       wrapping_key,
-      wrap_algorithm.Name("AES-KW"),
-      import_algorithm.Name("AES-GCM"),
+      wrap_algorithm.Other("AES-KW"),
+      import_algorithm.Other("AES-GCM"),
       True,
       [key_usage.Encrypt],
     ),
@@ -359,7 +359,7 @@ pub fn wrap_unwrap_key_jwk_test() {
   use result <- promise.then(subtle_crypto.wrap_key_jwk(
     key_to_wrap,
     wrapping_key,
-    wrap_algorithm.Name("AES-KW"),
+    wrap_algorithm.Other("AES-KW"),
   ))
   let assert Ok(wrapped_jwk) = result
   should.be_true(array_buffer.byte_length(wrapped_jwk) > 0)
@@ -368,8 +368,8 @@ pub fn wrap_unwrap_key_jwk_test() {
     subtle_crypto.unwrap_key_jwk(
       uint8_array.from_buffer(wrapped_jwk),
       wrapping_key,
-      wrap_algorithm.Name("AES-KW"),
-      import_algorithm.Name("AES-GCM"),
+      wrap_algorithm.Other("AES-KW"),
+      import_algorithm.Other("AES-GCM"),
       True,
       [key_usage.Encrypt],
     ),

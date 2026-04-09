@@ -4,8 +4,8 @@ import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 export function toDeriveAlgorithm(
   algorithm: $alg.DeriveAlgorithm$,
 ): AlgorithmIdentifier | HkdfParams | Pbkdf2Params | EcdhKeyDeriveParams {
-  if ($alg.DeriveAlgorithm$isName(algorithm)) {
-    return $alg.DeriveAlgorithm$Name$0(algorithm);
+  if ($alg.DeriveAlgorithm$isOther(algorithm)) {
+    return $alg.DeriveAlgorithm$Other$0(algorithm);
   }
   if ($alg.DeriveAlgorithm$isHkdf(algorithm)) {
     return {

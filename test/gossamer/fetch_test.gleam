@@ -1,6 +1,7 @@
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/headers
+import gossamer/http_method
 import gossamer/promise
 import gossamer/request
 import gossamer/request_init
@@ -55,16 +56,16 @@ pub fn headers_entries_test() {
 
 pub fn request_new_test() {
   let assert Ok(req) = request.new("https://example.org/foo")
-  request.method(req) |> should.equal("GET")
+  request.method(req) |> should.equal(http_method.Get)
   request.url(req) |> should.equal("https://example.org/foo")
 }
 
 pub fn request_new_with_init_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
     ])
-  request.method(req) |> should.equal("POST")
+  request.method(req) |> should.equal(http_method.Post)
 }
 
 pub fn request_headers_test() {
@@ -81,7 +82,7 @@ pub fn request_headers_test() {
 pub fn request_text_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
       request_init.Body("hello"),
     ])
   use text <- promise.then(request.text(req))
@@ -137,7 +138,7 @@ pub fn response_get_not_found_test() {
 pub fn request_blob_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
       request_init.Body("blob content"),
     ])
   use result <- promise.then(request.blob(req))
@@ -157,7 +158,7 @@ pub fn response_blob_test() {
 pub fn request_form_data_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
       request_init.Headers(
         headers.from_pairs([
           #("content-type", "application/x-www-form-urlencoded"),
@@ -267,7 +268,7 @@ pub fn request_is_body_used_test() {
 pub fn request_array_buffer_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
       request_init.Body("hi"),
     ])
   use result <- promise.then(request.array_buffer(req))
@@ -279,7 +280,7 @@ pub fn request_array_buffer_test() {
 pub fn request_bytes_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
       request_init.Body("abc"),
     ])
   use result <- promise.then(request.bytes(req))
@@ -291,7 +292,7 @@ pub fn request_bytes_test() {
 pub fn request_json_test() {
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
-      request_init.Method("POST"),
+      request_init.Method(http_method.Post),
       request_init.Body("{\"a\":1}"),
     ])
   use result <- promise.then(request.json(req))
@@ -301,8 +302,8 @@ pub fn request_json_test() {
 
 // Response additional body tests
 
-pub fn response_json_static_test() {
-  let resp = response.json(42, [])
+pub fn response_from_json_test() {
+  let resp = response.from_json(42, [])
   response.status(resp) |> should.equal(200)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("42"))
@@ -335,14 +336,14 @@ pub fn response_bytes_test() {
   promise.resolve(Nil)
 }
 
-pub fn response_json_body_test() {
+pub fn response_json_test() {
   let assert Ok(resp) =
     response.new_with_init("{\"a\":1}", [
       response_init.Headers(
         headers.from_pairs([#("content-type", "application/json")]),
       ),
     ])
-  use result <- promise.then(response.json_body(resp))
+  use result <- promise.then(response.json(resp))
   should.be_ok(result)
   promise.resolve(Nil)
 }

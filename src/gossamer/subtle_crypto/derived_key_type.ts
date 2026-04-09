@@ -5,8 +5,8 @@ import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
 export function toDerivedKeyType(
   derivedKeyType: $type.DerivedKeyType$,
 ): AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams {
-  if ($type.DerivedKeyType$isName(derivedKeyType)) {
-    return $type.DerivedKeyType$Name$0(derivedKeyType);
+  if ($type.DerivedKeyType$isOther(derivedKeyType)) {
+    return $type.DerivedKeyType$Other$0(derivedKeyType);
   }
   if ($type.DerivedKeyType$isAesDerived(derivedKeyType)) {
     return {

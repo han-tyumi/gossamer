@@ -1,10 +1,11 @@
 import type * as $textEncoder from "$/gossamer/gossamer/text_encoder.mjs";
 import { EncodeIntoResult$EncodeIntoResult } from "$/gossamer/gossamer/text_encoder/encode_into_result.mjs";
+import { fromEncoding } from "~/gossamer/encoding.ts";
 
 const sharedEncoder = new TextEncoder();
 
 export const encoding: typeof $textEncoder.encoding = () => {
-  return sharedEncoder.encoding;
+  return fromEncoding(sharedEncoder.encoding);
 };
 
 export const encode: typeof $textEncoder.encode = (

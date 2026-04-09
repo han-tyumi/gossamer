@@ -16,7 +16,7 @@ export const new_with_init: typeof $response.new_with_init = (body, init) => {
   );
 };
 
-export const json: typeof $response.json = (data, init) => {
+export const from_json: typeof $response.from_json = (data, init) => {
   return Response.json(data, toResponseInit(toArray(init)));
 };
 
@@ -79,7 +79,7 @@ export const bytes: typeof $response.bytes = (response) => {
   return toResult.fromPromise(response.bytes());
 };
 
-export const json_body: typeof $response.json_body = (response) => {
+export const json: typeof $response.json = (response) => {
   return toResult.fromPromise(response.json());
 };
 

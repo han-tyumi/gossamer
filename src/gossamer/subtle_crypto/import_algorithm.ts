@@ -11,8 +11,8 @@ export function toImportAlgorithm(
   | HmacImportParams
   | RsaHashedImportParams
   | EcKeyImportParams {
-  if ($alg.ImportAlgorithm$isName(algorithm)) {
-    return $alg.ImportAlgorithm$Name$0(algorithm);
+  if ($alg.ImportAlgorithm$isOther(algorithm)) {
+    return $alg.ImportAlgorithm$Other$0(algorithm);
   }
   if ($alg.ImportAlgorithm$isHmacImport(algorithm)) {
     return {

@@ -1,4 +1,5 @@
 import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/encoding.{type Encoding}
 import gossamer/text_decoder/text_decoder_option.{type TextDecoderOption}
 
 @external(javascript, "./text_decoder.type.ts", "TextDecoder$")
@@ -14,7 +15,7 @@ pub fn new_with(
 ) -> Result(TextDecoder, String)
 
 @external(javascript, "./text_decoder.ffi.mjs", "encoding")
-pub fn encoding(of decoder: TextDecoder) -> String
+pub fn encoding(of decoder: TextDecoder) -> Encoding
 
 @external(javascript, "./text_decoder.ffi.mjs", "is_fatal")
 pub fn is_fatal(decoder: TextDecoder) -> Bool

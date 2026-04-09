@@ -8,8 +8,8 @@ export function toEncryptAlgorithm(
   | AesGcmParams
   | AesCtrParams
   | RsaOaepParams {
-  if ($alg.EncryptAlgorithm$isName(algorithm)) {
-    return $alg.EncryptAlgorithm$Name$0(algorithm);
+  if ($alg.EncryptAlgorithm$isOther(algorithm)) {
+    return $alg.EncryptAlgorithm$Other$0(algorithm);
   }
   if ($alg.EncryptAlgorithm$isAesCbc(algorithm)) {
     return {

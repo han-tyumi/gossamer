@@ -1,5 +1,6 @@
 import gleeunit/should
 import gossamer/array_buffer
+import gossamer/encoding
 import gossamer/text_decoder
 import gossamer/text_decoder/text_decoder_option
 import gossamer/text_encoder
@@ -7,12 +8,12 @@ import gossamer/uint8_array
 
 pub fn new_test() {
   let decoder = text_decoder.new()
-  text_decoder.encoding(decoder) |> should.equal("utf-8")
+  text_decoder.encoding(decoder) |> should.equal(encoding.Utf8)
 }
 
 pub fn new_with_utf8_test() {
   let assert Ok(decoder) = text_decoder.new_with("utf-8", [])
-  text_decoder.encoding(decoder) |> should.equal("utf-8")
+  text_decoder.encoding(decoder) |> should.equal(encoding.Utf8)
 }
 
 pub fn new_with_invalid_test() {

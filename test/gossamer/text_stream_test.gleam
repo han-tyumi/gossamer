@@ -1,5 +1,6 @@
 import gleam/option.{None}
 import gleeunit/should
+import gossamer/encoding
 import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
@@ -10,7 +11,7 @@ import gossamer/text_encoder_stream
 
 pub fn text_encoder_stream_new_test() {
   let encoder = text_encoder_stream.new()
-  text_encoder_stream.encoding(encoder) |> should.equal("utf-8")
+  text_encoder_stream.encoding(encoder) |> should.equal(encoding.Utf8)
 }
 
 pub fn text_encoder_stream_readable_writable_test() {
@@ -21,14 +22,14 @@ pub fn text_encoder_stream_readable_writable_test() {
 
 pub fn text_decoder_stream_new_test() {
   let decoder = text_decoder_stream.new()
-  text_decoder_stream.encoding(decoder) |> should.equal("utf-8")
+  text_decoder_stream.encoding(decoder) |> should.equal(encoding.Utf8)
   text_decoder_stream.is_fatal(decoder) |> should.be_false
   text_decoder_stream.is_ignore_bom(decoder) |> should.be_false
 }
 
 pub fn text_decoder_stream_new_with_test() {
   let assert Ok(decoder) = text_decoder_stream.new_with("utf-8", [])
-  text_decoder_stream.encoding(decoder) |> should.equal("utf-8")
+  text_decoder_stream.encoding(decoder) |> should.equal(encoding.Utf8)
 }
 
 pub fn text_decoder_stream_readable_writable_test() {

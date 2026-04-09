@@ -1,9 +1,10 @@
 import gleeunit/should
+import gossamer/encoding
 import gossamer/text_encoder
 import gossamer/uint8_array
 
 pub fn encoding_test() {
-  text_encoder.encoding() |> should.equal("utf-8")
+  text_encoder.encoding() |> should.equal(encoding.Utf8)
 }
 
 pub fn encode_test() {

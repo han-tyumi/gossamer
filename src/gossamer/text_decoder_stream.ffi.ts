@@ -1,4 +1,5 @@
 import type * as $textDecoderStream from "$/gossamer/gossamer/text_decoder_stream.mjs";
+import { fromEncoding } from "~/gossamer/encoding.ts";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder/text_decoder_option.ts";
 import { toResult } from "~/utils/result.ts";
 
@@ -32,7 +33,7 @@ export const writable: typeof $textDecoderStream.writable = (
 export const encoding: typeof $textDecoderStream.encoding = (
   decoder: TextDecoderStream,
 ) => {
-  return decoder.encoding;
+  return fromEncoding(decoder.encoding);
 };
 
 export const is_fatal: typeof $textDecoderStream.is_fatal = (

@@ -1,4 +1,5 @@
 import type * as $textEncoderStream from "$/gossamer/gossamer/text_encoder_stream.mjs";
+import { fromEncoding } from "~/gossamer/encoding.ts";
 
 export type TextEncoderStream$ = TextEncoderStream;
 
@@ -21,5 +22,5 @@ export const writable: typeof $textEncoderStream.writable = (
 export const encoding: typeof $textEncoderStream.encoding = (
   encoder: TextEncoderStream,
 ) => {
-  return encoder.encoding;
+  return fromEncoding(encoder.encoding);
 };

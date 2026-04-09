@@ -3,8 +3,8 @@ import * as $alg from "$/gossamer/gossamer/subtle_crypto/wrap_algorithm.mjs";
 export function toWrapAlgorithm(
   algorithm: $alg.WrapAlgorithm$,
 ): AlgorithmIdentifier | AesCbcParams | AesCtrParams | RsaOaepParams {
-  if ($alg.WrapAlgorithm$isName(algorithm)) {
-    return $alg.WrapAlgorithm$Name$0(algorithm);
+  if ($alg.WrapAlgorithm$isOther(algorithm)) {
+    return $alg.WrapAlgorithm$Other$0(algorithm);
   }
   if ($alg.WrapAlgorithm$isAesCbc(algorithm)) {
     return {

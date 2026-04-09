@@ -1,4 +1,5 @@
 import * as $requestInit from "$/gossamer/gossamer/request_init.mjs";
+import { toHttpMethod } from "~/gossamer/http_method.ts";
 import { toRequestRedirect } from "~/gossamer/request_redirect.ts";
 
 export function toRequestInit(
@@ -7,7 +8,7 @@ export function toRequestInit(
   const result: RequestInit = {};
   for (const option of options) {
     if ($requestInit.RequestInit$isMethod(option)) {
-      result.method = $requestInit.RequestInit$Method$0(option);
+      result.method = toHttpMethod($requestInit.RequestInit$Method$0(option));
     } else if ($requestInit.RequestInit$isHeaders(option)) {
       result.headers = $requestInit.RequestInit$Headers$0(option);
     } else if ($requestInit.RequestInit$isBody(option)) {
