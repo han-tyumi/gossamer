@@ -1,3 +1,11 @@
+## 4.1.0 (2026-04-09)
+
+### Features
+
+- add labels to function arguments
+- widen side-effect callback return types
+- use generic types for Dynamic input parameters
+
 ## 4.0.1 (2026-04-08)
 
 ### Fixes
