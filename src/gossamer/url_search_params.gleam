@@ -62,7 +62,7 @@ pub fn sort(params: URLSearchParams) -> URLSearchParams
 @external(javascript, "./url_search_params.ffi.mjs", "for_each")
 pub fn for_each(
   in params: URLSearchParams,
-  run callback: fn(String, String) -> Nil,
+  run callback: fn(String, String) -> a,
 ) -> Nil
 
 @external(javascript, "./url_search_params.ffi.mjs", "keys")

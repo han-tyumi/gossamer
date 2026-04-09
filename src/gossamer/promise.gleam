@@ -14,7 +14,7 @@ pub type PromiseWithResolvers(a) {
 }
 
 @external(javascript, "./promise.ffi.mjs", "new_")
-pub fn new(executor: fn(fn(a) -> Nil, fn(r) -> Nil) -> Nil) -> Promise(a)
+pub fn new(executor: fn(fn(a) -> b, fn(r) -> c) -> d) -> Promise(a)
 
 /// Resolves with a list of results when all provided promises resolve, or
 /// rejects when any promise is rejected.
@@ -64,7 +64,7 @@ pub fn catch(
 ) -> Promise(a)
 
 @external(javascript, "./promise.ffi.mjs", "finally_")
-pub fn finally(promise: Promise(a), run onfinally: fn() -> Nil) -> Promise(a)
+pub fn finally(promise: Promise(a), run onfinally: fn() -> b) -> Promise(a)
 
 pub fn from_result(result: Result(a, _)) -> Promise(a) {
   case result {

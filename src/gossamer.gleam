@@ -39,17 +39,17 @@ pub fn clear_timeout(id: Int) -> Nil
 /// script's execution environment.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "queue_microtask")
-pub fn queue_microtask(run func: fn() -> Nil) -> Nil
+pub fn queue_microtask(run func: fn() -> a) -> Nil
 
 @external(javascript, "./gossamer.ffi.mjs", "set_interval")
-pub fn set_interval(every delay: Int, run callback: fn() -> Nil) -> Int
+pub fn set_interval(every delay: Int, run callback: fn() -> a) -> Int
 
 /// Sets a timer which executes a function once after the delay
 /// (in milliseconds) elapses. Returns an id which may be used to cancel the
 /// timeout.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_timeout")
-pub fn set_timeout(after delay: Int, run callback: fn() -> Nil) -> Int
+pub fn set_timeout(after delay: Int, run callback: fn() -> a) -> Int
 
 @external(javascript, "./gossamer.ffi.mjs", "user_agent")
 pub fn user_agent() -> String

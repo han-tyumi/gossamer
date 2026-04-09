@@ -22,4 +22,4 @@ pub fn reason(for signal: AbortSignal) -> Result(Dynamic, Nil)
 pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, String)
 
 @external(javascript, "./abort_signal.ffi.mjs", "on_abort")
-pub fn on_abort(signal: AbortSignal, run handler: fn() -> Nil) -> Nil
+pub fn on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil

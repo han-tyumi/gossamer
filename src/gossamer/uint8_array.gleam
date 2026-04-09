@@ -226,12 +226,12 @@ pub fn index_map(
 ) -> Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "for_each")
-pub fn for_each(in array: Uint8Array, run callback: fn(Int) -> Nil) -> Nil
+pub fn for_each(in array: Uint8Array, run callback: fn(Int) -> b) -> Nil
 
 @external(javascript, "./uint8_array.ffi.mjs", "index_for_each")
 pub fn index_for_each(
   in array: Uint8Array,
-  run callback: fn(Int, Int) -> Nil,
+  run callback: fn(Int, Int) -> b,
 ) -> Nil
 
 @external(javascript, "./uint8_array.ffi.mjs", "sort")

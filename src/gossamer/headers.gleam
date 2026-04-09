@@ -55,5 +55,5 @@ pub fn entries(of headers: Headers) -> List(#(String, String))
 @external(javascript, "./headers.ffi.mjs", "for_each")
 pub fn for_each(
   in headers: Headers,
-  run callback: fn(String, String) -> Nil,
+  run callback: fn(String, String) -> a,
 ) -> Nil

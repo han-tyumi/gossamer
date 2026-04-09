@@ -105,5 +105,5 @@ pub fn entries(of form_data: FormData) -> List(#(String, String))
 @external(javascript, "./form_data.ffi.mjs", "for_each")
 pub fn for_each(
   in form_data: FormData,
-  run callback: fn(String, String) -> Nil,
+  run callback: fn(String, String) -> a,
 ) -> Nil

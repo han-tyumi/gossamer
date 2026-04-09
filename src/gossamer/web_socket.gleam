@@ -86,16 +86,13 @@ pub fn send(to socket: WebSocket, data data: String) -> Nil
 pub fn send_dynamic(to socket: WebSocket, data data: Dynamic) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")
-pub fn on_open(socket: WebSocket, run handler: fn() -> Nil) -> Nil
+pub fn on_open(socket: WebSocket, run handler: fn() -> a) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_message")
-pub fn on_message(
-  socket: WebSocket,
-  run handler: fn(MessageEvent) -> Nil,
-) -> Nil
+pub fn on_message(socket: WebSocket, run handler: fn(MessageEvent) -> a) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_error")
-pub fn on_error(socket: WebSocket, run handler: fn() -> Nil) -> Nil
+pub fn on_error(socket: WebSocket, run handler: fn() -> a) -> Nil
 
 @external(javascript, "./web_socket.ffi.mjs", "on_close")
-pub fn on_close(socket: WebSocket, run handler: fn(CloseEvent) -> Nil) -> Nil
+pub fn on_close(socket: WebSocket, run handler: fn(CloseEvent) -> a) -> Nil

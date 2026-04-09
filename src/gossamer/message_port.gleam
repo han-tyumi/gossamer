@@ -13,13 +13,10 @@ pub fn start(port: MessagePort) -> Nil
 pub fn close(port: MessagePort) -> Nil
 
 @external(javascript, "./message_port.ffi.mjs", "on_message")
-pub fn on_message(
-  port: MessagePort,
-  run handler: fn(MessageEvent) -> Nil,
-) -> Nil
+pub fn on_message(port: MessagePort, run handler: fn(MessageEvent) -> a) -> Nil
 
 @external(javascript, "./message_port.ffi.mjs", "on_message_error")
 pub fn on_message_error(
   port: MessagePort,
-  run handler: fn(MessageEvent) -> Nil,
+  run handler: fn(MessageEvent) -> a,
 ) -> Nil
