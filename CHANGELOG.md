@@ -1,3 +1,10 @@
+## 6.2.0 (2026-04-10)
+
+### Features
+
+- add Math module with constants, trig, log, and utility functions
+- add Number module with type checks, formatting, and parsing
+
 ## 6.1.0 (2026-04-10)
 
 ### Features
