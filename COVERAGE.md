@@ -2,9 +2,9 @@
 
 gossamer targets cross-runtime JavaScript APIs — both
 [Web Platform](https://min-common-api.proposal.wintertc.org/) and
-[ECMAScript](https://tc39.es/ecma262/) — that have no direct equivalent in
-Gleam's standard library. All APIs must work in Deno, Node.js, Bun, and
-browsers.
+[ECMAScript](https://tc39.es/ecma262/). This includes APIs with no Gleam
+equivalent and native JS types that complement Gleam's standard library for
+interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ## Specs
 
@@ -40,13 +40,13 @@ browsers.
 
 ### Fetch & HTTP
 
-| Interface | Status | Module               | Notes |
-| --------- | ------ | -------------------- | ----- |
-| fetch()   | ✅     | `gossamer`           |       |
-| Headers   | ✅     | `gossamer/headers`   |       |
-| Request   | ✅     | `gossamer/request`   |       |
-| Response  | ✅     | `gossamer/response`  |       |
-| FormData  | ✅     | `gossamer/form_data` |       |
+| Interface | Status | Module               |
+| --------- | ------ | -------------------- |
+| fetch()   | ✅     | `gossamer`           |
+| Headers   | ✅     | `gossamer/headers`   |
+| Request   | ✅     | `gossamer/request`   |
+| Response  | ✅     | `gossamer/response`  |
+| FormData  | ✅     | `gossamer/form_data` |
 
 ### URL
 
@@ -58,126 +58,144 @@ browsers.
 
 ### Streams
 
-| Interface                        | Status | Module                                         | Notes |
-| -------------------------------- | ------ | ---------------------------------------------- | ----- |
-| ReadableStream                   | ✅     | `gossamer/readable_stream`                     |       |
-| ReadableStreamDefaultReader      | ✅     | `gossamer/readable_stream/reader`              |       |
-| ReadableStreamBYOBReader         | ✅     | `gossamer/readable_stream/byob_reader`         |       |
-| ReadableStreamDefaultController  | ✅     | `gossamer/readable_stream/default_controller`  |       |
-| WritableStream                   | ✅     | `gossamer/writable_stream`                     |       |
-| WritableStreamDefaultWriter      | ✅     | `gossamer/writable_stream/writer`              |       |
-| WritableStreamDefaultController  | ✅     | `gossamer/writable_stream/default_controller`  |       |
-| TransformStream                  | ✅     | `gossamer/transform_stream`                    |       |
-| TransformStreamDefaultController | ✅     | `gossamer/transform_stream/default_controller` |       |
-| ByteLengthQueuingStrategy        | ✅     | `gossamer/byte_length_queuing_strategy`        |       |
-| CountQueuingStrategy             | ✅     | `gossamer/count_queuing_strategy`              |       |
+| Interface                        | Status | Module                                         |
+| -------------------------------- | ------ | ---------------------------------------------- |
+| ReadableStream                   | ✅     | `gossamer/readable_stream`                     |
+| ReadableStreamDefaultReader      | ✅     | `gossamer/readable_stream/reader`              |
+| ReadableStreamBYOBReader         | ✅     | `gossamer/readable_stream/byob_reader`         |
+| ReadableStreamDefaultController  | ✅     | `gossamer/readable_stream/default_controller`  |
+| WritableStream                   | ✅     | `gossamer/writable_stream`                     |
+| WritableStreamDefaultWriter      | ✅     | `gossamer/writable_stream/writer`              |
+| WritableStreamDefaultController  | ✅     | `gossamer/writable_stream/default_controller`  |
+| TransformStream                  | ✅     | `gossamer/transform_stream`                    |
+| TransformStreamDefaultController | ✅     | `gossamer/transform_stream/default_controller` |
+| ByteLengthQueuingStrategy        | ✅     | `gossamer/byte_length_queuing_strategy`        |
+| CountQueuingStrategy             | ✅     | `gossamer/count_queuing_strategy`              |
 
 ### Compression
 
-| Interface           | Status | Module                          | Notes |
-| ------------------- | ------ | ------------------------------- | ----- |
-| CompressionStream   | ✅     | `gossamer/compression_stream`   |       |
-| DecompressionStream | ✅     | `gossamer/decompression_stream` |       |
+| Interface           | Status | Module                          |
+| ------------------- | ------ | ------------------------------- |
+| CompressionStream   | ✅     | `gossamer/compression_stream`   |
+| DecompressionStream | ✅     | `gossamer/decompression_stream` |
 
 ### Text Encoding
 
-| Interface         | Status | Module                         | Notes |
-| ----------------- | ------ | ------------------------------ | ----- |
-| TextEncoder       | ✅     | `gossamer/text_encoder`        |       |
-| TextDecoder       | ✅     | `gossamer/text_decoder`        |       |
-| TextEncoderStream | ✅     | `gossamer/text_encoder_stream` |       |
-| TextDecoderStream | ✅     | `gossamer/text_decoder_stream` |       |
+| Interface         | Status | Module                         |
+| ----------------- | ------ | ------------------------------ |
+| TextEncoder       | ✅     | `gossamer/text_encoder`        |
+| TextDecoder       | ✅     | `gossamer/text_decoder`        |
+| TextEncoderStream | ✅     | `gossamer/text_encoder_stream` |
+| TextDecoderStream | ✅     | `gossamer/text_decoder_stream` |
 
 ### Crypto
 
-| Interface    | Status | Module                   | Notes |
-| ------------ | ------ | ------------------------ | ----- |
-| Crypto       | ✅     | `gossamer/crypto`        |       |
-| SubtleCrypto | ✅     | `gossamer/subtle_crypto` |       |
-| CryptoKey    | ✅     | `gossamer/crypto_key`    |       |
+| Interface    | Status | Module                   |
+| ------------ | ------ | ------------------------ |
+| Crypto       | ✅     | `gossamer/crypto`        |
+| SubtleCrypto | ✅     | `gossamer/subtle_crypto` |
+| CryptoKey    | ✅     | `gossamer/crypto_key`    |
 
 ### Data Types
 
-| Interface | Status | Module          | Notes |
-| --------- | ------ | --------------- | ----- |
-| Blob      | ✅     | `gossamer/blob` |       |
-| File      | ✅     | `gossamer/file` |       |
+| Interface | Status | Module          |
+| --------- | ------ | --------------- |
+| Blob      | ✅     | `gossamer/blob` |
+| File      | ✅     | `gossamer/file` |
 
 ### Events & DOM
 
-| Interface             | Status | Module                   | Notes |
-| --------------------- | ------ | ------------------------ | ----- |
-| Event                 | ❌     | —                        |       |
-| EventTarget           | ❌     | —                        |       |
-| CustomEvent           | ❌     | —                        |       |
-| ErrorEvent            | ❌     | —                        |       |
-| PromiseRejectionEvent | ❌     | —                        |       |
-| DOMException          | ✅     | `gossamer/dom_exception` |       |
+| Interface             | Status | Module                   |
+| --------------------- | ------ | ------------------------ |
+| Event                 | ✅     | `gossamer/event`         |
+| EventTarget           | ✅     | `gossamer/event_target`  |
+| CustomEvent           | ❌     | —                        |
+| ErrorEvent            | ❌     | —                        |
+| PromiseRejectionEvent | ❌     | —                        |
+| DOMException          | ✅     | `gossamer/dom_exception` |
 
 ### Cancellation
 
-| Interface       | Status | Module                      | Notes |
-| --------------- | ------ | --------------------------- | ----- |
-| AbortController | ✅     | `gossamer/abort_controller` |       |
-| AbortSignal     | ✅     | `gossamer/abort_signal`     |       |
+| Interface       | Status | Module                      |
+| --------------- | ------ | --------------------------- |
+| AbortController | ✅     | `gossamer/abort_controller` |
+| AbortSignal     | ✅     | `gossamer/abort_signal`     |
 
 ### Messaging
 
-| Interface      | Status | Module                     | Notes |
-| -------------- | ------ | -------------------------- | ----- |
-| MessageChannel | ✅     | `gossamer/message_channel` |       |
-| MessagePort    | ✅     | `gossamer/message_port`    |       |
-| MessageEvent   | ✅     | `gossamer/message_event`   |       |
+| Interface      | Status | Module                     |
+| -------------- | ------ | -------------------------- |
+| MessageChannel | ✅     | `gossamer/message_channel` |
+| MessagePort    | ✅     | `gossamer/message_port`    |
+| MessageEvent   | ✅     | `gossamer/message_event`   |
 
 ### Timers & Scheduling
 
-| Interface      | Status | Module     | Notes |
-| -------------- | ------ | ---------- | ----- |
-| setTimeout     | ✅     | `gossamer` |       |
-| setInterval    | ✅     | `gossamer` |       |
-| clearTimeout   | ✅     | `gossamer` |       |
-| clearInterval  | ✅     | `gossamer` |       |
-| queueMicrotask | ✅     | `gossamer` |       |
+| Interface      | Status | Module     |
+| -------------- | ------ | ---------- |
+| setTimeout     | ✅     | `gossamer` |
+| setInterval    | ✅     | `gossamer` |
+| clearTimeout   | ✅     | `gossamer` |
+| clearInterval  | ✅     | `gossamer` |
+| queueMicrotask | ✅     | `gossamer` |
 
 ### Utilities
 
-| Interface           | Status | Module                 | Notes |
-| ------------------- | ------ | ---------------------- | ----- |
-| structuredClone     | ✅     | `gossamer`             |       |
-| atob / btoa         | ✅     | `gossamer`             |       |
-| reportError         | ✅     | `gossamer`             |       |
-| console             | ✅     | `gossamer/console`     |       |
-| Performance         | ✅     | `gossamer/performance` |       |
-| navigator.userAgent | ✅     | `gossamer`             |       |
+| Interface           | Status | Module                 |
+| ------------------- | ------ | ---------------------- |
+| structuredClone     | ✅     | `gossamer`             |
+| atob / btoa         | ✅     | `gossamer`             |
+| reportError         | ✅     | `gossamer`             |
+| console             | ✅     | `gossamer/console`     |
+| Performance         | ✅     | `gossamer/performance` |
+| navigator.userAgent | ✅     | `gossamer`             |
 
 ## Cross-Runtime Web APIs (beyond WinterTC minimum)
 
-| Interface | Status | Module                | Notes |
-| --------- | ------ | --------------------- | ----- |
-| WebSocket | ✅     | `gossamer/web_socket` |       |
+| Interface | Status | Module                |
+| --------- | ------ | --------------------- |
+| WebSocket | ✅     | `gossamer/web_socket` |
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface     | Status | Module                    | Notes                                               |
-| ------------- | ------ | ------------------------- | --------------------------------------------------- |
-| Promise       | ✅     | `gossamer/promise`        |                                                     |
-| Uint8Array    | 🚧     | `gossamer/uint8_array`    | Missing `entries()`, `keys()`, `values()` iterators |
-| ArrayBuffer   | 🚧     | `gossamer/array_buffer`   | Missing `resize()`, resizable/maxByteLength props   |
-| Iterator      | ✅     | `gossamer/iterator`       |                                                     |
-| AsyncIterator | ✅     | `gossamer/async_iterator` |                                                     |
-| JSON          | ✅     | `gossamer/json`           |                                                     |
-| Date          | 🚧     | `gossamer` (type only)    |                                                     |
-| RegExp        | ❌     | —                         |                                                     |
-| Error types   | ✅     | `gossamer/error`          |                                                     |
+| Interface     | Status | Module                    | Notes                                                |
+| ------------- | ------ | ------------------------- | ---------------------------------------------------- |
+| Promise       | ✅     | `gossamer/promise`        |                                                      |
+| Uint8Array    | 🚧     | `gossamer/uint8_array`    | Missing `entries()`, `keys()`, `values()` iterators  |
+| ArrayBuffer   | 🚧     | `gossamer/array_buffer`   | Missing `resize()`, resizable/maxByteLength props    |
+| Iterator      | 🚧     | `gossamer/iterator`       | Missing creation (from List/callback) for JS interop |
+| AsyncIterator | 🚧     | `gossamer/async_iterator` | Missing creation for JS interop                      |
+| JSON          | ✅     | `gossamer/json`           |                                                      |
+| Date          | ✅     | `gossamer/date`           |                                                      |
+| RegExp        | ❌     | —                         | Low priority; `gleam_regexp` covers most use cases   |
+| Symbol        | ❌     | —                         |                                                      |
+| Error types   | ✅     | `gossamer/error`          |                                                      |
+
+## ECMAScript Built-ins (complements Gleam equivalents)
+
+Gleam has conceptual equivalents for these, but they are not the native JS
+types. These bindings enable interop with JS APIs that return or accept native
+types, and expose functionality Gleam's stdlib doesn't cover.
+
+| Interface            | Status | Module | Notes                                                              |
+| -------------------- | ------ | ------ | ------------------------------------------------------------------ |
+| Map                  | ❌     | —      | Gleam Dict is not a JS Map; needed for JS interop                  |
+| Set                  | ❌     | —      | Gleam Set is not a JS Set; needed for JS interop                   |
+| WeakMap              | ❌     | —      | Metadata/caching on JS objects without preventing GC               |
+| WeakSet              | ❌     | —      | Tracking JS objects without preventing GC                          |
+| WeakRef              | ❌     | —      | Weak references to objects                                         |
+| FinalizationRegistry | ❌     | —      | Cleanup callbacks when objects are GC'd                            |
+| Array                | ❌     | —      | Gleam List is not a JS Array; needed for JS interop                |
+| Math                 | ❌     | —      | Trig, log, exponential, random, constants missing from Gleam       |
+| Number               | ❌     | —      | `toFixed()`, `toPrecision()`, `toExponential()` missing from Gleam |
+| String               | ❌     | —      | `normalize()`, `localeCompare()`, locale case conversion           |
 
 ## Out of Scope
 
-| Category                                        | Reason                                                     |
-| ----------------------------------------------- | ---------------------------------------------------------- |
-| Map, Set, Array, String, Number, Math           | Gleam has equivalents (Dict, Set, List, string, int/float) |
-| DOM APIs (document, window, Element, etc.)      | Browser-only                                               |
-| WebAssembly                                     | Warrants its own package                                   |
-| Runtime-specific (Deno.\*, process.\*, etc.)    | Not cross-runtime                                          |
-| Proxy, Reflect, SharedArrayBuffer, Atomics      | Metaprogramming / threading, not useful from Gleam         |
-| WeakMap, WeakSet, WeakRef, FinalizationRegistry | GC primitives, rarely needed                               |
-| Generator, AsyncGenerator                       | Gleam has its own patterns                                 |
+| Category                                   | Reason                                                  |
+| ------------------------------------------ | ------------------------------------------------------- |
+| DOM APIs (document, window, Element, etc.) | Browser-only                                            |
+| WebAssembly                                | Warrants its own package                                |
+| Proxy, Reflect                             | Metaprogramming, not expressible in Gleam's type system |
+| SharedArrayBuffer, Atomics                 | Threading; revisit if Workers become cross-runtime      |
+| Generator, AsyncGenerator                  | Iterator creation via protocol is sufficient            |

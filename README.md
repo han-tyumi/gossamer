@@ -7,8 +7,8 @@ Cross-runtime JavaScript API bindings for [Gleam](https://gleam.run/).
 
 gossamer covers Web Platform APIs
 ([WinterTC](https://min-common-api.proposal.wintertc.org/)) and ECMAScript
-built-ins that have no direct equivalent in Gleam's standard library. All APIs
-work across Deno, Node.js, Bun, and browsers.
+built-ins, including native JS types that complement Gleam's standard library
+for interop. All APIs work across Deno, Node.js, Bun, and browsers.
 
 APIs mirror their JavaScript counterparts in structure and naming, adapted to
 Gleam conventions — snake_case naming, pipeable signatures, `Result` for
