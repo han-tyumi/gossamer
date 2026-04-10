@@ -1,3 +1,9 @@
+## 6.1.0 (2026-04-10)
+
+### Features
+
+- add CustomEvent module, complete Uint8Array and ArrayBuffer APIs
+
 ## 6.0.0 (2026-04-10)
 
 ### Breaking Changes
