@@ -417,3 +417,30 @@ pub fn last_index_of_from_test() {
   let array = uint8_array.from_list([1, 2, 3, 2])
   uint8_array.last_index_of_from(array, 2, 2) |> should.equal(1)
 }
+
+pub fn keys_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.keys(array) |> should.equal([0, 1, 2])
+}
+
+pub fn values_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.values(array) |> should.equal([10, 20, 30])
+}
+
+pub fn entries_test() {
+  let array = uint8_array.from_list([10, 20, 30])
+  uint8_array.entries(array) |> should.equal([#(0, 10), #(1, 20), #(2, 30)])
+}
+
+pub fn keys_empty_test() {
+  uint8_array.new() |> uint8_array.keys() |> should.equal([])
+}
+
+pub fn values_empty_test() {
+  uint8_array.new() |> uint8_array.values() |> should.equal([])
+}
+
+pub fn entries_empty_test() {
+  uint8_array.new() |> uint8_array.entries() |> should.equal([])
+}

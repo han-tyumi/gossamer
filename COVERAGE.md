@@ -109,7 +109,7 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | --------------------- | ------ | ------------------------ |
 | Event                 | ✅     | `gossamer/event`         |
 | EventTarget           | ✅     | `gossamer/event_target`  |
-| CustomEvent           | ❌     | —                        |
+| CustomEvent           | ✅     | `gossamer/custom_event`  |
 | ErrorEvent            | ❌     | —                        |
 | PromiseRejectionEvent | ❌     | —                        |
 | DOMException          | ✅     | `gossamer/dom_exception` |
@@ -161,8 +161,8 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | Interface     | Status | Module                    | Notes                                                |
 | ------------- | ------ | ------------------------- | ---------------------------------------------------- |
 | Promise       | ✅     | `gossamer/promise`        |                                                      |
-| Uint8Array    | 🚧     | `gossamer/uint8_array`    | Missing `entries()`, `keys()`, `values()` iterators  |
-| ArrayBuffer   | 🚧     | `gossamer/array_buffer`   | Missing `resize()`, resizable/maxByteLength props    |
+| Uint8Array    | ✅     | `gossamer/uint8_array`    |                                                      |
+| ArrayBuffer   | ✅     | `gossamer/array_buffer`   |                                                      |
 | Iterator      | 🚧     | `gossamer/iterator`       | Missing creation (from List/callback) for JS interop |
 | AsyncIterator | 🚧     | `gossamer/async_iterator` | Missing creation for JS interop                      |
 | JSON          | ✅     | `gossamer/json`           |                                                      |

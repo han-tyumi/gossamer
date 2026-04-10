@@ -318,6 +318,18 @@ export const index_reduce_right: typeof $uint8Array.index_reduce_right = (
   );
 };
 
+export const keys: typeof $uint8Array.keys = (array) => {
+  return fromArray(Array.from(array.keys()));
+};
+
+export const values: typeof $uint8Array.values = (array) => {
+  return fromArray(Array.from(array.values()));
+};
+
+export const entries: typeof $uint8Array.entries = (array) => {
+  return fromArray(Array.from(array.entries()));
+};
+
 export const to_list: typeof $uint8Array.to_list = (array) => {
   return fromArray(Array.from(array));
 };

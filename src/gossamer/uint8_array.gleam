@@ -274,6 +274,15 @@ pub fn index_reduce_right(
   with callback: fn(a, Int, Int) -> a,
 ) -> a
 
+@external(javascript, "./uint8_array.ffi.mjs", "keys")
+pub fn keys(of array: Uint8Array) -> List(Int)
+
+@external(javascript, "./uint8_array.ffi.mjs", "values")
+pub fn values(of array: Uint8Array) -> List(Int)
+
+@external(javascript, "./uint8_array.ffi.mjs", "entries")
+pub fn entries(of array: Uint8Array) -> List(#(Int, Int))
+
 @external(javascript, "./uint8_array.ffi.mjs", "to_list")
 pub fn to_list(array: Uint8Array) -> List(Int)
 

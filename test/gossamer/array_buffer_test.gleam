@@ -45,3 +45,36 @@ pub fn slice_with_end_test() {
   let sliced = array_buffer.slice_with_end(buffer, 2, 6)
   array_buffer.byte_length(sliced) |> should.equal(4)
 }
+
+pub fn new_resizable_test() {
+  let buffer = array_buffer.new_resizable(8, 16)
+  array_buffer.byte_length(buffer) |> should.equal(8)
+  array_buffer.max_byte_length(buffer) |> should.equal(16)
+  array_buffer.is_resizable(buffer) |> should.be_true()
+}
+
+pub fn is_resizable_fixed_test() {
+  let buffer = array_buffer.new(8)
+  array_buffer.is_resizable(buffer) |> should.be_false()
+}
+
+pub fn max_byte_length_fixed_test() {
+  let buffer = array_buffer.new(8)
+  array_buffer.max_byte_length(buffer) |> should.equal(8)
+}
+
+pub fn resize_test() {
+  let buffer = array_buffer.new_resizable(8, 16)
+  let assert Ok(_) = array_buffer.resize(buffer, 12)
+  array_buffer.byte_length(buffer) |> should.equal(12)
+}
+
+pub fn resize_exceeds_max_test() {
+  let buffer = array_buffer.new_resizable(8, 16)
+  array_buffer.resize(buffer, 32) |> should.be_error()
+}
+
+pub fn resize_fixed_buffer_test() {
+  let buffer = array_buffer.new(8)
+  array_buffer.resize(buffer, 4) |> should.be_error()
+}
