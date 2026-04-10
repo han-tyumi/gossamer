@@ -1,3 +1,13 @@
+## 6.0.0 (2026-04-10)
+
+### Breaking Changes
+
+- add Date module with full API surface
+
+### Features
+
+- add Event and EventTarget modules
+
 ## 5.0.0 (2026-04-09)
 
 ### Breaking Changes
