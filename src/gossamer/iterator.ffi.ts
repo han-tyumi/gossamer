@@ -1,6 +1,6 @@
+import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import type * as $iterator from "$/gossamer/gossamer/iterator.mjs";
 import type { List } from "$/prelude.mjs";
-import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import {
   List$isNonEmpty,
   List$NonEmpty$first,
@@ -14,8 +14,15 @@ import {
 } from "~/gossamer/iterator_result.ts";
 import { fromArray } from "~/utils/list.ts";
 import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type Iterator$<T, TReturn, TNext> = Iterator<T, TReturn, TNext>;
+
+function withHelpers<T>(
+  iterator: Iterator<T, unknown, unknown>,
+): IteratorObject<T, undefined, unknown> {
+  return Iterator.from(iterator);
+}
 
 export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $iterator.new$<TNext, T, TReturn>>
@@ -152,4 +159,88 @@ export const for_: typeof $iterator.for$ = <T, TReturn, TNext>(
     }
     fun(result.value);
   }
+};
+
+export const map: typeof $iterator.map = <T, U>(
+  iterator: Iterator<T, unknown, unknown>,
+  callback: (value: T) => U,
+) => {
+  return withHelpers(iterator).map(callback) as Iterator<
+    U,
+    undefined,
+    undefined
+  >;
+};
+
+export const filter: typeof $iterator.filter = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+  predicate: (value: T) => boolean,
+) => {
+  return withHelpers(iterator).filter(predicate) as Iterator<
+    T,
+    undefined,
+    undefined
+  >;
+};
+
+export const take: typeof $iterator.take = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+  limit: number,
+) => {
+  return withHelpers(iterator).take(limit) as Iterator<
+    T,
+    undefined,
+    undefined
+  >;
+};
+
+export const drop: typeof $iterator.drop = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+  count: number,
+) => {
+  return withHelpers(iterator).drop(count) as Iterator<
+    T,
+    undefined,
+    undefined
+  >;
+};
+
+export const flat_map: typeof $iterator.flat_map = <T, U>(
+  iterator: Iterator<T, unknown, unknown>,
+  callback: (value: T) => Iterator<U, undefined, undefined>,
+) => {
+  return withHelpers(iterator).flatMap(callback) as Iterator<
+    U,
+    undefined,
+    undefined
+  >;
+};
+
+export const reduce: typeof $iterator.reduce = <T, U>(
+  iterator: Iterator<T, unknown, unknown>,
+  initial: U,
+  callback: (accumulator: U, value: T) => U,
+) => {
+  return withHelpers(iterator).reduce(callback, initial);
+};
+
+export const some: typeof $iterator.some = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+  predicate: (value: T) => boolean,
+) => {
+  return withHelpers(iterator).some(predicate);
+};
+
+export const every: typeof $iterator.every = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+  predicate: (value: T) => boolean,
+) => {
+  return withHelpers(iterator).every(predicate);
+};
+
+export const find: typeof $iterator.find = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+  predicate: (value: T) => boolean,
+) => {
+  return toResult(withHelpers(iterator).find(predicate));
 };

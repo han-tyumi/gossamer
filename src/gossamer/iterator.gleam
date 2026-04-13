@@ -59,3 +59,85 @@ pub fn throw(
 
 @external(javascript, "./iterator.ffi.mjs", "for_")
 pub fn for(in iterator: Iterator(a, return, next), run fun: fn(a) -> any) -> Nil
+
+/// Returns a new iterator that yields the results of applying the callback to
+/// each value from the source iterator.
+///
+@external(javascript, "./iterator.ffi.mjs", "map")
+pub fn map(
+  over iterator: Iterator(a, return, next),
+  with callback: fn(a) -> b,
+) -> Iterator(b, Nil, Nil)
+
+/// Returns a new iterator that yields only the values from the source iterator
+/// for which the predicate returns `True`.
+///
+@external(javascript, "./iterator.ffi.mjs", "filter")
+pub fn filter(
+  in iterator: Iterator(a, return, next),
+  keeping predicate: fn(a) -> Bool,
+) -> Iterator(a, Nil, Nil)
+
+/// Returns a new iterator that yields at most `limit` values from the source
+/// iterator.
+///
+@external(javascript, "./iterator.ffi.mjs", "take")
+pub fn take(
+  from iterator: Iterator(a, return, next),
+  up_to limit: Int,
+) -> Iterator(a, Nil, Nil)
+
+/// Returns a new iterator that skips the first `count` values from the source
+/// iterator, then yields the rest.
+///
+@external(javascript, "./iterator.ffi.mjs", "drop")
+pub fn drop(
+  from iterator: Iterator(a, return, next),
+  up_to count: Int,
+) -> Iterator(a, Nil, Nil)
+
+/// Returns a new iterator that applies the callback to each value from the
+/// source iterator and yields all values from the resulting iterators.
+///
+@external(javascript, "./iterator.ffi.mjs", "flat_map")
+pub fn flat_map(
+  over iterator: Iterator(a, return, next),
+  with callback: fn(a) -> Iterator(b, Nil, Nil),
+) -> Iterator(b, Nil, Nil)
+
+/// Consumes the iterator, calling the reducer with each value and an
+/// accumulator. Returns the final accumulator value.
+///
+@external(javascript, "./iterator.ffi.mjs", "reduce")
+pub fn reduce(
+  over iterator: Iterator(a, return, next),
+  from initial: b,
+  with callback: fn(b, a) -> b,
+) -> b
+
+/// Consumes the iterator and returns `True` if the predicate returns `True`
+/// for any value. Short-circuits on the first match.
+///
+@external(javascript, "./iterator.ffi.mjs", "some")
+pub fn some(
+  in iterator: Iterator(a, return, next),
+  satisfying predicate: fn(a) -> Bool,
+) -> Bool
+
+/// Consumes the iterator and returns `True` if the predicate returns `True`
+/// for every value. Short-circuits on the first non-match.
+///
+@external(javascript, "./iterator.ffi.mjs", "every")
+pub fn every(
+  in iterator: Iterator(a, return, next),
+  satisfying predicate: fn(a) -> Bool,
+) -> Bool
+
+/// Consumes the iterator and returns the first value for which the predicate
+/// returns `True`. Returns an error if no value matches.
+///
+@external(javascript, "./iterator.ffi.mjs", "find")
+pub fn find(
+  in iterator: Iterator(a, return, next),
+  one_that predicate: fn(a) -> Bool,
+) -> Result(a, Nil)
