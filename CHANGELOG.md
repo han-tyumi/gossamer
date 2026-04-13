@@ -1,3 +1,9 @@
+## 6.3.0 (2026-04-13)
+
+### Features
+
+- complete Iterator, AsyncIterator, and URL modules
+
 ## 6.2.0 (2026-04-10)
 
 ### Features
