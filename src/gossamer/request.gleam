@@ -39,7 +39,7 @@ pub fn headers(of request: Request) -> Headers
 
 /// Returns the cache mode associated with the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "cache")
@@ -47,7 +47,7 @@ pub fn cache(of request: Request) -> RequestCache
 
 /// Returns the credentials mode associated with the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "credentials")
@@ -55,7 +55,7 @@ pub fn credentials(of request: Request) -> RequestCredentials
 
 /// Returns the kind of resource requested by the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "destination")
@@ -69,7 +69,7 @@ pub fn signal(of request: Request) -> AbortSignal
 
 /// Returns the referrer of the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer")
@@ -77,7 +77,7 @@ pub fn referrer(of request: Request) -> String
 
 /// Returns the referrer policy associated with the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
@@ -85,7 +85,7 @@ pub fn referrer_policy(of request: Request) -> ReferrerPolicy
 
 /// Returns the mode associated with the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
@@ -93,7 +93,7 @@ pub fn mode(of request: Request) -> RequestMode
 
 /// Returns whether the request can outlive the global in which it was created.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "is_keepalive")
@@ -101,7 +101,7 @@ pub fn is_keepalive(request: Request) -> Bool
 
 /// Returns the subresource integrity metadata of the request.
 ///
-/// Note: Not available on Deno (returns `undefined`).
+/// Note: Not available on Deno.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "integrity")

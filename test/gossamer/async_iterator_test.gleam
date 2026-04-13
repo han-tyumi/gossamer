@@ -110,3 +110,53 @@ pub fn for_await_test() {
   use _ <- promise.then(async_iterator.for_await(iter, fn(_value) { Nil }))
   promise.resolve(Nil)
 }
+
+pub fn from_list_test() {
+  let iter = async_iterator.from_list([10, 20, 30])
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Yield(10))
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Yield(20))
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Yield(30))
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Return(Nil))
+  promise.resolve(Nil)
+}
+
+pub fn from_list_empty_test() {
+  let iter = async_iterator.from_list([])
+
+  use result <- promise.then(async_iterator.next(iter))
+  should.equal(result, iterator_result.Return(Nil))
+  promise.resolve(Nil)
+}
+
+pub fn to_list_test() {
+  let iter = async_iterator.from_list([1, 2, 3])
+
+  use result <- promise.then(async_iterator.to_list(iter))
+  should.equal(result, [1, 2, 3])
+  promise.resolve(Nil)
+}
+
+pub fn to_list_empty_test() {
+  let iter = async_iterator.from_list([])
+
+  use result <- promise.then(async_iterator.to_list(iter))
+  should.equal(result, [])
+  promise.resolve(Nil)
+}
+
+pub fn from_list_to_list_roundtrip_test() {
+  let original = [5, 10, 15, 20]
+  let iter = async_iterator.from_list(original)
+
+  use result <- promise.then(async_iterator.to_list(iter))
+  should.equal(result, original)
+  promise.resolve(Nil)
+}

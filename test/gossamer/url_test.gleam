@@ -1,4 +1,6 @@
+import gleam/string
 import gleeunit/should
+import gossamer/blob
 import gossamer/url
 import gossamer/url_search_params
 
@@ -210,4 +212,18 @@ pub fn url_search_params_values_test() {
 pub fn url_search_params_for_each_test() {
   let params = url_search_params.from_string("a=1")
   url_search_params.for_each(params, fn(_value, _name) { Nil })
+}
+
+pub fn create_object_url_test() {
+  let test_blob = blob.from_string("hello")
+
+  url.create_object_url(test_blob)
+  |> string.starts_with("blob:")
+  |> should.be_true
+}
+
+pub fn revoke_object_url_test() {
+  let test_blob = blob.from_string("hello")
+  let object_url = url.create_object_url(test_blob)
+  url.revoke_object_url(object_url)
 }

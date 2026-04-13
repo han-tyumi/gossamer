@@ -236,8 +236,7 @@ pub fn to_iso_string(date: Date) -> String
 @external(javascript, "./date.ffi.mjs", "to_utc_string")
 pub fn to_utc_string(date: Date) -> String
 
-/// Returns the date as a JSON string (ISO 8601 format), suitable for
-/// serialization with `JSON.stringify`.
+/// Returns the date as an ISO 8601 string, suitable for JSON serialization.
 ///
 @external(javascript, "./date.ffi.mjs", "to_json")
 pub fn to_json(date: Date) -> String

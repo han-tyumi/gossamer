@@ -98,3 +98,11 @@ export const set_username: typeof $url.set_username = (url, username) => {
 
 export const to_string: typeof $url.to_string = (url) => url.toString();
 export const to_json: typeof $url.to_json = (url) => url.toJSON();
+
+export const create_object_url: typeof $url.create_object_url = (blob) => {
+  return URL.createObjectURL(blob);
+};
+
+export const revoke_object_url: typeof $url.revoke_object_url = (url) => {
+  URL.revokeObjectURL(url);
+};

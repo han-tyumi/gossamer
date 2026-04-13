@@ -10,6 +10,17 @@ pub fn new(
   next: fn(Option(next)) -> Promise(IteratorResult(a, return)),
 ) -> AsyncIterator(a, return, next)
 
+/// Creates an async iterator from a Gleam list.
+///
+@external(javascript, "./async_iterator.ffi.mjs", "from_list")
+pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
+
+/// Collects all values from an async iterator into a list. Consumes the
+/// iterator.
+///
+@external(javascript, "./async_iterator.ffi.mjs", "to_list")
+pub fn to_list(iterator: AsyncIterator(a, return, next)) -> Promise(List(a))
+
 @external(javascript, "./async_iterator.ffi.mjs", "with_return")
 pub fn with_return(
   iterator: AsyncIterator(a, return, next),

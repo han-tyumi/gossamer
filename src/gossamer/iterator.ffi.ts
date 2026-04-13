@@ -1,10 +1,18 @@
 import type * as $iterator from "$/gossamer/gossamer/iterator.mjs";
+import type { List } from "$/prelude.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
-import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import {
+  List$isNonEmpty,
+  List$NonEmpty$first,
+  List$NonEmpty$rest,
+  Result$Error,
+  Result$Ok,
+} from "$/prelude.mjs";
 import {
   toGleamIteratorResult,
   toIteratorResult,
 } from "~/gossamer/iterator_result.ts";
+import { fromArray } from "~/utils/list.ts";
 import { toOption } from "~/utils/option.ts";
 
 export type Iterator$<T, TReturn, TNext> = Iterator<T, TReturn, TNext>;
@@ -12,32 +20,75 @@ export type Iterator$<T, TReturn, TNext> = Iterator<T, TReturn, TNext>;
 export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $iterator.new$<TNext, T, TReturn>>
 ) => {
-  const iterator: Iterator<T, TReturn, TNext> = {
-    next: (...[value]) => toIteratorResult(next(toOption(value))),
+  const iterator = {
+    next: (...[value]: [TNext?]) => toIteratorResult(next(toOption(value))),
+    [Symbol.iterator]() {
+      return this;
+    },
   };
-  return iterator;
+  return iterator as unknown as Iterator<T, TReturn, TNext>;
+};
+
+export const from_list: typeof $iterator.from_list = <T>(list: List<T>) => {
+  let current = list;
+  const iterator = {
+    next() {
+      if (List$isNonEmpty(current)) {
+        // deno-lint-ignore no-non-null-assertion
+        const value = List$NonEmpty$first(current)!;
+        // deno-lint-ignore no-non-null-assertion
+        current = List$NonEmpty$rest(current)!;
+        return { done: false as const, value };
+      }
+      return { done: true as const, value: undefined };
+    },
+    [Symbol.iterator]() {
+      return this;
+    },
+  };
+  return iterator as unknown as Iterator<T, undefined, undefined>;
+};
+
+export const to_list: typeof $iterator.to_list = <T>(
+  iterator: Iterator<T, unknown, unknown>,
+) => {
+  const values: T[] = [];
+  while (true) {
+    const result = iterator.next();
+    if (result.done) {
+      break;
+    }
+    values.push(result.value);
+  }
+  return fromArray(values);
 };
 
 export const with_return: typeof $iterator.with_return = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
   return_: Parameters<typeof $iterator.with_return<T, TReturn, TNext>>[1],
 ) => {
-  const newIterator: Iterator<T, TReturn, TNext> = {
+  const newIterator = {
     ...iterator,
-    return: (value) => toIteratorResult(return_(toOption(value))),
+    return: (value?: TReturn) => toIteratorResult(return_(toOption(value))),
+    [Symbol.iterator]() {
+      return this;
+    },
   };
-  return newIterator;
+  return newIterator as unknown as Iterator<T, TReturn, TNext>;
 };
 
 export const with_throw: typeof $iterator.with_throw = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
   throw_: Parameters<typeof $iterator.with_throw<T, TReturn, TNext>>[1],
 ) => {
-  const newIterator: Iterator<T, TReturn, TNext> = {
+  const newIterator = {
     ...iterator,
-    throw: (value) => toIteratorResult(throw_(toOption(value))),
+    throw: (value?: unknown) => toIteratorResult(throw_(value)),
+    [Symbol.iterator]() {
+      return this;
+    },
   };
-  return newIterator;
+  return newIterator as unknown as Iterator<T, TReturn, TNext>;
 };
 
 export const next: typeof $iterator.next = <T, TReturn, TNext>(

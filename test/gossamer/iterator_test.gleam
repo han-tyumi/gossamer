@@ -106,3 +106,38 @@ pub fn for_test() {
 
   iterator.for(iter, fn(_value) { Nil })
 }
+
+pub fn from_list_test() {
+  let iter = iterator.from_list([10, 20, 30])
+
+  iterator.next(iter) |> should.equal(iterator_result.Yield(10))
+  iterator.next(iter) |> should.equal(iterator_result.Yield(20))
+  iterator.next(iter) |> should.equal(iterator_result.Yield(30))
+  iterator.next(iter) |> should.equal(iterator_result.Return(Nil))
+}
+
+pub fn from_list_empty_test() {
+  let iter = iterator.from_list([])
+
+  iterator.next(iter) |> should.equal(iterator_result.Return(Nil))
+}
+
+pub fn to_list_test() {
+  let iter = iterator.from_list([1, 2, 3])
+
+  iterator.to_list(iter) |> should.equal([1, 2, 3])
+}
+
+pub fn to_list_empty_test() {
+  let iter = iterator.from_list([])
+
+  iterator.to_list(iter) |> should.equal([])
+}
+
+pub fn from_list_to_list_roundtrip_test() {
+  let original = [5, 10, 15, 20]
+
+  iterator.from_list(original)
+  |> iterator.to_list
+  |> should.equal(original)
+}

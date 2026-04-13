@@ -50,11 +50,11 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ### URL
 
-| Interface       | Status | Module                       | Notes                                                         |
-| --------------- | ------ | ---------------------------- | ------------------------------------------------------------- |
-| URL             | 🚧     | `gossamer/url`               | Missing `createObjectURL()`, `revokeObjectURL()` (verify Bun) |
-| URLSearchParams | ✅     | `gossamer/url_search_params` |                                                               |
-| URLPattern      | ✅     | `gossamer/url_pattern`       |                                                               |
+| Interface       | Status | Module                       | Notes |
+| --------------- | ------ | ---------------------------- | ----- |
+| URL             | ✅     | `gossamer/url`               |       |
+| URLSearchParams | ✅     | `gossamer/url_search_params` |       |
+| URLPattern      | ✅     | `gossamer/url_pattern`       |       |
 
 ### Streams
 
@@ -158,20 +158,20 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface     | Status | Module                    | Notes                                                |
-| ------------- | ------ | ------------------------- | ---------------------------------------------------- |
-| Promise       | ✅     | `gossamer/promise`        |                                                      |
-| Uint8Array    | ✅     | `gossamer/uint8_array`    |                                                      |
-| ArrayBuffer   | ✅     | `gossamer/array_buffer`   |                                                      |
-| Iterator      | 🚧     | `gossamer/iterator`       | Missing creation (from List/callback) for JS interop |
-| AsyncIterator | 🚧     | `gossamer/async_iterator` | Missing creation for JS interop                      |
-| JSON          | ✅     | `gossamer/json`           |                                                      |
-| Date          | ✅     | `gossamer/date`           |                                                      |
-| RegExp        | ❌     | —                         | Low priority; `gleam_regexp` covers most use cases   |
-| Symbol        | ❌     | —                         |                                                      |
-| Number        | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants          |
-| Math          | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants            |
-| Error types   | ✅     | `gossamer/error`          |                                                      |
+| Interface     | Status | Module                    | Notes                                              |
+| ------------- | ------ | ------------------------- | -------------------------------------------------- |
+| Promise       | ✅     | `gossamer/promise`        |                                                    |
+| Uint8Array    | ✅     | `gossamer/uint8_array`    |                                                    |
+| ArrayBuffer   | ✅     | `gossamer/array_buffer`   |                                                    |
+| Iterator      | ✅     | `gossamer/iterator`       |                                                    |
+| AsyncIterator | ✅     | `gossamer/async_iterator` |                                                    |
+| JSON          | ✅     | `gossamer/json`           |                                                    |
+| Date          | ✅     | `gossamer/date`           |                                                    |
+| RegExp        | ❌     | —                         | Low priority; `gleam_regexp` covers most use cases |
+| Symbol        | ❌     | —                         |                                                    |
+| Number        | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants        |
+| Math          | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants          |
+| Error types   | ✅     | `gossamer/error`          |                                                    |
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 

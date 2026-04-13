@@ -9,6 +9,16 @@ pub fn new(
   next: fn(Option(next)) -> IteratorResult(a, return),
 ) -> Iterator(a, return, next)
 
+/// Creates an iterator from a Gleam list.
+///
+@external(javascript, "./iterator.ffi.mjs", "from_list")
+pub fn from_list(list: List(a)) -> Iterator(a, Nil, Nil)
+
+/// Collects all values from an iterator into a list. Consumes the iterator.
+///
+@external(javascript, "./iterator.ffi.mjs", "to_list")
+pub fn to_list(iterator: Iterator(a, return, next)) -> List(a)
+
 @external(javascript, "./iterator.ffi.mjs", "with_return")
 pub fn with_return(
   iterator: Iterator(a, return, next),
