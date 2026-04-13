@@ -1,3 +1,10 @@
+## 6.4.0 (2026-04-13)
+
+### Features
+
+- add Iterator Helpers (map, filter, take, drop, flat_map, reduce, some, every,
+  find)
+
 ## 6.3.0 (2026-04-13)
 
 ### Features
