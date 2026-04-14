@@ -1,3 +1,9 @@
+## 6.7.0 (2026-04-14)
+
+### Features
+
+- add Array module with full spec coverage
+
 ## 6.6.0 (2026-04-14)
 
 ### Features
