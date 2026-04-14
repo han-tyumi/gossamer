@@ -1,3 +1,9 @@
+## 6.6.0 (2026-04-14)
+
+### Features
+
+- add Symbol module with global registry
+
 ## 6.5.0 (2026-04-14)
 
 ### Features
