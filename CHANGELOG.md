@@ -1,3 +1,9 @@
+## 6.8.0 (2026-04-14)
+
+### Features
+
+- add String module with Unicode, locale, and full JS string API
+
 ## 6.7.0 (2026-04-14)
 
 ### Features
