@@ -1,3 +1,9 @@
+## 6.5.0 (2026-04-14)
+
+### Features
+
+- add Map and Set modules with full spec coverage
+
 ## 6.4.0 (2026-04-13)
 
 ### Features
