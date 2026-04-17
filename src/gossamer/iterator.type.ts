@@ -1,1 +1,1 @@
-export type Iterator$<T, TReturn, TNext> = Iterator<T, TReturn, TNext>;
+export type Iterator$<T, TReturn, TNext> = IterableIterator<T, TReturn, TNext>;

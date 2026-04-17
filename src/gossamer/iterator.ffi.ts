@@ -16,8 +16,6 @@ import { fromArray } from "~/utils/list.ts";
 import { toOption } from "~/utils/option.ts";
 import { toResult } from "~/utils/result.ts";
 
-export type Iterator$<T, TReturn, TNext> = Iterator<T, TReturn, TNext>;
-
 function withHelpers<T>(
   iterator: Iterator<T, unknown, unknown>,
 ): IteratorObject<T, undefined, unknown> {
@@ -27,18 +25,18 @@ function withHelpers<T>(
 export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $iterator.new$<TNext, T, TReturn>>
 ) => {
-  const iterator = {
+  const iterator: IterableIterator<T, TReturn, TNext> = {
     next: (...[value]: [TNext?]) => toIteratorResult(next(toOption(value))),
     [Symbol.iterator]() {
       return this;
     },
   };
-  return iterator as unknown as Iterator<T, TReturn, TNext>;
+  return iterator;
 };
 
 export const from_list: typeof $iterator.from_list = <T>(list: List<T>) => {
   let current = list;
-  const iterator = {
+  const iterator: IterableIterator<T, undefined, undefined> = {
     next() {
       if (List$isNonEmpty(current)) {
         // deno-lint-ignore no-non-null-assertion
@@ -53,7 +51,7 @@ export const from_list: typeof $iterator.from_list = <T>(list: List<T>) => {
       return this;
     },
   };
-  return iterator as unknown as Iterator<T, undefined, undefined>;
+  return iterator;
 };
 
 export const to_list: typeof $iterator.to_list = <T>(
@@ -74,28 +72,30 @@ export const with_return: typeof $iterator.with_return = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
   return_: Parameters<typeof $iterator.with_return<T, TReturn, TNext>>[1],
 ) => {
-  const newIterator = {
+  const newIterator: IterableIterator<T, TReturn, TNext> = {
     ...iterator,
+    next: (...args) => iterator.next(...args),
     return: (value?: TReturn) => toIteratorResult(return_(toOption(value))),
     [Symbol.iterator]() {
       return this;
     },
   };
-  return newIterator as unknown as Iterator<T, TReturn, TNext>;
+  return newIterator;
 };
 
 export const with_throw: typeof $iterator.with_throw = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
   throw_: Parameters<typeof $iterator.with_throw<T, TReturn, TNext>>[1],
 ) => {
-  const newIterator = {
+  const newIterator: IterableIterator<T, TReturn, TNext> = {
     ...iterator,
+    next: (...args) => iterator.next(...args),
     throw: (value?: unknown) => toIteratorResult(throw_(value)),
     [Symbol.iterator]() {
       return this;
     },
   };
-  return newIterator as unknown as Iterator<T, TReturn, TNext>;
+  return newIterator;
 };
 
 export const next: typeof $iterator.next = <T, TReturn, TNext>(
@@ -165,7 +165,7 @@ export const map: typeof $iterator.map = <T, U>(
   iterator: Iterator<T, unknown, unknown>,
   callback: (value: T) => U,
 ) => {
-  return withHelpers(iterator).map(callback) as Iterator<
+  return withHelpers(iterator).map(callback) as IterableIterator<
     U,
     undefined,
     undefined
@@ -176,7 +176,7 @@ export const filter: typeof $iterator.filter = <T>(
   iterator: Iterator<T, unknown, unknown>,
   predicate: (value: T) => boolean,
 ) => {
-  return withHelpers(iterator).filter(predicate) as Iterator<
+  return withHelpers(iterator).filter(predicate) as IterableIterator<
     T,
     undefined,
     undefined
@@ -187,7 +187,7 @@ export const take: typeof $iterator.take = <T>(
   iterator: Iterator<T, unknown, unknown>,
   limit: number,
 ) => {
-  return withHelpers(iterator).take(limit) as Iterator<
+  return withHelpers(iterator).take(limit) as IterableIterator<
     T,
     undefined,
     undefined
@@ -198,7 +198,7 @@ export const drop: typeof $iterator.drop = <T>(
   iterator: Iterator<T, unknown, unknown>,
   count: number,
 ) => {
-  return withHelpers(iterator).drop(count) as Iterator<
+  return withHelpers(iterator).drop(count) as IterableIterator<
     T,
     undefined,
     undefined
@@ -209,7 +209,7 @@ export const flat_map: typeof $iterator.flat_map = <T, U>(
   iterator: Iterator<T, unknown, unknown>,
   callback: (value: T) => Iterator<U, undefined, undefined>,
 ) => {
-  return withHelpers(iterator).flatMap(callback) as Iterator<
+  return withHelpers(iterator).flatMap(callback) as IterableIterator<
     U,
     undefined,
     undefined

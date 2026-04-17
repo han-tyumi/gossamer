@@ -16,45 +16,39 @@ import { fromArray } from "~/utils/list.ts";
 import { toOption } from "~/utils/option.ts";
 import { toResult } from "~/utils/result.ts";
 
-export type AsyncIterator$<T, TReturn, TNext> = AsyncIterator<
-  T,
-  TReturn,
-  TNext
->;
-
 export const new_: typeof $asyncIterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $asyncIterator.new$<TNext, T, TReturn>>
 ) => {
-  const iterator = {
+  const iterator: AsyncIterableIterator<T, TReturn, TNext> = {
     next: async (...[value]: [TNext?]) =>
       toIteratorResult(await next(toOption(value))),
     [Symbol.asyncIterator]() {
       return this;
     },
   };
-  return iterator as unknown as AsyncIterator<T, TReturn, TNext>;
+  return iterator;
 };
 
 export const from_list: typeof $asyncIterator.from_list = <T>(
   list: List<T>,
 ) => {
   let current = list;
-  const iterator = {
+  const iterator: AsyncIterableIterator<T, undefined, undefined> = {
     next() {
       if (List$isNonEmpty(current)) {
         // deno-lint-ignore no-non-null-assertion
         const value = List$NonEmpty$first(current)!;
         // deno-lint-ignore no-non-null-assertion
         current = List$NonEmpty$rest(current)!;
-        return { done: false as const, value };
+        return Promise.resolve({ done: false as const, value });
       }
-      return { done: true as const, value: undefined };
+      return Promise.resolve({ done: true as const, value: undefined });
     },
     [Symbol.asyncIterator]() {
       return this;
     },
   };
-  return iterator as unknown as AsyncIterator<T, undefined, undefined>;
+  return iterator;
 };
 
 export const to_list: typeof $asyncIterator.to_list = <T>(
@@ -82,15 +76,16 @@ export const with_return: typeof $asyncIterator.with_return = <
   iterator: AsyncIterator<T, TReturn, TNext>,
   return_: Parameters<typeof $asyncIterator.with_return<T, TReturn, TNext>>[1],
 ) => {
-  const newIterator = {
+  const newIterator: AsyncIterableIterator<T, TReturn, TNext> = {
     ...iterator,
+    next: (...args) => iterator.next(...args),
     return: async (value?: TReturn) =>
       toIteratorResult(await return_(toOption(value))),
     [Symbol.asyncIterator]() {
       return this;
     },
   };
-  return newIterator as unknown as AsyncIterator<T, TReturn, TNext>;
+  return newIterator;
 };
 
 export const with_throw: typeof $asyncIterator.with_throw = <
@@ -101,14 +96,15 @@ export const with_throw: typeof $asyncIterator.with_throw = <
   iterator: AsyncIterator<T, TReturn, TNext>,
   throw_: Parameters<typeof $asyncIterator.with_throw<T, TReturn, TNext>>[1],
 ) => {
-  const newIterator = {
+  const newIterator: AsyncIterableIterator<T, TReturn, TNext> = {
     ...iterator,
+    next: (...args) => iterator.next(...args),
     throw: async (value?: unknown) => toIteratorResult(await throw_(value)),
     [Symbol.asyncIterator]() {
       return this;
     },
   };
-  return newIterator as unknown as AsyncIterator<T, TReturn, TNext>;
+  return newIterator;
 };
 
 export const next: typeof $asyncIterator.next = <T, TReturn, TNext>(
