@@ -14,53 +14,44 @@ const entryPointFiles = fs.expandGlob(path.joinGlobs([srcDir, "**/*.ffi.ts"]), {
   includeDirs: false,
 });
 
-const entryPoints = await Array.fromAsync(entryPointFiles, (entry) => {
-  const { dir, name } = path.parse(path.relative(srcDir, entry.path));
-  return {
-    in: entry.path,
-    out: path.resolve(srcDir, path.join(dir, name)),
-  };
+const entryPoints = await Array.fromAsync(
+  entryPointFiles,
+  (entry) => entry.path,
+);
+
+const buildImportMapper: Plugin = {
+  name: "build-import-mapper",
+  setup: (pluginBuild) => {
+    pluginBuild.onResolve({ filter: externalImportRegex }, (args) => {
+      const importerRuntimeDir = path.resolve(
+        packageBuildDir,
+        path.relative(srcDir, path.dirname(args.importer)),
+      );
+
+      const targetPath = args.path.startsWith("~/")
+        ? path.resolve(
+          packageBuildDir,
+          args.path.replace(/^~\//, "").replace(/\.ts$/, ".mjs"),
+        )
+        : path.resolve(buildRoot, args.path.replace(/^\$\//, ""));
+
+      const relativePath = path.relative(importerRuntimeDir, targetPath);
+
+      return {
+        path: relativePath.startsWith(".") ? relativePath : `./${relativePath}`,
+        external: true,
+      };
+    });
+  },
+};
+
+await build({
+  entryPoints,
+  outdir: srcDir,
+  outbase: srcDir,
+  outExtension: { ".js": ".mjs" },
+  platform: "neutral",
+  target: "esnext",
+  bundle: true,
+  plugins: [buildImportMapper],
 });
-
-function createBuildImportMapper(entryPointPath: string): Plugin {
-  const entryDir = path.dirname(entryPointPath);
-  const runtimeOutputDir = path.resolve(
-    packageBuildDir,
-    path.relative(srcDir, entryDir),
-  );
-
-  return {
-    name: "build-import-mapper",
-    setup: (pluginBuild) => {
-      pluginBuild.onResolve({ filter: externalImportRegex }, (args) => {
-        const targetPath = args.path.startsWith("~/")
-          ? path.resolve(
-            packageBuildDir,
-            args.path.replace(/^~\//, "").replace(/\.ts$/, ".mjs"),
-          )
-          : path.resolve(buildRoot, args.path.replace(/^\$\//, ""));
-
-        const relativePath = path.relative(runtimeOutputDir, targetPath);
-
-        return {
-          path: relativePath.startsWith(".")
-            ? relativePath
-            : `./${relativePath}`,
-          external: true,
-        };
-      });
-    },
-  };
-}
-
-await Promise.all(entryPoints.map((entryPoint) =>
-  build({
-    entryPoints: [entryPoint],
-    platform: "neutral",
-    outdir: srcDir,
-    outExtension: { ".js": ".mjs" },
-    target: "esnext",
-    bundle: true,
-    plugins: [createBuildImportMapper(entryPoint.in)],
-  })
-));
