@@ -1,5 +1,5 @@
 import type * as $symbol from "$/gossamer/gossamer/symbol.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Symbol$ = symbol;
 

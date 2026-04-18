@@ -1,7 +1,7 @@
 import * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
 import type { List } from "$/prelude.mjs";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type ReadableStream$<T> = ReadableStream<T>;
 

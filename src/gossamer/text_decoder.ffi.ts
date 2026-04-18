@@ -1,8 +1,8 @@
 import * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
 import type { List } from "$/prelude.mjs";
-import { fromEncoding } from "~/gossamer/encoding.ts";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type TextDecoder$ = TextDecoder;
 

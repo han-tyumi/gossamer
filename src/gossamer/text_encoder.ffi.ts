@@ -1,5 +1,5 @@
 import * as $textEncoder from "$/gossamer/gossamer/text_encoder.mjs";
-import { fromEncoding } from "~/gossamer/encoding.ts";
+import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 
 const sharedEncoder = new TextEncoder();
 

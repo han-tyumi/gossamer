@@ -1,8 +1,8 @@
 import type * as $uint8Array from "$/gossamer/gossamer/uint8_array.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
-import { indexToResult, toResult } from "~/utils/result.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
 export type Uint8Array$ = Uint8Array;
 

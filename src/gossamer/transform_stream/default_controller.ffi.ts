@@ -1,5 +1,5 @@
 import type * as $defaultController from "$/gossamer/gossamer/transform_stream/default_controller.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type DefaultController$<T> = TransformStreamDefaultController<T>;
 

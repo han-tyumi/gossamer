@@ -1,5 +1,5 @@
 import type * as $blob from "$/gossamer/gossamer/blob.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Blob$ = Blob;
 

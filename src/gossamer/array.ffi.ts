@@ -1,8 +1,8 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import type * as $array from "$/gossamer/gossamer/array.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
-import { indexToResult, toResult } from "~/utils/result.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
 export type Array$<T> = Array<T>;
 

@@ -1,5 +1,5 @@
 import * as $keyUsage from "$/gossamer/gossamer/key_usage.mjs";
-import { toArray } from "~/utils/list.ts";
+import { toArray } from "~/utils/list.ffi.ts";
 
 export function toKeyUsage(value: $keyUsage.KeyUsage$): KeyUsage {
   if ($keyUsage.KeyUsage$isDecrypt(value)) return "decrypt";

@@ -1,5 +1,5 @@
 import type * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type MessagePort$ = MessagePort;
 

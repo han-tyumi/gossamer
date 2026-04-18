@@ -1,5 +1,5 @@
 import type * as $crypto from "$/gossamer/gossamer/crypto.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export const get_random_values: typeof $crypto.get_random_values = (array) => {
   return toResult.fromThrows(() => globalThis.crypto.getRandomValues(array));

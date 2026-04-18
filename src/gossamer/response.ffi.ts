@@ -1,8 +1,8 @@
 import * as $response from "$/gossamer/gossamer/response.mjs";
-import { fromResponseType } from "~/gossamer/response_type.ts";
-import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ts";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
+import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Response$ = Response;
 

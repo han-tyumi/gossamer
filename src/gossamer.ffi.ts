@@ -1,7 +1,7 @@
 import type * as $gossamer from "$/gossamer/gossamer.mjs";
 import { toRequestInit } from "~/gossamer/request.ffi.ts";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export const structured_clone: typeof $gossamer.structured_clone = (value) => {
   return toResult.fromThrows(() => globalThis.structuredClone(value));

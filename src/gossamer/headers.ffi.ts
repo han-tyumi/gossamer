@@ -1,7 +1,7 @@
 import type * as $headers from "$/gossamer/gossamer/headers.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Headers$ = Headers;
 

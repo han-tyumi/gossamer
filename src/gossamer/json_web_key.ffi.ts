@@ -1,8 +1,8 @@
 import * as $jsonWebKey from "$/gossamer/gossamer/json_web_key.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
-import { fromKeyUsage, toKeyUsageArray } from "~/gossamer/key_usage.ts";
-import { fromArrayMapped } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
+import { fromKeyUsage, toKeyUsageArray } from "~/gossamer/key_usage.ffi.ts";
+import { fromArrayMapped } from "~/utils/list.ffi.ts";
+import { toOption } from "~/utils/option.ffi.ts";
 
 type JWK = $jsonWebKey.JsonWebKey$;
 

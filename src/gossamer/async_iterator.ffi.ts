@@ -11,10 +11,10 @@ import {
 import {
   toGleamIteratorResult,
   toIteratorResult,
-} from "~/gossamer/iterator_result.ts";
-import { fromArray } from "~/utils/list.ts";
-import { toOption } from "~/utils/option.ts";
-import { toResult } from "~/utils/result.ts";
+} from "~/gossamer/iterator_result.ffi.ts";
+import { fromArray } from "~/utils/list.ffi.ts";
+import { toOption } from "~/utils/option.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $asyncIterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $asyncIterator.new$<TNext, T, TReturn>>

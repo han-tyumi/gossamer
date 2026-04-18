@@ -1,5 +1,5 @@
 import type * as $set from "$/gossamer/gossamer/set.mjs";
-import { toArray } from "~/utils/list.ts";
+import { toArray } from "~/utils/list.ffi.ts";
 
 export type Set$<T> = Set<T>;
 

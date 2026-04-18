@@ -1,5 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/sign_algorithm.mjs";
-import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 
 export function toSignAlgorithm(
   algorithm: $alg.SignAlgorithm$,

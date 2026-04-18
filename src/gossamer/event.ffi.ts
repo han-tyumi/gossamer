@@ -1,7 +1,7 @@
 import * as $event from "$/gossamer/gossamer/event.mjs";
-import { fromEventPhase } from "~/gossamer/event_phase.ts";
-import { fromArray, toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromEventPhase } from "~/gossamer/event_phase.ffi.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Event$ = Event;
 

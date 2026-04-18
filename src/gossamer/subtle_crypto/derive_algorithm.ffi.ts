@@ -1,5 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/derive_algorithm.mjs";
-import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 
 export function toDeriveAlgorithm(
   algorithm: $alg.DeriveAlgorithm$,

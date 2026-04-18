@@ -1,6 +1,6 @@
 import * as $promise from "$/gossamer/gossamer/promise.mjs";
-import { fromArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Promise$<T> = Promise<T>;
 

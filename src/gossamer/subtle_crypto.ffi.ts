@@ -1,17 +1,17 @@
 import * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
-import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ts";
-import { toKeyFormat } from "~/gossamer/key_format.ts";
-import { toKeyUsageArray } from "~/gossamer/key_usage.ts";
-import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
-import { toDeriveAlgorithm } from "~/gossamer/subtle_crypto/derive_algorithm.ts";
-import { toDerivedKeyType } from "~/gossamer/subtle_crypto/derived_key_type.ts";
-import { toEncryptAlgorithm } from "~/gossamer/subtle_crypto/encrypt_algorithm.ts";
-import { toImportAlgorithm } from "~/gossamer/subtle_crypto/import_algorithm.ts";
-import { toWrapAlgorithm } from "~/gossamer/subtle_crypto/wrap_algorithm.ts";
-import { toKeyGenAlgorithm } from "~/gossamer/subtle_crypto/key_gen_algorithm.ts";
-import { toKeyPairGenAlgorithm } from "~/gossamer/subtle_crypto/key_pair_gen_algorithm.ts";
-import { toSignAlgorithm } from "~/gossamer/subtle_crypto/sign_algorithm.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ffi.ts";
+import { toKeyFormat } from "~/gossamer/key_format.ffi.ts";
+import { toKeyUsageArray } from "~/gossamer/key_usage.ffi.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
+import { toDeriveAlgorithm } from "~/gossamer/subtle_crypto/derive_algorithm.ffi.ts";
+import { toDerivedKeyType } from "~/gossamer/subtle_crypto/derived_key_type.ffi.ts";
+import { toEncryptAlgorithm } from "~/gossamer/subtle_crypto/encrypt_algorithm.ffi.ts";
+import { toImportAlgorithm } from "~/gossamer/subtle_crypto/import_algorithm.ffi.ts";
+import { toWrapAlgorithm } from "~/gossamer/subtle_crypto/wrap_algorithm.ffi.ts";
+import { toKeyGenAlgorithm } from "~/gossamer/subtle_crypto/key_gen_algorithm.ffi.ts";
+import { toKeyPairGenAlgorithm } from "~/gossamer/subtle_crypto/key_pair_gen_algorithm.ffi.ts";
+import { toSignAlgorithm } from "~/gossamer/subtle_crypto/sign_algorithm.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
 

@@ -1,8 +1,8 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type * as $string from "$/gossamer/gossamer/string.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
-import { toNormalizationForm } from "~/gossamer/string/normalization_form.ts";
-import { indexToResult, toResult } from "~/utils/result.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { toNormalizationForm } from "~/gossamer/string/normalization_form.ffi.ts";
+import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
 export const from_char_code: typeof $string.from_char_code = (code) =>
   String.fromCharCode(code);

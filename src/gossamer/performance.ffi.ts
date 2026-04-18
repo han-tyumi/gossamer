@@ -1,6 +1,6 @@
 import type * as $performance from "$/gossamer/gossamer/performance.mjs";
-import { fromArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export const now: typeof $performance.now = () => {
   return performance.now();

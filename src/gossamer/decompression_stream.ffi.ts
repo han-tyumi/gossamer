@@ -1,6 +1,6 @@
 import type * as $decompressionStream from "$/gossamer/gossamer/decompression_stream.mjs";
-import { toCompressionFormat } from "~/gossamer/compression_format.ts";
-import { toResult } from "~/utils/result.ts";
+import { toCompressionFormat } from "~/gossamer/compression_format.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type DecompressionStream$ = DecompressionStream;
 

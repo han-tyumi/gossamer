@@ -1,9 +1,9 @@
 import * as $byobReader from "$/gossamer/gossamer/readable_stream/byob_reader.mjs";
 import type { List } from "$/prelude.mjs";
 import { toArrayBufferViewType } from "~/gossamer/array_buffer.ffi.ts";
-import { toReadResult } from "~/gossamer/readable_stream/read_result.ts";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { toReadResult } from "~/gossamer/readable_stream/read_result.ffi.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type ByobReader$<_T> = ReadableStreamBYOBReader;
 

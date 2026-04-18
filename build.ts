@@ -7,7 +7,7 @@ import denoConfig from "./deno.json" with { type: "json" };
 const srcDir = path.resolve("src");
 const buildRoot = path.resolve(denoConfig.imports["$/"]);
 const packageBuildDir = path.resolve(buildRoot, "gossamer");
-const buildImportRegex = /^\$\//;
+const externalImportRegex = /^[$~]\//;
 
 const entryPointFiles = fs.expandGlob(path.joinGlobs([srcDir, "**/*.ffi.ts"]), {
   extended: false,
@@ -24,7 +24,7 @@ const entryPoints = await Array.fromAsync(entryPointFiles, (entry) => {
 
 function createBuildImportMapper(entryPointPath: string): Plugin {
   const entryDir = path.dirname(entryPointPath);
-  const outputDir = path.resolve(
+  const runtimeOutputDir = path.resolve(
     packageBuildDir,
     path.relative(srcDir, entryDir),
   );
@@ -32,12 +32,15 @@ function createBuildImportMapper(entryPointPath: string): Plugin {
   return {
     name: "build-import-mapper",
     setup: (pluginBuild) => {
-      pluginBuild.onResolve({ filter: buildImportRegex }, (args) => {
-        const targetPath = path.resolve(
-          buildRoot,
-          args.path.replace(buildImportRegex, ""),
-        );
-        const relativePath = path.relative(outputDir, targetPath);
+      pluginBuild.onResolve({ filter: externalImportRegex }, (args) => {
+        const targetPath = args.path.startsWith("~/")
+          ? path.resolve(
+            packageBuildDir,
+            args.path.replace(/^~\//, "").replace(/\.ts$/, ".mjs"),
+          )
+          : path.resolve(buildRoot, args.path.replace(/^\$\//, ""));
+
+        const relativePath = path.relative(runtimeOutputDir, targetPath);
 
         return {
           path: relativePath.startsWith(".")
@@ -58,7 +61,6 @@ await Promise.all(entryPoints.map((entryPoint) =>
     outExtension: { ".js": ".mjs" },
     target: "esnext",
     bundle: true,
-    alias: { "~": denoConfig.imports["~/"] },
     plugins: [createBuildImportMapper(entryPoint.in)],
   })
 ));

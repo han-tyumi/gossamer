@@ -1,5 +1,5 @@
 import * as $arrayBuffer from "$/gossamer/gossamer/array_buffer.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type ArrayBuffer$ = ArrayBuffer;
 

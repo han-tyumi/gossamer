@@ -1,6 +1,6 @@
 import * as $type from "$/gossamer/gossamer/subtle_crypto/derived_key_type.mjs";
-import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ts";
-import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
+import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 
 export function toDerivedKeyType(
   derivedKeyType: $type.DerivedKeyType$,

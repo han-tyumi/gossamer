@@ -1,8 +1,8 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
-import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ts";
-import { toReadyState } from "~/gossamer/ready_state.ts";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ffi.ts";
+import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type WebSocket$ = WebSocket;
 

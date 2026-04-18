@@ -1,5 +1,5 @@
 import type * as $writer from "$/gossamer/gossamer/writable_stream/writer.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Writer$<T> = WritableStreamDefaultWriter<T>;
 

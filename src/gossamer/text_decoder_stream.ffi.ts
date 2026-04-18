@@ -1,7 +1,7 @@
 import type * as $textDecoderStream from "$/gossamer/gossamer/text_decoder_stream.mjs";
-import { fromEncoding } from "~/gossamer/encoding.ts";
+import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder.ffi.ts";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type TextDecoderStream$ = TextDecoderStream;
 

@@ -1,6 +1,6 @@
 import type * as $map from "$/gossamer/gossamer/map.mjs";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Map$<K, V> = Map<K, V>;
 

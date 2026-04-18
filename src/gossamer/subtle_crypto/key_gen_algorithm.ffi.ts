@@ -1,6 +1,6 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/key_gen_algorithm.mjs";
-import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ts";
-import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
+import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 
 export function toKeyGenAlgorithm(
   algorithm: $alg.KeyGenAlgorithm$,

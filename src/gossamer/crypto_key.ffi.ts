@@ -1,12 +1,12 @@
 import * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
-import { fromAesAlgorithm } from "~/gossamer/aes_algorithm.ts";
-import { fromEcAlgorithm } from "~/gossamer/ec_algorithm.ts";
-import { fromHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
-import { toKeyType } from "~/gossamer/key_type.ts";
-import { fromKeyUsage } from "~/gossamer/key_usage.ts";
-import { fromNamedCurve } from "~/gossamer/named_curve.ts";
-import { fromRsaAlgorithm } from "~/gossamer/rsa_algorithm.ts";
-import { fromArrayMapped } from "~/utils/list.ts";
+import { fromAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
+import { fromEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
+import { fromHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
+import { toKeyType } from "~/gossamer/key_type.ffi.ts";
+import { fromKeyUsage } from "~/gossamer/key_usage.ffi.ts";
+import { fromNamedCurve } from "~/gossamer/named_curve.ffi.ts";
+import { fromRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
+import { fromArrayMapped } from "~/utils/list.ffi.ts";
 
 export type CryptoKey$ = CryptoKey;
 

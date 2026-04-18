@@ -1,8 +1,8 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/import_algorithm.mjs";
-import { toEcAlgorithm } from "~/gossamer/ec_algorithm.ts";
-import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ts";
-import { toNamedCurve } from "~/gossamer/named_curve.ts";
-import { toRsaAlgorithm } from "~/gossamer/rsa_algorithm.ts";
+import { toEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
+import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
+import { toNamedCurve } from "~/gossamer/named_curve.ffi.ts";
+import { toRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
 
 export function toImportAlgorithm(
   algorithm: $alg.ImportAlgorithm$,

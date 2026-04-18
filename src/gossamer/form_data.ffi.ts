@@ -1,6 +1,6 @@
 import * as $formData from "$/gossamer/gossamer/form_data.mjs";
-import { fromArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 function toFormDataValue(
   value: FormDataEntryValue,

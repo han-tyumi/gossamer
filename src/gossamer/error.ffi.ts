@@ -1,5 +1,5 @@
 import type * as $error from "$/gossamer/gossamer/error.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type Error$ = Error;
 

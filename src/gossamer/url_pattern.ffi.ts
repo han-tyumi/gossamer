@@ -1,7 +1,7 @@
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
 import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type URLPattern$ = URLPattern;
 

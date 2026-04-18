@@ -1,6 +1,6 @@
 import type * as $abortSignal from "$/gossamer/gossamer/abort_signal.mjs";
-import { toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type AbortSignal$ = AbortSignal;
 

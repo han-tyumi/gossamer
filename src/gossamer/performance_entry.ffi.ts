@@ -1,5 +1,5 @@
 import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
-import { toResult } from "~/utils/result.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type PerformanceEntry$ = PerformanceEntry;
 
