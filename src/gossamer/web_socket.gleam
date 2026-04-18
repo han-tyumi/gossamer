@@ -1,7 +1,10 @@
+import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/binary_type.{type BinaryType}
+import gossamer/blob.{type Blob}
 import gossamer/close_event.{type CloseEvent}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
+import gossamer/uint8_array.{type Uint8Array}
 
 // TODO: Most WebSocket functions are untested — requires a live WebSocket
 // server which can't be created cross-runtime from pure Gleam. Only `new`,
@@ -68,21 +71,55 @@ pub fn ready_state(of socket: WebSocket) -> ReadyState
 @external(javascript, "./web_socket.ffi.mjs", "url")
 pub fn url(of socket: WebSocket) -> String
 
+/// Closes the WebSocket connection. Returns an error if the connection is
+/// already closing or closed.
+///
 @external(javascript, "./web_socket.ffi.mjs", "close")
-pub fn close(socket: WebSocket) -> Nil
+pub fn close(socket: WebSocket) -> Result(Nil, String)
 
+/// Closes the WebSocket connection with the given code and reason. Returns an
+/// error if the code is invalid (must be 1000 or 3000–4999) or the reason
+/// exceeds 123 bytes.
+///
 @external(javascript, "./web_socket.ffi.mjs", "close_with")
 pub fn close_with(
   socket: WebSocket,
   code code: Int,
   reason reason: String,
-) -> Nil
+) -> Result(Nil, String)
 
-@external(javascript, "./web_socket.ffi.mjs", "send")
-pub fn send(to socket: WebSocket, data data: String) -> Nil
+/// Sends a string through the WebSocket. Returns an error if the connection
+/// is not open.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_string")
+pub fn send_string(
+  to socket: WebSocket,
+  data data: String,
+) -> Result(Nil, String)
 
-@external(javascript, "./web_socket.ffi.mjs", "send_dynamic")
-pub fn send_dynamic(to socket: WebSocket, data data: a) -> Nil
+/// Sends binary data as a `Uint8Array` through the WebSocket. Returns an
+/// error if the connection is not open.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_bytes")
+pub fn send_bytes(
+  to socket: WebSocket,
+  data data: Uint8Array,
+) -> Result(Nil, String)
+
+/// Sends a `Blob` through the WebSocket. Returns an error if the connection
+/// is not open.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_blob")
+pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, String)
+
+/// Sends an `ArrayBuffer` through the WebSocket. Returns an error if the
+/// connection is not open.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_buffer")
+pub fn send_buffer(
+  to socket: WebSocket,
+  data data: ArrayBuffer,
+) -> Result(Nil, String)
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")
 pub fn on_open(socket: WebSocket, run handler: fn() -> a) -> Nil

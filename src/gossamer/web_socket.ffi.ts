@@ -50,7 +50,9 @@ export const url: typeof $webSocket.url = (socket) => {
 };
 
 export const close: typeof $webSocket.close = (socket) => {
-  socket.close();
+  return toResult.fromThrows(() => {
+    socket.close();
+  });
 };
 
 export const close_with: typeof $webSocket.close_with = (
@@ -58,15 +60,33 @@ export const close_with: typeof $webSocket.close_with = (
   code,
   reason,
 ) => {
-  socket.close(code, reason);
+  return toResult.fromThrows(() => {
+    socket.close(code, reason);
+  });
 };
 
-export const send: typeof $webSocket.send = (socket, data) => {
-  socket.send(data);
+export const send_string: typeof $webSocket.send_string = (socket, data) => {
+  return toResult.fromThrows(() => {
+    socket.send(data);
+  });
 };
 
-export const send_dynamic: typeof $webSocket.send_dynamic = (socket, data) => {
-  socket.send(data as string | ArrayBufferLike | Blob | ArrayBufferView);
+export const send_bytes: typeof $webSocket.send_bytes = (socket, data) => {
+  return toResult.fromThrows(() => {
+    socket.send(data);
+  });
+};
+
+export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
+  return toResult.fromThrows(() => {
+    socket.send(data);
+  });
+};
+
+export const send_buffer: typeof $webSocket.send_buffer = (socket, data) => {
+  return toResult.fromThrows(() => {
+    socket.send(data);
+  });
 };
 
 export const on_open: typeof $webSocket.on_open = (socket, handler) => {
