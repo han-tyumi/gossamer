@@ -1,4 +1,5 @@
 import gleeunit/should
+import gossamer/iterator
 import gossamer/map
 
 pub fn new_test() {
@@ -32,14 +33,15 @@ pub fn has_test() {
 
 pub fn delete_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
-  map.delete(m, "a") |> should.be_true
+  map.delete(from: m, key: "a")
   map.has(m, "a") |> should.be_false
   map.size(m) |> should.equal(1)
 }
 
 pub fn delete_missing_test() {
   let m = map.new()
-  map.delete(m, "missing") |> should.be_false
+  map.delete(from: m, key: "missing")
+  map.size(m) |> should.equal(0)
 }
 
 pub fn clear_test() {
@@ -50,22 +52,22 @@ pub fn clear_test() {
 
 pub fn keys_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
-  map.keys(m) |> should.equal(["a", "b"])
+  map.keys(m) |> iterator.to_list |> should.equal(["a", "b"])
 }
 
 pub fn values_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
-  map.values(m) |> should.equal([1, 2])
+  map.values(m) |> iterator.to_list |> should.equal([1, 2])
 }
 
 pub fn entries_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
-  map.entries(m) |> should.equal([#("a", 1), #("b", 2)])
+  map.entries(m) |> iterator.to_list |> should.equal([#("a", 1), #("b", 2)])
 }
 
 pub fn for_each_test() {
   let m = map.from_list([#("a", 1)])
-  map.for_each(m, fn(_value, _key) { Nil })
+  map.for_each(m, fn(_key, _value) { Nil })
 }
 
 pub fn set_chaining_test() {

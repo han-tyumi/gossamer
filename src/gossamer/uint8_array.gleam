@@ -1,5 +1,6 @@
 import gleam/order.{type Order}
 import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/iterator.{type Iterator}
 
 @external(javascript, "./uint8_array.type.ts", "Uint8Array$")
 pub type Uint8Array
@@ -51,24 +52,24 @@ pub fn includes_from(
 ) -> Bool
 
 @external(javascript, "./uint8_array.ffi.mjs", "index_of")
-pub fn index_of(in array: Uint8Array, value value: Int) -> Int
+pub fn index_of(in array: Uint8Array, value value: Int) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "index_of_from")
 pub fn index_of_from(
   in array: Uint8Array,
   value value: Int,
   from index: Int,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "last_index_of")
-pub fn last_index_of(in array: Uint8Array, value value: Int) -> Int
+pub fn last_index_of(in array: Uint8Array, value value: Int) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "last_index_of_from")
 pub fn last_index_of_from(
   in array: Uint8Array,
   value value: Int,
   from index: Int,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "slice")
 pub fn slice(array: Uint8Array) -> Uint8Array
@@ -172,13 +173,13 @@ pub fn index_find(
 pub fn find_index(
   in array: Uint8Array,
   one_that predicate: fn(Int) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "index_find_index")
 pub fn index_find_index(
   in array: Uint8Array,
   one_that predicate: fn(Int, Int) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "find_last")
 pub fn find_last(
@@ -196,13 +197,13 @@ pub fn index_find_last(
 pub fn find_last_index(
   in array: Uint8Array,
   one_that predicate: fn(Int) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "index_find_last_index")
 pub fn index_find_last_index(
   in array: Uint8Array,
   one_that predicate: fn(Int, Int) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "filter")
 pub fn filter(
@@ -275,13 +276,13 @@ pub fn index_reduce_right(
 ) -> a
 
 @external(javascript, "./uint8_array.ffi.mjs", "keys")
-pub fn keys(of array: Uint8Array) -> List(Int)
+pub fn keys(of array: Uint8Array) -> Iterator(Int, Nil, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "values")
-pub fn values(of array: Uint8Array) -> List(Int)
+pub fn values(of array: Uint8Array) -> Iterator(Int, Nil, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "entries")
-pub fn entries(of array: Uint8Array) -> List(#(Int, Int))
+pub fn entries(of array: Uint8Array) -> Iterator(#(Int, Int), Nil, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "to_list")
 pub fn to_list(array: Uint8Array) -> List(Int)

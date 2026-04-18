@@ -1,3 +1,5 @@
+import gossamer/iterator.{type Iterator}
+
 @external(javascript, "./headers.type.ts", "Headers$")
 pub type Headers
 
@@ -44,13 +46,13 @@ pub fn set(
 pub fn get_set_cookie(from headers: Headers) -> List(String)
 
 @external(javascript, "./headers.ffi.mjs", "keys")
-pub fn keys(of headers: Headers) -> List(String)
+pub fn keys(of headers: Headers) -> Iterator(String, Nil, Nil)
 
 @external(javascript, "./headers.ffi.mjs", "values")
-pub fn values(of headers: Headers) -> List(String)
+pub fn values(of headers: Headers) -> Iterator(String, Nil, Nil)
 
 @external(javascript, "./headers.ffi.mjs", "entries")
-pub fn entries(of headers: Headers) -> List(#(String, String))
+pub fn entries(of headers: Headers) -> Iterator(#(String, String), Nil, Nil)
 
 @external(javascript, "./headers.ffi.mjs", "for_each")
 pub fn for_each(

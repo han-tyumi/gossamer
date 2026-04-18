@@ -2,6 +2,7 @@ import gossamer/array_buffer
 import gossamer/blob
 import gossamer/headers
 import gossamer/http_method
+import gossamer/iterator
 import gossamer/promise
 import gossamer/request
 import gossamer/request_init
@@ -46,12 +47,12 @@ pub fn headers_delete_test() {
 
 pub fn headers_keys_test() {
   let hdrs = headers.from_pairs([#("b", "2"), #("a", "1")])
-  headers.keys(hdrs) |> should.equal(["a", "b"])
+  headers.keys(hdrs) |> iterator.to_list |> should.equal(["a", "b"])
 }
 
 pub fn headers_entries_test() {
   let hdrs = headers.from_pairs([#("a", "1")])
-  headers.entries(hdrs) |> should.equal([#("a", "1")])
+  headers.entries(hdrs) |> iterator.to_list |> should.equal([#("a", "1")])
 }
 
 pub fn request_new_test() {
@@ -189,12 +190,12 @@ pub fn response_form_data_test() {
 
 pub fn headers_values_test() {
   let hdrs = headers.from_pairs([#("a", "1"), #("b", "2")])
-  headers.values(hdrs) |> should.equal(["1", "2"])
+  headers.values(hdrs) |> iterator.to_list |> should.equal(["1", "2"])
 }
 
 pub fn headers_for_each_test() {
   let hdrs = headers.from_pairs([#("x", "1")])
-  headers.for_each(hdrs, fn(_value, _name) { Nil })
+  headers.for_each(hdrs, fn(_name, _value) { Nil })
 }
 
 pub fn headers_get_set_cookie_test() {

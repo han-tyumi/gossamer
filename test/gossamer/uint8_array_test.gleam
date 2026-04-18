@@ -1,5 +1,6 @@
 import gleam/order
 import gleeunit/should
+import gossamer/iterator
 import gossamer/uint8_array
 
 pub fn new_test() {
@@ -54,13 +55,13 @@ pub fn includes_from_test() {
 
 pub fn index_of_test() {
   let array = uint8_array.from_list([1, 2, 3, 2])
-  uint8_array.index_of(array, 2) |> should.equal(1)
-  uint8_array.index_of(array, 5) |> should.equal(-1)
+  uint8_array.index_of(array, 2) |> should.equal(Ok(1))
+  uint8_array.index_of(array, 5) |> should.be_error
 }
 
 pub fn last_index_of_test() {
   let array = uint8_array.from_list([1, 2, 3, 2])
-  uint8_array.last_index_of(array, 2) |> should.equal(3)
+  uint8_array.last_index_of(array, 2) |> should.equal(Ok(3))
 }
 
 pub fn slice_test() {
@@ -140,8 +141,8 @@ pub fn find_test() {
 
 pub fn find_index_test() {
   let array = uint8_array.from_list([10, 20, 30])
-  uint8_array.find_index(array, fn(value) { value > 15 }) |> should.equal(1)
-  uint8_array.find_index(array, fn(value) { value > 50 }) |> should.equal(-1)
+  uint8_array.find_index(array, fn(value) { value > 15 }) |> should.equal(Ok(1))
+  uint8_array.find_index(array, fn(value) { value > 50 }) |> should.be_error
 }
 
 pub fn find_last_test() {
@@ -153,7 +154,7 @@ pub fn find_last_test() {
 pub fn find_last_index_test() {
   let array = uint8_array.from_list([10, 20, 30])
   uint8_array.find_last_index(array, fn(value) { value > 15 })
-  |> should.equal(2)
+  |> should.equal(Ok(2))
 }
 
 pub fn filter_test() {
@@ -364,7 +365,7 @@ pub fn index_find_test() {
 pub fn index_find_index_test() {
   let array = uint8_array.from_list([10, 20, 30])
   uint8_array.index_find_index(array, fn(value, _index) { value > 15 })
-  |> should.equal(1)
+  |> should.equal(Ok(1))
 }
 
 pub fn index_find_last_test() {
@@ -376,7 +377,7 @@ pub fn index_find_last_test() {
 pub fn index_find_last_index_test() {
   let array = uint8_array.from_list([10, 20, 30])
   uint8_array.index_find_last_index(array, fn(value, _index) { value > 15 })
-  |> should.equal(2)
+  |> should.equal(Ok(2))
 }
 
 pub fn index_filter_test() {
@@ -409,38 +410,49 @@ pub fn index_reduce_right_test() {
 
 pub fn index_of_from_test() {
   let array = uint8_array.from_list([1, 2, 3, 2])
-  uint8_array.index_of_from(array, 2, 2) |> should.equal(3)
-  uint8_array.index_of_from(array, 1, 1) |> should.equal(-1)
+  uint8_array.index_of_from(array, 2, 2) |> should.equal(Ok(3))
+  uint8_array.index_of_from(array, 1, 1) |> should.be_error
 }
 
 pub fn last_index_of_from_test() {
   let array = uint8_array.from_list([1, 2, 3, 2])
-  uint8_array.last_index_of_from(array, 2, 2) |> should.equal(1)
+  uint8_array.last_index_of_from(array, 2, 2) |> should.equal(Ok(1))
 }
 
 pub fn keys_test() {
   let array = uint8_array.from_list([10, 20, 30])
-  uint8_array.keys(array) |> should.equal([0, 1, 2])
+  uint8_array.keys(array) |> iterator.to_list |> should.equal([0, 1, 2])
 }
 
 pub fn values_test() {
   let array = uint8_array.from_list([10, 20, 30])
-  uint8_array.values(array) |> should.equal([10, 20, 30])
+  uint8_array.values(array) |> iterator.to_list |> should.equal([10, 20, 30])
 }
 
 pub fn entries_test() {
   let array = uint8_array.from_list([10, 20, 30])
-  uint8_array.entries(array) |> should.equal([#(0, 10), #(1, 20), #(2, 30)])
+  uint8_array.entries(array)
+  |> iterator.to_list
+  |> should.equal([#(0, 10), #(1, 20), #(2, 30)])
 }
 
 pub fn keys_empty_test() {
-  uint8_array.new() |> uint8_array.keys() |> should.equal([])
+  uint8_array.new()
+  |> uint8_array.keys()
+  |> iterator.to_list
+  |> should.equal([])
 }
 
 pub fn values_empty_test() {
-  uint8_array.new() |> uint8_array.values() |> should.equal([])
+  uint8_array.new()
+  |> uint8_array.values()
+  |> iterator.to_list
+  |> should.equal([])
 }
 
 pub fn entries_empty_test() {
-  uint8_array.new() |> uint8_array.entries() |> should.equal([])
+  uint8_array.new()
+  |> uint8_array.entries()
+  |> iterator.to_list
+  |> should.equal([])
 }

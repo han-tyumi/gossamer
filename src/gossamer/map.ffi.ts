@@ -1,5 +1,5 @@
 import type * as $map from "$/gossamer/gossamer/map.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
+import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type Map$<K, V> = Map<K, V>;
@@ -32,7 +32,8 @@ export const set: typeof $map.set = (map, key, value) => {
 };
 
 export const delete_: typeof $map.delete$ = (map, key) => {
-  return map.delete(key);
+  map.delete(key);
+  return map;
 };
 
 export const clear: typeof $map.clear = (map) => {
@@ -41,17 +42,17 @@ export const clear: typeof $map.clear = (map) => {
 };
 
 export const keys: typeof $map.keys = (map) => {
-  return fromArray(Array.from(map.keys()));
+  return map.keys();
 };
 
 export const values: typeof $map.values = (map) => {
-  return fromArray(Array.from(map.values()));
+  return map.values();
 };
 
 export const entries: typeof $map.entries = (map) => {
-  return fromArray(Array.from(map.entries()));
+  return map.entries();
 };
 
 export const for_each: typeof $map.for_each = (map, callback) => {
-  map.forEach((value, key) => callback(value, key));
+  map.forEach((value, key) => callback(key, value));
 };

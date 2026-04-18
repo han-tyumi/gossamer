@@ -50,24 +50,27 @@ pub fn is_well_formed(string: String) -> Bool
 pub fn to_well_formed(string: String) -> String
 
 @external(javascript, "./string.ffi.mjs", "index_of")
-pub fn index_of(in string: String, search search: String) -> Int
+pub fn index_of(in string: String, search search: String) -> Result(Int, Nil)
 
 @external(javascript, "./string.ffi.mjs", "index_of_from")
 pub fn index_of_from(
   in string: String,
   search search: String,
   from position: Int,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./string.ffi.mjs", "last_index_of")
-pub fn last_index_of(in string: String, search search: String) -> Int
+pub fn last_index_of(
+  in string: String,
+  search search: String,
+) -> Result(Int, Nil)
 
 @external(javascript, "./string.ffi.mjs", "last_index_of_from")
 pub fn last_index_of_from(
   in string: String,
   search search: String,
   from position: Int,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./string.ffi.mjs", "slice")
 pub fn slice(string: String, from start: Int, to end: Int) -> String

@@ -69,19 +69,19 @@ export const for_each: typeof $urlSearchParams.for_each = (
   params,
   callback,
 ) => {
-  params.forEach((value, key) => callback(value, key));
+  params.forEach((value, name) => callback(name, value));
 };
 
 export const keys: typeof $urlSearchParams.keys = (params) => {
-  return fromArray(Array.from(params.keys()));
+  return params.keys();
 };
 
 export const values: typeof $urlSearchParams.values = (params) => {
-  return fromArray(Array.from(params.values()));
+  return params.values();
 };
 
 export const entries: typeof $urlSearchParams.entries = (params) => {
-  return fromArray(Array.from(params.entries()));
+  return params.entries();
 };
 
 export const to_string: typeof $urlSearchParams.to_string = (params) => {

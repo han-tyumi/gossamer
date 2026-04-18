@@ -2,7 +2,7 @@ import type * as $uint8Array from "$/gossamer/gossamer/uint8_array.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import { fromArray, toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { indexToResult, toResult } from "~/utils/result.ts";
 
 export type Uint8Array$ = Uint8Array;
 
@@ -62,7 +62,7 @@ export const includes_from: typeof $uint8Array.includes_from = (
 };
 
 export const index_of: typeof $uint8Array.index_of = (array, value) => {
-  return array.indexOf(value);
+  return indexToResult(array.indexOf(value));
 };
 
 export const index_of_from: typeof $uint8Array.index_of_from = (
@@ -70,14 +70,14 @@ export const index_of_from: typeof $uint8Array.index_of_from = (
   value,
   index,
 ) => {
-  return array.indexOf(value, index);
+  return indexToResult(array.indexOf(value, index));
 };
 
 export const last_index_of: typeof $uint8Array.last_index_of = (
   array,
   value,
 ) => {
-  return array.lastIndexOf(value);
+  return indexToResult(array.lastIndexOf(value));
 };
 
 export const last_index_of_from: typeof $uint8Array.last_index_of_from = (
@@ -85,7 +85,7 @@ export const last_index_of_from: typeof $uint8Array.last_index_of_from = (
   value,
   index,
 ) => {
-  return array.lastIndexOf(value, index);
+  return indexToResult(array.lastIndexOf(value, index));
 };
 
 export const slice: typeof $uint8Array.slice = (array) => {
@@ -190,14 +190,16 @@ export const index_find: typeof $uint8Array.index_find = (array, predicate) => {
 };
 
 export const find_index: typeof $uint8Array.find_index = (array, predicate) => {
-  return array.findIndex((value) => predicate(value));
+  return indexToResult(array.findIndex((value) => predicate(value)));
 };
 
 export const index_find_index: typeof $uint8Array.index_find_index = (
   array,
   predicate,
 ) => {
-  return array.findIndex((value, index) => predicate(value, index));
+  return indexToResult(
+    array.findIndex((value, index) => predicate(value, index)),
+  );
 };
 
 export const find_last: typeof $uint8Array.find_last = (array, predicate) => {
@@ -215,14 +217,16 @@ export const find_last_index: typeof $uint8Array.find_last_index = (
   array,
   predicate,
 ) => {
-  return array.findLastIndex((value) => predicate(value));
+  return indexToResult(array.findLastIndex((value) => predicate(value)));
 };
 
 export const index_find_last_index: typeof $uint8Array.index_find_last_index = (
   array,
   predicate,
 ) => {
-  return array.findLastIndex((value, index) => predicate(value, index));
+  return indexToResult(
+    array.findLastIndex((value, index) => predicate(value, index)),
+  );
 };
 
 export const filter: typeof $uint8Array.filter = (array, predicate) => {
@@ -319,15 +323,15 @@ export const index_reduce_right: typeof $uint8Array.index_reduce_right = (
 };
 
 export const keys: typeof $uint8Array.keys = (array) => {
-  return fromArray(Array.from(array.keys()));
+  return array.keys();
 };
 
 export const values: typeof $uint8Array.values = (array) => {
-  return fromArray(Array.from(array.values()));
+  return array.values();
 };
 
 export const entries: typeof $uint8Array.entries = (array) => {
-  return fromArray(Array.from(array.entries()));
+  return array.entries();
 };
 
 export const to_list: typeof $uint8Array.to_list = (array) => {

@@ -1,4 +1,5 @@
 import gleeunit/should
+import gossamer/iterator
 import gossamer/set
 
 pub fn new_test() {
@@ -39,14 +40,15 @@ pub fn has_test() {
 
 pub fn delete_test() {
   let s = set.from_list([1, 2, 3])
-  set.delete(s, 2) |> should.be_true
+  set.delete(from: s, value: 2)
   set.has(s, 2) |> should.be_false
   set.size(s) |> should.equal(2)
 }
 
 pub fn delete_missing_test() {
   let s = set.new()
-  set.delete(s, 99) |> should.be_false
+  set.delete(from: s, value: 99)
+  set.size(s) |> should.equal(0)
 }
 
 pub fn clear_test() {
@@ -57,12 +59,12 @@ pub fn clear_test() {
 
 pub fn values_test() {
   let s = set.from_list([1, 2, 3])
-  set.values(s) |> should.equal([1, 2, 3])
+  set.values(s) |> iterator.to_list |> should.equal([1, 2, 3])
 }
 
 pub fn entries_test() {
   let s = set.from_list([1, 2])
-  set.entries(s) |> should.equal([#(1, 1), #(2, 2)])
+  set.entries(s) |> iterator.to_list |> should.equal([#(1, 1), #(2, 2)])
 }
 
 pub fn for_each_test() {
@@ -81,14 +83,14 @@ pub fn intersection_test() {
   let a = set.from_list([1, 2, 3])
   let b = set.from_list([2, 3, 4])
   let result = set.intersection(a, b)
-  set.values(result) |> should.equal([2, 3])
+  set.values(result) |> iterator.to_list |> should.equal([2, 3])
 }
 
 pub fn difference_test() {
   let a = set.from_list([1, 2, 3])
   let b = set.from_list([2, 3, 4])
   let result = set.difference(a, b)
-  set.values(result) |> should.equal([1])
+  set.values(result) |> iterator.to_list |> should.equal([1])
 }
 
 pub fn symmetric_difference_test() {

@@ -1,3 +1,5 @@
+import gossamer/iterator.{type Iterator}
+
 @external(javascript, "./map.type.ts", "Map$")
 pub type Map(key, value)
 
@@ -27,10 +29,10 @@ pub fn set(
   value value: value,
 ) -> Map(key, value)
 
-/// Returns whether the key existed before removal.
+/// Removes the entry for the given key. Mutates the map.
 ///
 @external(javascript, "./map.ffi.mjs", "delete_")
-pub fn delete(from map: Map(key, value), key key: key) -> Bool
+pub fn delete(from map: Map(key, value), key key: key) -> Map(key, value)
 
 /// Removes all entries. Mutates the map.
 ///
@@ -38,16 +40,16 @@ pub fn delete(from map: Map(key, value), key key: key) -> Bool
 pub fn clear(map: Map(key, value)) -> Map(key, value)
 
 @external(javascript, "./map.ffi.mjs", "keys")
-pub fn keys(of map: Map(key, value)) -> List(key)
+pub fn keys(of map: Map(key, value)) -> Iterator(key, Nil, Nil)
 
 @external(javascript, "./map.ffi.mjs", "values")
-pub fn values(of map: Map(key, value)) -> List(value)
+pub fn values(of map: Map(key, value)) -> Iterator(value, Nil, Nil)
 
 @external(javascript, "./map.ffi.mjs", "entries")
-pub fn entries(of map: Map(key, value)) -> List(#(key, value))
+pub fn entries(of map: Map(key, value)) -> Iterator(#(key, value), Nil, Nil)
 
 @external(javascript, "./map.ffi.mjs", "for_each")
 pub fn for_each(
   in map: Map(key, value),
-  run callback: fn(value, key) -> a,
+  run callback: fn(key, value) -> a,
 ) -> Nil

@@ -1,5 +1,14 @@
 import gossamer/blob.{type Blob}
 import gossamer/file.{type File}
+import gossamer/iterator.{type Iterator}
+
+/// Represents a value stored in a `FormData` entry. Form data values are
+/// either strings or files.
+///
+pub type FormDataValue {
+  Text(String)
+  FileValue(File)
+}
 
 @external(javascript, "./form_data.type.ts", "FormData$")
 pub type FormData
@@ -94,16 +103,18 @@ pub fn set_blob_with_filename(
 ) -> FormData
 
 @external(javascript, "./form_data.ffi.mjs", "keys")
-pub fn keys(of form_data: FormData) -> List(String)
+pub fn keys(of form_data: FormData) -> Iterator(String, Nil, Nil)
 
 @external(javascript, "./form_data.ffi.mjs", "values")
-pub fn values(of form_data: FormData) -> List(String)
+pub fn values(of form_data: FormData) -> Iterator(FormDataValue, Nil, Nil)
 
 @external(javascript, "./form_data.ffi.mjs", "entries")
-pub fn entries(of form_data: FormData) -> List(#(String, String))
+pub fn entries(
+  of form_data: FormData,
+) -> Iterator(#(String, FormDataValue), Nil, Nil)
 
 @external(javascript, "./form_data.ffi.mjs", "for_each")
 pub fn for_each(
   in form_data: FormData,
-  run callback: fn(String, String) -> a,
+  run callback: fn(String, FormDataValue) -> a,
 ) -> Nil

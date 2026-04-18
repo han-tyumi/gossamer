@@ -2,6 +2,7 @@ import gleeunit/should
 import gossamer/blob
 import gossamer/file
 import gossamer/form_data
+import gossamer/iterator
 
 pub fn form_data_append_get_test() {
   let fd =
@@ -36,7 +37,7 @@ pub fn form_data_keys_test() {
     form_data.new()
     |> form_data.append("a", "1")
     |> form_data.append("b", "2")
-  should.equal(form_data.keys(fd), ["a", "b"])
+  form_data.keys(fd) |> iterator.to_list |> should.equal(["a", "b"])
 }
 
 pub fn form_data_blob_test() {
@@ -105,7 +106,9 @@ pub fn form_data_values_test() {
     form_data.new()
     |> form_data.append("a", "1")
     |> form_data.append("b", "2")
-  form_data.values(fd) |> should.equal(["1", "2"])
+  form_data.values(fd)
+  |> iterator.to_list
+  |> should.equal([form_data.Text("1"), form_data.Text("2")])
 }
 
 pub fn form_data_entries_test() {
@@ -113,12 +116,17 @@ pub fn form_data_entries_test() {
     form_data.new()
     |> form_data.append("a", "1")
     |> form_data.append("b", "2")
-  form_data.entries(fd) |> should.equal([#("a", "1"), #("b", "2")])
+  form_data.entries(fd)
+  |> iterator.to_list
+  |> should.equal([
+    #("a", form_data.Text("1")),
+    #("b", form_data.Text("2")),
+  ])
 }
 
 pub fn form_data_for_each_test() {
   let fd =
     form_data.new()
     |> form_data.append("x", "10")
-  form_data.for_each(fd, fn(_value, _name) { Nil })
+  form_data.for_each(fd, fn(_name, _value) { Nil })
 }

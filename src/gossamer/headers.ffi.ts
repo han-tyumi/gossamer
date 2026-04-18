@@ -40,17 +40,17 @@ export const get_set_cookie: typeof $headers.get_set_cookie = (headers) => {
 };
 
 export const keys: typeof $headers.keys = (headers) => {
-  return fromArray(Array.from(headers.keys()));
+  return headers.keys();
 };
 
 export const values: typeof $headers.values = (headers) => {
-  return fromArray(Array.from(headers.values()));
+  return headers.values();
 };
 
 export const entries: typeof $headers.entries = (headers) => {
-  return fromArray(Array.from(headers.entries()));
+  return headers.entries();
 };
 
 export const for_each: typeof $headers.for_each = (headers, callback) => {
-  headers.forEach((value, key) => callback(value, key));
+  headers.forEach((value, name) => callback(name, value));
 };

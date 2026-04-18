@@ -30,20 +30,24 @@ pub fn includes_from(
 ) -> Bool
 
 @external(javascript, "./array.ffi.mjs", "index_of")
-pub fn index_of(in array: Array(a), value value: a) -> Int
+pub fn index_of(in array: Array(a), value value: a) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "index_of_from")
-pub fn index_of_from(in array: Array(a), value value: a, from index: Int) -> Int
+pub fn index_of_from(
+  in array: Array(a),
+  value value: a,
+  from index: Int,
+) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "last_index_of")
-pub fn last_index_of(in array: Array(a), value value: a) -> Int
+pub fn last_index_of(in array: Array(a), value value: a) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "last_index_of_from")
 pub fn last_index_of_from(
   in array: Array(a),
   value value: a,
   from index: Int,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "find")
 pub fn find(
@@ -58,13 +62,16 @@ pub fn index_find(
 ) -> Result(a, Nil)
 
 @external(javascript, "./array.ffi.mjs", "find_index")
-pub fn find_index(in array: Array(a), one_that predicate: fn(a) -> Bool) -> Int
+pub fn find_index(
+  in array: Array(a),
+  one_that predicate: fn(a) -> Bool,
+) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "index_find_index")
 pub fn index_find_index(
   in array: Array(a),
   one_that predicate: fn(a, Int) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "find_last")
 pub fn find_last(
@@ -82,13 +89,13 @@ pub fn index_find_last(
 pub fn find_last_index(
   in array: Array(a),
   one_that predicate: fn(a) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "index_find_last_index")
 pub fn index_find_last_index(
   in array: Array(a),
   one_that predicate: fn(a, Int) -> Bool,
-) -> Int
+) -> Result(Int, Nil)
 
 @external(javascript, "./array.ffi.mjs", "every")
 pub fn every(in array: Array(a), satisfying predicate: fn(a) -> Bool) -> Bool

@@ -41,13 +41,13 @@ pub fn includes_test() {
 
 pub fn index_of_test() {
   let a = array.from_list([10, 20, 30, 20])
-  array.index_of(a, 20) |> should.equal(1)
-  array.index_of(a, 99) |> should.equal(-1)
+  array.index_of(a, 20) |> should.equal(Ok(1))
+  array.index_of(a, 99) |> should.be_error
 }
 
 pub fn last_index_of_test() {
   let a = array.from_list([10, 20, 30, 20])
-  array.last_index_of(a, 20) |> should.equal(3)
+  array.last_index_of(a, 20) |> should.equal(Ok(3))
 }
 
 pub fn find_test() {
@@ -58,8 +58,8 @@ pub fn find_test() {
 
 pub fn find_index_test() {
   let a = array.from_list([10, 20, 30])
-  array.find_index(a, one_that: fn(value) { value > 15 }) |> should.equal(1)
-  array.find_index(a, one_that: fn(value) { value > 99 }) |> should.equal(-1)
+  array.find_index(a, one_that: fn(value) { value > 15 }) |> should.equal(Ok(1))
+  array.find_index(a, one_that: fn(value) { value > 99 }) |> should.be_error
 }
 
 pub fn find_last_test() {
@@ -70,7 +70,7 @@ pub fn find_last_test() {
 pub fn find_last_index_test() {
   let a = array.from_list([1, 2, 3, 2, 1])
   array.find_last_index(a, one_that: fn(value) { value == 2 })
-  |> should.equal(3)
+  |> should.equal(Ok(3))
 }
 
 pub fn every_test() {

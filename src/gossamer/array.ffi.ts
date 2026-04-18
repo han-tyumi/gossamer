@@ -2,7 +2,7 @@ import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import type * as $array from "$/gossamer/gossamer/array.mjs";
 import { fromArray, toArray } from "~/utils/list.ts";
-import { toResult } from "~/utils/result.ts";
+import { indexToResult, toResult } from "~/utils/result.ts";
 
 export type Array$<T> = Array<T>;
 
@@ -40,22 +40,22 @@ export const includes_from: typeof $array.includes_from = (
 ) => array.includes(value, index);
 
 export const index_of: typeof $array.index_of = (array, value) =>
-  array.indexOf(value);
+  indexToResult(array.indexOf(value));
 
 export const index_of_from: typeof $array.index_of_from = (
   array,
   value,
   index,
-) => array.indexOf(value, index);
+) => indexToResult(array.indexOf(value, index));
 
 export const last_index_of: typeof $array.last_index_of = (array, value) =>
-  array.lastIndexOf(value);
+  indexToResult(array.lastIndexOf(value));
 
 export const last_index_of_from: typeof $array.last_index_of_from = (
   array,
   value,
   index,
-) => array.lastIndexOf(value, index);
+) => indexToResult(array.lastIndexOf(value, index));
 
 export const find: typeof $array.find = (array, predicate) =>
   toResult(array.find((value) => predicate(value)));
@@ -64,12 +64,12 @@ export const index_find: typeof $array.index_find = (array, predicate) =>
   toResult(array.find((value, index) => predicate(value, index)));
 
 export const find_index: typeof $array.find_index = (array, predicate) =>
-  array.findIndex((value) => predicate(value));
+  indexToResult(array.findIndex((value) => predicate(value)));
 
 export const index_find_index: typeof $array.index_find_index = (
   array,
   predicate,
-) => array.findIndex((value, index) => predicate(value, index));
+) => indexToResult(array.findIndex((value, index) => predicate(value, index)));
 
 export const find_last: typeof $array.find_last = (array, predicate) =>
   toResult(array.findLast((value) => predicate(value)));
@@ -82,12 +82,15 @@ export const index_find_last: typeof $array.index_find_last = (
 export const find_last_index: typeof $array.find_last_index = (
   array,
   predicate,
-) => array.findLastIndex((value) => predicate(value));
+) => indexToResult(array.findLastIndex((value) => predicate(value)));
 
 export const index_find_last_index: typeof $array.index_find_last_index = (
   array,
   predicate,
-) => array.findLastIndex((value, index) => predicate(value, index));
+) =>
+  indexToResult(
+    array.findLastIndex((value, index) => predicate(value, index)),
+  );
 
 export const every: typeof $array.every = (array, predicate) =>
   array.every((value) => predicate(value));

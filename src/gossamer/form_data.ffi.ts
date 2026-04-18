@@ -1,6 +1,15 @@
-import type * as $formData from "$/gossamer/gossamer/form_data.mjs";
+import * as $formData from "$/gossamer/gossamer/form_data.mjs";
 import { fromArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
+
+function toFormDataValue(
+  value: FormDataEntryValue,
+): $formData.FormDataValue$ {
+  if (typeof value === "string") {
+    return $formData.FormDataValue$Text(value);
+  }
+  return $formData.FormDataValue$FileValue(value);
+}
 
 export type FormData$ = FormData;
 
@@ -90,29 +99,25 @@ export const set_blob_with_filename: typeof $formData.set_blob_with_filename = (
 };
 
 export const keys: typeof $formData.keys = (formData) => {
-  return fromArray(Array.from(formData.keys()));
+  return formData.keys();
 };
 
 export const values: typeof $formData.values = (formData) => {
-  return fromArray(
-    Array.from(formData.values()).filter(
-      (value): value is string => typeof value === "string",
-    ),
-  );
+  return Array.from(formData.values(), toFormDataValue).values();
 };
 
 export const entries: typeof $formData.entries = (formData) => {
-  return fromArray(
-    Array.from(formData.entries()).filter(
-      (entry): entry is [string, string] => typeof entry[1] === "string",
-    ),
-  );
+  return Array.from(
+    formData.entries(),
+    ([name, value]): [string, $formData.FormDataValue$] => [
+      name,
+      toFormDataValue(value),
+    ],
+  ).values();
 };
 
 export const for_each: typeof $formData.for_each = (formData, callback) => {
-  formData.forEach((value, key) => {
-    if (typeof value === "string") {
-      callback(value, key);
-    }
+  formData.forEach((value, name) => {
+    callback(name, toFormDataValue(value));
   });
 };

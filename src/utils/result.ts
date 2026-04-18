@@ -6,6 +6,10 @@ export function toResult<T>(value: T | null | undefined): Result<T, undefined> {
     : Result$Ok(value);
 }
 
+export function indexToResult(index: number): Result<number, undefined> {
+  return index === -1 ? Result$Error(undefined) : Result$Ok(index);
+}
+
 toResult.fromThrows = function <T>(
   throws: () => T,
 ): Result<T, string> {

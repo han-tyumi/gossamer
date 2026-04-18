@@ -1,3 +1,5 @@
+import gossamer/iterator.{type Iterator}
+
 @external(javascript, "./set.type.ts", "Set$")
 pub type Set(value)
 
@@ -18,10 +20,10 @@ pub fn add(to set: Set(value), value value: value) -> Set(value)
 @external(javascript, "./set.ffi.mjs", "has")
 pub fn has(in set: Set(value), value value: value) -> Bool
 
-/// Returns whether the value existed before removal.
+/// Removes the value from the set. Mutates the set.
 ///
 @external(javascript, "./set.ffi.mjs", "delete_")
-pub fn delete(from set: Set(value), value value: value) -> Bool
+pub fn delete(from set: Set(value), value value: value) -> Set(value)
 
 /// Removes all values. Mutates the set.
 ///
@@ -29,10 +31,10 @@ pub fn delete(from set: Set(value), value value: value) -> Bool
 pub fn clear(set: Set(value)) -> Set(value)
 
 @external(javascript, "./set.ffi.mjs", "values")
-pub fn values(of set: Set(value)) -> List(value)
+pub fn values(of set: Set(value)) -> Iterator(value, Nil, Nil)
 
 @external(javascript, "./set.ffi.mjs", "entries")
-pub fn entries(of set: Set(value)) -> List(#(value, value))
+pub fn entries(of set: Set(value)) -> Iterator(#(value, value), Nil, Nil)
 
 @external(javascript, "./set.ffi.mjs", "for_each")
 pub fn for_each(in set: Set(value), run callback: fn(value) -> a) -> Nil

@@ -2,7 +2,7 @@ import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type * as $string from "$/gossamer/gossamer/string.mjs";
 import { fromArray, toArray } from "~/utils/list.ts";
 import { toNormalizationForm } from "~/gossamer/string/normalization_form.ts";
-import { toResult } from "~/utils/result.ts";
+import { indexToResult, toResult } from "~/utils/result.ts";
 
 export const from_char_code: typeof $string.from_char_code = (code) =>
   String.fromCharCode(code);
@@ -58,22 +58,22 @@ export const to_well_formed: typeof $string.to_well_formed = (string) =>
   string.toWellFormed();
 
 export const index_of: typeof $string.index_of = (string, search) =>
-  string.indexOf(search);
+  indexToResult(string.indexOf(search));
 
 export const index_of_from: typeof $string.index_of_from = (
   string,
   search,
   position,
-) => string.indexOf(search, position);
+) => indexToResult(string.indexOf(search, position));
 
 export const last_index_of: typeof $string.last_index_of = (string, search) =>
-  string.lastIndexOf(search);
+  indexToResult(string.lastIndexOf(search));
 
 export const last_index_of_from: typeof $string.last_index_of_from = (
   string,
   search,
   position,
-) => string.lastIndexOf(search, position);
+) => indexToResult(string.lastIndexOf(search, position));
 
 export const slice: typeof $string.slice = (string, start, end) =>
   string.slice(start, end);

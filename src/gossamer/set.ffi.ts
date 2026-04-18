@@ -1,5 +1,5 @@
 import type * as $set from "$/gossamer/gossamer/set.mjs";
-import { fromArray, toArray } from "~/utils/list.ts";
+import { toArray } from "~/utils/list.ts";
 
 export type Set$<T> = Set<T>;
 
@@ -27,7 +27,8 @@ export const has: typeof $set.has = (set, value) => {
 };
 
 export const delete_: typeof $set.delete$ = (set, value) => {
-  return set.delete(value);
+  set.delete(value);
+  return set;
 };
 
 export const clear: typeof $set.clear = (set) => {
@@ -36,11 +37,11 @@ export const clear: typeof $set.clear = (set) => {
 };
 
 export const values: typeof $set.values = (set) => {
-  return fromArray(Array.from(set.values()));
+  return set.values();
 };
 
 export const entries: typeof $set.entries = (set) => {
-  return fromArray(Array.from(set.entries()));
+  return set.entries();
 };
 
 export const for_each: typeof $set.for_each = (set, callback) => {

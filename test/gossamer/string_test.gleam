@@ -81,21 +81,22 @@ pub fn to_well_formed_test() {
 }
 
 pub fn index_of_test() {
-  string.index_of("hello world", search: "world") |> should.equal(6)
-  string.index_of("hello", search: "xyz") |> should.equal(-1)
+  string.index_of("hello world", search: "world") |> should.equal(Ok(6))
+  string.index_of("hello", search: "xyz") |> should.be_error
 }
 
 pub fn index_of_from_test() {
-  string.index_of_from("abcabc", search: "abc", from: 1) |> should.equal(3)
+  string.index_of_from("abcabc", search: "abc", from: 1)
+  |> should.equal(Ok(3))
 }
 
 pub fn last_index_of_test() {
-  string.last_index_of("abcabc", search: "abc") |> should.equal(3)
+  string.last_index_of("abcabc", search: "abc") |> should.equal(Ok(3))
 }
 
 pub fn last_index_of_from_test() {
   string.last_index_of_from("abcabc", search: "abc", from: 2)
-  |> should.equal(0)
+  |> should.equal(Ok(0))
 }
 
 pub fn slice_test() {

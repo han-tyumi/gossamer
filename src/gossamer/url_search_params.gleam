@@ -1,3 +1,5 @@
+import gossamer/iterator.{type Iterator}
+
 @external(javascript, "./url_search_params.type.ts", "URLSearchParams$")
 pub type URLSearchParams
 
@@ -66,13 +68,15 @@ pub fn for_each(
 ) -> Nil
 
 @external(javascript, "./url_search_params.ffi.mjs", "keys")
-pub fn keys(of params: URLSearchParams) -> List(String)
+pub fn keys(of params: URLSearchParams) -> Iterator(String, Nil, Nil)
 
 @external(javascript, "./url_search_params.ffi.mjs", "values")
-pub fn values(of params: URLSearchParams) -> List(String)
+pub fn values(of params: URLSearchParams) -> Iterator(String, Nil, Nil)
 
 @external(javascript, "./url_search_params.ffi.mjs", "entries")
-pub fn entries(of params: URLSearchParams) -> List(#(String, String))
+pub fn entries(
+  of params: URLSearchParams,
+) -> Iterator(#(String, String), Nil, Nil)
 
 @external(javascript, "./url_search_params.ffi.mjs", "to_string")
 pub fn to_string(params: URLSearchParams) -> String
