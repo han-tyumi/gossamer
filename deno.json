@@ -1,7 +1,7 @@
 {
   "imports": {
-    "@std/fs": "jsr:@std/fs@^1.0.17",
-    "@std/path": "jsr:@std/path@^1.0.9",
+    "@std/fs": "jsr:@std/fs@^1.0.23",
+    "@std/path": "jsr:@std/path@^1.1.4",
     "~/": "./src/",
     "$/": "./build/dev/javascript/",
     "esbuild": "npm:esbuild@~0.28.0"
