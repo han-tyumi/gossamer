@@ -5,10 +5,16 @@ pub type DefaultController(a)
 pub fn desired_size(of controller: DefaultController(a)) -> Result(Int, Nil)
 
 @external(javascript, "./default_controller.ffi.mjs", "enqueue")
-pub fn enqueue(in controller: DefaultController(a), chunk chunk: a) -> Nil
+pub fn enqueue(
+  in controller: DefaultController(a),
+  chunk chunk: a,
+) -> Result(Nil, String)
 
 @external(javascript, "./default_controller.ffi.mjs", "error")
-pub fn error(controller: DefaultController(a), reason reason: b) -> Nil
+pub fn error(
+  controller: DefaultController(a),
+  reason reason: b,
+) -> Result(Nil, String)
 
 @external(javascript, "./default_controller.ffi.mjs", "terminate")
-pub fn terminate(controller: DefaultController(a)) -> Nil
+pub fn terminate(controller: DefaultController(a)) -> Result(Nil, String)

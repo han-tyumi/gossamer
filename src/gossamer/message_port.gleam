@@ -4,7 +4,7 @@ import gossamer/message_event.{type MessageEvent}
 pub type MessagePort
 
 @external(javascript, "./message_port.ffi.mjs", "post_message")
-pub fn post_message(to port: MessagePort, data data: a) -> Nil
+pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, String)
 
 @external(javascript, "./message_port.ffi.mjs", "start")
 pub fn start(port: MessagePort) -> Nil

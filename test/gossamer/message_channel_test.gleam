@@ -24,10 +24,10 @@ pub fn post_message_test() {
     Nil
   })
 
-  message_port.post_message(port1, "hello from port1")
+  let assert Ok(_) = message_port.post_message(port1, "hello from port1")
 
   use value <- promise.then(resolvers.promise)
-  should.equal(value, "hello from port1")
+  should.equal(value, Ok("hello from port1"))
   message_port.close(port1)
   message_port.close(port2)
   promise.resolve(Nil)
@@ -60,7 +60,7 @@ pub fn message_event_properties_test() {
     Nil
   })
 
-  message_port.post_message(port1, "test")
+  let assert Ok(_) = message_port.post_message(port1, "test")
 
   use _ <- promise.then(resolvers.promise)
   message_port.close(port1)

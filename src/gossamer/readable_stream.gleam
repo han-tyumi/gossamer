@@ -42,36 +42,43 @@ pub fn from_pull(
 /// See https://github.com/oven-sh/bun/issues/3700
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from")
-pub fn from(iterable: a) -> ReadableStream(b)
+pub fn from(iterable: a) -> Result(ReadableStream(b), String)
 
 @external(javascript, "./readable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: ReadableStream(a)) -> Bool
 
 @external(javascript, "./readable_stream.ffi.mjs", "cancel")
-pub fn cancel(stream: ReadableStream(a), reason reason: r) -> Promise(Nil)
+pub fn cancel(
+  stream: ReadableStream(a),
+  reason reason: r,
+) -> Promise(Result(Nil, String))
 
 @external(javascript, "./readable_stream.ffi.mjs", "get_reader")
-pub fn get_reader(stream: ReadableStream(a)) -> Reader(a)
+pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), String)
 
 @external(javascript, "./readable_stream.ffi.mjs", "get_byob_reader")
-pub fn get_byob_reader(stream: ReadableStream(a)) -> ByobReader(a)
+pub fn get_byob_reader(
+  stream: ReadableStream(a),
+) -> Result(ByobReader(a), String)
 
 @external(javascript, "./readable_stream.ffi.mjs", "pipe_through")
 pub fn pipe_through(
   stream: ReadableStream(a),
   transform: #(ReadableStream(b), WritableStream(a)),
   with options: List(StreamPipeOption),
-) -> ReadableStream(b)
+) -> Result(ReadableStream(b), String)
 
 @external(javascript, "./readable_stream.ffi.mjs", "pipe_to")
 pub fn pipe_to(
   stream: ReadableStream(a),
   destination: WritableStream(a),
   with options: List(StreamPipeOption),
-) -> Promise(Nil)
+) -> Promise(Result(Nil, String))
 
 @external(javascript, "./readable_stream.ffi.mjs", "tee")
-pub fn tee(stream: ReadableStream(a)) -> #(ReadableStream(a), ReadableStream(a))
+pub fn tee(
+  stream: ReadableStream(a),
+) -> Result(#(ReadableStream(a), ReadableStream(a)), String)
 
 @external(javascript, "./readable_stream.ffi.mjs", "async_iterator")
 pub fn async_iterator(

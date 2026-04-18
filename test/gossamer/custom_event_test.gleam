@@ -47,9 +47,10 @@ pub fn dispatch_custom_event_test() {
   })
 
   let ev = custom_event.new_with_detail("greet", "world")
-  event_target.dispatch_event(on: target, event: custom_event.to_event(ev))
+  let _ =
+    event_target.dispatch_event(on: target, event: custom_event.to_event(ev))
 
   use value <- promise.then(resolvers.promise)
-  value |> should.equal("received")
+  value |> should.equal(Ok("received"))
   promise.resolve(Nil)
 }

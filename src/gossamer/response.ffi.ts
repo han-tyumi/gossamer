@@ -30,7 +30,9 @@ export const new_with_init: typeof $response.new_with_init = (body, init) => {
 };
 
 export const from_json: typeof $response.from_json = (data, init) => {
-  return Response.json(data, toResponseInit(toArray(init)));
+  return toResult.fromThrows(() =>
+    Response.json(data, toResponseInit(toArray(init)))
+  );
 };
 
 export const error: typeof $response.error = () => {
@@ -38,14 +40,14 @@ export const error: typeof $response.error = () => {
 };
 
 export const redirect: typeof $response.redirect = (url) => {
-  return Response.redirect(url);
+  return toResult.fromThrows(() => Response.redirect(url));
 };
 
 export const redirect_with_status: typeof $response.redirect_with_status = (
   url,
   status,
 ) => {
-  return Response.redirect(url, status);
+  return toResult.fromThrows(() => Response.redirect(url, status));
 };
 
 export const headers_: typeof $response.headers = (response) => {
@@ -70,7 +72,9 @@ export const type_: typeof $response.type_ = (response) => {
 
 export const url: typeof $response.url = (response) => response.url;
 
-export const clone: typeof $response.clone = (response) => response.clone();
+export const clone: typeof $response.clone = (response) => {
+  return toResult.fromThrows(() => response.clone());
+};
 
 export const body: typeof $response.body = (response) => {
   return toResult(response.body);

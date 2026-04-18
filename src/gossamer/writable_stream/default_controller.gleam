@@ -7,4 +7,7 @@ pub type DefaultController
 pub fn signal(of controller: DefaultController) -> AbortSignal
 
 @external(javascript, "./default_controller.ffi.mjs", "error")
-pub fn error(controller: DefaultController, reason reason: a) -> Nil
+pub fn error(
+  controller: DefaultController,
+  reason reason: a,
+) -> Result(Nil, String)

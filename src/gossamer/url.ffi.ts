@@ -50,8 +50,10 @@ export const set_hostname: typeof $url.set_hostname = (url, hostname) => {
 
 export const href: typeof $url.href = (url) => url.href;
 export const set_href: typeof $url.set_href = (url, href) => {
-  url.href = href;
-  return url;
+  return toResult.fromThrows(() => {
+    url.href = href;
+    return url;
+  });
 };
 
 export const origin: typeof $url.origin = (url) => url.origin;

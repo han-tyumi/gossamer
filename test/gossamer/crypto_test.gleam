@@ -26,8 +26,8 @@ import gossamer/subtle_crypto/wrap_algorithm
 import gossamer/uint8_array
 
 pub fn get_random_values_test() {
-  let array = uint8_array.from_length(16)
-  let result = crypto.get_random_values(array)
+  let assert Ok(array) = uint8_array.from_length(16)
+  let assert Ok(result) = crypto.get_random_values(array)
   should.equal(uint8_array.byte_length(result), 16)
 }
 
@@ -60,7 +60,8 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.equal(crypto_key.is_extractable(key), True)
   should.equal(crypto_key.type_(key), key_type.Secret)
 
-  let iv = crypto.get_random_values(uint8_array.from_length(12))
+  let assert Ok(iv_source) = uint8_array.from_length(12)
+  let assert Ok(iv) = crypto.get_random_values(iv_source)
   let plaintext = uint8_array.from_list([72, 101, 108, 108, 111])
 
   use result <- promise.then(subtle_crypto.encrypt(
@@ -142,7 +143,8 @@ pub fn generate_rsa_key_pair_test() {
 }
 
 pub fn import_export_key_test() {
-  let raw_key = crypto.get_random_values(uint8_array.from_length(16))
+  let assert Ok(raw_key_source) = uint8_array.from_length(16)
+  let assert Ok(raw_key) = crypto.get_random_values(raw_key_source)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -250,7 +252,8 @@ pub fn import_key_jwk_test() {
 
 pub fn derive_bits_test() {
   let password = uint8_array.from_list([112, 97, 115, 115])
-  let salt = crypto.get_random_values(uint8_array.from_length(16))
+  let assert Ok(salt_source) = uint8_array.from_length(16)
+  let assert Ok(salt) = crypto.get_random_values(salt_source)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -275,7 +278,8 @@ pub fn derive_bits_test() {
 
 pub fn derive_key_test() {
   let password = uint8_array.from_list([112, 97, 115, 115])
-  let salt = crypto.get_random_values(uint8_array.from_length(16))
+  let assert Ok(salt_source) = uint8_array.from_length(16)
+  let assert Ok(salt) = crypto.get_random_values(salt_source)
 
   use result <- promise.then(
     subtle_crypto.import_key(

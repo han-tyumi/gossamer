@@ -16,15 +16,16 @@ pub fn gzip_round_trip_test() {
 
   let input =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, data)
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, data)
+      let _ = default_controller.close(controller)
+      Nil
     })
 
   let assert Ok(compressor) = compression_stream.new(compression_format.Gzip)
   let assert Ok(decompressor) =
     decompression_stream.new(compression_format.Gzip)
 
-  let output =
+  let assert Ok(first) =
     input
     |> readable_stream.pipe_through(
       #(
@@ -33,6 +34,8 @@ pub fn gzip_round_trip_test() {
       ),
       [],
     )
+  let assert Ok(output) =
+    first
     |> readable_stream.pipe_through(
       #(
         decompression_stream.readable(decompressor),
@@ -41,7 +44,7 @@ pub fn gzip_round_trip_test() {
       [],
     )
 
-  let reader = readable_stream.get_reader(output)
+  let assert Ok(reader) = readable_stream.get_reader(output)
 
   use result <- promise.then(reader.read(reader))
   let assert Ok(read) = result

@@ -11,7 +11,7 @@ pub fn new_and_next_test() {
     })
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Return(Nil))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -29,16 +29,16 @@ pub fn stateful_iterator_test() {
     })
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Yield(0))
+  should.equal(result, Ok(iterator_result.Yield(0)))
 
   use result <- promise.then(async_iterator.next_with(iter, 0))
-  should.equal(result, iterator_result.Yield(1))
+  should.equal(result, Ok(iterator_result.Yield(1)))
 
   use result <- promise.then(async_iterator.next_with(iter, 1))
-  should.equal(result, iterator_result.Yield(2))
+  should.equal(result, Ok(iterator_result.Yield(2)))
 
   use result <- promise.then(async_iterator.next_with(iter, 2))
-  should.equal(result, iterator_result.Return(Nil))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -115,16 +115,16 @@ pub fn from_list_test() {
   let iter = async_iterator.from_list([10, 20, 30])
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Yield(10))
+  should.equal(result, Ok(iterator_result.Yield(10)))
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Yield(20))
+  should.equal(result, Ok(iterator_result.Yield(20)))
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Yield(30))
+  should.equal(result, Ok(iterator_result.Yield(30)))
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Return(Nil))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -132,7 +132,7 @@ pub fn from_list_empty_test() {
   let iter = async_iterator.from_list([])
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Return(Nil))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -140,7 +140,7 @@ pub fn to_list_test() {
   let iter = async_iterator.from_list([1, 2, 3])
 
   use result <- promise.then(async_iterator.to_list(iter))
-  should.equal(result, [1, 2, 3])
+  should.equal(result, Ok([1, 2, 3]))
   promise.resolve(Nil)
 }
 
@@ -148,7 +148,7 @@ pub fn to_list_empty_test() {
   let iter = async_iterator.from_list([])
 
   use result <- promise.then(async_iterator.to_list(iter))
-  should.equal(result, [])
+  should.equal(result, Ok([]))
   promise.resolve(Nil)
 }
 
@@ -157,6 +157,6 @@ pub fn from_list_to_list_roundtrip_test() {
   let iter = async_iterator.from_list(original)
 
   use result <- promise.then(async_iterator.to_list(iter))
-  should.equal(result, original)
+  should.equal(result, Ok(original))
   promise.resolve(Nil)
 }

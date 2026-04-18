@@ -14,42 +14,42 @@ import gleeunit/should
 
 pub fn headers_new_test() {
   let hdrs = headers.new()
-  headers.has(hdrs, "content-type") |> should.be_false()
+  headers.has(hdrs, "content-type") |> should.equal(Ok(False))
 }
 
 pub fn headers_from_pairs_test() {
-  let hdrs = headers.from_pairs([#("content-type", "text/plain")])
+  let assert Ok(hdrs) = headers.from_pairs([#("content-type", "text/plain")])
   headers.get(hdrs, "content-type") |> should.equal(Ok("text/plain"))
 }
 
 pub fn headers_append_test() {
   let hdrs = headers.new()
-  headers.append(hdrs, "x-custom", "value1")
-  headers.append(hdrs, "x-custom", "value2")
+  let assert Ok(_) = headers.append(hdrs, "x-custom", "value1")
+  let assert Ok(_) = headers.append(hdrs, "x-custom", "value2")
   headers.get(hdrs, "x-custom")
   |> should.equal(Ok("value1, value2"))
 }
 
 pub fn headers_set_test() {
   let hdrs = headers.new()
-  headers.set(hdrs, "x-custom", "value1")
-  headers.set(hdrs, "x-custom", "value2")
+  let assert Ok(_) = headers.set(hdrs, "x-custom", "value1")
+  let assert Ok(_) = headers.set(hdrs, "x-custom", "value2")
   headers.get(hdrs, "x-custom") |> should.equal(Ok("value2"))
 }
 
 pub fn headers_delete_test() {
-  let hdrs = headers.from_pairs([#("x-custom", "value")])
-  headers.delete(hdrs, "x-custom")
-  headers.has(hdrs, "x-custom") |> should.be_false()
+  let assert Ok(hdrs) = headers.from_pairs([#("x-custom", "value")])
+  let assert Ok(_) = headers.delete(hdrs, "x-custom")
+  headers.has(hdrs, "x-custom") |> should.equal(Ok(False))
 }
 
 pub fn headers_keys_test() {
-  let hdrs = headers.from_pairs([#("b", "2"), #("a", "1")])
+  let assert Ok(hdrs) = headers.from_pairs([#("b", "2"), #("a", "1")])
   headers.keys(hdrs) |> iterator.to_list |> should.equal(["a", "b"])
 }
 
 pub fn headers_entries_test() {
-  let hdrs = headers.from_pairs([#("a", "1")])
+  let assert Ok(hdrs) = headers.from_pairs([#("a", "1")])
   headers.entries(hdrs) |> iterator.to_list |> should.equal([#("a", "1")])
 }
 
@@ -68,12 +68,10 @@ pub fn request_new_with_init_test() {
 }
 
 pub fn request_headers_test() {
+  let assert Ok(hdrs) =
+    headers.from_pairs([#("content-type", "application/json")])
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
-      request.Headers(
-        headers.from_pairs([#("content-type", "application/json")]),
-      ),
-    ])
+    request.new_with_init("https://example.org", [request.Headers(hdrs)])
   headers.get(request.headers(req), "content-type")
   |> should.equal(Ok("application/json"))
 }
@@ -117,13 +115,14 @@ pub fn response_error_test() {
 }
 
 pub fn response_redirect_test() {
-  let resp = response.redirect_with_status("https://example.org", 301)
+  let assert Ok(resp) =
+    response.redirect_with_status("https://example.org", 301)
   response.status(resp) |> should.equal(301)
 }
 
 pub fn response_clone_test() {
   let assert Ok(resp) = response.new("hello")
-  let cloned = response.clone(resp)
+  let assert Ok(cloned) = response.clone(resp)
   use text <- promise.then(response.text(cloned))
   should.equal(text, Ok("hello"))
 }
@@ -155,14 +154,14 @@ pub fn response_blob_test() {
 }
 
 pub fn request_form_data_test() {
+  let assert Ok(hdrs) =
+    headers.from_pairs([
+      #("content-type", "application/x-www-form-urlencoded"),
+    ])
   let assert Ok(req) =
     request.new_with_init("https://example.org", [
       request.Method(http_method.Post),
-      request.Headers(
-        headers.from_pairs([
-          #("content-type", "application/x-www-form-urlencoded"),
-        ]),
-      ),
+      request.Headers(hdrs),
       request.Body("key=value&foo=bar"),
     ])
   use result <- promise.then(request.form_data(req))
@@ -171,14 +170,12 @@ pub fn request_form_data_test() {
 }
 
 pub fn response_form_data_test() {
-  let assert Ok(resp) =
-    response.new_with_init("key=value", [
-      response.Headers(
-        headers.from_pairs([
-          #("content-type", "application/x-www-form-urlencoded"),
-        ]),
-      ),
+  let assert Ok(hdrs) =
+    headers.from_pairs([
+      #("content-type", "application/x-www-form-urlencoded"),
     ])
+  let assert Ok(resp) =
+    response.new_with_init("key=value", [response.Headers(hdrs)])
   use result <- promise.then(response.form_data(resp))
   let assert Ok(_fd) = result
   promise.resolve(Nil)
@@ -187,12 +184,12 @@ pub fn response_form_data_test() {
 // Headers additional tests
 
 pub fn headers_values_test() {
-  let hdrs = headers.from_pairs([#("a", "1"), #("b", "2")])
+  let assert Ok(hdrs) = headers.from_pairs([#("a", "1"), #("b", "2")])
   headers.values(hdrs) |> iterator.to_list |> should.equal(["1", "2"])
 }
 
 pub fn headers_for_each_test() {
-  let hdrs = headers.from_pairs([#("x", "1")])
+  let assert Ok(hdrs) = headers.from_pairs([#("x", "1")])
   headers.for_each(hdrs, fn(_name, _value) { Nil })
 }
 
@@ -255,7 +252,7 @@ pub fn request_integrity_test() {
 
 pub fn request_clone_test() {
   let assert Ok(req) = request.new("https://example.org")
-  let cloned = request.clone(req)
+  let assert Ok(cloned) = request.clone(req)
   request.url(cloned) |> should.equal("https://example.org/")
 }
 
@@ -302,7 +299,7 @@ pub fn request_json_test() {
 // Response additional body tests
 
 pub fn response_from_json_test() {
-  let resp = response.from_json(42, [])
+  let assert Ok(resp) = response.from_json(42, [])
   response.status(resp) |> should.equal(200)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("42"))
@@ -336,12 +333,10 @@ pub fn response_bytes_test() {
 }
 
 pub fn response_json_test() {
+  let assert Ok(hdrs) =
+    headers.from_pairs([#("content-type", "application/json")])
   let assert Ok(resp) =
-    response.new_with_init("{\"a\":1}", [
-      response.Headers(
-        headers.from_pairs([#("content-type", "application/json")]),
-      ),
-    ])
+    response.new_with_init("{\"a\":1}", [response.Headers(hdrs)])
   use result <- promise.then(response.json(resp))
   should.be_ok(result)
   promise.resolve(Nil)

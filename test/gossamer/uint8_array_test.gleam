@@ -10,9 +10,8 @@ pub fn new_test() {
 }
 
 pub fn from_length_test() {
-  uint8_array.from_length(5)
-  |> uint8_array.length()
-  |> should.equal(5)
+  let assert Ok(array) = uint8_array.from_length(5)
+  array |> uint8_array.length() |> should.equal(5)
 }
 
 pub fn from_list_test() {
@@ -23,15 +22,13 @@ pub fn from_list_test() {
 }
 
 pub fn byte_length_test() {
-  uint8_array.from_length(10)
-  |> uint8_array.byte_length()
-  |> should.equal(10)
+  let assert Ok(array) = uint8_array.from_length(10)
+  array |> uint8_array.byte_length() |> should.equal(10)
 }
 
 pub fn byte_offset_test() {
-  uint8_array.from_length(10)
-  |> uint8_array.byte_offset()
-  |> should.equal(0)
+  let assert Ok(array) = uint8_array.from_length(10)
+  array |> uint8_array.byte_offset() |> should.equal(0)
 }
 
 pub fn at_test() {
@@ -80,7 +77,7 @@ pub fn slice_range_test() {
 }
 
 pub fn fill_test() {
-  let array = uint8_array.from_length(3)
+  let assert Ok(array) = uint8_array.from_length(3)
   uint8_array.fill(array, 42)
   uint8_array.at(array, 0) |> should.equal(Ok(42))
   uint8_array.at(array, 2) |> should.equal(Ok(42))
@@ -101,8 +98,8 @@ pub fn with_test() {
 }
 
 pub fn set_test() {
-  let array = uint8_array.from_length(5)
-  uint8_array.set(array, uint8_array.from_list([10, 20]))
+  let assert Ok(array) = uint8_array.from_length(5)
+  let assert Ok(_) = uint8_array.set(array, uint8_array.from_list([10, 20]))
   uint8_array.at(array, 0) |> should.equal(Ok(10))
   uint8_array.at(array, 1) |> should.equal(Ok(20))
   uint8_array.at(array, 2) |> should.equal(Ok(0))
@@ -252,9 +249,8 @@ pub fn to_base64_test() {
 }
 
 pub fn from_base64_test() {
-  uint8_array.from_base64("SGVsbG8=")
-  |> uint8_array.to_list()
-  |> should.equal([72, 101, 108, 108, 111])
+  let assert Ok(array) = uint8_array.from_base64("SGVsbG8=")
+  array |> uint8_array.to_list() |> should.equal([72, 101, 108, 108, 111])
 }
 
 pub fn to_hex_test() {
@@ -264,9 +260,8 @@ pub fn to_hex_test() {
 }
 
 pub fn from_hex_test() {
-  uint8_array.from_hex("48656c6c6f")
-  |> uint8_array.to_list()
-  |> should.equal([72, 101, 108, 108, 111])
+  let assert Ok(array) = uint8_array.from_hex("48656c6c6f")
+  array |> uint8_array.to_list() |> should.equal([72, 101, 108, 108, 111])
 }
 
 pub fn slice_from_test() {
@@ -282,13 +277,14 @@ pub fn subarray_test() {
 }
 
 pub fn set_with_offset_test() {
-  let array = uint8_array.from_length(5)
-  uint8_array.set_with_offset(array, uint8_array.from_list([10, 20]), 2)
+  let assert Ok(array) = uint8_array.from_length(5)
+  let assert Ok(_) =
+    uint8_array.set_with_offset(array, uint8_array.from_list([10, 20]), 2)
   uint8_array.to_list(array) |> should.equal([0, 0, 10, 20, 0])
 }
 
 pub fn fill_range_test() {
-  let array = uint8_array.from_length(5)
+  let assert Ok(array) = uint8_array.from_length(5)
   uint8_array.fill_range(array, 99, 1, 3)
   uint8_array.to_list(array) |> should.equal([0, 99, 99, 0, 0])
 }
@@ -300,15 +296,17 @@ pub fn for_each_test() {
 }
 
 pub fn set_from_base64_test() {
-  let array = uint8_array.from_length(10)
-  let #(read, written) = uint8_array.set_from_base64(array, "SGVsbG8=")
+  let assert Ok(array) = uint8_array.from_length(10)
+  let assert Ok(#(read, written)) =
+    uint8_array.set_from_base64(array, "SGVsbG8=")
   read |> should.equal(8)
   written |> should.equal(5)
 }
 
 pub fn set_from_hex_test() {
-  let array = uint8_array.from_length(10)
-  let #(read, written) = uint8_array.set_from_hex(array, "48656c6c6f")
+  let assert Ok(array) = uint8_array.from_length(10)
+  let assert Ok(#(read, written)) =
+    uint8_array.set_from_hex(array, "48656c6c6f")
   read |> should.equal(10)
   written |> should.equal(5)
 }

@@ -264,7 +264,7 @@ pub fn to_time_string_test() {
 
 pub fn to_iso_string_test() {
   let assert Ok(d) = date.from_string("2026-04-09T14:30:00.000Z")
-  date.to_iso_string(d) |> should.equal("2026-04-09T14:30:00.000Z")
+  date.to_iso_string(d) |> should.equal(Ok("2026-04-09T14:30:00.000Z"))
 }
 
 pub fn to_utc_string_test() {
@@ -274,7 +274,7 @@ pub fn to_utc_string_test() {
 
 pub fn to_json_test() {
   let assert Ok(d) = date.from_string("2026-04-09T14:30:00.000Z")
-  date.to_json(d) |> should.equal("2026-04-09T14:30:00.000Z")
+  date.to_json(d) |> should.equal(Ok("2026-04-09T14:30:00.000Z"))
 }
 
 pub fn to_locale_string_test() {

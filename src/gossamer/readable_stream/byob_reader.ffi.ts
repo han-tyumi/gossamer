@@ -3,6 +3,7 @@ import type { List } from "$/prelude.mjs";
 import { toArrayBufferViewType } from "~/gossamer/array_buffer.ffi.ts";
 import { toReadResult } from "~/gossamer/readable_stream/read_result.ts";
 import { toArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type ByobReader$<_T> = ReadableStreamBYOBReader;
 
@@ -21,14 +22,14 @@ function toByobReaderReadOptions(
 export const closed: typeof $byobReader.closed = (
   reader: ReadableStreamBYOBReader,
 ) => {
-  return reader.closed.then(() => undefined);
+  return toResult.fromPromise(reader.closed.then(() => undefined));
 };
 
 export const cancel: typeof $byobReader.cancel = (
   reader: ReadableStreamBYOBReader,
   reason,
 ) => {
-  return reader.cancel(reason).then(() => undefined);
+  return toResult.fromPromise(reader.cancel(reason).then(() => undefined));
 };
 
 // TODO(@han-tyumi): Revisit BYOB reader types - the ArrayBufferView/ArrayBufferLike
@@ -38,21 +39,25 @@ export const read: typeof $byobReader.read = ((
   view: { buffer: ArrayBufferLike; byte_length: number; byte_offset: number },
   options: Parameters<typeof $byobReader.read>[2],
 ) => {
-  return reader.read({
-    buffer: view.buffer as ArrayBuffer,
-    byteLength: view.byte_length,
-    byteOffset: view.byte_offset,
-  }, toByobReaderReadOptions(options)).then((result) => {
-    const newValue = result.value
-      ? toArrayBufferViewType(result.value)
-      : result.value;
-    return toReadResult({ done: result.done, value: newValue });
-  });
+  return toResult.fromPromise(
+    reader.read({
+      buffer: view.buffer as ArrayBuffer,
+      byteLength: view.byte_length,
+      byteOffset: view.byte_offset,
+    }, toByobReaderReadOptions(options)).then((result) => {
+      const newValue = result.value
+        ? toArrayBufferViewType(result.value)
+        : result.value;
+      return toReadResult({ done: result.done, value: newValue });
+    }),
+  );
 }) as typeof $byobReader.read;
 
 export const release_lock: typeof $byobReader.release_lock = (
   reader: ReadableStreamBYOBReader,
 ) => {
-  reader.releaseLock();
-  return reader;
+  return toResult.fromThrows(() => {
+    reader.releaseLock();
+    return reader;
+  });
 };

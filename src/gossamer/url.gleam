@@ -54,7 +54,7 @@ pub fn set_hostname(of url: URL, to hostname: String) -> URL
 pub fn href(of url: URL) -> String
 
 @external(javascript, "./url.ffi.mjs", "set_href")
-pub fn set_href(of url: URL, to href: String) -> URL
+pub fn set_href(of url: URL, to href: String) -> Result(URL, String)
 
 @external(javascript, "./url.ffi.mjs", "origin")
 pub fn origin(of url: URL) -> String

@@ -14,14 +14,16 @@ export function toArrayBufferViewType(
 }
 
 export const new_: typeof $arrayBuffer.new$ = (byteLength) => {
-  return new ArrayBuffer(byteLength);
+  return toResult.fromThrows(() => new ArrayBuffer(byteLength));
 };
 
 export const new_resizable: typeof $arrayBuffer.new_resizable = (
   byteLength,
   maxByteLength,
 ) => {
-  return new ArrayBuffer(byteLength, { maxByteLength });
+  return toResult.fromThrows(() =>
+    new ArrayBuffer(byteLength, { maxByteLength })
+  );
 };
 
 export const byte_length: typeof $arrayBuffer.byte_length = (
@@ -55,7 +57,7 @@ export const is_detached: typeof $arrayBuffer.is_detached = (
 export const transfer: typeof $arrayBuffer.transfer = (
   arrayBuffer: ArrayBuffer,
 ) => {
-  return arrayBuffer.transfer();
+  return toResult.fromThrows(() => arrayBuffer.transfer());
 };
 
 export const resize: typeof $arrayBuffer.resize = (

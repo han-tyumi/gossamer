@@ -13,17 +13,20 @@ pub type ByobReaderReadOption {
 }
 
 @external(javascript, "./byob_reader.ffi.mjs", "closed")
-pub fn closed(of reader: ByobReader(a)) -> Promise(Nil)
+pub fn closed(of reader: ByobReader(a)) -> Promise(Result(Nil, String))
 
 @external(javascript, "./byob_reader.ffi.mjs", "cancel")
-pub fn cancel(reader: ByobReader(a), reason reason: r) -> Promise(Nil)
+pub fn cancel(
+  reader: ByobReader(a),
+  reason reason: r,
+) -> Promise(Result(Nil, String))
 
 @external(javascript, "./byob_reader.ffi.mjs", "read")
 pub fn read(
   reader: ByobReader(a),
   into view: ArrayBufferView,
   with options: List(ByobReaderReadOption),
-) -> Promise(ReadResult(ArrayBufferView))
+) -> Promise(Result(ReadResult(ArrayBufferView), String))
 
 @external(javascript, "./byob_reader.ffi.mjs", "release_lock")
-pub fn release_lock(reader: ByobReader(a)) -> ByobReader(a)
+pub fn release_lock(reader: ByobReader(a)) -> Result(ByobReader(a), String)

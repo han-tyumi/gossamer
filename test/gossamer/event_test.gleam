@@ -80,7 +80,7 @@ pub fn composed_path_undispatched_test() {
 pub fn event_target_new_test() {
   let target = event_target.new()
   let ev = event.new("test")
-  event_target.dispatch_event(on: target, event: ev) |> should.be_true()
+  event_target.dispatch_event(on: target, event: ev) |> should.equal(Ok(True))
 }
 
 pub fn add_event_listener_test() {
@@ -92,10 +92,10 @@ pub fn add_event_listener_test() {
     Nil
   })
 
-  event_target.dispatch_event(on: target, event: event.new("ping"))
+  let _ = event_target.dispatch_event(on: target, event: event.new("ping"))
 
   use value <- promise.then(resolvers.promise)
-  value |> should.equal("ping")
+  value |> should.equal(Ok("ping"))
   promise.resolve(Nil)
 }
 
@@ -114,13 +114,13 @@ pub fn multiple_listeners_test() {
     Nil
   })
 
-  event_target.dispatch_event(on: target, event: event.new("test"))
+  let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
   use value1 <- promise.then(first.promise)
-  value1 |> should.equal("first")
+  value1 |> should.equal(Ok("first"))
 
   use value2 <- promise.then(second.promise)
-  value2 |> should.equal("second")
+  value2 |> should.equal(Ok("second"))
   promise.resolve(Nil)
 }
 
@@ -142,7 +142,7 @@ pub fn remove_event_listener_test() {
 
   // Dispatch should not trigger the removed handler
   event_target.dispatch_event(on: target, event: event.new("test"))
-  |> should.be_true()
+  |> should.equal(Ok(True))
 }
 
 pub fn dispatch_event_cancelable_test() {
@@ -157,7 +157,7 @@ pub fn dispatch_event_cancelable_test() {
   let result = event_target.dispatch_event(on: target, event: ev)
 
   // dispatch_event returns False when preventDefault was called
-  result |> should.be_false()
+  result |> should.equal(Ok(False))
 }
 
 pub fn once_option_test() {
@@ -175,13 +175,13 @@ pub fn once_option_test() {
   )
 
   // First dispatch triggers the listener
-  event_target.dispatch_event(on: target, event: event.new("once"))
+  let _ = event_target.dispatch_event(on: target, event: event.new("once"))
 
   // Second dispatch should not trigger (listener was auto-removed)
-  event_target.dispatch_event(on: target, event: event.new("once"))
+  let _ = event_target.dispatch_event(on: target, event: event.new("once"))
 
   use count <- promise.then(resolvers.promise)
-  count |> should.equal(1)
+  count |> should.equal(Ok(1))
   promise.resolve(Nil)
 }
 
@@ -198,10 +198,10 @@ pub fn target_in_listener_test() {
     Nil
   })
 
-  event_target.dispatch_event(on: target, event: event.new("test"))
+  let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
   use has_target <- promise.then(resolvers.promise)
-  has_target |> should.be_true()
+  has_target |> should.equal(Ok(True))
   promise.resolve(Nil)
 }
 
@@ -214,9 +214,9 @@ pub fn event_phase_in_listener_test() {
     Nil
   })
 
-  event_target.dispatch_event(on: target, event: event.new("test"))
+  let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
   use phase <- promise.then(resolvers.promise)
-  phase |> should.equal(event_phase.AtTarget)
+  phase |> should.equal(Ok(event_phase.AtTarget))
   promise.resolve(Nil)
 }

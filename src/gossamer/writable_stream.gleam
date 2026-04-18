@@ -26,10 +26,13 @@ pub fn from_write(
 pub fn is_locked(stream: WritableStream(a)) -> Bool
 
 @external(javascript, "./writable_stream.ffi.mjs", "abort")
-pub fn abort(stream: WritableStream(a), reason reason: r) -> Promise(Nil)
+pub fn abort(
+  stream: WritableStream(a),
+  reason reason: r,
+) -> Promise(Result(Nil, String))
 
 @external(javascript, "./writable_stream.ffi.mjs", "close")
-pub fn close(stream: WritableStream(a)) -> Promise(Nil)
+pub fn close(stream: WritableStream(a)) -> Promise(Result(Nil, String))
 
 @external(javascript, "./writable_stream.ffi.mjs", "get_writer")
-pub fn get_writer(stream: WritableStream(a)) -> Writer(a)
+pub fn get_writer(stream: WritableStream(a)) -> Result(Writer(a), String)

@@ -13,13 +13,22 @@ export const enqueue: typeof $defaultController.enqueue = (
   controller,
   chunk,
 ) => {
-  controller.enqueue(chunk);
+  return toResult.fromThrows(() => {
+    controller.enqueue(chunk);
+    return undefined;
+  });
 };
 
 export const error: typeof $defaultController.error = (controller, reason) => {
-  controller.error(reason);
+  return toResult.fromThrows(() => {
+    controller.error(reason);
+    return undefined;
+  });
 };
 
 export const terminate: typeof $defaultController.terminate = (controller) => {
-  controller.terminate();
+  return toResult.fromThrows(() => {
+    controller.terminate();
+    return undefined;
+  });
 };

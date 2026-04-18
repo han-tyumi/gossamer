@@ -111,7 +111,9 @@ export const integrity: typeof $request.integrity = (request) => {
   return request.integrity;
 };
 
-export const clone: typeof $request.clone = (request) => request.clone();
+export const clone: typeof $request.clone = (request) => {
+  return toResult.fromThrows(() => request.clone());
+};
 
 export const body: typeof $request.body = (request) => {
   return toResult(request.body);

@@ -24,7 +24,7 @@ pub fn new_promise_resolve_test() {
       Nil
     })
   use value <- promise.then(promise)
-  should.equal(value, 5)
+  should.equal(value, Ok(5))
 }
 
 pub fn new_promise_reject_test() {
@@ -33,9 +33,9 @@ pub fn new_promise_reject_test() {
       reject("error")
       Nil
     })
-  use reason <- promise.catch(promise)
-  let assert Ok(reason) = decode.run(reason, decode.string)
-  should.equal(reason, "error")
+  use result <- promise.then(promise)
+  should.be_error(result)
+  promise.resolve(Nil)
 }
 
 pub fn promise_all_test() {
@@ -43,7 +43,7 @@ pub fn promise_all_test() {
     [promise.resolve(1), promise.resolve(2), promise.resolve(3)]
     |> promise.all
   use values <- promise.then(promise)
-  should.equal(values, [1, 2, 3])
+  should.equal(values, Ok([1, 2, 3]))
 }
 
 pub fn promise_race_test() {
@@ -52,10 +52,10 @@ pub fn promise_race_test() {
       gossamer.set_timeout(100, fn() { resolve("first") })
       Nil
     })
-  let promise2 = promise.resolve("second")
+  let promise2 = promise.resolve(Ok("second"))
   let race_promise = promise.race([promise1, promise2])
   use value <- promise.then(race_promise)
-  should.equal(value, "second")
+  should.equal(value, Ok(Ok("second")))
 }
 
 pub fn promise_any_test() {
@@ -64,7 +64,7 @@ pub fn promise_any_test() {
   let promise3 = promise.resolve("success")
   let any_promise = promise.any([promise1, promise2, promise3])
   use value <- promise.then(any_promise)
-  should.equal(value, "success")
+  should.equal(value, Ok("success"))
 }
 
 pub fn promise_all_settled_test() {
@@ -115,7 +115,7 @@ pub fn finally_test() {
   resolvers.resolve(42)
 
   use ran <- promise.then(finally_ran.promise)
-  should.be_true(ran)
+  should.equal(ran, Ok(True))
   promise.resolve(Nil)
 }
 

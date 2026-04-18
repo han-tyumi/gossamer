@@ -14,6 +14,7 @@ import {
 } from "~/gossamer/iterator_result.ts";
 import { fromArray } from "~/utils/list.ts";
 import { toOption } from "~/utils/option.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type AsyncIterator$<T, TReturn, TNext> = AsyncIterator<
   T,
@@ -56,19 +57,21 @@ export const from_list: typeof $asyncIterator.from_list = <T>(
   return iterator as unknown as AsyncIterator<T, undefined, undefined>;
 };
 
-export const to_list: typeof $asyncIterator.to_list = async <T>(
+export const to_list: typeof $asyncIterator.to_list = <T>(
   iterator: AsyncIterator<T, unknown, unknown>,
 ) => {
-  const values: T[] = [];
-  while (true) {
-    // deno-lint-ignore no-await-in-loop
-    const result = await iterator.next();
-    if (result.done) {
-      break;
+  return toResult.fromPromise((async () => {
+    const values: T[] = [];
+    while (true) {
+      // deno-lint-ignore no-await-in-loop
+      const result = await iterator.next();
+      if (result.done) {
+        break;
+      }
+      values.push(result.value);
     }
-    values.push(result.value);
-  }
-  return fromArray(values);
+    return fromArray(values);
+  })());
 };
 
 export const with_return: typeof $asyncIterator.with_return = <
@@ -108,14 +111,17 @@ export const with_throw: typeof $asyncIterator.with_throw = <
   return newIterator as unknown as AsyncIterator<T, TReturn, TNext>;
 };
 
-export const next: typeof $asyncIterator.next = async <T, TReturn, TNext>(
+export const next: typeof $asyncIterator.next = <T, TReturn, TNext>(
   iterator: AsyncIterator<T, TReturn, TNext>,
 ) => {
-  const result = await iterator.next();
-  return toGleamIteratorResult(result);
+  return toResult.fromPromise(
+    Promise.resolve(iterator.next()).then((result) =>
+      toGleamIteratorResult(result)
+    ),
+  );
 };
 
-export const next_with: typeof $asyncIterator.next_with = async <
+export const next_with: typeof $asyncIterator.next_with = <
   T,
   TReturn,
   TNext,
@@ -123,8 +129,11 @@ export const next_with: typeof $asyncIterator.next_with = async <
   iterator: AsyncIterator<T, TReturn, TNext>,
   value: Parameters<typeof $asyncIterator.next_with<T, TReturn, TNext>>[1],
 ) => {
-  const result = await iterator.next(value);
-  return toGleamIteratorResult(result);
+  return toResult.fromPromise(
+    Promise.resolve(iterator.next(value)).then((result) =>
+      toGleamIteratorResult(result)
+    ),
+  );
 };
 
 export const return_: typeof $asyncIterator.return$ = async <T, TReturn, TNext>(
@@ -166,7 +175,7 @@ export const throw_: typeof $asyncIterator.throw$ = async <T, TReturn, TNext>(
   return Result$Ok(toGleamIteratorResult(result));
 };
 
-export const for_await: typeof $asyncIterator.for_await = async <
+export const for_await: typeof $asyncIterator.for_await = <
   T,
   TReturn,
   TNext,
@@ -174,13 +183,16 @@ export const for_await: typeof $asyncIterator.for_await = async <
   iterator: AsyncIterator<T, TReturn, TNext>,
   fun: Parameters<typeof $asyncIterator.for_await<T>>[1],
 ) => {
-  while (true) {
-    // deno-lint-ignore no-await-in-loop
-    const result = await iterator.next();
-    if (result.done) {
-      break;
+  return toResult.fromPromise((async () => {
+    while (true) {
+      // deno-lint-ignore no-await-in-loop
+      const result = await iterator.next();
+      if (result.done) {
+        break;
+      }
+      // deno-lint-ignore no-await-in-loop
+      await fun(result.value);
     }
-    // deno-lint-ignore no-await-in-loop
-    await fun(result.value);
-  }
+    return undefined;
+  })());
 };

@@ -139,7 +139,7 @@ pub fn set_hostname_test() {
 
 pub fn set_href_test() {
   let assert Ok(parsed) = url.new("https://example.org/old")
-  url.set_href(parsed, "https://other.org/new")
+  let assert Ok(_) = url.set_href(parsed, "https://other.org/new")
   url.href(parsed) |> should.equal("https://other.org/new")
 }
 

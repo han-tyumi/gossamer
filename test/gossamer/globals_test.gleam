@@ -52,7 +52,7 @@ pub fn set_timeout_and_clear_test() {
   should.be_true(id >= 0)
 
   use value <- promise.then(resolvers.promise)
-  should.equal(value, "fired")
+  should.equal(value, Ok("fired"))
   promise.resolve(Nil)
 }
 
@@ -76,7 +76,7 @@ pub fn queue_microtask_test() {
   })
 
   use value <- promise.then(resolvers.promise)
-  should.equal(value, "microtask ran")
+  should.equal(value, Ok("microtask ran"))
   promise.resolve(Nil)
 }
 

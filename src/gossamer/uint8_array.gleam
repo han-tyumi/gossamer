@@ -9,7 +9,7 @@ pub type Uint8Array
 pub fn new() -> Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Uint8Array
+pub fn from_length(length: Int) -> Result(Uint8Array, String)
 
 @external(javascript, "./uint8_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Uint8Array
@@ -21,10 +21,10 @@ pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> Int) -> Uint8Array
 pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "from_base64")
-pub fn from_base64(string: String) -> Uint8Array
+pub fn from_base64(string: String) -> Result(Uint8Array, String)
 
 @external(javascript, "./uint8_array.ffi.mjs", "from_hex")
-pub fn from_hex(string: String) -> Uint8Array
+pub fn from_hex(string: String) -> Result(Uint8Array, String)
 
 @external(javascript, "./uint8_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Uint8Array) -> ArrayBuffer
@@ -88,14 +88,17 @@ pub fn slice_range(
 pub fn subarray(array: Uint8Array, from begin: Int, to end: Int) -> Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "set")
-pub fn set(in array: Uint8Array, values values: Uint8Array) -> Nil
+pub fn set(
+  in array: Uint8Array,
+  values values: Uint8Array,
+) -> Result(Nil, String)
 
 @external(javascript, "./uint8_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Uint8Array,
   values values: Uint8Array,
   offset offset: Int,
-) -> Nil
+) -> Result(Nil, String)
 
 @external(javascript, "./uint8_array.ffi.mjs", "copy_within")
 pub fn copy_within(
@@ -294,7 +297,13 @@ pub fn to_base64(array: Uint8Array) -> String
 pub fn to_hex(array: Uint8Array) -> String
 
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_base64")
-pub fn set_from_base64(array: Uint8Array, string: String) -> #(Int, Int)
+pub fn set_from_base64(
+  array: Uint8Array,
+  string: String,
+) -> Result(#(Int, Int), String)
 
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_hex")
-pub fn set_from_hex(array: Uint8Array, string: String) -> #(Int, Int)
+pub fn set_from_hex(
+  array: Uint8Array,
+  string: String,
+) -> Result(#(Int, Int), String)

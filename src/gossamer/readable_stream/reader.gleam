@@ -5,13 +5,16 @@ import gossamer/readable_stream/read_result.{type ReadResult}
 pub type Reader(a)
 
 @external(javascript, "./reader.ffi.mjs", "closed")
-pub fn closed(of reader: Reader(a)) -> Promise(Nil)
+pub fn closed(of reader: Reader(a)) -> Promise(Result(Nil, String))
 
 @external(javascript, "./reader.ffi.mjs", "cancel")
-pub fn cancel(reader: Reader(a), reason reason: r) -> Promise(Nil)
+pub fn cancel(
+  reader: Reader(a),
+  reason reason: r,
+) -> Promise(Result(Nil, String))
 
 @external(javascript, "./reader.ffi.mjs", "read")
 pub fn read(reader: Reader(a)) -> Promise(Result(ReadResult(a), String))
 
 @external(javascript, "./reader.ffi.mjs", "release_lock")
-pub fn release_lock(reader: Reader(a)) -> Reader(a)
+pub fn release_lock(reader: Reader(a)) -> Result(Reader(a), String)

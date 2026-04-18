@@ -1,5 +1,6 @@
 import type * as $date from "$/gossamer/gossamer/date.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toResult } from "~/utils/result.ts";
 
 export type Date$ = Date;
 
@@ -154,13 +155,16 @@ export const to_date_string: typeof $date.to_date_string = (date) =>
 export const to_time_string: typeof $date.to_time_string = (date) =>
   date.toTimeString();
 
-export const to_iso_string: typeof $date.to_iso_string = (date) =>
-  date.toISOString();
+export const to_iso_string: typeof $date.to_iso_string = (date) => {
+  return toResult.fromThrows(() => date.toISOString());
+};
 
 export const to_utc_string: typeof $date.to_utc_string = (date) =>
   date.toUTCString();
 
-export const to_json: typeof $date.to_json = (date) => date.toJSON();
+export const to_json: typeof $date.to_json = (date) => {
+  return toResult.fromThrows(() => date.toJSON());
+};
 
 export const to_locale_string: typeof $date.to_locale_string = (date) =>
   date.toLocaleString();

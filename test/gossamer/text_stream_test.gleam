@@ -48,11 +48,12 @@ pub fn text_encode_decode_stream_roundtrip_test() {
 
   let source =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "hello stream")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "hello stream")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let encoded =
+  let assert Ok(encoded) =
     readable_stream.pipe_through(
       source,
       #(
@@ -64,7 +65,7 @@ pub fn text_encode_decode_stream_roundtrip_test() {
 
   let decoder = text_decoder_stream.new()
 
-  let decoded =
+  let assert Ok(decoded) =
     readable_stream.pipe_through(
       encoded,
       #(
@@ -74,7 +75,7 @@ pub fn text_encode_decode_stream_roundtrip_test() {
       [],
     )
 
-  let r = readable_stream.get_reader(decoded)
+  let assert Ok(r) = readable_stream.get_reader(decoded)
 
   use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value("hello stream")))

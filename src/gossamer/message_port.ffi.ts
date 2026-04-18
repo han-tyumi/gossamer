@@ -1,9 +1,13 @@
 import type * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
+import { toResult } from "~/utils/result.ts";
 
 export type MessagePort$ = MessagePort;
 
 export const post_message: typeof $messagePort.post_message = (port, data) => {
-  port.postMessage(data);
+  return toResult.fromThrows(() => {
+    port.postMessage(data);
+    return undefined;
+  });
 };
 
 export const start: typeof $messagePort.start = (port) => {

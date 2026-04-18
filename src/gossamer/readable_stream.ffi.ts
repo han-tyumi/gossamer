@@ -1,6 +1,7 @@
 import * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
 import type { List } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type ReadableStream$<T> = ReadableStream<T>;
 
@@ -43,7 +44,7 @@ export const new_: typeof $readableStream.new$ = (source) => {
 };
 
 export const from: typeof $readableStream.from = (iterable) => {
-  return ReadableStream.from(iterable);
+  return toResult.fromThrows(() => ReadableStream.from(iterable));
 };
 
 export const is_locked: typeof $readableStream.is_locked = (
@@ -56,19 +57,19 @@ export const cancel: typeof $readableStream.cancel = (
   stream: ReadableStream,
   reason,
 ) => {
-  return stream.cancel(reason).then(() => undefined);
+  return toResult.fromPromise(stream.cancel(reason).then(() => undefined));
 };
 
 export const get_reader: typeof $readableStream.get_reader = (
   stream: ReadableStream,
 ) => {
-  return stream.getReader();
+  return toResult.fromThrows(() => stream.getReader());
 };
 
 export const get_byob_reader: typeof $readableStream.get_byob_reader = (
   stream: ReadableStream,
 ) => {
-  return stream.getReader({ mode: "byob" });
+  return toResult.fromThrows(() => stream.getReader({ mode: "byob" }));
 };
 
 export const pipe_through: typeof $readableStream.pipe_through = (
@@ -76,9 +77,11 @@ export const pipe_through: typeof $readableStream.pipe_through = (
   [readable, writable]: [ReadableStream, WritableStream],
   options,
 ) => {
-  return stream.pipeThrough(
-    { readable, writable },
-    toStreamPipeOptions(options),
+  return toResult.fromThrows(() =>
+    stream.pipeThrough(
+      { readable, writable },
+      toStreamPipeOptions(options),
+    )
   );
 };
 
@@ -87,16 +90,18 @@ export const pipe_to: typeof $readableStream.pipe_to = (
   destination: WritableStream,
   options,
 ) => {
-  return stream.pipeTo(
-    destination,
-    toStreamPipeOptions(options),
-  ).then(() => undefined);
+  return toResult.fromPromise(
+    stream.pipeTo(
+      destination,
+      toStreamPipeOptions(options),
+    ).then(() => undefined),
+  );
 };
 
 export const tee: typeof $readableStream.tee = (
   stream: ReadableStream,
 ) => {
-  return stream.tee();
+  return toResult.fromThrows(() => stream.tee());
 };
 
 export const async_iterator: typeof $readableStream.async_iterator = <T>(

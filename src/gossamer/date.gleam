@@ -225,10 +225,10 @@ pub fn to_date_string(date: Date) -> String
 pub fn to_time_string(date: Date) -> String
 
 /// Returns the date as an ISO 8601 string (e.g.,
-/// "2026-04-09T14:30:00.000Z").
+/// "2026-04-09T14:30:00.000Z"). Returns an error if the date is invalid.
 ///
 @external(javascript, "./date.ffi.mjs", "to_iso_string")
-pub fn to_iso_string(date: Date) -> String
+pub fn to_iso_string(date: Date) -> Result(String, String)
 
 /// Returns the date as a UTC string (e.g.,
 /// "Thu, 09 Apr 2026 14:30:00 GMT").
@@ -237,9 +237,10 @@ pub fn to_iso_string(date: Date) -> String
 pub fn to_utc_string(date: Date) -> String
 
 /// Returns the date as an ISO 8601 string, suitable for JSON serialization.
+/// Returns an error if the date is invalid.
 ///
 @external(javascript, "./date.ffi.mjs", "to_json")
-pub fn to_json(date: Date) -> String
+pub fn to_json(date: Date) -> Result(String, String)
 
 /// Returns a locale-sensitive string representing the full date and time.
 ///

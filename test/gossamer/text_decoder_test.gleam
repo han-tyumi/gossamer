@@ -69,6 +69,6 @@ pub fn flush_test() {
 }
 
 pub fn decode_empty_buffer_test() {
-  let buffer = array_buffer.new(0)
+  let assert Ok(buffer) = array_buffer.new(0)
   text_decoder.decode(buffer) |> should.equal("")
 }

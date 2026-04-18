@@ -10,16 +10,25 @@ export const desired_size: typeof $defaultController.desired_size = (
 };
 
 export const close: typeof $defaultController.close = (controller) => {
-  controller.close();
+  return toResult.fromThrows(() => {
+    controller.close();
+    return undefined;
+  });
 };
 
 export const enqueue: typeof $defaultController.enqueue = (
   controller,
   chunk,
 ) => {
-  controller.enqueue(chunk);
+  return toResult.fromThrows(() => {
+    controller.enqueue(chunk);
+    return undefined;
+  });
 };
 
 export const error: typeof $defaultController.error = (controller, reason) => {
-  controller.error(reason);
+  return toResult.fromThrows(() => {
+    controller.error(reason);
+    return undefined;
+  });
 };

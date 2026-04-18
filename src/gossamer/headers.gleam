@@ -7,40 +7,44 @@ pub type Headers
 pub fn new() -> Headers
 
 @external(javascript, "./headers.ffi.mjs", "from_pairs")
-pub fn from_pairs(pairs: List(#(String, String))) -> Headers
+pub fn from_pairs(pairs: List(#(String, String))) -> Result(Headers, String)
 
 /// Appends a new value onto an existing header, or adds the header if it does
 /// not already exist. Mutates the headers in-place and returns them for
-/// chaining.
+/// chaining. Returns an error if the name or value is not a valid ByteString.
 ///
 @external(javascript, "./headers.ffi.mjs", "append")
 pub fn append(
   to headers: Headers,
   name name: String,
   value value: String,
-) -> Headers
+) -> Result(Headers, String)
 
 /// Deletes a header. Mutates the headers in-place and returns them for
-/// chaining.
+/// chaining. Returns an error if the name is not a valid ByteString.
 ///
 @external(javascript, "./headers.ffi.mjs", "delete_")
-pub fn delete(from headers: Headers, name name: String) -> Headers
+pub fn delete(
+  from headers: Headers,
+  name name: String,
+) -> Result(Headers, String)
 
 @external(javascript, "./headers.ffi.mjs", "get")
-pub fn get(from headers: Headers, name name: String) -> Result(String, Nil)
+pub fn get(from headers: Headers, name name: String) -> Result(String, String)
 
 @external(javascript, "./headers.ffi.mjs", "has")
-pub fn has(in headers: Headers, name name: String) -> Bool
+pub fn has(in headers: Headers, name name: String) -> Result(Bool, String)
 
 /// Sets a new value for an existing header, or adds the header if it does not
 /// already exist. Mutates the headers in-place and returns them for chaining.
+/// Returns an error if the name or value is not a valid ByteString.
 ///
 @external(javascript, "./headers.ffi.mjs", "set")
 pub fn set(
   in headers: Headers,
   name name: String,
   value value: String,
-) -> Headers
+) -> Result(Headers, String)
 
 @external(javascript, "./headers.ffi.mjs", "get_set_cookie")
 pub fn get_set_cookie(from headers: Headers) -> List(String)

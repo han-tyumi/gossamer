@@ -122,7 +122,7 @@ pub fn is_keepalive(request: Request) -> Bool
 pub fn integrity(of request: Request) -> String
 
 @external(javascript, "./request.ffi.mjs", "clone")
-pub fn clone(request: Request) -> Request
+pub fn clone(request: Request) -> Result(Request, String)
 
 @external(javascript, "./request.ffi.mjs", "body")
 pub fn body(of request: Request) -> Result(ReadableStream(Uint8Array), Nil)

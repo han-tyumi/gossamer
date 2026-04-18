@@ -11,7 +11,7 @@ export const new_: typeof $uint8Array.new$ = () => {
 };
 
 export const from_length: typeof $uint8Array.from_length = (length) => {
-  return new Uint8Array(length);
+  return toResult.fromThrows(() => new Uint8Array(length));
 };
 
 export const from_list: typeof $uint8Array.from_list = (list) => {
@@ -109,7 +109,10 @@ export const subarray: typeof $uint8Array.subarray = (array, begin, end) => {
 };
 
 export const set: typeof $uint8Array.set = (array, values) => {
-  array.set(values);
+  return toResult.fromThrows(() => {
+    array.set(values);
+    return undefined;
+  });
 };
 
 export const set_with_offset: typeof $uint8Array.set_with_offset = (
@@ -117,7 +120,10 @@ export const set_with_offset: typeof $uint8Array.set_with_offset = (
   values,
   offset,
 ) => {
-  array.set(values, offset);
+  return toResult.fromThrows(() => {
+    array.set(values, offset);
+    return undefined;
+  });
 };
 
 export const copy_within: typeof $uint8Array.copy_within = (
@@ -347,25 +353,29 @@ export const to_hex: typeof $uint8Array.to_hex = (array) => {
 };
 
 export const from_base64: typeof $uint8Array.from_base64 = (string) => {
-  return Uint8Array.fromBase64(string);
+  return toResult.fromThrows(() => Uint8Array.fromBase64(string));
 };
 
 export const from_hex: typeof $uint8Array.from_hex = (string) => {
-  return Uint8Array.fromHex(string);
+  return toResult.fromThrows(() => Uint8Array.fromHex(string));
 };
 
 export const set_from_base64: typeof $uint8Array.set_from_base64 = (
   array,
   string,
 ) => {
-  const result = array.setFromBase64(string);
-  return [result.read, result.written];
+  return toResult.fromThrows(() => {
+    const result = array.setFromBase64(string);
+    return [result.read, result.written];
+  });
 };
 
 export const set_from_hex: typeof $uint8Array.set_from_hex = (
   array,
   string,
 ) => {
-  const result = array.setFromHex(string);
-  return [result.read, result.written];
+  return toResult.fromThrows(() => {
+    const result = array.setFromHex(string);
+    return [result.read, result.written];
+  });
 };

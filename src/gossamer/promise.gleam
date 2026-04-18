@@ -11,26 +11,28 @@ pub type PromiseSettledResult(a) {
 
 pub type PromiseWithResolvers(a, r) {
   PromiseWithResolvers(
-    promise: Promise(a),
+    promise: Promise(Result(a, String)),
     resolve: fn(a) -> Nil,
     reject: fn(r) -> Nil,
   )
 }
 
 @external(javascript, "./promise.ffi.mjs", "new_")
-pub fn new(executor: fn(fn(a) -> b, fn(r) -> c) -> d) -> Promise(a)
+pub fn new(
+  executor: fn(fn(a) -> b, fn(r) -> c) -> d,
+) -> Promise(Result(a, String))
 
 /// Resolves with a list of results when all provided promises resolve, or
 /// rejects when any promise is rejected.
 ///
 @external(javascript, "./promise.ffi.mjs", "all")
-pub fn all(values: List(Promise(a))) -> Promise(List(a))
+pub fn all(values: List(Promise(a))) -> Promise(Result(List(a), String))
 
 /// Resolves or rejects as soon as any of the provided promises resolves or
 /// rejects, taking on that promise's value.
 ///
 @external(javascript, "./promise.ffi.mjs", "race")
-pub fn race(values: List(Promise(a))) -> Promise(a)
+pub fn race(values: List(Promise(a))) -> Promise(Result(a, String))
 
 @external(javascript, "./promise.ffi.mjs", "reject")
 pub fn reject(reason: r) -> Promise(a)
@@ -50,7 +52,7 @@ pub fn all_settled(
 /// AggregateError only if all provided promises are rejected.
 ///
 @external(javascript, "./promise.ffi.mjs", "any")
-pub fn any(values: List(Promise(a))) -> Promise(a)
+pub fn any(values: List(Promise(a))) -> Promise(Result(a, String))
 
 @external(javascript, "./promise.ffi.mjs", "try_")
 pub fn try(func: fn() -> a) -> Promise(Result(a, String))

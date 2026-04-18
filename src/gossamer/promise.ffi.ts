@@ -5,25 +5,28 @@ import { toResult } from "~/utils/result.ts";
 export type Promise$<T> = Promise<T>;
 
 export const new_: typeof $promise.new$ = (executor) => {
-  return new Promise((resolve, reject) => {
-    executor(
-      (value) => {
-        resolve(value);
-      },
-      (reason) => {
-        reject(reason);
-      },
-    );
-  });
+  return toResult.fromPromise(
+    new Promise((resolve, reject) => {
+      executor(
+        (value) => {
+          resolve(value);
+        },
+        (reason) => {
+          reject(reason);
+        },
+      );
+    }),
+  );
 };
 
-export const all: typeof $promise.all = async (values) => {
-  const results = await Promise.all(values);
-  return fromArray(results);
+export const all: typeof $promise.all = (values) => {
+  return toResult.fromPromise(
+    Promise.all(values).then((results) => fromArray(results)),
+  );
 };
 
 export const race: typeof $promise.race = (values) => {
-  return Promise.race(values);
+  return toResult.fromPromise(Promise.race(values));
 };
 
 export const reject: typeof $promise.reject = (reason) => {
@@ -46,7 +49,7 @@ export const all_settled: typeof $promise.all_settled = async (values) => {
 };
 
 export const any: typeof $promise.any = (values) => {
-  return Promise.any(values);
+  return toResult.fromPromise(Promise.any(values));
 };
 
 export const try_: typeof $promise.try$ = (func) => {
@@ -56,7 +59,7 @@ export const try_: typeof $promise.try$ = (func) => {
 export const with_resolvers: typeof $promise.with_resolvers = () => {
   const { promise, resolve, reject } = Promise.withResolvers();
   return $promise.PromiseWithResolvers$PromiseWithResolvers(
-    promise,
+    toResult.fromPromise(promise),
     (value) => {
       resolve(value);
     },

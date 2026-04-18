@@ -7,14 +7,14 @@ export type Reader$<T> = ReadableStreamDefaultReader<T>;
 export const closed: typeof $reader.closed = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  return reader.closed.then(() => undefined);
+  return toResult.fromPromise(reader.closed.then(() => undefined));
 };
 
 export const cancel: typeof $reader.cancel = (
   reader: ReadableStreamDefaultReader,
   reason,
 ) => {
-  return reader.cancel(reason).then(() => undefined);
+  return toResult.fromPromise(reader.cancel(reason).then(() => undefined));
 };
 
 export const read: typeof $reader.read = (
@@ -28,6 +28,8 @@ export const read: typeof $reader.read = (
 export const release_lock: typeof $reader.release_lock = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  reader.releaseLock();
-  return reader;
+  return toResult.fromThrows(() => {
+    reader.releaseLock();
+    return reader;
+  });
 };

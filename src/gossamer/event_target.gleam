@@ -58,7 +58,11 @@ pub fn remove_event_listener_with(
 ) -> Nil
 
 /// Dispatches an event to the target, invoking any registered listeners.
-/// Returns whether `prevent_default` was not called by any listener.
+/// Returns whether `prevent_default` was not called by any listener. Returns
+/// an error if the event is already being dispatched.
 ///
 @external(javascript, "./event_target.ffi.mjs", "dispatch_event")
-pub fn dispatch_event(on target: EventTarget, event event: Event) -> Bool
+pub fn dispatch_event(
+  on target: EventTarget,
+  event event: Event,
+) -> Result(Bool, String)

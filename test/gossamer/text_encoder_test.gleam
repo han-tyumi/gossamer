@@ -26,7 +26,7 @@ pub fn encode_unicode_test() {
 }
 
 pub fn encode_into_test() {
-  let dest = uint8_array.from_length(10)
+  let assert Ok(dest) = uint8_array.from_length(10)
   let result = text_encoder.encode_into("hello", dest)
   result.read |> should.equal(5)
   result.written |> should.equal(5)

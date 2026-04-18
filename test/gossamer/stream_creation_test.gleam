@@ -18,20 +18,21 @@ import gossamer/writable_stream/writer
 pub fn readable_stream_from_start_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "hello")
-      default_controller.enqueue(controller, "world")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "hello")
+      let _ = default_controller.enqueue(controller, "world")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let reader = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value("hello")))
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value("world")))
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Done(None)))
 }
 
@@ -39,14 +40,15 @@ pub fn readable_stream_new_with_options_test() {
   let stream =
     readable_stream.new([
       readable_stream.Start(fn(controller) {
-        default_controller.enqueue(controller, 42)
-        default_controller.close(controller)
+        let _ = default_controller.enqueue(controller, 42)
+        let _ = default_controller.close(controller)
+        Nil
       }),
     ])
 
-  let reader = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value(42)))
 }
 
@@ -57,7 +59,7 @@ pub fn writable_stream_from_write_test() {
       promise.resolve(Nil)
     })
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.write(w, "hello"))
   use _ <- promise.then(writer.close(w))
@@ -73,7 +75,7 @@ pub fn writable_stream_new_with_options_test() {
       }),
     ])
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.write(w, "test"))
   use _ <- promise.then(writer.close(w))
@@ -83,18 +85,19 @@ pub fn writable_stream_new_with_options_test() {
 pub fn transform_stream_from_transform_test() {
   let transform =
     transform_stream.from_transform(fn(chunk: Int, controller) {
-      transform_controller.enqueue(controller, int.to_string(chunk))
+      let _ = transform_controller.enqueue(controller, int.to_string(chunk))
       promise.resolve(Nil)
     })
 
   let readable =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, 1)
-      default_controller.enqueue(controller, 2)
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, 1)
+      let _ = default_controller.enqueue(controller, 2)
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let transformed =
+  let assert Ok(transformed) =
     readable_stream.pipe_through(
       readable,
       #(
@@ -104,24 +107,25 @@ pub fn transform_stream_from_transform_test() {
       [],
     )
 
-  let reader = readable_stream.get_reader(transformed)
+  let assert Ok(r) = readable_stream.get_reader(transformed)
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value("1")))
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value("2")))
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Done(None)))
 }
 
 pub fn readable_pipe_to_writable_test() {
   let readable =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "a")
-      default_controller.enqueue(controller, "b")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "a")
+      let _ = default_controller.enqueue(controller, "b")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
   let chunks = []
@@ -140,12 +144,13 @@ pub fn readable_pipe_to_writable_test() {
 pub fn readable_stream_is_locked_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "x")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "x")
+      let _ = default_controller.close(controller)
+      Nil
     })
   readable_stream.is_locked(stream) |> should.be_false
 
-  let r = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
   readable_stream.is_locked(stream) |> should.be_true
 
   // Drain so the stream closes cleanly.
@@ -157,14 +162,15 @@ pub fn readable_stream_is_locked_test() {
 pub fn readable_stream_tee_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "hello")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "hello")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let #(branch1, branch2) = readable_stream.tee(stream)
+  let assert Ok(#(branch1, branch2)) = readable_stream.tee(stream)
 
-  let reader1 = readable_stream.get_reader(branch1)
-  let reader2 = readable_stream.get_reader(branch2)
+  let assert Ok(reader1) = readable_stream.get_reader(branch1)
+  let assert Ok(reader2) = readable_stream.get_reader(branch2)
 
   use result1 <- promise.then(reader.read(reader1))
   should.equal(result1, Ok(read_result.Value("hello")))
@@ -177,8 +183,9 @@ pub fn readable_stream_tee_test() {
 pub fn readable_stream_cancel_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "data")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "data")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
   use _ <- promise.then(readable_stream.cancel(stream, "done"))
@@ -188,12 +195,12 @@ pub fn readable_stream_cancel_test() {
 pub fn readable_stream_from_pull_test() {
   let stream =
     readable_stream.from_pull(fn(controller) {
-      default_controller.enqueue(controller, 42)
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, 42)
+      let _ = default_controller.close(controller)
       promise.resolve(Nil)
     })
 
-  let r = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
 
   use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Value(42)))
@@ -205,10 +212,11 @@ pub fn writable_stream_is_locked_test() {
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
   writable_stream.is_locked(stream) |> should.be_false
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
   writable_stream.is_locked(stream) |> should.be_true
 
-  writer.release_lock(w)
+  let assert Ok(_) = writer.release_lock(w)
+  Nil
 }
 
 pub fn writable_stream_close_test() {
@@ -230,13 +238,14 @@ pub fn writable_stream_abort_test() {
 pub fn reader_release_lock_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.close(controller)
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let r = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
   readable_stream.is_locked(stream) |> should.be_true
 
-  reader.release_lock(r)
+  let assert Ok(_) = reader.release_lock(r)
   readable_stream.is_locked(stream) |> should.be_false
 }
 
@@ -244,10 +253,10 @@ pub fn writer_release_lock_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
   writable_stream.is_locked(stream) |> should.be_true
 
-  writer.release_lock(w)
+  let assert Ok(_) = writer.release_lock(w)
   writable_stream.is_locked(stream) |> should.be_false
 }
 
@@ -256,10 +265,11 @@ pub fn writer_release_lock_test() {
 pub fn reader_closed_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.close(controller)
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let r = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
 
   // Reading past the end triggers closed.
   use _ <- promise.then(reader.read(r))
@@ -270,11 +280,12 @@ pub fn reader_closed_test() {
 pub fn reader_cancel_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "data")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "data")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let r = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
 
   use _ <- promise.then(reader.cancel(r, "no longer needed"))
   promise.resolve(Nil)
@@ -288,11 +299,12 @@ pub fn readable_controller_desired_size_test() {
       readable_stream.Start(fn(controller) {
         let assert Ok(size) = default_controller.desired_size(controller)
         should.be_true(size >= 0)
-        default_controller.close(controller)
+        let _ = default_controller.close(controller)
+        Nil
       }),
     ])
 
-  let r = readable_stream.get_reader(stream)
+  let assert Ok(r) = readable_stream.get_reader(stream)
 
   use _ <- promise.then(reader.read(r))
   promise.resolve(Nil)
@@ -304,7 +316,7 @@ pub fn writer_closed_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.close(w))
   use _ <- promise.then(writer.closed(w))
@@ -315,20 +327,21 @@ pub fn writer_desired_size_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
   let assert Ok(size) = writer.desired_size(w)
   should.be_true(size >= 0)
-  writer.release_lock(w)
+  let assert Ok(_) = writer.release_lock(w)
+  Nil
 }
 
 pub fn writer_ready_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.ready(w))
-  writer.release_lock(w)
+  let assert Ok(_) = writer.release_lock(w)
   promise.resolve(Nil)
 }
 
@@ -336,7 +349,7 @@ pub fn writer_abort_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.abort(w, "aborted"))
   promise.resolve(Nil)
@@ -353,7 +366,7 @@ pub fn writable_controller_signal_test() {
       }),
     ])
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.write(w, "x"))
   use _ <- promise.then(writer.close(w))
@@ -364,12 +377,12 @@ pub fn writable_controller_error_test() {
   let stream =
     writable_stream.new([
       writable_stream.Write(fn(_chunk, controller) {
-        writable_controller.error(controller, dynamic.string("fail"))
+        let _ = writable_controller.error(controller, dynamic.string("fail"))
         promise.resolve(Nil)
       }),
     ])
 
-  let w = writable_stream.get_writer(stream)
+  let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.then(writer.write(w, "trigger"))
   promise.resolve(Nil)
@@ -382,18 +395,19 @@ pub fn transform_controller_desired_size_test() {
     transform_stream.new([
       transform_stream.Transform(fn(_chunk: String, controller) {
         let _size = transform_controller.desired_size(controller)
-        transform_controller.enqueue(controller, "out")
+        let _ = transform_controller.enqueue(controller, "out")
         promise.resolve(Nil)
       }),
     ])
 
   let readable =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "in")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "in")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let transformed =
+  let assert Ok(transformed) =
     readable_stream.pipe_through(
       readable,
       #(
@@ -403,7 +417,7 @@ pub fn transform_controller_desired_size_test() {
       [],
     )
 
-  let r = readable_stream.get_reader(transformed)
+  let assert Ok(r) = readable_stream.get_reader(transformed)
 
   use _ <- promise.then(reader.read(r))
   promise.resolve(Nil)
@@ -413,10 +427,11 @@ pub fn transform_controller_error_test() {
   let transform =
     transform_stream.new([
       transform_stream.Transform(fn(_chunk: String, controller) {
-        transform_controller.error(
-          controller,
-          dynamic.string("transform error"),
-        )
+        let _ =
+          transform_controller.error(
+            controller,
+            dynamic.string("transform error"),
+          )
         promise.resolve(Nil)
       }),
     ])
@@ -429,18 +444,19 @@ pub fn transform_controller_terminate_test() {
   let transform =
     transform_stream.new([
       transform_stream.Transform(fn(_chunk: String, controller) {
-        transform_controller.terminate(controller)
+        let _ = transform_controller.terminate(controller)
         promise.resolve(Nil)
       }),
     ])
 
   let readable =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, "in")
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, "in")
+      let _ = default_controller.close(controller)
+      Nil
     })
 
-  let transformed =
+  let assert Ok(transformed) =
     readable_stream.pipe_through(
       readable,
       #(
@@ -450,7 +466,7 @@ pub fn transform_controller_terminate_test() {
       [],
     )
 
-  let r = readable_stream.get_reader(transformed)
+  let assert Ok(r) = readable_stream.get_reader(transformed)
 
   use result <- promise.then(reader.read(r))
   should.equal(result, Ok(read_result.Done(None)))
@@ -462,20 +478,21 @@ pub fn transform_controller_terminate_test() {
 pub fn readable_stream_async_iterator_test() {
   let stream =
     readable_stream.from_start(fn(controller) {
-      default_controller.enqueue(controller, 1)
-      default_controller.enqueue(controller, 2)
-      default_controller.close(controller)
+      let _ = default_controller.enqueue(controller, 1)
+      let _ = default_controller.enqueue(controller, 2)
+      let _ = default_controller.close(controller)
+      Nil
     })
 
   let iter = readable_stream.async_iterator(stream)
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Yield(1))
+  should.equal(result, Ok(iterator_result.Yield(1)))
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Yield(2))
+  should.equal(result, Ok(iterator_result.Yield(2)))
 
   use result <- promise.then(async_iterator.next(iter))
-  should.equal(result, iterator_result.Return(Nil))
+  should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }

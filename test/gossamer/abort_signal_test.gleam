@@ -50,7 +50,7 @@ pub fn on_abort_test() {
   abort_controller.abort(controller)
 
   use value <- promise.then(resolvers.promise)
-  should.equal(value, "aborted")
+  should.equal(value, Ok("aborted"))
   promise.resolve(Nil)
 }
 

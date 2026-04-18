@@ -141,8 +141,9 @@ export const trim_start: typeof $string.trim_start = (string) =>
 
 export const trim_end: typeof $string.trim_end = (string) => string.trimEnd();
 
-export const repeat: typeof $string.repeat = (string, times) =>
-  string.repeat(times);
+export const repeat: typeof $string.repeat = (string, times) => {
+  return toResult.fromThrows(() => string.repeat(times));
+};
 
 export const pad_start: typeof $string.pad_start = (
   string,

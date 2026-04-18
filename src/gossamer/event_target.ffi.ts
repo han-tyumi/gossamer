@@ -1,5 +1,6 @@
 import * as $eventTarget from "$/gossamer/gossamer/event_target.mjs";
 import { toArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type EventTarget$ = EventTarget;
 
@@ -70,5 +71,5 @@ export const dispatch_event: typeof $eventTarget.dispatch_event = (
   target,
   event,
 ) => {
-  return target.dispatchEvent(event);
+  return toResult.fromThrows(() => target.dispatchEvent(event));
 };

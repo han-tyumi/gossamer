@@ -19,7 +19,9 @@ pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 /// iterator.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "to_list")
-pub fn to_list(iterator: AsyncIterator(a, return, next)) -> Promise(List(a))
+pub fn to_list(
+  iterator: AsyncIterator(a, return, next),
+) -> Promise(Result(List(a), String))
 
 @external(javascript, "./async_iterator.ffi.mjs", "with_return")
 pub fn with_return(
@@ -36,13 +38,13 @@ pub fn with_throw(
 @external(javascript, "./async_iterator.ffi.mjs", "next")
 pub fn next(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(IteratorResult(a, return))
+) -> Promise(Result(IteratorResult(a, return), String))
 
 @external(javascript, "./async_iterator.ffi.mjs", "next_with")
 pub fn next_with(
   iterator: AsyncIterator(a, return, next),
   value: next,
-) -> Promise(IteratorResult(a, return))
+) -> Promise(Result(IteratorResult(a, return), String))
 
 @external(javascript, "./async_iterator.ffi.mjs", "return_")
 pub fn return(
@@ -65,4 +67,4 @@ pub fn throw(
 pub fn for_await(
   in iterator: AsyncIterator(a, return, next),
   run fun: fn(a) -> any,
-) -> Promise(Nil)
+) -> Promise(Result(Nil, String))

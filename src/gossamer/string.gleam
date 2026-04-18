@@ -157,7 +157,7 @@ pub fn trim_start(string: String) -> String
 pub fn trim_end(string: String) -> String
 
 @external(javascript, "./string.ffi.mjs", "repeat")
-pub fn repeat(string: String, times times: Int) -> String
+pub fn repeat(string: String, times times: Int) -> Result(String, String)
 
 /// Pads the start to reach `target_length` UTF-16 code units. This differs
 /// from `gleam/string.pad_start` which counts grapheme clusters.

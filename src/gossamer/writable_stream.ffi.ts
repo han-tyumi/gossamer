@@ -1,5 +1,6 @@
 import * as $writableStream from "$/gossamer/gossamer/writable_stream.mjs";
 import { toArray } from "~/utils/list.ts";
+import { toResult } from "~/utils/result.ts";
 
 export type WritableStream$<T> = WritableStream<T>;
 
@@ -35,17 +36,17 @@ export const abort: typeof $writableStream.abort = (
   stream: WritableStream,
   reason,
 ) => {
-  return stream.abort(reason).then(() => undefined);
+  return toResult.fromPromise(stream.abort(reason).then(() => undefined));
 };
 
 export const close: typeof $writableStream.close = (
   stream: WritableStream,
 ) => {
-  return stream.close().then(() => undefined);
+  return toResult.fromPromise(stream.close().then(() => undefined));
 };
 
 export const get_writer: typeof $writableStream.get_writer = (
   stream: WritableStream,
 ) => {
-  return stream.getWriter();
+  return toResult.fromThrows(() => stream.getWriter());
 };

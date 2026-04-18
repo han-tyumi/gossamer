@@ -6,7 +6,7 @@ pub type ArrayBufferView {
 }
 
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
-pub fn new(byte_length: Int) -> ArrayBuffer
+pub fn new(byte_length: Int) -> Result(ArrayBuffer, String)
 
 @external(javascript, "./array_buffer.ffi.mjs", "byte_length")
 pub fn byte_length(of array_buffer: ArrayBuffer) -> Int
@@ -15,7 +15,10 @@ pub fn byte_length(of array_buffer: ArrayBuffer) -> Int
 /// maximum byte length.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "new_resizable")
-pub fn new_resizable(byte_length: Int, max_byte_length max: Int) -> ArrayBuffer
+pub fn new_resizable(
+  byte_length: Int,
+  max_byte_length max: Int,
+) -> Result(ArrayBuffer, String)
 
 @external(javascript, "./array_buffer.ffi.mjs", "max_byte_length")
 pub fn max_byte_length(of array_buffer: ArrayBuffer) -> Int
@@ -30,7 +33,7 @@ pub fn is_view(value: a) -> Bool
 pub fn is_detached(array_buffer: ArrayBuffer) -> Bool
 
 @external(javascript, "./array_buffer.ffi.mjs", "transfer")
-pub fn transfer(array_buffer: ArrayBuffer) -> ArrayBuffer
+pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, String)
 
 /// Resizes the `ArrayBuffer` to the specified byte length. The buffer must
 /// have been created with `new_resizable`. Returns an error if the new length

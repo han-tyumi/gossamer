@@ -27,16 +27,22 @@ pub fn new_with_init(
 ) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "from_json")
-pub fn from_json(data: a, with init: List(ResponseInit)) -> Response
+pub fn from_json(
+  data: a,
+  with init: List(ResponseInit),
+) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "error")
 pub fn error() -> Response
 
 @external(javascript, "./response.ffi.mjs", "redirect")
-pub fn redirect(url: String) -> Response
+pub fn redirect(url: String) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "redirect_with_status")
-pub fn redirect_with_status(url: String, status status: Int) -> Response
+pub fn redirect_with_status(
+  url: String,
+  status status: Int,
+) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "headers_")
 pub fn headers(of response: Response) -> Headers
@@ -60,7 +66,7 @@ pub fn type_(of response: Response) -> ResponseType
 pub fn url(of response: Response) -> String
 
 @external(javascript, "./response.ffi.mjs", "clone")
-pub fn clone(response: Response) -> Response
+pub fn clone(response: Response) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "body")
 pub fn body(of response: Response) -> Result(ReadableStream(Uint8Array), Nil)

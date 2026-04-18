@@ -187,7 +187,7 @@ pub fn trim_end_test() {
 }
 
 pub fn repeat_test() {
-  string.repeat("ab", times: 3) |> should.equal("ababab")
+  string.repeat("ab", times: 3) |> should.equal(Ok("ababab"))
 }
 
 pub fn pad_start_test() {
