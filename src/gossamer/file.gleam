@@ -1,12 +1,16 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
-import gossamer/file_option.{type FileOption}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./file.type.ts", "File$")
 pub type File
+
+pub type FileOption {
+  Type(String)
+  LastModified(Int)
+}
 
 @external(javascript, "./file.ffi.mjs", "from_strings")
 pub fn from_strings(parts: List(String), named name: String) -> File

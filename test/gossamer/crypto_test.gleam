@@ -6,10 +6,8 @@ import gossamer/aes_algorithm
 import gossamer/array_buffer
 import gossamer/crypto
 import gossamer/crypto_key
-import gossamer/crypto_key_pair
 import gossamer/ec_algorithm
 import gossamer/hash_algorithm
-import gossamer/key_algorithm
 import gossamer/key_format
 import gossamer/key_type
 import gossamer/key_usage
@@ -94,7 +92,7 @@ pub fn generate_key_pair_sign_verify_test() {
   )
   let assert Ok(pair) = result
 
-  let crypto_key_pair.CryptoKeyPair(public_key:, private_key:) = pair
+  let subtle_crypto.CryptoKeyPair(public_key:, private_key:) = pair
   should.equal(crypto_key.type_(public_key), key_type.Public)
   should.equal(crypto_key.type_(private_key), key_type.Private)
 
@@ -133,11 +131,11 @@ pub fn generate_rsa_key_pair_test() {
     ),
   )
   let assert Ok(pair) = result
-  let crypto_key_pair.CryptoKeyPair(public_key:, private_key:) = pair
+  let subtle_crypto.CryptoKeyPair(public_key:, private_key:) = pair
   should.equal(crypto_key.type_(public_key), key_type.Public)
   should.equal(crypto_key.type_(private_key), key_type.Private)
   let algo = crypto_key.algorithm(private_key)
-  let assert key_algorithm.Rsa(name:, modulus_length:, ..) = algo
+  let assert crypto_key.Rsa(name:, modulus_length:, ..) = algo
   should.equal(name, rsa_algorithm.RsassaPkcs1V15)
   should.equal(modulus_length, 2048)
   promise.resolve(Nil)
@@ -177,7 +175,7 @@ pub fn crypto_key_algorithm_test() {
   )
   let assert Ok(key) = result
   let algo = crypto_key.algorithm(key)
-  should.equal(algo, key_algorithm.Aes(aes_algorithm.AesGcm, 256))
+  should.equal(algo, crypto_key.Aes(aes_algorithm.AesGcm, 256))
   promise.resolve(Nil)
 }
 

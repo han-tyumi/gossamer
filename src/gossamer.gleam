@@ -1,6 +1,5 @@
 import gossamer/promise.{type Promise}
-import gossamer/request.{type Request}
-import gossamer/request_init.{type RequestInit}
+import gossamer/request.{type Request, type RequestInit}
 import gossamer/response.{type Response}
 
 @external(javascript, "./gossamer.ffi.mjs", "fetch_")

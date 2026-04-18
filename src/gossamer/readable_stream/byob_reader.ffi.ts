@@ -1,9 +1,22 @@
-import type * as $byobReader from "$/gossamer/gossamer/readable_stream/byob_reader.mjs";
-import { toArrayBufferViewType } from "~/gossamer/array_buffer_view.ts";
-import { toByobReaderReadOptions } from "~/gossamer/readable_stream/byob_reader_read_option.ts";
+import * as $byobReader from "$/gossamer/gossamer/readable_stream/byob_reader.mjs";
+import type { List } from "$/prelude.mjs";
+import { toArrayBufferViewType } from "~/gossamer/array_buffer.ffi.ts";
 import { toReadResult } from "~/gossamer/readable_stream/read_result.ts";
+import { toArray } from "~/utils/list.ts";
 
 export type ByobReader$<_T> = ReadableStreamBYOBReader;
+
+function toByobReaderReadOptions(
+  options: List<$byobReader.ByobReaderReadOption$>,
+): Partial<ReadableStreamBYOBReaderReadOptions> {
+  const result: Partial<ReadableStreamBYOBReaderReadOptions> = {};
+  for (const option of toArray(options)) {
+    if ($byobReader.ByobReaderReadOption$isMin(option)) {
+      result.min = $byobReader.ByobReaderReadOption$Min$0(option);
+    }
+  }
+  return result;
+}
 
 export const closed: typeof $byobReader.closed = (
   reader: ReadableStreamBYOBReader,

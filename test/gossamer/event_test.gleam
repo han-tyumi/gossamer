@@ -1,9 +1,7 @@
 import gleeunit/should
 import gossamer/event
-import gossamer/event_init
 import gossamer/event_phase
 import gossamer/event_target
-import gossamer/event_target/listener_option
 import gossamer/promise
 
 pub fn new_test() {
@@ -14,9 +12,9 @@ pub fn new_test() {
 pub fn new_with_test() {
   let ev =
     event.new_with("custom", [
-      event_init.Bubbles(True),
-      event_init.Cancelable(True),
-      event_init.Composed(True),
+      event.Bubbles(True),
+      event.Cancelable(True),
+      event.Composed(True),
     ])
   event.type_(ev) |> should.equal("custom")
   event.is_bubbles(ev) |> should.be_true()
@@ -58,7 +56,7 @@ pub fn is_trusted_test() {
 }
 
 pub fn prevent_default_test() {
-  let ev = event.new_with("test", [event_init.Cancelable(True)])
+  let ev = event.new_with("test", [event.Cancelable(True)])
   event.is_default_prevented(ev) |> should.be_false()
   event.prevent_default(ev)
   event.is_default_prevented(ev) |> should.be_true()
@@ -155,7 +153,7 @@ pub fn dispatch_event_cancelable_test() {
     Nil
   })
 
-  let ev = event.new_with("cancel", [event_init.Cancelable(True)])
+  let ev = event.new_with("cancel", [event.Cancelable(True)])
   let result = event_target.dispatch_event(on: target, event: ev)
 
   // dispatch_event returns False when preventDefault was called
@@ -173,7 +171,7 @@ pub fn once_option_test() {
       resolvers.resolve(1)
       Nil
     },
-    with: [listener_option.Once(True)],
+    with: [event_target.Once(True)],
   )
 
   // First dispatch triggers the listener

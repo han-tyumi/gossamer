@@ -1,5 +1,5 @@
 import type * as $gossamer from "$/gossamer/gossamer.mjs";
-import { toRequestInit } from "~/gossamer/request_init.ts";
+import { toRequestInit } from "~/gossamer/request.ffi.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 

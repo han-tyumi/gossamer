@@ -1,6 +1,6 @@
 import gossamer/encoding.{type Encoding}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/text_decoder/text_decoder_option.{type TextDecoderOption}
+import gossamer/text_decoder.{type TextDecoderOption}
 import gossamer/writable_stream.{type WritableStream}
 
 @external(javascript, "./text_decoder_stream.type.ts", "TextDecoderStream$")

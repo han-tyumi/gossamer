@@ -1,8 +1,25 @@
-import type * as $eventTarget from "$/gossamer/gossamer/event_target.mjs";
-import { toListenerOption } from "~/gossamer/event_target/listener_option.ts";
+import * as $eventTarget from "$/gossamer/gossamer/event_target.mjs";
 import { toArray } from "~/utils/list.ts";
 
 export type EventTarget$ = EventTarget;
+
+function toListenerOption(
+  options: $eventTarget.ListenerOption$[],
+): AddEventListenerOptions {
+  const result: AddEventListenerOptions = {};
+  for (const option of options) {
+    if ($eventTarget.ListenerOption$isCapture(option)) {
+      result.capture = $eventTarget.ListenerOption$Capture$0(option);
+    } else if ($eventTarget.ListenerOption$isOnce(option)) {
+      result.once = $eventTarget.ListenerOption$Once$0(option);
+    } else if ($eventTarget.ListenerOption$isPassive(option)) {
+      result.passive = $eventTarget.ListenerOption$Passive$0(option);
+    } else if ($eventTarget.ListenerOption$isSignal(option)) {
+      result.signal = $eventTarget.ListenerOption$Signal$0(option);
+    }
+  }
+  return result;
+}
 
 export const new_: typeof $eventTarget.new$ = () => {
   return new EventTarget();

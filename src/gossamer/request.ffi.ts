@@ -1,16 +1,66 @@
-import type * as $request from "$/gossamer/gossamer/request.mjs";
-import { fromReferrerPolicy } from "~/gossamer/referrer_policy.ts";
-import { fromRequestCache } from "~/gossamer/request_cache.ts";
-import { fromHttpMethod } from "~/gossamer/http_method.ts";
-import { fromRequestCredentials } from "~/gossamer/request_credentials.ts";
+import * as $request from "$/gossamer/gossamer/request.mjs";
+import {
+  fromReferrerPolicy,
+  toReferrerPolicy,
+} from "~/gossamer/referrer_policy.ts";
+import { fromRequestCache, toRequestCache } from "~/gossamer/request_cache.ts";
+import { fromHttpMethod, toHttpMethod } from "~/gossamer/http_method.ts";
+import {
+  fromRequestCredentials,
+  toRequestCredentials,
+} from "~/gossamer/request_credentials.ts";
 import { fromRequestDestination } from "~/gossamer/request_destination.ts";
-import { toRequestInit } from "~/gossamer/request_init.ts";
-import { fromRequestMode } from "~/gossamer/request_mode.ts";
-import { fromRequestRedirect } from "~/gossamer/request_redirect.ts";
+import { fromRequestMode, toRequestMode } from "~/gossamer/request_mode.ts";
+import {
+  fromRequestRedirect,
+  toRequestRedirect,
+} from "~/gossamer/request_redirect.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type Request$ = Request;
+
+export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
+  const result: RequestInit = {};
+  for (const option of options) {
+    if ($request.RequestInit$isMethod(option)) {
+      result.method = toHttpMethod($request.RequestInit$Method$0(option));
+    } else if ($request.RequestInit$isHeaders(option)) {
+      result.headers = $request.RequestInit$Headers$0(option);
+    } else if ($request.RequestInit$isBody(option)) {
+      result.body = $request.RequestInit$Body$0(option);
+    } else if ($request.RequestInit$isCache(option)) {
+      result.cache = toRequestCache(
+        $request.RequestInit$Cache$0(option),
+      ) as RequestCache;
+    } else if ($request.RequestInit$isCredentials(option)) {
+      result.credentials = toRequestCredentials(
+        $request.RequestInit$Credentials$0(option),
+      ) as RequestCredentials;
+    } else if ($request.RequestInit$isIntegrity(option)) {
+      result.integrity = $request.RequestInit$Integrity$0(option);
+    } else if ($request.RequestInit$isKeepalive(option)) {
+      result.keepalive = $request.RequestInit$Keepalive$0(option);
+    } else if ($request.RequestInit$isMode(option)) {
+      result.mode = toRequestMode(
+        $request.RequestInit$Mode$0(option),
+      ) as RequestMode;
+    } else if ($request.RequestInit$isRedirect(option)) {
+      result.redirect = toRequestRedirect(
+        $request.RequestInit$Redirect$0(option),
+      );
+    } else if ($request.RequestInit$isReferrer(option)) {
+      result.referrer = $request.RequestInit$Referrer$0(option);
+    } else if ($request.RequestInit$isReferrerPolicy(option)) {
+      result.referrerPolicy = toReferrerPolicy(
+        $request.RequestInit$ReferrerPolicy$0(option),
+      ) as ReferrerPolicy;
+    } else if ($request.RequestInit$isSignal(option)) {
+      result.signal = $request.RequestInit$Signal$0(option);
+    }
+  }
+  return result;
+}
 
 export const new_: typeof $request.new$ = (input) => {
   return toResult.fromThrows(() => new Request(input));

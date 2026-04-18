@@ -1,5 +1,4 @@
-import type * as $textEncoder from "$/gossamer/gossamer/text_encoder.mjs";
-import { EncodeIntoResult$EncodeIntoResult } from "$/gossamer/gossamer/text_encoder/encode_into_result.mjs";
+import * as $textEncoder from "$/gossamer/gossamer/text_encoder.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ts";
 
 const sharedEncoder = new TextEncoder();
@@ -19,5 +18,8 @@ export const encode_into: typeof $textEncoder.encode_into = (
   dest: Uint8Array,
 ) => {
   const result = sharedEncoder.encodeInto(input, dest);
-  return EncodeIntoResult$EncodeIntoResult(result.read, result.written);
+  return $textEncoder.EncodeIntoResult$EncodeIntoResult(
+    result.read,
+    result.written,
+  );
 };

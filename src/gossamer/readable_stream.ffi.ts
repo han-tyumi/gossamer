@@ -1,9 +1,42 @@
-import type * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
-import { toStreamPipeOptions } from "~/gossamer/readable_stream/stream_pipe_option.ts";
-import { toUnderlyingSource } from "~/gossamer/readable_stream/underlying_source.ts";
+import * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
+import type { List } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ts";
 
 export type ReadableStream$<T> = ReadableStream<T>;
+
+function toUnderlyingSource<T>(
+  options: $readableStream.UnderlyingSource$<T>[],
+): UnderlyingDefaultSource<T> {
+  const result: UnderlyingDefaultSource<T> = {};
+  for (const option of options) {
+    if ($readableStream.UnderlyingSource$isStart(option)) {
+      result.start = $readableStream.UnderlyingSource$Start$0(option);
+    } else if ($readableStream.UnderlyingSource$isPull(option)) {
+      result.pull = $readableStream.UnderlyingSource$Pull$0(option);
+    } else if ($readableStream.UnderlyingSource$isCancel(option)) {
+      result.cancel = $readableStream.UnderlyingSource$Cancel$0(option);
+    }
+  }
+  return result;
+}
+
+function toStreamPipeOptions(
+  options: List<$readableStream.StreamPipeOption$>,
+): Partial<StreamPipeOptions> {
+  const result: Partial<StreamPipeOptions> = {};
+  for (const option of toArray(options)) {
+    if ($readableStream.StreamPipeOption$isPreventAbort(option)) {
+      result.preventAbort = true;
+    } else if ($readableStream.StreamPipeOption$isPreventCancel(option)) {
+      result.preventCancel = true;
+    } else if ($readableStream.StreamPipeOption$isPreventClose(option)) {
+      result.preventClose = true;
+    } else if ($readableStream.StreamPipeOption$isSignal(option)) {
+      result.signal = $readableStream.StreamPipeOption$Signal$0(option);
+    }
+  }
+  return result;
+}
 
 export const new_: typeof $readableStream.new$ = (source) => {
   return new ReadableStream(toUnderlyingSource(toArray(source)));

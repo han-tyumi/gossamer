@@ -1,9 +1,20 @@
-import type * as $file from "$/gossamer/gossamer/file.mjs";
-import { toFileOptions } from "~/gossamer/file_option.ts";
+import * as $file from "$/gossamer/gossamer/file.mjs";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type File$ = File;
+
+function toFileOptions(options: $file.FileOption$[]): FilePropertyBag {
+  const result: FilePropertyBag = {};
+  for (const option of options) {
+    if ($file.FileOption$isType(option)) {
+      result.type = $file.FileOption$Type$0(option);
+    } else if ($file.FileOption$isLastModified(option)) {
+      result.lastModified = $file.FileOption$LastModified$0(option);
+    }
+  }
+  return result;
+}
 
 export const from_strings: typeof $file.from_strings = (parts, name) => {
   return new File(toArray(parts), name);

@@ -1,9 +1,14 @@
 import gleam/dynamic.{type Dynamic}
-import gossamer/event_init.{type EventInit}
 import gossamer/event_phase.{type EventPhase}
 
 @external(javascript, "./event.type.ts", "Event$")
 pub type Event
+
+pub type EventInit {
+  Bubbles(Bool)
+  Cancelable(Bool)
+  Composed(Bool)
+}
 
 /// Creates a new `Event` with the given type.
 ///

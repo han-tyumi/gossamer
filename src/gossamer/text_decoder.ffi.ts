@@ -1,9 +1,24 @@
-import type * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
+import * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
+import type { List } from "$/prelude.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ts";
-import { toTextDecoderOptions } from "~/gossamer/text_decoder/text_decoder_option.ts";
+import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type TextDecoder$ = TextDecoder;
+
+export function toTextDecoderOptions(
+  options: List<$textDecoder.TextDecoderOption$>,
+): Partial<TextDecoderOptions> {
+  const result: Partial<TextDecoderOptions> = {};
+  for (const option of toArray(options)) {
+    if ($textDecoder.TextDecoderOption$isFatal(option)) {
+      result.fatal = true;
+    } else if ($textDecoder.TextDecoderOption$isIgnoreBom(option)) {
+      result.ignoreBOM = true;
+    }
+  }
+  return result;
+}
 
 const sharedDecoder = new TextDecoder();
 

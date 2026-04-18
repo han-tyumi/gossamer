@@ -3,7 +3,6 @@ import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/file
-import gossamer/file_option
 import gossamer/promise
 import gossamer/uint8_array
 
@@ -36,7 +35,7 @@ pub fn file_last_modified_test() {
 pub fn file_from_strings_with_test() {
   let f =
     file.from_strings_with(["hello"], "typed.txt", [
-      file_option.Type("text/plain"),
+      file.Type("text/plain"),
     ])
   file.name(f) |> should.equal("typed.txt")
   should.be_true(string.starts_with(file.type_(f), "text/plain"))
@@ -44,7 +43,7 @@ pub fn file_from_strings_with_test() {
 
 pub fn file_from_blob_with_test() {
   let b = blob.from_string("blob data")
-  let f = file.from_blob_with(b, "blob.txt", [file_option.Type("text/plain")])
+  let f = file.from_blob_with(b, "blob.txt", [file.Type("text/plain")])
   file.name(f) |> should.equal("blob.txt")
   should.be_true(string.starts_with(file.type_(f), "text/plain"))
 }

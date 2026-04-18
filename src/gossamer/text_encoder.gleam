@@ -1,6 +1,9 @@
 import gossamer/encoding.{type Encoding}
-import gossamer/text_encoder/encode_into_result.{type EncodeIntoResult}
 import gossamer/uint8_array.{type Uint8Array}
+
+pub type EncodeIntoResult {
+  EncodeIntoResult(read: Int, written: Int)
+}
 
 @external(javascript, "./text_encoder.ffi.mjs", "encoding")
 pub fn encoding() -> Encoding

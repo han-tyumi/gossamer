@@ -1,8 +1,36 @@
-import gossamer/url_pattern_init.{type URLPatternInit}
-import gossamer/url_pattern_result.{type URLPatternResult}
+import gleam/dict.{type Dict}
 
 @external(javascript, "./url_pattern.type.ts", "URLPattern$")
 pub type URLPattern
+
+pub type URLPatternInit {
+  Protocol(String)
+  Username(String)
+  Password(String)
+  Hostname(String)
+  Port(String)
+  Pathname(String)
+  Search(String)
+  Hash(String)
+  BaseURL(String)
+}
+
+pub type URLPatternComponentResult {
+  URLPatternComponentResult(input: String, groups: Dict(String, String))
+}
+
+pub type URLPatternResult {
+  URLPatternResult(
+    protocol: URLPatternComponentResult,
+    username: URLPatternComponentResult,
+    password: URLPatternComponentResult,
+    hostname: URLPatternComponentResult,
+    port: URLPatternComponentResult,
+    pathname: URLPatternComponentResult,
+    search: URLPatternComponentResult,
+    hash: URLPatternComponentResult,
+  )
+}
 
 @external(javascript, "./url_pattern.ffi.mjs", "new_")
 pub fn new(init: List(URLPatternInit)) -> Result(URLPattern, String)

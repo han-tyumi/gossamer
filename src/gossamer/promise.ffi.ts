@@ -1,5 +1,4 @@
 import * as $promise from "$/gossamer/gossamer/promise.mjs";
-import * as $promiseSettledResult from "$/gossamer/gossamer/promise_settled_result.mjs";
 import { fromArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
@@ -40,8 +39,8 @@ export const all_settled: typeof $promise.all_settled = async (values) => {
   return fromArray(
     results.map((result) =>
       result.status === "fulfilled"
-        ? $promiseSettledResult.PromiseSettledResult$Fulfilled(result.value)
-        : $promiseSettledResult.PromiseSettledResult$Rejected(result.reason)
+        ? $promise.PromiseSettledResult$Fulfilled(result.value)
+        : $promise.PromiseSettledResult$Rejected(result.reason)
     ),
   );
 };

@@ -3,7 +3,6 @@ import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer
 import gossamer/promise
-import gossamer/promise_settled_result
 
 pub fn resolve_promise_test() {
   let promise = promise.resolve(42)
@@ -74,8 +73,7 @@ pub fn promise_all_settled_test() {
   let all_settled_promise = promise.all_settled([promise1, promise2])
   use results <- promise.then(all_settled_promise)
   case results {
-    [promise_settled_result.Fulfilled(1), promise_settled_result.Rejected(_)] ->
-      Nil
+    [promise.Fulfilled(1), promise.Rejected(_)] -> Nil
     _ -> should.fail()
   }
 }

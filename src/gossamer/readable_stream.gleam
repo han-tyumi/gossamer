@@ -1,26 +1,39 @@
+import gleam/dynamic.{type Dynamic}
+import gossamer/abort_signal.{type AbortSignal}
 import gossamer/async_iterator.{type AsyncIterator}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/byob_reader.{type ByobReader}
 import gossamer/readable_stream/default_controller.{type DefaultController}
 import gossamer/readable_stream/reader.{type Reader}
-import gossamer/readable_stream/stream_pipe_option.{type StreamPipeOption}
-import gossamer/readable_stream/underlying_source.{type UnderlyingSource}
 import gossamer/writable_stream.{type WritableStream}
 
 @external(javascript, "./readable_stream.type.ts", "ReadableStream$")
 pub type ReadableStream(a)
 
+pub type UnderlyingSource(a) {
+  Start(fn(DefaultController(a)) -> Nil)
+  Pull(fn(DefaultController(a)) -> Promise(Nil))
+  Cancel(fn(Dynamic) -> Promise(Nil))
+}
+
+pub type StreamPipeOption {
+  PreventAbort
+  PreventCancel
+  PreventClose
+  Signal(AbortSignal)
+}
+
 @external(javascript, "./readable_stream.ffi.mjs", "new_")
 pub fn new(source: List(UnderlyingSource(a))) -> ReadableStream(a)
 
 pub fn from_start(start: fn(DefaultController(a)) -> Nil) -> ReadableStream(a) {
-  new([underlying_source.Start(start)])
+  new([Start(start)])
 }
 
 pub fn from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
 ) -> ReadableStream(a) {
-  new([underlying_source.Pull(pull)])
+  new([Pull(pull)])
 }
 
 /// Creates a `ReadableStream` from an iterable or async iterable.

@@ -1,10 +1,23 @@
-import type * as $response from "$/gossamer/gossamer/response.mjs";
-import { toResponseInit } from "~/gossamer/response_init.ts";
+import * as $response from "$/gossamer/gossamer/response.mjs";
 import { fromResponseType } from "~/gossamer/response_type.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type Response$ = Response;
+
+function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
+  const result: ResponseInit = {};
+  for (const option of options) {
+    if ($response.ResponseInit$isHeaders(option)) {
+      result.headers = $response.ResponseInit$Headers$0(option);
+    } else if ($response.ResponseInit$isStatus(option)) {
+      result.status = $response.ResponseInit$Status$0(option);
+    } else if ($response.ResponseInit$isStatusText(option)) {
+      result.statusText = $response.ResponseInit$StatusText$0(option);
+    }
+  }
+  return result;
+}
 
 export const new_: typeof $response.new$ = (body) => {
   return toResult.fromThrows(() => new Response(body));

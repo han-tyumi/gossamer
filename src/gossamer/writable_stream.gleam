@@ -1,10 +1,17 @@
+import gleam/dynamic.{type Dynamic}
 import gossamer/promise.{type Promise}
 import gossamer/writable_stream/default_controller.{type DefaultController}
-import gossamer/writable_stream/underlying_sink.{type UnderlyingSink}
 import gossamer/writable_stream/writer.{type Writer}
 
 @external(javascript, "./writable_stream.type.ts", "WritableStream$")
 pub type WritableStream(a)
+
+pub type UnderlyingSink(a) {
+  Start(fn(DefaultController) -> Nil)
+  Write(fn(a, DefaultController) -> Promise(Nil))
+  Close(fn() -> Promise(Nil))
+  Abort(fn(Dynamic) -> Promise(Nil))
+}
 
 @external(javascript, "./writable_stream.ffi.mjs", "new_")
 pub fn new(sink: List(UnderlyingSink(a))) -> WritableStream(a)
@@ -12,7 +19,7 @@ pub fn new(sink: List(UnderlyingSink(a))) -> WritableStream(a)
 pub fn from_write(
   write: fn(a, DefaultController) -> Promise(Nil),
 ) -> WritableStream(a) {
-  new([underlying_sink.Write(write)])
+  new([Write(write)])
 }
 
 @external(javascript, "./writable_stream.ffi.mjs", "is_locked")

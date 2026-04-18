@@ -1,6 +1,10 @@
 @external(javascript, "./array_buffer.type.ts", "ArrayBuffer$")
 pub type ArrayBuffer
 
+pub type ArrayBufferView {
+  ArrayBufferView(buffer: ArrayBuffer, byte_length: Int, byte_offset: Int)
+}
+
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
 pub fn new(byte_length: Int) -> ArrayBuffer
 

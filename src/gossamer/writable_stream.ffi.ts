@@ -1,8 +1,25 @@
-import type * as $writableStream from "$/gossamer/gossamer/writable_stream.mjs";
-import { toUnderlyingSink } from "~/gossamer/writable_stream/underlying_sink.ts";
+import * as $writableStream from "$/gossamer/gossamer/writable_stream.mjs";
 import { toArray } from "~/utils/list.ts";
 
 export type WritableStream$<T> = WritableStream<T>;
+
+function toUnderlyingSink<T>(
+  options: $writableStream.UnderlyingSink$<T>[],
+): UnderlyingSink<T> {
+  const result: UnderlyingSink<T> = {};
+  for (const option of options) {
+    if ($writableStream.UnderlyingSink$isStart(option)) {
+      result.start = $writableStream.UnderlyingSink$Start$0(option);
+    } else if ($writableStream.UnderlyingSink$isWrite(option)) {
+      result.write = $writableStream.UnderlyingSink$Write$0(option);
+    } else if ($writableStream.UnderlyingSink$isClose(option)) {
+      result.close = $writableStream.UnderlyingSink$Close$0(option);
+    } else if ($writableStream.UnderlyingSink$isAbort(option)) {
+      result.abort = $writableStream.UnderlyingSink$Abort$0(option);
+    }
+  }
+  return result;
+}
 
 export const new_: typeof $writableStream.new$ = (sink) => {
   return new WritableStream(toUnderlyingSink(toArray(sink)));

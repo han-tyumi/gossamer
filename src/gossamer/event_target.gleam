@@ -1,8 +1,15 @@
+import gossamer/abort_signal.{type AbortSignal}
 import gossamer/event.{type Event}
-import gossamer/event_target/listener_option.{type ListenerOption}
 
 @external(javascript, "./event_target.type.ts", "EventTarget$")
 pub type EventTarget
+
+pub type ListenerOption {
+  Capture(Bool)
+  Once(Bool)
+  Passive(Bool)
+  Signal(AbortSignal)
+}
 
 /// Creates a new `EventTarget`.
 ///

@@ -5,12 +5,17 @@ import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/response_init.{type ResponseInit}
 import gossamer/response_type.{type ResponseType}
 import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./response.type.ts", "Response$")
 pub type Response
+
+pub type ResponseInit {
+  Headers(Headers)
+  Status(Int)
+  StatusText(String)
+}
 
 @external(javascript, "./response.ffi.mjs", "new_")
 pub fn new(body: String) -> Result(Response, String)

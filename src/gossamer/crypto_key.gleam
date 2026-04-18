@@ -1,9 +1,26 @@
-import gossamer/key_algorithm.{type KeyAlgorithm}
+import gossamer/aes_algorithm.{type AesAlgorithm}
+import gossamer/ec_algorithm.{type EcAlgorithm}
+import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/key_type.{type KeyType}
 import gossamer/key_usage.{type KeyUsage}
+import gossamer/named_curve.{type NamedCurve}
+import gossamer/rsa_algorithm.{type RsaAlgorithm}
+import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./crypto_key.type.ts", "CryptoKey$")
 pub type CryptoKey
+
+pub type KeyAlgorithm {
+  Aes(name: AesAlgorithm, length: Int)
+  Ec(name: EcAlgorithm, named_curve: NamedCurve)
+  Hmac(hash: HashAlgorithm, length: Int)
+  Rsa(
+    name: RsaAlgorithm,
+    modulus_length: Int,
+    public_exponent: Uint8Array,
+    hash: HashAlgorithm,
+  )
+}
 
 @external(javascript, "./crypto_key.ffi.mjs", "algorithm")
 pub fn algorithm(of key: CryptoKey) -> KeyAlgorithm

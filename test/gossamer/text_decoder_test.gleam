@@ -2,7 +2,6 @@ import gleeunit/should
 import gossamer/array_buffer
 import gossamer/encoding
 import gossamer/text_decoder
-import gossamer/text_decoder/text_decoder_option
 import gossamer/text_encoder
 import gossamer/uint8_array
 
@@ -22,14 +21,13 @@ pub fn new_with_invalid_test() {
 }
 
 pub fn new_with_fatal_test() {
-  let assert Ok(decoder) =
-    text_decoder.new_with("utf-8", [text_decoder_option.Fatal])
+  let assert Ok(decoder) = text_decoder.new_with("utf-8", [text_decoder.Fatal])
   text_decoder.is_fatal(decoder) |> should.be_true
 }
 
 pub fn new_with_ignore_bom_test() {
   let assert Ok(decoder) =
-    text_decoder.new_with("utf-8", [text_decoder_option.IgnoreBom])
+    text_decoder.new_with("utf-8", [text_decoder.IgnoreBom])
   text_decoder.is_ignore_bom(decoder) |> should.be_true
 }
 

@@ -1,10 +1,64 @@
-import type * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
-import { toURLPatternInit } from "~/gossamer/url_pattern_init.ts";
-import { toURLPatternResult } from "~/gossamer/url_pattern_result.ts";
-import { toArray } from "~/utils/list.ts";
+import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
+import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
+import { fromArray, toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type URLPattern$ = URLPattern;
+
+function toURLPatternInit(
+  options: $urlPattern.URLPatternInit$[],
+): URLPatternInit {
+  const result: URLPatternInit = {};
+  for (const option of options) {
+    if ($urlPattern.URLPatternInit$isProtocol(option)) {
+      result.protocol = $urlPattern.URLPatternInit$Protocol$0(option);
+    } else if ($urlPattern.URLPatternInit$isUsername(option)) {
+      result.username = $urlPattern.URLPatternInit$Username$0(option);
+    } else if ($urlPattern.URLPatternInit$isPassword(option)) {
+      result.password = $urlPattern.URLPatternInit$Password$0(option);
+    } else if ($urlPattern.URLPatternInit$isHostname(option)) {
+      result.hostname = $urlPattern.URLPatternInit$Hostname$0(option);
+    } else if ($urlPattern.URLPatternInit$isPort(option)) {
+      result.port = $urlPattern.URLPatternInit$Port$0(option);
+    } else if ($urlPattern.URLPatternInit$isPathname(option)) {
+      result.pathname = $urlPattern.URLPatternInit$Pathname$0(option);
+    } else if ($urlPattern.URLPatternInit$isSearch(option)) {
+      result.search = $urlPattern.URLPatternInit$Search$0(option);
+    } else if ($urlPattern.URLPatternInit$isHash(option)) {
+      result.hash = $urlPattern.URLPatternInit$Hash$0(option);
+    } else if ($urlPattern.URLPatternInit$isBaseURL(option)) {
+      result.baseURL = $urlPattern.URLPatternInit$BaseURL$0(option);
+    }
+  }
+  return result;
+}
+
+function toComponentResult(
+  component: URLPatternComponentResult,
+): $urlPattern.URLPatternComponentResult$ {
+  const entries = Object.entries(component.groups).filter(
+    (entry): entry is [string, string] => typeof entry[1] === "string",
+  );
+  return $urlPattern.URLPatternComponentResult$URLPatternComponentResult(
+    component.input,
+    $dict.from_list(fromArray(entries)),
+  );
+}
+
+function toURLPatternResult(
+  result: URLPatternResult,
+): $urlPattern.URLPatternResult$ {
+  return $urlPattern.URLPatternResult$URLPatternResult(
+    toComponentResult(result.protocol),
+    toComponentResult(result.username),
+    toComponentResult(result.password),
+    toComponentResult(result.hostname),
+    toComponentResult(result.port),
+    toComponentResult(result.pathname),
+    toComponentResult(result.search),
+    toComponentResult(result.hash),
+  );
+}
 
 export const new_: typeof $urlPattern.new$ = (init) => {
   return toResult.fromThrows(() =>

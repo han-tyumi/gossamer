@@ -1,9 +1,22 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/encoding.{type Encoding}
-import gossamer/text_decoder/text_decoder_option.{type TextDecoderOption}
 
 @external(javascript, "./text_decoder.type.ts", "TextDecoder$")
 pub type TextDecoder
+
+pub type TextDecoderOption {
+  /// When set, decoding invalid data returns an error instead of substituting
+  /// malformed data with a replacement character.
+  ///
+  Fatal
+
+  /// Indicates whether the [byte order mark](https://www.w3.org/International/questions/qa-byte-order-mark)
+  /// will be included in the output or skipped over. It defaults to false,
+  /// which means that the byte order mark will be skipped over when decoding
+  /// and will not be included in the decoded text.
+  ///
+  IgnoreBom
+}
 
 @external(javascript, "./text_decoder.ffi.mjs", "new_")
 pub fn new() -> TextDecoder

@@ -9,13 +9,10 @@ import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/readable_stream/read_result
 import gossamer/readable_stream/reader
-import gossamer/readable_stream/underlying_source
 import gossamer/transform_stream
 import gossamer/transform_stream/default_controller as transform_controller
-import gossamer/transform_stream/transformer
 import gossamer/writable_stream
 import gossamer/writable_stream/default_controller as writable_controller
-import gossamer/writable_stream/underlying_sink
 import gossamer/writable_stream/writer
 
 pub fn readable_stream_from_start_test() {
@@ -41,7 +38,7 @@ pub fn readable_stream_from_start_test() {
 pub fn readable_stream_new_with_options_test() {
   let stream =
     readable_stream.new([
-      underlying_source.Start(fn(controller) {
+      readable_stream.Start(fn(controller) {
         default_controller.enqueue(controller, 42)
         default_controller.close(controller)
       }),
@@ -70,7 +67,7 @@ pub fn writable_stream_from_write_test() {
 pub fn writable_stream_new_with_options_test() {
   let stream =
     writable_stream.new([
-      underlying_sink.Write(fn(chunk, _controller) {
+      writable_stream.Write(fn(chunk, _controller) {
         should.equal(chunk, "test")
         promise.resolve(Nil)
       }),
@@ -288,7 +285,7 @@ pub fn reader_cancel_test() {
 pub fn readable_controller_desired_size_test() {
   let stream =
     readable_stream.new([
-      underlying_source.Start(fn(controller) {
+      readable_stream.Start(fn(controller) {
         let assert Ok(size) = default_controller.desired_size(controller)
         should.be_true(size >= 0)
         default_controller.close(controller)
@@ -350,7 +347,7 @@ pub fn writer_abort_test() {
 pub fn writable_controller_signal_test() {
   let stream =
     writable_stream.new([
-      underlying_sink.Write(fn(_chunk, controller) {
+      writable_stream.Write(fn(_chunk, controller) {
         let _signal = writable_controller.signal(controller)
         promise.resolve(Nil)
       }),
@@ -366,7 +363,7 @@ pub fn writable_controller_signal_test() {
 pub fn writable_controller_error_test() {
   let stream =
     writable_stream.new([
-      underlying_sink.Write(fn(_chunk, controller) {
+      writable_stream.Write(fn(_chunk, controller) {
         writable_controller.error(controller, dynamic.string("fail"))
         promise.resolve(Nil)
       }),
@@ -383,7 +380,7 @@ pub fn writable_controller_error_test() {
 pub fn transform_controller_desired_size_test() {
   let transform =
     transform_stream.new([
-      transformer.Transform(fn(_chunk: String, controller) {
+      transform_stream.Transform(fn(_chunk: String, controller) {
         let _size = transform_controller.desired_size(controller)
         transform_controller.enqueue(controller, "out")
         promise.resolve(Nil)
@@ -415,7 +412,7 @@ pub fn transform_controller_desired_size_test() {
 pub fn transform_controller_error_test() {
   let transform =
     transform_stream.new([
-      transformer.Transform(fn(_chunk: String, controller) {
+      transform_stream.Transform(fn(_chunk: String, controller) {
         transform_controller.error(
           controller,
           dynamic.string("transform error"),
@@ -431,7 +428,7 @@ pub fn transform_controller_error_test() {
 pub fn transform_controller_terminate_test() {
   let transform =
     transform_stream.new([
-      transformer.Transform(fn(_chunk: String, controller) {
+      transform_stream.Transform(fn(_chunk: String, controller) {
         transform_controller.terminate(controller)
         promise.resolve(Nil)
       }),

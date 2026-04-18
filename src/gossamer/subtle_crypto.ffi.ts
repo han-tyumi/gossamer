@@ -1,5 +1,4 @@
-import type * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
-import { toCryptoKeyPair } from "~/gossamer/crypto_key_pair.ts";
+import * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ts";
 import { toKeyFormat } from "~/gossamer/key_format.ts";
 import { toKeyUsageArray } from "~/gossamer/key_usage.ts";
@@ -15,6 +14,15 @@ import { toSignAlgorithm } from "~/gossamer/subtle_crypto/sign_algorithm.ts";
 import { toResult } from "~/utils/result.ts";
 
 const subtle = globalThis.crypto.subtle;
+
+function toCryptoKeyPair(
+  pair: CryptoKeyPair,
+): $subtleCrypto.CryptoKeyPair$ {
+  return $subtleCrypto.CryptoKeyPair$CryptoKeyPair(
+    pair.publicKey,
+    pair.privateKey,
+  );
+}
 
 export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
   return toResult.fromPromise(

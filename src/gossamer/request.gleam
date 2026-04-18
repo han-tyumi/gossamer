@@ -11,13 +11,27 @@ import gossamer/referrer_policy.{type ReferrerPolicy}
 import gossamer/request_cache.{type RequestCache}
 import gossamer/request_credentials.{type RequestCredentials}
 import gossamer/request_destination.{type RequestDestination}
-import gossamer/request_init.{type RequestInit}
 import gossamer/request_mode.{type RequestMode}
 import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/uint8_array.{type Uint8Array}
 
 @external(javascript, "./request.type.ts", "Request$")
 pub type Request
+
+pub type RequestInit {
+  Method(HttpMethod)
+  Headers(Headers)
+  Body(String)
+  Cache(RequestCache)
+  Credentials(RequestCredentials)
+  Integrity(String)
+  Keepalive(Bool)
+  Mode(RequestMode)
+  Redirect(RequestRedirect)
+  Referrer(String)
+  ReferrerPolicy(ReferrerPolicy)
+  Signal(AbortSignal)
+}
 
 @external(javascript, "./request.ffi.mjs", "new_")
 pub fn new(input: String) -> Result(Request, String)

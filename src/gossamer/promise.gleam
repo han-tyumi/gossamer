@@ -1,9 +1,13 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
-import gossamer/promise_settled_result.{type PromiseSettledResult}
 
 @external(javascript, "./promise.type.ts", "Promise$")
 pub type Promise(a)
+
+pub type PromiseSettledResult(a) {
+  Fulfilled(value: a)
+  Rejected(reason: Dynamic)
+}
 
 pub type PromiseWithResolvers(a, r) {
   PromiseWithResolvers(

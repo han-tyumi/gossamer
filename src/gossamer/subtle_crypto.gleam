@@ -1,6 +1,5 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/crypto_key.{type CryptoKey}
-import gossamer/crypto_key_pair.{type CryptoKeyPair}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/json_web_key.{type JsonWebKey}
 import gossamer/key_format.{type KeyFormat}
@@ -15,6 +14,10 @@ import gossamer/subtle_crypto/key_pair_gen_algorithm.{type KeyPairGenAlgorithm}
 import gossamer/subtle_crypto/sign_algorithm.{type SignAlgorithm}
 import gossamer/subtle_crypto/wrap_algorithm.{type WrapAlgorithm}
 import gossamer/uint8_array.{type Uint8Array}
+
+pub type CryptoKeyPair {
+  CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
+}
 
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(

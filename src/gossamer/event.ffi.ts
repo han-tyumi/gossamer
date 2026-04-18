@@ -1,10 +1,23 @@
-import type * as $event from "$/gossamer/gossamer/event.mjs";
-import { toEventInit } from "~/gossamer/event_init.ts";
+import * as $event from "$/gossamer/gossamer/event.mjs";
 import { fromEventPhase } from "~/gossamer/event_phase.ts";
 import { fromArray, toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
 export type Event$ = Event;
+
+function toEventInit(options: $event.EventInit$[]): EventInit {
+  const result: EventInit = {};
+  for (const option of options) {
+    if ($event.EventInit$isBubbles(option)) {
+      result.bubbles = $event.EventInit$Bubbles$0(option);
+    } else if ($event.EventInit$isCancelable(option)) {
+      result.cancelable = $event.EventInit$Cancelable$0(option);
+    } else if ($event.EventInit$isComposed(option)) {
+      result.composed = $event.EventInit$Composed$0(option);
+    }
+  }
+  return result;
+}
 
 export const new_: typeof $event.new$ = (type) => {
   return new Event(type);
