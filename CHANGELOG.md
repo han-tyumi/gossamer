@@ -1,3 +1,42 @@
+## 7.0.0 (2026-04-18)
+
+### Breaking Changes
+
+- WebSocket close/close_with return Result(Nil, String) instead of Nil. The
+  previous send/send_dynamic functions are replaced by four typed variants —
+  send_string, send_bytes, send_blob, send_buffer — all returning Result(Nil,
+  String).
+- Multiple collection API changes for Gleam ergonomics: keys/values/entries
+  return Iterator instead of List on headers, url_search_params, uint8_array,
+  map, set, and form_data; map.delete and set.delete return the collection
+  instead of Bool, matching stdlib dict.delete; for_each callback arg order
+  flipped from JS (value, key) to Gleam (key, value) on map, headers, form_data,
+  and url_search_params; index_of, last_index_of, find_index, and
+  find_last_index return Result(Int, Nil) instead of -1 on array, uint8_array,
+  and string; FormData values/entries/for_each now include File values via a
+  FormDataValue type instead of silently filtering them out.
+- Import paths change for 19 types — the old satellite modules (close_event,
+  event_init, request_init, url_pattern_init, etc.) no longer exist. Import
+  their types from the anchor module instead.
+- ~62 functions now return Result or Promise(Result(T, String)) — consumers need
+  to destructure the Result with `let assert Ok(x) = ...` when confident or
+  handle the Error branch explicitly.
+- ResponseInit.Status, response.status, and response.redirect_with_status now
+  use HttpStatus instead of Int. readable_stream.from is removed — use
+  readable_stream.from_iterator or readable_stream.from_async_iterator.
+
+### Features
+
+- wrap WebSocket send/close in Result with typed send variants
+- make collections more Gleam-idiomatic
+- consolidate satellite types into anchor modules
+- wrap throwing Web APIs and rejectable Promises in Result
+- add HttpStatus enum and split readable_stream.from
+
+### Fixes
+
+- type Iterator$ and AsyncIterator$ as IterableIterator
+
 ## 6.8.0 (2026-04-14)
 
 ### Features
