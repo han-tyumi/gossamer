@@ -7,7 +7,7 @@ name = "release"
 
 [[workflows.steps]]
 type = "Command"
-command = "just clean build check test"
+command = "just clean build check test examples"
 
 [[workflows.steps]]
 type = "PrepareRelease"

@@ -3,7 +3,7 @@
 
 *.beam
 *.ez
-/build
+build/
 erl_crash.dump
 
 /src/**/*.ffi.mjs

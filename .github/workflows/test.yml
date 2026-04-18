@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: jdx/mise-action@v4
-      - run: just bootstrap test
+      - run: just bootstrap test examples
