@@ -2,6 +2,7 @@ import gossamer/array_buffer
 import gossamer/blob
 import gossamer/headers
 import gossamer/http_method
+import gossamer/http_status
 import gossamer/iterator
 import gossamer/promise
 import gossamer/request
@@ -88,17 +89,17 @@ pub fn request_text_test() {
 
 pub fn response_new_test() {
   let assert Ok(resp) = response.new("hello")
-  response.status(resp) |> should.equal(200)
+  response.status(resp) |> should.equal(http_status.Ok)
   response.is_ok(resp) |> should.be_true()
 }
 
 pub fn response_new_with_init_test() {
   let assert Ok(resp) =
     response.new_with_init("not found", [
-      response.Status(404),
+      response.Status(http_status.NotFound),
       response.StatusText("Not Found"),
     ])
-  response.status(resp) |> should.equal(404)
+  response.status(resp) |> should.equal(http_status.NotFound)
   response.status_text(resp) |> should.equal("Not Found")
   response.is_ok(resp) |> should.be_false()
 }
@@ -116,8 +117,11 @@ pub fn response_error_test() {
 
 pub fn response_redirect_test() {
   let assert Ok(resp) =
-    response.redirect_with_status("https://example.org", 301)
-  response.status(resp) |> should.equal(301)
+    response.redirect_with_status(
+      "https://example.org",
+      http_status.MovedPermanently,
+    )
+  response.status(resp) |> should.equal(http_status.MovedPermanently)
 }
 
 pub fn response_clone_test() {
@@ -128,9 +132,10 @@ pub fn response_clone_test() {
 }
 
 pub fn response_get_not_found_test() {
-  let assert Ok(resp) = response.new_with_init("", [response.Status(404)])
+  let assert Ok(resp) =
+    response.new_with_init("", [response.Status(http_status.NotFound)])
   response.is_ok(resp) |> should.be_false()
-  response.status(resp) |> should.equal(404)
+  response.status(resp) |> should.equal(http_status.NotFound)
 }
 
 pub fn request_blob_test() {
@@ -300,7 +305,7 @@ pub fn request_json_test() {
 
 pub fn response_from_json_test() {
   let assert Ok(resp) = response.from_json(42, [])
-  response.status(resp) |> should.equal(200)
+  response.status(resp) |> should.equal(http_status.Ok)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("42"))
   promise.resolve(Nil)

@@ -1,5 +1,6 @@
 import * as $response from "$/gossamer/gossamer/response.mjs";
 import { fromResponseType } from "~/gossamer/response_type.ts";
+import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ts";
 import { toArray } from "~/utils/list.ts";
 import { toResult } from "~/utils/result.ts";
 
@@ -11,7 +12,7 @@ function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
     if ($response.ResponseInit$isHeaders(option)) {
       result.headers = $response.ResponseInit$Headers$0(option);
     } else if ($response.ResponseInit$isStatus(option)) {
-      result.status = $response.ResponseInit$Status$0(option);
+      result.status = fromHttpStatus($response.ResponseInit$Status$0(option));
     } else if ($response.ResponseInit$isStatusText(option)) {
       result.statusText = $response.ResponseInit$StatusText$0(option);
     }
@@ -47,7 +48,9 @@ export const redirect_with_status: typeof $response.redirect_with_status = (
   url,
   status,
 ) => {
-  return toResult.fromThrows(() => Response.redirect(url, status));
+  return toResult.fromThrows(() =>
+    Response.redirect(url, fromHttpStatus(status))
+  );
 };
 
 export const headers_: typeof $response.headers = (response) => {
@@ -60,7 +63,9 @@ export const is_redirected: typeof $response.is_redirected = (response) => {
   return response.redirected;
 };
 
-export const status: typeof $response.status = (response) => response.status;
+export const status: typeof $response.status = (response) => {
+  return toHttpStatus(response.status);
+};
 
 export const status_text: typeof $response.status_text = (response) => {
   return response.statusText;

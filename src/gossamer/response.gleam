@@ -3,6 +3,7 @@ import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
+import gossamer/http_status.{type HttpStatus}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
@@ -13,7 +14,7 @@ pub type Response
 
 pub type ResponseInit {
   Headers(Headers)
-  Status(Int)
+  Status(HttpStatus)
   StatusText(String)
 }
 
@@ -41,7 +42,7 @@ pub fn redirect(url: String) -> Result(Response, String)
 @external(javascript, "./response.ffi.mjs", "redirect_with_status")
 pub fn redirect_with_status(
   url: String,
-  status status: Int,
+  status status: HttpStatus,
 ) -> Result(Response, String)
 
 @external(javascript, "./response.ffi.mjs", "headers_")
@@ -54,7 +55,7 @@ pub fn is_ok(response: Response) -> Bool
 pub fn is_redirected(response: Response) -> Bool
 
 @external(javascript, "./response.ffi.mjs", "status")
-pub fn status(of response: Response) -> Int
+pub fn status(of response: Response) -> HttpStatus
 
 @external(javascript, "./response.ffi.mjs", "status_text")
 pub fn status_text(of response: Response) -> String

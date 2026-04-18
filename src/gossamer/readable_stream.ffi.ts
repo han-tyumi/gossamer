@@ -43,8 +43,18 @@ export const new_: typeof $readableStream.new$ = (source) => {
   return new ReadableStream(toUnderlyingSource(toArray(source)));
 };
 
-export const from: typeof $readableStream.from = (iterable) => {
-  return toResult.fromThrows(() => ReadableStream.from(iterable));
+export const from_iterator: typeof $readableStream.from_iterator = (
+  iterator,
+) => {
+  // @ts-ignore: ReadableStream.from exists at runtime; TS lib may lack type.
+  return ReadableStream.from(iterator);
+};
+
+export const from_async_iterator: typeof $readableStream.from_async_iterator = (
+  iterator,
+) => {
+  // @ts-ignore: ReadableStream.from exists at runtime; TS lib may lack type.
+  return ReadableStream.from(iterator);
 };
 
 export const is_locked: typeof $readableStream.is_locked = (

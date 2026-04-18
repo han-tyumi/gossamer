@@ -1,6 +1,7 @@
 import gleam/dynamic.{type Dynamic}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/async_iterator.{type AsyncIterator}
+import gossamer/iterator.{type Iterator}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/byob_reader.{type ByobReader}
 import gossamer/readable_stream/default_controller.{type DefaultController}
@@ -36,13 +37,23 @@ pub fn from_pull(
   new([Pull(pull)])
 }
 
-/// Creates a `ReadableStream` from an iterable or async iterable.
+/// Creates a `ReadableStream` from an `Iterator`.
 ///
 /// Note: Not available on Bun.
 /// See https://github.com/oven-sh/bun/issues/3700
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "from")
-pub fn from(iterable: a) -> Result(ReadableStream(b), String)
+@external(javascript, "./readable_stream.ffi.mjs", "from_iterator")
+pub fn from_iterator(iterator: Iterator(a, r, n)) -> ReadableStream(a)
+
+/// Creates a `ReadableStream` from an `AsyncIterator`.
+///
+/// Note: Not available on Bun.
+/// See https://github.com/oven-sh/bun/issues/3700
+///
+@external(javascript, "./readable_stream.ffi.mjs", "from_async_iterator")
+pub fn from_async_iterator(
+  iterator: AsyncIterator(a, r, n),
+) -> ReadableStream(a)
 
 @external(javascript, "./readable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: ReadableStream(a)) -> Bool

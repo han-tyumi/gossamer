@@ -1,5 +1,6 @@
 import gleeunit/should
 import gossamer
+import gossamer/http_status
 import gossamer/promise
 import gossamer/request
 import gossamer/response
@@ -85,7 +86,7 @@ pub fn queue_microtask_test() {
 pub fn fetch_data_url_test() {
   use result <- promise.then(gossamer.fetch("data:text/plain,hello"))
   let assert Ok(resp) = result
-  response.status(resp) |> should.equal(200)
+  response.status(resp) |> should.equal(http_status.Ok)
   use text <- promise.then(response.text(resp))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)
