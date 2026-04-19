@@ -3,12 +3,20 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/text_decoder.{type TextDecoderOption}
 import gossamer/writable_stream.{type WritableStream}
 
+/// A stream-based decoder: writes bytes to the writable side, reads text
+/// from the readable side.
+///
+/// See [TextDecoderStream](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoderStream) on MDN.
+///
 @external(javascript, "./text_decoder_stream.type.ts", "TextDecoderStream$")
 pub type TextDecoderStream
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "new_")
 pub fn new() -> TextDecoderStream
 
+/// Creates a `TextDecoderStream` with the given encoding label and
+/// options. Returns an error if the label isn't a recognized encoding.
+///
 @external(javascript, "./text_decoder_stream.ffi.mjs", "new_with")
 pub fn new_with(
   label: String,

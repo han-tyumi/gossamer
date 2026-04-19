@@ -3,6 +3,11 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
 
+/// A stream-based encoder: writes text to the writable side, reads UTF-8
+/// bytes from the readable side.
+///
+/// See [TextEncoderStream](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoderStream) on MDN.
+///
 @external(javascript, "./text_encoder_stream.type.ts", "TextEncoderStream$")
 pub type TextEncoderStream
 

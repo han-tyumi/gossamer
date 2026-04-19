@@ -1,3 +1,8 @@
+/// A queuing strategy for streams that measures queued chunks by their
+/// byte length.
+///
+/// See [ByteLengthQueuingStrategy](https://developer.mozilla.org/en-US/docs/Web/API/ByteLengthQueuingStrategy) on MDN.
+///
 @external(javascript, "./byte_length_queuing_strategy.type.ts", "ByteLengthQueuingStrategy$")
 pub type ByteLengthQueuingStrategy
 

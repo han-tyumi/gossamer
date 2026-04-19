@@ -1,3 +1,8 @@
+/// A queuing strategy for streams that counts queued chunks regardless
+/// of their size.
+///
+/// See [CountQueuingStrategy](https://developer.mozilla.org/en-US/docs/Web/API/CountQueuingStrategy) on MDN.
+///
 @external(javascript, "./count_queuing_strategy.type.ts", "CountQueuingStrategy$")
 pub type CountQueuingStrategy
 

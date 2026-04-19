@@ -1,3 +1,8 @@
+/// An exception from the Web Platform, with a name, message, and error
+/// code. Used by many Web APIs to signal error conditions.
+///
+/// See [DOMException](https://developer.mozilla.org/en-US/docs/Web/API/DOMException) on MDN.
+///
 @external(javascript, "./dom_exception.type.ts", "DOMException$")
 pub type DOMException
 

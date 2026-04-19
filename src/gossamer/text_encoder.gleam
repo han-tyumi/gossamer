@@ -1,3 +1,7 @@
+//// Encodes text as UTF-8 bytes.
+////
+//// See [TextEncoder](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder) on MDN.
+
 import gossamer/encoding.{type Encoding}
 import gossamer/uint8_array.{type Uint8Array}
 

@@ -1,6 +1,11 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/encoding.{type Encoding}
 
+/// Decodes a stream of bytes into text using a specified character
+/// encoding.
+///
+/// See [TextDecoder](https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder) on MDN.
+///
 @external(javascript, "./text_decoder.type.ts", "TextDecoder$")
 pub type TextDecoder
 
@@ -21,6 +26,9 @@ pub type TextDecoderOption {
 @external(javascript, "./text_decoder.ffi.mjs", "new_")
 pub fn new() -> TextDecoder
 
+/// Creates a `TextDecoder` with the given encoding label and options.
+/// Returns an error if the label isn't a recognized encoding.
+///
 @external(javascript, "./text_decoder.ffi.mjs", "new_with")
 pub fn new_with(
   label: String,
