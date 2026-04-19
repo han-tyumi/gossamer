@@ -1,5 +1,9 @@
 import gleam/dynamic.{type Dynamic}
 
+/// An event received from a message channel, port, worker, or WebSocket.
+///
+/// See [MessageEvent](https://developer.mozilla.org/en-US/docs/Web/API/MessageEvent) on MDN.
+///
 @external(javascript, "./message_event.type.ts", "MessageEvent$")
 pub type MessageEvent
 

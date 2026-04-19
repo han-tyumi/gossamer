@@ -1,5 +1,10 @@
 import gossamer/message_port.{type MessagePort}
 
+/// A bidirectional communication channel with two `MessagePort`s.
+/// Messages sent on one port are received on the other.
+///
+/// See [MessageChannel](https://developer.mozilla.org/en-US/docs/Web/API/MessageChannel) on MDN.
+///
 @external(javascript, "./message_channel.type.ts", "MessageChannel$")
 pub type MessageChannel
 

@@ -1,6 +1,10 @@
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/event.{type Event}
 
+/// An object that can receive events and have listeners for them.
+///
+/// See [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) on MDN.
+///
 @external(javascript, "./event_target.type.ts", "EventTarget$")
 pub type EventTarget
 

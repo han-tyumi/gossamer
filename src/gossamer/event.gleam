@@ -1,6 +1,10 @@
 import gleam/dynamic.{type Dynamic}
 import gossamer/event_phase.{type EventPhase}
 
+/// An event dispatched on an `EventTarget`.
+///
+/// See [Event](https://developer.mozilla.org/en-US/docs/Web/API/Event) on MDN.
+///
 @external(javascript, "./event.type.ts", "Event$")
 pub type Event
 

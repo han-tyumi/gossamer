@@ -1,6 +1,11 @@
 import gleam/dynamic.{type Dynamic}
 import gossamer/event.{type Event}
 
+/// An `Event` with a custom `detail` payload that can be dispatched from
+/// application code.
+///
+/// See [CustomEvent](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent) on MDN.
+///
 @external(javascript, "./custom_event.type.ts", "CustomEvent$")
 pub type CustomEvent
 
