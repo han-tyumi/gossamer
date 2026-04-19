@@ -3,7 +3,9 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
 
-/// An API for compressing a stream of data.
+/// A transform stream that compresses its input.
+///
+/// See [CompressionStream](https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream) on MDN.
 ///
 /// ## Examples
 ///

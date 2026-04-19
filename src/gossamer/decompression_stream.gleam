@@ -3,7 +3,9 @@ import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
 
-/// An API for decompressing a stream of data.
+/// A transform stream that decompresses its input.
+///
+/// See [DecompressionStream](https://developer.mozilla.org/en-US/docs/Web/API/DecompressionStream) on MDN.
 ///
 /// ## Examples
 ///
