@@ -15,6 +15,10 @@ import gossamer/request_mode.{type RequestMode}
 import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/uint8_array.{type Uint8Array}
 
+/// An HTTP request.
+///
+/// See [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) on MDN.
+///
 @external(javascript, "./request.type.ts", "Request$")
 pub type Request
 
@@ -33,9 +37,16 @@ pub type RequestInit {
   Signal(AbortSignal)
 }
 
+/// Creates a new `Request` from a URL string. Returns an error if `input`
+/// is not a valid URL.
+///
 @external(javascript, "./request.ffi.mjs", "new_")
 pub fn new(input: String) -> Result(Request, String)
 
+/// Creates a new `Request` with init options. Returns an error if `input`
+/// is not a valid URL or `init` contains an invalid method, header, or
+/// mode.
+///
 @external(javascript, "./request.ffi.mjs", "new_with_init")
 pub fn new_with_init(
   input: String,
@@ -121,29 +132,54 @@ pub fn is_keepalive(request: Request) -> Bool
 @external(javascript, "./request.ffi.mjs", "integrity")
 pub fn integrity(of request: Request) -> String
 
+/// Creates a clone of the request. Returns an error if the body has
+/// already been consumed or is locked to a reader.
+///
 @external(javascript, "./request.ffi.mjs", "clone")
 pub fn clone(request: Request) -> Result(Request, String)
 
+/// The request body as a `ReadableStream`. Returns an error if the request
+/// has no body.
+///
 @external(javascript, "./request.ffi.mjs", "body")
 pub fn body(of request: Request) -> Result(ReadableStream(Uint8Array), Nil)
 
 @external(javascript, "./request.ffi.mjs", "is_body_used")
 pub fn is_body_used(request: Request) -> Bool
 
+/// Reads the request body as a `Blob`. Returns an error if the body has
+/// already been consumed or cannot be read.
+///
 @external(javascript, "./request.ffi.mjs", "blob")
 pub fn blob(of request: Request) -> Promise(Result(Blob, String))
 
+/// Reads the request body as an `ArrayBuffer`. Returns an error if the
+/// body has already been consumed or cannot be read.
+///
 @external(javascript, "./request.ffi.mjs", "array_buffer")
 pub fn array_buffer(of request: Request) -> Promise(Result(ArrayBuffer, String))
 
+/// Reads the request body as a `Uint8Array`. Returns an error if the body
+/// has already been consumed or cannot be read.
+///
 @external(javascript, "./request.ffi.mjs", "bytes")
 pub fn bytes(of request: Request) -> Promise(Result(Uint8Array, String))
 
+/// Reads the request body and parses it as JSON. Returns an error if the
+/// body has already been consumed or the content is not valid JSON.
+///
 @external(javascript, "./request.ffi.mjs", "json")
 pub fn json(of request: Request) -> Promise(Result(Dynamic, String))
 
+/// Reads the request body as `FormData`. Returns an error if the body has
+/// already been consumed or the `Content-Type` is not `multipart/form-data`
+/// or `application/x-www-form-urlencoded`.
+///
 @external(javascript, "./request.ffi.mjs", "form_data")
 pub fn form_data(of request: Request) -> Promise(Result(FormData, String))
 
+/// Reads the request body as text. Returns an error if the body has
+/// already been consumed or cannot be read.
+///
 @external(javascript, "./request.ffi.mjs", "text")
 pub fn text(of request: Request) -> Promise(Result(String, String))

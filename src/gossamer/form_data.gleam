@@ -10,6 +10,12 @@ pub type FormDataValue {
   FileValue(File)
 }
 
+/// A set of key/value pairs representing form fields and their values,
+/// useful for building request bodies for multipart form submissions.
+/// Mutable — methods modify the set in place and return it for chaining.
+///
+/// See [FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) on MDN.
+///
 @external(javascript, "./form_data.type.ts", "FormData$")
 pub type FormData
 

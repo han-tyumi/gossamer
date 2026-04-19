@@ -1,11 +1,20 @@
 import gossamer/iterator.{type Iterator}
 
+/// An HTTP header set used with `fetch`, `Request`, and `Response`. Headers
+/// are mutable — methods like `append`, `delete`, and `set` modify the set
+/// in place.
+///
+/// See [Headers](https://developer.mozilla.org/en-US/docs/Web/API/Headers) on MDN.
+///
 @external(javascript, "./headers.type.ts", "Headers$")
 pub type Headers
 
 @external(javascript, "./headers.ffi.mjs", "new_")
 pub fn new() -> Headers
 
+/// Creates a `Headers` object from a list of name/value pairs. Returns an
+/// error if any name or value is not a valid ByteString.
+///
 @external(javascript, "./headers.ffi.mjs", "from_pairs")
 pub fn from_pairs(pairs: List(#(String, String))) -> Result(Headers, String)
 
@@ -29,9 +38,16 @@ pub fn delete(
   name name: String,
 ) -> Result(Headers, String)
 
+/// Returns the value for `name`, combining multiple values with `, `.
+/// Returns an error if `name` is not a valid ByteString or no such header
+/// exists.
+///
 @external(javascript, "./headers.ffi.mjs", "get")
 pub fn get(from headers: Headers, name name: String) -> Result(String, String)
 
+/// Checks whether a header with `name` exists. Returns an error if `name`
+/// is not a valid ByteString.
+///
 @external(javascript, "./headers.ffi.mjs", "has")
 pub fn has(in headers: Headers, name name: String) -> Result(Bool, String)
 
@@ -46,6 +62,9 @@ pub fn set(
   value value: String,
 ) -> Result(Headers, String)
 
+/// Returns the values of all `Set-Cookie` headers separately (rather than
+/// combining them with `, ` like `get` would).
+///
 @external(javascript, "./headers.ffi.mjs", "get_set_cookie")
 pub fn get_set_cookie(from headers: Headers) -> List(String)
 
