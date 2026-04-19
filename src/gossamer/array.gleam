@@ -1,6 +1,13 @@
 import gleam/order.{type Order}
 import gossamer/iterator.{type Iterator}
 
+/// A JS `Array` — an indexed, ordered, mutable list of values.
+///
+/// For most Gleam use cases, prefer `List`. This binding exists for JS
+/// interop where a JS `Array` is specifically required.
+///
+/// See [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) on MDN.
+///
 @external(javascript, "./array.type.ts", "Array$")
 pub type Array(a)
 

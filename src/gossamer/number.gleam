@@ -1,3 +1,6 @@
+//// Numeric constants, type checks, parsing, and formatting that mirror
+//// JavaScript's `Number` object.
+
 /// The maximum safe integer in JavaScript (2^53 - 1).
 ///
 pub const max_safe_integer = 9_007_199_254_740_991

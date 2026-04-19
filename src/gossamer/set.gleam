@@ -1,5 +1,14 @@
 import gossamer/iterator.{type Iterator}
 
+/// A JS `Set` holding unique values of any type, preserving insertion
+/// order. Mutable — methods modify the set in place and return it for
+/// chaining.
+///
+/// For most Gleam use cases, prefer `gleam/set.Set`. This binding exists
+/// for JS interop where a JS `Set` is specifically required.
+///
+/// See [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) on MDN.
+///
 @external(javascript, "./set.type.ts", "Set$")
 pub type Set(value)
 

@@ -1,3 +1,8 @@
+/// A unique, immutable primitive value. Two symbols are never equal, even
+/// if created with the same description.
+///
+/// See [Symbol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol) on MDN.
+///
 @external(javascript, "./symbol.type.ts", "Symbol$")
 pub type Symbol
 

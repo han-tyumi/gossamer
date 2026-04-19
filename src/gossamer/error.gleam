@@ -1,5 +1,10 @@
 import gleam/dynamic.{type Dynamic}
 
+/// A standard JS `Error` object with a name, message, and optional stack
+/// trace. Useful when constructing errors to pass to JS APIs.
+///
+/// See [Error](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error) on MDN.
+///
 @external(javascript, "./error.type.ts", "Error$")
 pub type Error
 

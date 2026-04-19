@@ -1,3 +1,6 @@
+//// Mathematical constants and functions mirroring JavaScript's `Math`
+//// object — trig, logs, exponentials, random, and more.
+
 /// The ratio of a circle's circumference to its diameter.
 ///
 pub const pi = 3.141592653589793

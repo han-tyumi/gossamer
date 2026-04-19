@@ -1,5 +1,14 @@
 import gossamer/iterator.{type Iterator}
 
+/// A JS `Map` holding key-value pairs. Supports any key type (unlike
+/// plain objects) and preserves insertion order. Mutable — methods modify
+/// the map in place and return it for chaining.
+///
+/// For most Gleam use cases, prefer `gleam/dict.Dict`. This binding
+/// exists for JS interop where a JS `Map` is specifically required.
+///
+/// See [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) on MDN.
+///
 @external(javascript, "./map.type.ts", "Map$")
 pub type Map(key, value)
 

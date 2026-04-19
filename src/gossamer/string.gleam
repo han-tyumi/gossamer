@@ -1,3 +1,8 @@
+//// Extensions to `gleam/string` for JS-specific operations — Unicode
+//// normalization, locale-aware comparison and case conversion, code
+//// point manipulation, and the JS string methods not covered by Gleam's
+//// standard library.
+
 import gleam/order.{type Order}
 import gossamer/string/normalization_form.{type NormalizationForm}
 

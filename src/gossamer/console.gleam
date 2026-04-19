@@ -1,3 +1,8 @@
+//// Access to the runtime's debugging console — log, warn, error, groups,
+//// counters, timers, and assertions.
+////
+//// See [console](https://developer.mozilla.org/en-US/docs/Web/API/console) on MDN.
+
 @external(javascript, "./console.ffi.mjs", "assert_")
 pub fn assert_(that condition: Bool, log data: a) -> Nil
 
