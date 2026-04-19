@@ -1,5 +1,10 @@
 import gleam/dynamic.{type Dynamic}
 
+/// A signal that communicates when an operation should be aborted.
+/// Used with `fetch`, streams, and other cancellable operations.
+///
+/// See [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) on MDN.
+///
 @external(javascript, "./abort_signal.type.ts", "AbortSignal$")
 pub type AbortSignal
 
@@ -15,9 +20,15 @@ pub fn timeout(milliseconds: Int) -> AbortSignal
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool
 
+/// The reason the signal was aborted with, or `Error(Nil)` if the signal
+/// is not aborted.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
 pub fn reason(for signal: AbortSignal) -> Result(Dynamic, Nil)
 
+/// Returns `Error` with the abort reason if the signal is aborted, or
+/// `Ok(Nil)` otherwise.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "throw_if_aborted")
 pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, String)
 

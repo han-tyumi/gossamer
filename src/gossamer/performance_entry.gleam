@@ -1,5 +1,9 @@
 import gleam/dynamic.{type Dynamic}
 
+/// A single performance metric produced by the Performance API.
+///
+/// See [PerformanceEntry](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEntry) on MDN.
+///
 @external(javascript, "./performance_entry.type.ts", "PerformanceEntry$")
 pub type PerformanceEntry
 

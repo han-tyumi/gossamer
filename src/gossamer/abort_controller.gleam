@@ -1,5 +1,10 @@
 import gossamer/abort_signal.{type AbortSignal}
 
+/// Signals the cancellation of an operation via its associated
+/// `AbortSignal`.
+///
+/// See [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) on MDN.
+///
 @external(javascript, "./abort_controller.type.ts", "AbortController$")
 pub type AbortController
 

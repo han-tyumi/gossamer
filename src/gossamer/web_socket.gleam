@@ -13,8 +13,9 @@ pub type CloseEvent {
   CloseEvent(code: Int, reason: String, was_clean: Bool)
 }
 
-/// Provides the API for creating and managing a WebSocket connection to a
-/// server, as well as for sending and receiving data on the connection.
+/// A bidirectional, message-oriented network connection to a server.
+///
+/// See [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSocket) on MDN.
 ///
 @external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket

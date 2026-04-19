@@ -1,3 +1,7 @@
+/// A point in time, represented as milliseconds since the Unix epoch.
+///
+/// See [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) on MDN.
+///
 @external(javascript, "./date.type.ts", "Date$")
 pub type Date
 

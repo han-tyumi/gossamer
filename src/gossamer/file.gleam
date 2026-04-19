@@ -4,6 +4,11 @@ import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 
+/// A `Blob` with a filename and last-modified timestamp. Commonly obtained
+/// from file inputs or drag-and-drop.
+///
+/// See [File](https://developer.mozilla.org/en-US/docs/Web/API/File) on MDN.
+///
 @external(javascript, "./file.type.ts", "File$")
 pub type File
 
@@ -47,9 +52,15 @@ pub fn size(of file: File) -> Int
 @external(javascript, "./file.ffi.mjs", "type_")
 pub fn type_(of file: File) -> String
 
+/// Reads the file's contents as an `ArrayBuffer`. Rejects if the file
+/// cannot be read.
+///
 @external(javascript, "./file.ffi.mjs", "array_buffer")
 pub fn array_buffer(of file: File) -> Promise(Result(ArrayBuffer, String))
 
+/// Reads the file's contents as a `Uint8Array`. Rejects if the file
+/// cannot be read.
+///
 @external(javascript, "./file.ffi.mjs", "bytes")
 pub fn bytes(of file: File) -> Promise(Result(Uint8Array, String))
 
@@ -67,5 +78,8 @@ pub fn slice_with_type(
 @external(javascript, "./file.ffi.mjs", "stream")
 pub fn stream(of file: File) -> ReadableStream(Uint8Array)
 
+/// Reads the file's contents as a UTF-8 string. Rejects if the file
+/// cannot be read.
+///
 @external(javascript, "./file.ffi.mjs", "text")
 pub fn text(of file: File) -> Promise(Result(String, String))

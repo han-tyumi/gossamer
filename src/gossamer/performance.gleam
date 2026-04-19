@@ -1,15 +1,28 @@
 import gleam/dynamic.{type Dynamic}
 import gossamer/performance_entry.{type PerformanceEntry}
 
+/// Returns a high-resolution timestamp (in milliseconds) relative to the
+/// time origin.
+///
 @external(javascript, "./performance.ffi.mjs", "now")
 pub fn now() -> Float
 
+/// Returns the time origin — the reference point all performance
+/// timestamps are measured from.
+///
 @external(javascript, "./performance.ffi.mjs", "time_origin")
 pub fn time_origin() -> Float
 
+/// Records a performance mark with `name` at the current time. Returns an
+/// error if `name` collides with a built-in timing mark.
+///
 @external(javascript, "./performance.ffi.mjs", "mark")
 pub fn mark(name: String) -> Result(PerformanceEntry, String)
 
+/// Records a measurement between two previously-recorded marks. Returns
+/// an error if either mark does not exist or `name` collides with a
+/// built-in timing mark.
+///
 @external(javascript, "./performance.ffi.mjs", "measure")
 pub fn measure(
   name: String,

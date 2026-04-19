@@ -1,5 +1,10 @@
 import gossamer/iterator.{type Iterator}
 
+/// A mutable set of URL query-string parameters. Methods modify the set
+/// in place and return it for chaining.
+///
+/// See [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) on MDN.
+///
 @external(javascript, "./url_search_params.type.ts", "URLSearchParams$")
 pub type URLSearchParams
 

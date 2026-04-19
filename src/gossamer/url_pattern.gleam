@@ -1,5 +1,10 @@
 import gleam/dict.{type Dict}
 
+/// A pattern for matching URLs, with support for wildcards and named
+/// groups. Useful for routing and URL matching.
+///
+/// See [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern) on MDN.
+///
 @external(javascript, "./url_pattern.type.ts", "URLPattern$")
 pub type URLPattern
 
@@ -32,12 +37,22 @@ pub type URLPatternResult {
   )
 }
 
+/// Creates a `URLPattern` from per-component patterns. Returns an error
+/// if any pattern is malformed.
+///
 @external(javascript, "./url_pattern.ffi.mjs", "new_")
 pub fn new(init: List(URLPatternInit)) -> Result(URLPattern, String)
 
+/// Creates a `URLPattern` from a single pattern string. Returns an error
+/// if the pattern is malformed.
+///
 @external(javascript, "./url_pattern.ffi.mjs", "new_from_string")
 pub fn new_from_string(pattern: String) -> Result(URLPattern, String)
 
+/// Creates a `URLPattern` from a pattern string resolved against a base
+/// URL. Returns an error if the pattern is malformed or the base URL is
+/// invalid.
+///
 @external(javascript, "./url_pattern.ffi.mjs", "new_from_string_with_base")
 pub fn new_from_string_with_base(
   pattern: String,
