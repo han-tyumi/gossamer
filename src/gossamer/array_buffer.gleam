@@ -1,3 +1,7 @@
+/// A generic raw binary data buffer.
+///
+/// See [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) on MDN.
+///
 @external(javascript, "./array_buffer.type.ts", "ArrayBuffer$")
 pub type ArrayBuffer
 
@@ -5,14 +9,19 @@ pub type ArrayBufferView {
   ArrayBufferView(buffer: ArrayBuffer, byte_length: Int, byte_offset: Int)
 }
 
+/// Creates a fixed-size `ArrayBuffer` of `byte_length` bytes. Returns an
+/// error if `byte_length` is negative or exceeds the maximum allocatable
+/// size.
+///
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
 pub fn new(byte_length: Int) -> Result(ArrayBuffer, String)
 
 @external(javascript, "./array_buffer.ffi.mjs", "byte_length")
 pub fn byte_length(of array_buffer: ArrayBuffer) -> Int
 
-/// Creates a resizable `ArrayBuffer` with the given initial byte length and
-/// maximum byte length.
+/// Creates a resizable `ArrayBuffer` with the given initial byte length
+/// and maximum byte length. Returns an error if either is negative or
+/// `max` exceeds the maximum allocatable size.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "new_resizable")
 pub fn new_resizable(
@@ -32,6 +41,9 @@ pub fn is_view(value: a) -> Bool
 @external(javascript, "./array_buffer.ffi.mjs", "is_detached")
 pub fn is_detached(array_buffer: ArrayBuffer) -> Bool
 
+/// Transfers the buffer's contents to a new `ArrayBuffer`, detaching the
+/// original. Returns an error if the buffer is already detached.
+///
 @external(javascript, "./array_buffer.ffi.mjs", "transfer")
 pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, String)
 

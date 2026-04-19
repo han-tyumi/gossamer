@@ -2,12 +2,19 @@ import gleam/order.{type Order}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/iterator.{type Iterator}
 
+/// A typed array of 8-bit unsigned integers (bytes).
+///
+/// See [Uint8Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) on MDN.
+///
 @external(javascript, "./uint8_array.type.ts", "Uint8Array$")
 pub type Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "new_")
 pub fn new() -> Uint8Array
 
+/// Creates a zero-filled `Uint8Array` of the given length. Returns an error
+/// if `length` is negative or exceeds the maximum allocatable size.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "from_length")
 pub fn from_length(length: Int) -> Result(Uint8Array, String)
 
@@ -20,9 +27,15 @@ pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> Int) -> Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
 
+/// Decodes a base64 string into a `Uint8Array`. Returns an error if
+/// `string` is not valid base64.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "from_base64")
 pub fn from_base64(string: String) -> Result(Uint8Array, String)
 
+/// Decodes a hex string into a `Uint8Array`. Returns an error if `string`
+/// is not valid hex (non-hex characters or odd length).
+///
 @external(javascript, "./uint8_array.ffi.mjs", "from_hex")
 pub fn from_hex(string: String) -> Result(Uint8Array, String)
 
@@ -38,6 +51,9 @@ pub fn byte_offset(of array: Uint8Array) -> Int
 @external(javascript, "./uint8_array.ffi.mjs", "length")
 pub fn length(of array: Uint8Array) -> Int
 
+/// Returns the byte at `index`, or `Error(Nil)` if the index is out of
+/// bounds. Negative indices count from the end.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "at")
 pub fn at(array: Uint8Array, index index: Int) -> Result(Int, Nil)
 
@@ -51,9 +67,13 @@ pub fn includes_from(
   from index: Int,
 ) -> Bool
 
+/// Returns the first index of `value`, or `Error(Nil)` if not present.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "index_of")
 pub fn index_of(in array: Uint8Array, value value: Int) -> Result(Int, Nil)
 
+/// Like `index_of`, but starts searching from `index`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "index_of_from")
 pub fn index_of_from(
   in array: Uint8Array,
@@ -61,9 +81,13 @@ pub fn index_of_from(
   from index: Int,
 ) -> Result(Int, Nil)
 
+/// Returns the last index of `value`, or `Error(Nil)` if not present.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "last_index_of")
 pub fn last_index_of(in array: Uint8Array, value value: Int) -> Result(Int, Nil)
 
+/// Like `last_index_of`, but searches backwards from `index`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "last_index_of_from")
 pub fn last_index_of_from(
   in array: Uint8Array,
@@ -87,12 +111,18 @@ pub fn slice_range(
 @external(javascript, "./uint8_array.ffi.mjs", "subarray")
 pub fn subarray(array: Uint8Array, from begin: Int, to end: Int) -> Uint8Array
 
+/// Copies `values` into `array` starting at index 0. Returns an error if
+/// `values` would extend past the end of `array`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "set")
 pub fn set(
   in array: Uint8Array,
   values values: Uint8Array,
 ) -> Result(Nil, String)
 
+/// Copies `values` into `array` starting at `offset`. Returns an error if
+/// `offset` is negative or the copy would extend past the end of `array`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Uint8Array,
@@ -160,48 +190,71 @@ pub fn index_some(
   satisfying predicate: fn(Int, Int) -> Bool,
 ) -> Bool
 
+/// Returns the first byte matching `predicate`, or `Error(Nil)` if none
+/// match.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "find")
 pub fn find(
   in array: Uint8Array,
   one_that predicate: fn(Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Like `find`, but passes the index alongside each byte to `predicate`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "index_find")
 pub fn index_find(
   in array: Uint8Array,
   one_that predicate: fn(Int, Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Returns the index of the first byte matching `predicate`, or
+/// `Error(Nil)` if none match.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "find_index")
 pub fn find_index(
   in array: Uint8Array,
   one_that predicate: fn(Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Like `find_index`, but passes the index alongside each byte to
+/// `predicate`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "index_find_index")
 pub fn index_find_index(
   in array: Uint8Array,
   one_that predicate: fn(Int, Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Returns the last byte matching `predicate`, or `Error(Nil)` if none
+/// match.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "find_last")
 pub fn find_last(
   in array: Uint8Array,
   one_that predicate: fn(Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Like `find_last`, but passes the index alongside each byte to
+/// `predicate`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "index_find_last")
 pub fn index_find_last(
   in array: Uint8Array,
   one_that predicate: fn(Int, Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Returns the index of the last byte matching `predicate`, or
+/// `Error(Nil)` if none match.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "find_last_index")
 pub fn find_last_index(
   in array: Uint8Array,
   one_that predicate: fn(Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Like `find_last_index`, but passes the index alongside each byte to
+/// `predicate`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "index_find_last_index")
 pub fn index_find_last_index(
   in array: Uint8Array,
@@ -296,12 +349,20 @@ pub fn to_base64(array: Uint8Array) -> String
 @external(javascript, "./uint8_array.ffi.mjs", "to_hex")
 pub fn to_hex(array: Uint8Array) -> String
 
+/// Decodes `string` as base64 into `array` in place. Returns the number
+/// of characters read and bytes written. Returns an error if `string` is
+/// not valid base64.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_base64")
 pub fn set_from_base64(
   array: Uint8Array,
   string: String,
 ) -> Result(#(Int, Int), String)
 
+/// Decodes `string` as hex into `array` in place. Returns the number of
+/// characters read and bytes written. Returns an error if `string` is not
+/// valid hex.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_hex")
 pub fn set_from_hex(
   array: Uint8Array,
