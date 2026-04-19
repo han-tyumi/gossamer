@@ -1,9 +1,18 @@
 import gleam/option.{type Option}
 import gossamer/iterator_result.{type IteratorResult}
 
+/// A pull-based iterator that yields values one at a time. `a` is the
+/// yielded value type, `return` is the final return value, `next` is the
+/// type of values passed in via `next_with`.
+///
+/// See [Iterator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator) on MDN.
+///
 @external(javascript, "./iterator.type.ts", "Iterator$")
 pub type Iterator(a, return, next)
 
+/// Creates an iterator from a `next` callback — called each time a value
+/// is pulled, producing the next value or signaling done.
+///
 @external(javascript, "./iterator.ffi.mjs", "new_")
 pub fn new(
   next: fn(Option(next)) -> IteratorResult(a, return),
@@ -19,38 +28,56 @@ pub fn from_list(list: List(a)) -> Iterator(a, Nil, Nil)
 @external(javascript, "./iterator.ffi.mjs", "to_list")
 pub fn to_list(iterator: Iterator(a, return, next)) -> List(a)
 
+/// Adds a `return` handler to the iterator, called when the consumer
+/// ends iteration early. Used to release resources.
+///
 @external(javascript, "./iterator.ffi.mjs", "with_return")
 pub fn with_return(
   iterator: Iterator(a, return, next),
   return: fn(Option(return)) -> IteratorResult(a, return),
 ) -> Iterator(a, return, next)
 
+/// Adds a `throw` handler to the iterator, called when the consumer
+/// signals an error.
+///
 @external(javascript, "./iterator.ffi.mjs", "with_throw")
 pub fn with_throw(
   iterator: Iterator(a, return, next),
   throw: fn(e) -> IteratorResult(a, return),
 ) -> Iterator(a, return, next)
 
+/// Advances the iterator and returns the next result.
+///
 @external(javascript, "./iterator.ffi.mjs", "next")
 pub fn next(iterator: Iterator(a, return, next)) -> IteratorResult(a, return)
 
+/// Advances the iterator, passing `value` to the iterator's internal logic.
+///
 @external(javascript, "./iterator.ffi.mjs", "next_with")
 pub fn next_with(
   iterator: Iterator(a, return, next),
   value: next,
 ) -> IteratorResult(a, return)
 
+/// Ends iteration early by invoking the iterator's `return` handler.
+/// Returns `Error(Nil)` if the iterator doesn't support `return`.
+///
 @external(javascript, "./iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: Iterator(a, return, next),
 ) -> Result(IteratorResult(a, return), Nil)
 
+/// Like `return`, but passes `value` to the iterator's `return` handler.
+///
 @external(javascript, "./iterator.ffi.mjs", "return_with")
 pub fn return_with(
   iterator: Iterator(a, return, next),
   value: return,
 ) -> Result(IteratorResult(a, return), Nil)
 
+/// Signals an error to the iterator by invoking its `throw` handler.
+/// Returns `Error(Nil)` if the iterator doesn't support `throw`.
+///
 @external(javascript, "./iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: Iterator(a, return, next),
