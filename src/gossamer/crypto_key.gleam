@@ -7,6 +7,11 @@ import gossamer/named_curve.{type NamedCurve}
 import gossamer/rsa_algorithm.{type RsaAlgorithm}
 import gossamer/uint8_array.{type Uint8Array}
 
+/// A cryptographic key used with `subtle_crypto` operations (encryption,
+/// signing, key derivation, etc.).
+///
+/// See [CryptoKey](https://developer.mozilla.org/en-US/docs/Web/API/CryptoKey) on MDN.
+///
 @external(javascript, "./crypto_key.type.ts", "CryptoKey$")
 pub type CryptoKey
 
