@@ -8,6 +8,10 @@ import gossamer/readable_stream/default_controller.{type DefaultController}
 import gossamer/readable_stream/reader.{type Reader}
 import gossamer/writable_stream.{type WritableStream}
 
+/// A pull-based stream of bytes or objects, used as a source for data.
+///
+/// See [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) on MDN.
+///
 @external(javascript, "./readable_stream.type.ts", "ReadableStream$")
 pub type ReadableStream(a)
 
@@ -24,13 +28,22 @@ pub type StreamPipeOption {
   Signal(AbortSignal)
 }
 
+/// Creates a `ReadableStream` driven by the given underlying-source
+/// callbacks (`Start`, `Pull`, `Cancel`).
+///
 @external(javascript, "./readable_stream.ffi.mjs", "new_")
 pub fn new(source: List(UnderlyingSource(a))) -> ReadableStream(a)
 
+/// Creates a `ReadableStream` from only a `Start` callback — use when all
+/// chunks can be enqueued up front.
+///
 pub fn from_start(start: fn(DefaultController(a)) -> Nil) -> ReadableStream(a) {
   new([Start(start)])
 }
 
+/// Creates a `ReadableStream` from only a `Pull` callback — use when chunks
+/// are produced on demand.
+///
 pub fn from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
 ) -> ReadableStream(a) {
@@ -55,23 +68,38 @@ pub fn from_async_iterator(
   iterator: AsyncIterator(a, r, n),
 ) -> ReadableStream(a)
 
+/// Checks whether the stream is locked to a reader.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: ReadableStream(a)) -> Bool
 
+/// Signals consumer disinterest in the stream. Rejects if the underlying
+/// source's cancel callback throws or returns a rejecting promise.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "cancel")
 pub fn cancel(
   stream: ReadableStream(a),
   reason reason: r,
 ) -> Promise(Result(Nil, String))
 
+/// Acquires a `Reader` that locks the stream. Returns an error if the
+/// stream is already locked.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "get_reader")
 pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), String)
 
+/// Acquires a `ByobReader` for bring-your-own-buffer reads. Returns an
+/// error if the stream is already locked or is not a byte stream.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "get_byob_reader")
 pub fn get_byob_reader(
   stream: ReadableStream(a),
 ) -> Result(ByobReader(a), String)
 
+/// Pipes the stream through a transform (a writable+readable pair),
+/// returning the readable side. Returns an error if this stream or the
+/// writable side is already locked.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "pipe_through")
 pub fn pipe_through(
   stream: ReadableStream(a),
@@ -79,6 +107,9 @@ pub fn pipe_through(
   with options: List(StreamPipeOption),
 ) -> Result(ReadableStream(b), String)
 
+/// Pipes the stream to a `WritableStream`. Rejects if piping fails (stream
+/// errored, destination errored, or either side already locked).
+///
 @external(javascript, "./readable_stream.ffi.mjs", "pipe_to")
 pub fn pipe_to(
   stream: ReadableStream(a),
@@ -86,11 +117,17 @@ pub fn pipe_to(
   with options: List(StreamPipeOption),
 ) -> Promise(Result(Nil, String))
 
+/// Splits the stream into two independent streams reading the same data.
+/// Returns an error if the stream is already locked.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "tee")
 pub fn tee(
   stream: ReadableStream(a),
 ) -> Result(#(ReadableStream(a), ReadableStream(a)), String)
 
+/// Returns an `AsyncIterator` that reads from the stream. The iterator
+/// locks the stream until reading completes.
+///
 @external(javascript, "./readable_stream.ffi.mjs", "async_iterator")
 pub fn async_iterator(
   of stream: ReadableStream(a),
