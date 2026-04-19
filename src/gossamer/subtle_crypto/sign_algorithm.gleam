@@ -1,5 +1,7 @@
 import gossamer/hash_algorithm.{type HashAlgorithm}
 
+/// Algorithm parameters for `subtle_crypto.sign` and `verify`.
+///
 pub type SignAlgorithm {
   Hmac
   RsassaPkcs1V15

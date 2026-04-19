@@ -4,6 +4,9 @@ import gossamer/named_curve.{type NamedCurve}
 import gossamer/rsa_algorithm.{type RsaAlgorithm}
 import gossamer/uint8_array.{type Uint8Array}
 
+/// Algorithm parameters for `subtle_crypto.generate_key_pair`
+/// (asymmetric keys).
+///
 pub type KeyPairGenAlgorithm {
   Rsa(
     name: RsaAlgorithm,
