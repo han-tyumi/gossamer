@@ -1,3 +1,6 @@
+/// Compression algorithms supported by `CompressionStream` and
+/// `DecompressionStream`.
+///
 pub type CompressionFormat {
   Deflate
   DeflateRaw

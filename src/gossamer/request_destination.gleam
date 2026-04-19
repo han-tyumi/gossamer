@@ -1,3 +1,6 @@
+/// The destination — the kind of resource being requested. Used by the
+/// browser for security decisions; not typically set by application code.
+///
 pub type RequestDestination {
   Audio
   AudioWorklet

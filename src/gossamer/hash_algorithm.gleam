@@ -1,3 +1,5 @@
+/// Cryptographic hash algorithms supported by `subtle_crypto`.
+///
 pub type HashAlgorithm {
   Sha1
   Sha256

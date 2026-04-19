@@ -1,3 +1,5 @@
+/// RSA algorithms supported by `subtle_crypto`.
+///
 pub type RsaAlgorithm {
   RsaOaep
   RsaPss

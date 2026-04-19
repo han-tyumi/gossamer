@@ -1,3 +1,5 @@
+/// An HTTP method.
+///
 pub type HttpMethod {
   Connect
   Delete
