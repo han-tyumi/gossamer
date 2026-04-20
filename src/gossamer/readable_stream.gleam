@@ -73,8 +73,9 @@ pub fn from_async_iterator(
 @external(javascript, "./readable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: ReadableStream(a)) -> Bool
 
-/// Signals consumer disinterest in the stream. Rejects if the underlying
-/// source's cancel callback throws or returns a rejecting promise.
+/// Signals consumer disinterest in the stream. Returns an error if the
+/// underlying source's cancel callback throws or returns a rejecting
+/// promise.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "cancel")
 pub fn cancel(
@@ -107,8 +108,9 @@ pub fn pipe_through(
   with options: List(StreamPipeOption),
 ) -> Result(ReadableStream(b), String)
 
-/// Pipes the stream to a `WritableStream`. Rejects if piping fails (stream
-/// errored, destination errored, or either side already locked).
+/// Pipes the stream to a `WritableStream`. Returns an error if piping
+/// fails (stream errored, destination errored, or either side already
+/// locked).
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "pipe_to")
 pub fn pipe_to(

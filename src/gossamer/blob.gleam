@@ -38,14 +38,14 @@ pub fn size(of blob: Blob) -> Int
 @external(javascript, "./blob.ffi.mjs", "type_")
 pub fn type_(of blob: Blob) -> String
 
-/// Reads the blob's contents as an `ArrayBuffer`. Rejects if the blob
-/// cannot be read.
+/// Reads the blob's contents as an `ArrayBuffer`. Returns an error if
+/// the blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "array_buffer")
 pub fn array_buffer(of blob: Blob) -> Promise(Result(ArrayBuffer, String))
 
-/// Reads the blob's contents as a `Uint8Array`. Rejects if the blob
-/// cannot be read.
+/// Reads the blob's contents as a `Uint8Array`. Returns an error if the
+/// blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "bytes")
 pub fn bytes(of blob: Blob) -> Promise(Result(Uint8Array, String))
@@ -64,8 +64,8 @@ pub fn slice_with_type(
 @external(javascript, "./blob.ffi.mjs", "stream")
 pub fn stream(of blob: Blob) -> ReadableStream(Uint8Array)
 
-/// Reads the blob's contents as a UTF-8 string. Rejects if the blob
-/// cannot be read.
+/// Reads the blob's contents as a UTF-8 string. Returns an error if the
+/// blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "text")
 pub fn text(of blob: Blob) -> Promise(Result(String, String))

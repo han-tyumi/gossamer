@@ -26,7 +26,7 @@ pub fn new(
 pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 
 /// Collects all values from an async iterator into a list. Consumes the
-/// iterator. Rejects if any `next` call rejects.
+/// iterator. Returns an error if any `next` call rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "to_list")
 pub fn to_list(
@@ -50,16 +50,17 @@ pub fn with_throw(
 ) -> AsyncIterator(a, return, next)
 
 /// Advances the iterator and returns a promise for the next result.
-/// Rejects if the underlying `next` callback throws or returns a
-/// rejecting promise.
+/// Returns an error if the underlying `next` callback throws or returns
+/// a rejecting promise.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "next")
 pub fn next(
   iterator: AsyncIterator(a, return, next),
 ) -> Promise(Result(IteratorResult(a, return), String))
 
-/// Advances the iterator, passing `value` to its internal logic. Rejects
-/// if the underlying callback throws or returns a rejecting promise.
+/// Advances the iterator, passing `value` to its internal logic. Returns
+/// an error if the underlying callback throws or returns a rejecting
+/// promise.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "next_with")
 pub fn next_with(
@@ -92,8 +93,8 @@ pub fn throw(
   reason reason: e,
 ) -> Promise(Result(IteratorResult(a, return), Nil))
 
-/// Consumes the iterator, calling `fun` on each yielded value. Rejects if
-/// the iterator or callback throws.
+/// Consumes the iterator, calling `fun` on each yielded value. Returns
+/// an error if the iterator or callback throws.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "for_await")
 pub fn for_await(

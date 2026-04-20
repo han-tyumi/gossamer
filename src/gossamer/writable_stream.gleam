@@ -37,8 +37,8 @@ pub fn from_write(
 @external(javascript, "./writable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: WritableStream(a)) -> Bool
 
-/// Aborts the stream. Rejects if the underlying sink's abort callback
-/// throws or returns a rejecting promise.
+/// Aborts the stream. Returns an error if the underlying sink's abort
+/// callback throws or returns a rejecting promise.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "abort")
 pub fn abort(
@@ -46,8 +46,9 @@ pub fn abort(
   reason reason: r,
 ) -> Promise(Result(Nil, String))
 
-/// Closes the stream after all writes complete. Rejects if the underlying
-/// sink's close callback throws or returns a rejecting promise.
+/// Closes the stream after all writes complete. Returns an error if the
+/// underlying sink's close callback throws or returns a rejecting
+/// promise.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "close")
 pub fn close(stream: WritableStream(a)) -> Promise(Result(Nil, String))

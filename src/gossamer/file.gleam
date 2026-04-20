@@ -52,14 +52,14 @@ pub fn size(of file: File) -> Int
 @external(javascript, "./file.ffi.mjs", "type_")
 pub fn type_(of file: File) -> String
 
-/// Reads the file's contents as an `ArrayBuffer`. Rejects if the file
-/// cannot be read.
+/// Reads the file's contents as an `ArrayBuffer`. Returns an error if
+/// the file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "array_buffer")
 pub fn array_buffer(of file: File) -> Promise(Result(ArrayBuffer, String))
 
-/// Reads the file's contents as a `Uint8Array`. Rejects if the file
-/// cannot be read.
+/// Reads the file's contents as a `Uint8Array`. Returns an error if the
+/// file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "bytes")
 pub fn bytes(of file: File) -> Promise(Result(Uint8Array, String))
@@ -78,8 +78,8 @@ pub fn slice_with_type(
 @external(javascript, "./file.ffi.mjs", "stream")
 pub fn stream(of file: File) -> ReadableStream(Uint8Array)
 
-/// Reads the file's contents as a UTF-8 string. Rejects if the file
-/// cannot be read.
+/// Reads the file's contents as a UTF-8 string. Returns an error if the
+/// file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "text")
 pub fn text(of file: File) -> Promise(Result(String, String))

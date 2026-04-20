@@ -19,7 +19,7 @@ pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
 }
 
-/// Computes a cryptographic hash of `data`. Rejects if the algorithm is
+/// Computes a cryptographic hash of `data`. Returns an error if the algorithm is
 /// not supported or `data` cannot be processed.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
@@ -28,7 +28,7 @@ pub fn digest(
   data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Encrypts `data` with `key` using `algorithm`. Rejects if the key's
+/// Encrypts `data` with `key` using `algorithm`. Returns an error if the key's
 /// usage doesn't include `"encrypt"`, the key's algorithm doesn't match,
 /// or the data is invalid for the algorithm.
 ///
@@ -39,7 +39,7 @@ pub fn encrypt(
   data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Decrypts `data` with `key` using `algorithm`. Rejects if the key's
+/// Decrypts `data` with `key` using `algorithm`. Returns an error if the key's
 /// usage doesn't include `"decrypt"`, the key's algorithm doesn't match,
 /// or `data` is not valid ciphertext.
 ///
@@ -50,7 +50,7 @@ pub fn decrypt(
   data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Produces a digital signature of `data` with `key`. Rejects if the
+/// Produces a digital signature of `data` with `key`. Returns an error if the
 /// key's usage doesn't include `"sign"` or the key's algorithm doesn't
 /// match.
 ///
@@ -61,7 +61,7 @@ pub fn sign(
   data data: Uint8Array,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Verifies `signature` against `data` using `key`. Rejects if the key's
+/// Verifies `signature` against `data` using `key`. Returns an error if the key's
 /// usage doesn't include `"verify"` or the key's algorithm doesn't match.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "verify")
@@ -72,7 +72,7 @@ pub fn verify(
   data data: Uint8Array,
 ) -> Promise(Result(Bool, String))
 
-/// Generates a new symmetric `CryptoKey`. Rejects if the algorithm is
+/// Generates a new symmetric `CryptoKey`. Returns an error if the algorithm is
 /// unsupported or `usages` is empty.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key")
@@ -82,7 +82,7 @@ pub fn generate_key(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Generates a new public/private key pair. Rejects if the algorithm is
+/// Generates a new public/private key pair. Returns an error if the algorithm is
 /// unsupported or `usages` is empty.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key_pair")
@@ -92,7 +92,7 @@ pub fn generate_key_pair(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKeyPair, String))
 
-/// Imports a raw key from `data`. Rejects if `data` doesn't match `format`
+/// Imports a raw key from `data`. Returns an error if `data` doesn't match `format`
 /// or the algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
@@ -104,7 +104,7 @@ pub fn import_key(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Imports a key from a JSON Web Key. Rejects if `data` is malformed or
+/// Imports a key from a JSON Web Key. Returns an error if `data` is malformed or
 /// the algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key_jwk")
@@ -115,7 +115,7 @@ pub fn import_key_jwk(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Exports `key` in the given `format`. Rejects if the key is not
+/// Exports `key` in the given `format`. Returns an error if the key is not
 /// extractable.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
@@ -124,12 +124,12 @@ pub fn export_key(
   key key: CryptoKey,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Exports `key` as a JSON Web Key. Rejects if the key is not extractable.
+/// Exports `key` as a JSON Web Key. Returns an error if the key is not extractable.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
 pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(JsonWebKey, String))
 
-/// Derives bits of shared secret from a base key. Rejects if the key's
+/// Derives bits of shared secret from a base key. Returns an error if the key's
 /// usage doesn't include `"deriveBits"` or the algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_bits")
@@ -139,7 +139,7 @@ pub fn derive_bits(
   length length: Int,
 ) -> Promise(Result(ArrayBuffer, String))
 
-/// Derives a new `CryptoKey` from a base key. Rejects if the key's usage
+/// Derives a new `CryptoKey` from a base key. Returns an error if the key's usage
 /// doesn't include `"deriveKey"` or the algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_key")
@@ -151,9 +151,9 @@ pub fn derive_key(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, String))
 
-/// Exports `key` in raw form and encrypts it with `wrapping_key`. Rejects
-/// if either key's usage doesn't allow the operation or the wrapping key's
-/// algorithm is unsupported.
+/// Exports `key` in raw form and encrypts it with `wrapping_key`. Returns
+/// an error if either key's usage doesn't allow the operation or the
+/// wrapping key's algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key")
 pub fn wrap_key(
@@ -173,7 +173,7 @@ pub fn wrap_key_jwk(
 ) -> Promise(Result(ArrayBuffer, String))
 
 /// Decrypts `wrapped_key` with `unwrapping_key` and imports the result.
-/// Rejects if the unwrapping fails or the imported key is invalid for the
+/// Returns an error if the unwrapping fails or the imported key is invalid for the
 /// specified algorithm.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")

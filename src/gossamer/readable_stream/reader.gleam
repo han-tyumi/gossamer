@@ -8,13 +8,13 @@ import gossamer/readable_stream/read_result.{type ReadResult}
 @external(javascript, "./reader.type.ts", "Reader$")
 pub type Reader(a)
 
-/// Resolves when the stream closes. Rejects if the stream errored.
+/// Resolves when the stream closes. Returns an error if the stream errored.
 ///
 @external(javascript, "./reader.ffi.mjs", "closed")
 pub fn closed(of reader: Reader(a)) -> Promise(Result(Nil, String))
 
-/// Cancels the stream and releases the reader's lock. Rejects if the
-/// underlying cancel fails.
+/// Cancels the stream and releases the reader's lock. Returns an error
+/// if the underlying cancel fails.
 ///
 @external(javascript, "./reader.ffi.mjs", "cancel")
 pub fn cancel(
@@ -22,8 +22,8 @@ pub fn cancel(
   reason reason: r,
 ) -> Promise(Result(Nil, String))
 
-/// Reads the next chunk from the stream. Rejects if the stream errored or
-/// the reader was released.
+/// Reads the next chunk from the stream. Returns an error if the stream
+/// errored or the reader was released.
 ///
 @external(javascript, "./reader.ffi.mjs", "read")
 pub fn read(reader: Reader(a)) -> Promise(Result(ReadResult(a), String))

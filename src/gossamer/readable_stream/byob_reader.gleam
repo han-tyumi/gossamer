@@ -17,13 +17,14 @@ pub type ByobReaderReadOption {
   Min(Int)
 }
 
-/// Resolves when the stream closes. Rejects if the stream errored.
+/// Resolves when the stream closes. Returns an error if the stream
+/// errored.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "closed")
 pub fn closed(of reader: ByobReader(a)) -> Promise(Result(Nil, String))
 
-/// Cancels the stream and releases the reader's lock. Rejects if the
-/// underlying cancel fails.
+/// Cancels the stream and releases the reader's lock. Returns an error
+/// if the underlying cancel fails.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "cancel")
 pub fn cancel(
@@ -31,8 +32,8 @@ pub fn cancel(
   reason reason: r,
 ) -> Promise(Result(Nil, String))
 
-/// Reads bytes from the stream into `view`. Rejects if the stream errored
-/// or the reader was released.
+/// Reads bytes from the stream into `view`. Returns an error if the
+/// stream errored or the reader was released.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "read")
 pub fn read(
