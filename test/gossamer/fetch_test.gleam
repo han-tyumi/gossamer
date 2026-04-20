@@ -92,6 +92,85 @@ pub fn request_text_test() {
   should.equal(text, Ok("hello"))
 }
 
+pub fn request_body_bytes_test() {
+  let bytes = uint8_array.from_list([104, 105])
+  let assert Ok(req) =
+    request.new_with_init("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyBytes(bytes),
+    ])
+  use text <- promise.then(request.text(req))
+  should.equal(text, Ok("hi"))
+  promise.resolve(Nil)
+}
+
+pub fn request_body_blob_test() {
+  let b = blob.from_string("blob body")
+  let assert Ok(req) =
+    request.new_with_init("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyBlob(b),
+    ])
+  use text <- promise.then(request.text(req))
+  should.equal(text, Ok("blob body"))
+  promise.resolve(Nil)
+}
+
+pub fn request_body_buffer_test() {
+  let bytes = uint8_array.from_list([97, 98, 99])
+  let buffer = uint8_array.buffer(bytes)
+  let assert Ok(req) =
+    request.new_with_init("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyBuffer(buffer),
+    ])
+  use text <- promise.then(request.text(req))
+  should.equal(text, Ok("abc"))
+  promise.resolve(Nil)
+}
+
+pub fn request_body_params_test() {
+  let params = url_search_params.from_string("a=1&b=2")
+  let assert Ok(req) =
+    request.new_with_init("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyParams(params),
+    ])
+  use text <- promise.then(request.text(req))
+  should.equal(text, Ok("a=1&b=2"))
+  promise.resolve(Nil)
+}
+
+pub fn request_body_form_data_test() {
+  let fd = form_data.new() |> form_data.append("key", "value")
+  let assert Ok(req) =
+    request.new_with_init("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyFormData(fd),
+    ])
+  use result <- promise.then(request.form_data(req))
+  should.be_ok(result)
+  promise.resolve(Nil)
+}
+
+pub fn request_body_stream_test() {
+  let bytes = uint8_array.from_list([104, 105])
+  let stream =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, bytes)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  let assert Ok(req) =
+    request.new_with_init("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyStream(stream),
+    ])
+  use text <- promise.then(request.text(req))
+  should.equal(text, Ok("hi"))
+  promise.resolve(Nil)
+}
+
 pub fn response_from_string_test() {
   let resp = response.from_string("hello")
   response.status(resp) |> should.equal(http_status.Ok)

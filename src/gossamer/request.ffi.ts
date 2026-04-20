@@ -32,6 +32,21 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
       result.headers = $request.RequestInit$Headers$0(option);
     } else if ($request.RequestInit$isBody(option)) {
       result.body = $request.RequestInit$Body$0(option);
+    } else if ($request.RequestInit$isBodyBytes(option)) {
+      result.body = $request.RequestInit$BodyBytes$0(option) as BodyInit;
+    } else if ($request.RequestInit$isBodyBlob(option)) {
+      result.body = $request.RequestInit$BodyBlob$0(option);
+    } else if ($request.RequestInit$isBodyBuffer(option)) {
+      result.body = $request.RequestInit$BodyBuffer$0(option);
+    } else if ($request.RequestInit$isBodyFormData(option)) {
+      result.body = $request.RequestInit$BodyFormData$0(option);
+    } else if ($request.RequestInit$isBodyParams(option)) {
+      result.body = $request.RequestInit$BodyParams$0(option);
+    } else if ($request.RequestInit$isBodyStream(option)) {
+      result.body = $request.RequestInit$BodyStream$0(option);
+      // `duplex: "half"` is required by the Fetch spec when body is a
+      // `ReadableStream`; currently the only accepted value.
+      (result as RequestInit & { duplex: string }).duplex = "half";
     } else if ($request.RequestInit$isCache(option)) {
       result.cache = toRequestCache(
         $request.RequestInit$Cache$0(option),

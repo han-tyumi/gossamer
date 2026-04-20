@@ -14,6 +14,7 @@ import gossamer/request_destination.{type RequestDestination}
 import gossamer/request_mode.{type RequestMode}
 import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/uint8_array.{type Uint8Array}
+import gossamer/url_search_params.{type URLSearchParams}
 
 /// An HTTP request.
 ///
@@ -26,6 +27,12 @@ pub type RequestInit {
   Method(HttpMethod)
   Headers(Headers)
   Body(String)
+  BodyBytes(Uint8Array)
+  BodyBlob(Blob)
+  BodyBuffer(ArrayBuffer)
+  BodyFormData(FormData)
+  BodyParams(URLSearchParams)
+  BodyStream(ReadableStream(Uint8Array))
   Cache(RequestCache)
   Credentials(RequestCredentials)
   Integrity(String)
