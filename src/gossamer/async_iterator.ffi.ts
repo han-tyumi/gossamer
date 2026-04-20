@@ -5,6 +5,7 @@ import {
   List$isNonEmpty,
   List$NonEmpty$first,
   List$NonEmpty$rest,
+  Result$Ok,
 } from "$/prelude.mjs";
 import {
   toGleamIteratorResult,
@@ -135,9 +136,7 @@ export const return_: typeof $asyncIterator.return$ = <T, TReturn, TNext>(
 ) => {
   if (!iterator.return) {
     return Promise.resolve(
-      toResult.fromThrows(() =>
-        $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
-      ),
+      Result$Ok($iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()),
     );
   }
   return toResult.fromPromise(
@@ -159,9 +158,7 @@ export const return_with: typeof $asyncIterator.return_with = <
 ) => {
   if (!iterator.return) {
     return Promise.resolve(
-      toResult.fromThrows(() =>
-        $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
-      ),
+      Result$Ok($iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()),
     );
   }
   return toResult.fromPromise(
@@ -179,9 +176,7 @@ export const throw_: typeof $asyncIterator.throw$ = <T, TReturn, TNext>(
 ) => {
   if (!iterator.throw) {
     return Promise.resolve(
-      toResult.fromThrows(() =>
-        $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
-      ),
+      Result$Ok($iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()),
     );
   }
   return toResult.fromPromise(
