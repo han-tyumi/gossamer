@@ -25,14 +25,14 @@ pub fn new_with_base(
   relative_to base: String,
 ) -> Result(URL, JsError)
 
-/// Like `new`, but returns `Error(Nil)` instead of an error message when
-/// the URL is invalid. Useful when the failure reason isn't needed.
+/// Like `new`, but returns `Error(Nil)` rather than a `JsError` when the
+/// URL is invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "parse")
 pub fn parse(url: String) -> Result(URL, Nil)
 
-/// Like `new_with_base`, but returns `Error(Nil)` instead of an error
-/// message when the URL is invalid.
+/// Like `new_with_base`, but returns `Error(Nil)` rather than a `JsError`
+/// when the URL is invalid.
 ///
 @external(javascript, "./url.ffi.mjs", "parse_with_base")
 pub fn parse_with_base(
