@@ -1,4 +1,3 @@
-import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $iteratorHandlerOutcome from "$/gossamer/gossamer/iterator_handler_outcome.mjs";
 import type * as $iterator from "$/gossamer/gossamer/iterator.mjs";
 import type { List } from "$/prelude.mjs";
@@ -157,9 +156,7 @@ export const throw_: typeof $iterator.throw$ = <T, TReturn, TNext>(
   }
   return toResult.fromThrows(() =>
     $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
-      toGleamIteratorResult(
-        throwFn.call(iterator, $option.unwrap(reason, undefined)),
-      ),
+      toGleamIteratorResult(throwFn.call(iterator, reason)),
     )
   );
 };

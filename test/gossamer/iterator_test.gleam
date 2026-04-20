@@ -104,6 +104,19 @@ pub fn throw_with_handler_test() {
   )
 }
 
+pub fn throw_passes_reason_test() {
+  let iter =
+    iterator.new(fn(_) { iterator_result.Yield(1) })
+    |> iterator.with_throw(fn(err) { iterator_result.Return(err) })
+
+  iterator.throw(iter, "specific-reason")
+  |> should.equal(
+    Ok(
+      iterator_handler_outcome.Handled(iterator_result.Return("specific-reason")),
+    ),
+  )
+}
+
 pub fn for_test() {
   // for() calls next() without arguments (next is always None).
   // Use a finite iterator that returns done immediately after first yield.
