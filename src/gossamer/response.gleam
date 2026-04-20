@@ -8,6 +8,7 @@ import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
 import gossamer/uint8_array.{type Uint8Array}
+import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
 
 /// The response to an HTTP request.
@@ -164,6 +165,11 @@ pub fn error() -> Response
 @external(javascript, "./response.ffi.mjs", "redirect")
 pub fn redirect(url: String) -> Result(Response, String)
 
+/// Creates a redirect response to `url` with status 302 Found.
+///
+@external(javascript, "./response.ffi.mjs", "redirect_url")
+pub fn redirect_url(url: URL) -> Response
+
 /// Creates a redirect response to `url` with the given status. Returns an
 /// error if `url` is not a valid URL or `status` is not a redirect status
 /// (3xx).
@@ -180,6 +186,15 @@ pub fn redirect(url: String) -> Result(Response, String)
 @external(javascript, "./response.ffi.mjs", "redirect_with_status")
 pub fn redirect_with_status(
   url: String,
+  status status: HttpStatus,
+) -> Result(Response, String)
+
+/// Creates a redirect response to `url` with the given status. Returns an
+/// error if `status` is not a redirect status (3xx).
+///
+@external(javascript, "./response.ffi.mjs", "redirect_url_with_status")
+pub fn redirect_url_with_status(
+  url: URL,
   status status: HttpStatus,
 ) -> Result(Response, String)
 

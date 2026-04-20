@@ -13,6 +13,7 @@ import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
 import gossamer/uint8_array
+import gossamer/url
 import gossamer/url_search_params
 
 import gleeunit/should
@@ -125,6 +126,19 @@ pub fn response_redirect_test() {
       "https://example.org",
       http_status.MovedPermanently,
     )
+  response.status(resp) |> should.equal(http_status.MovedPermanently)
+}
+
+pub fn response_redirect_url_test() {
+  let assert Ok(u) = url.new("https://example.org")
+  let resp = response.redirect_url(u)
+  response.status(resp) |> should.equal(http_status.Found)
+}
+
+pub fn response_redirect_url_with_status_test() {
+  let assert Ok(u) = url.new("https://example.org")
+  let assert Ok(resp) =
+    response.redirect_url_with_status(u, http_status.MovedPermanently)
   response.status(resp) |> should.equal(http_status.MovedPermanently)
 }
 

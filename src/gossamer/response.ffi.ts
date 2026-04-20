@@ -132,6 +132,10 @@ export const redirect: typeof $response.redirect = (url) => {
   return toResult.fromThrows(() => Response.redirect(url));
 };
 
+export const redirect_url: typeof $response.redirect_url = (url) => {
+  return Response.redirect(url.toString());
+};
+
 export const redirect_with_status: typeof $response.redirect_with_status = (
   url,
   status,
@@ -140,6 +144,13 @@ export const redirect_with_status: typeof $response.redirect_with_status = (
     Response.redirect(url, fromHttpStatus(status))
   );
 };
+
+export const redirect_url_with_status:
+  typeof $response.redirect_url_with_status = (url, status) => {
+    return toResult.fromThrows(() =>
+      Response.redirect(url.toString(), fromHttpStatus(status))
+    );
+  };
 
 export const headers_: typeof $response.headers = (response) => {
   return response.headers;
