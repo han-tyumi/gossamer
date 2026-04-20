@@ -46,7 +46,20 @@ export const fetch_: typeof $gossamer.fetch = (url) => {
   return toResult.fromPromise(globalThis.fetch(url));
 };
 
+export const fetch_url: typeof $gossamer.fetch_url = (url) => {
+  return toResult.fromPromise(globalThis.fetch(url));
+};
+
 export const fetch_with_init: typeof $gossamer.fetch_with_init = (
+  url,
+  init,
+) => {
+  return toResult.fromPromise(
+    globalThis.fetch(url, toRequestInit(toArray(init))),
+  );
+};
+
+export const fetch_url_with_init: typeof $gossamer.fetch_url_with_init = (
   url,
   init,
 ) => {

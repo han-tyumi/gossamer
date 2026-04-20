@@ -4,6 +4,7 @@ import gossamer/http_status
 import gossamer/promise
 import gossamer/request
 import gossamer/response
+import gossamer/url
 
 pub fn structured_clone_int_test() {
   gossamer.structured_clone(42) |> should.equal(Ok(42))
@@ -108,5 +109,23 @@ pub fn fetch_request_data_url_test() {
   let assert Ok(resp) = result
   use text <- promise.then(response.text(resp))
   should.equal(text, Ok("from_request"))
+  promise.resolve(Nil)
+}
+
+pub fn fetch_url_data_url_test() {
+  let assert Ok(u) = url.new("data:text/plain,from_url")
+  use result <- promise.then(gossamer.fetch_url(u))
+  let assert Ok(resp) = result
+  use text <- promise.then(response.text(resp))
+  should.equal(text, Ok("from_url"))
+  promise.resolve(Nil)
+}
+
+pub fn fetch_url_with_init_data_url_test() {
+  let assert Ok(u) = url.new("data:text/plain,from_url_init")
+  use result <- promise.then(gossamer.fetch_url_with_init(u, []))
+  let assert Ok(resp) = result
+  use text <- promise.then(response.text(resp))
+  should.equal(text, Ok("from_url_init"))
   promise.resolve(Nil)
 }

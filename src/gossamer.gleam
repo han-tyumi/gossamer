@@ -6,6 +6,7 @@
 import gossamer/promise.{type Promise}
 import gossamer/request.{type Request, type RequestInit}
 import gossamer/response.{type Response}
+import gossamer/url.{type URL}
 
 /// Fetches a resource from `url`. Rejects on network error, CORS failure,
 /// or if the URL is invalid.
@@ -20,6 +21,21 @@ pub fn fetch(url: String) -> Promise(Result(Response, String))
 @external(javascript, "./gossamer.ffi.mjs", "fetch_with_init")
 pub fn fetch_with_init(
   url: String,
+  with init: List(RequestInit),
+) -> Promise(Result(Response, String))
+
+/// Fetches a resource from `url`. Rejects on network error or CORS
+/// failure.
+///
+@external(javascript, "./gossamer.ffi.mjs", "fetch_url")
+pub fn fetch_url(url: URL) -> Promise(Result(Response, String))
+
+/// Fetches a resource from `url` with the given request init options.
+/// Rejects on network error, CORS failure, or if `init` is invalid.
+///
+@external(javascript, "./gossamer.ffi.mjs", "fetch_url_with_init")
+pub fn fetch_url_with_init(
+  url: URL,
   with init: List(RequestInit),
 ) -> Promise(Result(Response, String))
 
