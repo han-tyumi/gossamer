@@ -30,7 +30,9 @@ pub fn new(
 ) -> Result(TransformStream(input, output), JsError)
 
 /// Creates a `TransformStream` from only a `Transform` callback — use when
-/// the transformer just maps input chunks to output chunks.
+/// the transformer just maps input chunks to output chunks. Returns an
+/// error if the `Start` callback throws synchronously (inherited from
+/// `new`).
 ///
 pub fn from_transform(
   transform: fn(input, DefaultController(output)) -> Promise(Nil),

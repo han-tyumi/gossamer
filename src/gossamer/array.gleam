@@ -69,48 +69,71 @@ pub fn last_index_of_from(
   from index: Int,
 ) -> Result(Int, Nil)
 
+/// Returns the first value matching `predicate`, or `Error(Nil)` if none
+/// match.
+///
 @external(javascript, "./array.ffi.mjs", "find")
 pub fn find(
   in array: Array(a),
   one_that predicate: fn(a) -> Bool,
 ) -> Result(a, Nil)
 
+/// Like `find`, but passes the index alongside each value to `predicate`.
+///
 @external(javascript, "./array.ffi.mjs", "index_find")
 pub fn index_find(
   in array: Array(a),
   one_that predicate: fn(a, Int) -> Bool,
 ) -> Result(a, Nil)
 
+/// Returns the index of the first value matching `predicate`, or
+/// `Error(Nil)` if none match.
+///
 @external(javascript, "./array.ffi.mjs", "find_index")
 pub fn find_index(
   in array: Array(a),
   one_that predicate: fn(a) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Like `find_index`, but passes the index alongside each value to
+/// `predicate`.
+///
 @external(javascript, "./array.ffi.mjs", "index_find_index")
 pub fn index_find_index(
   in array: Array(a),
   one_that predicate: fn(a, Int) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Returns the last value matching `predicate`, or `Error(Nil)` if none
+/// match.
+///
 @external(javascript, "./array.ffi.mjs", "find_last")
 pub fn find_last(
   in array: Array(a),
   one_that predicate: fn(a) -> Bool,
 ) -> Result(a, Nil)
 
+/// Like `find_last`, but passes the index alongside each value to
+/// `predicate`.
+///
 @external(javascript, "./array.ffi.mjs", "index_find_last")
 pub fn index_find_last(
   in array: Array(a),
   one_that predicate: fn(a, Int) -> Bool,
 ) -> Result(a, Nil)
 
+/// Returns the index of the last value matching `predicate`, or
+/// `Error(Nil)` if none match.
+///
 @external(javascript, "./array.ffi.mjs", "find_last_index")
 pub fn find_last_index(
   in array: Array(a),
   one_that predicate: fn(a) -> Bool,
 ) -> Result(Int, Nil)
 
+/// Like `find_last_index`, but passes the index alongside each value to
+/// `predicate`.
+///
 @external(javascript, "./array.ffi.mjs", "index_find_last_index")
 pub fn index_find_last_index(
   in array: Array(a),
