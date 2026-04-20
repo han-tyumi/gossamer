@@ -165,11 +165,6 @@ pub fn error() -> Response
 @external(javascript, "./response.ffi.mjs", "redirect")
 pub fn redirect(url: String) -> Result(Response, String)
 
-/// Creates a redirect response to `url` with status 302 Found.
-///
-@external(javascript, "./response.ffi.mjs", "redirect_url")
-pub fn redirect_url(url: URL) -> Response
-
 /// Creates a redirect response to `url` with the given status. Returns an
 /// error if `url` is not a valid URL or `status` is not a redirect status
 /// (3xx).
@@ -188,6 +183,11 @@ pub fn redirect_with_status(
   url: String,
   status status: HttpStatus,
 ) -> Result(Response, String)
+
+/// Creates a redirect response to `url` with status 302 Found.
+///
+@external(javascript, "./response.ffi.mjs", "redirect_url")
+pub fn redirect_url(url: URL) -> Response
 
 /// Creates a redirect response to `url` with the given status. Returns an
 /// error if `status` is not a redirect status (3xx).
