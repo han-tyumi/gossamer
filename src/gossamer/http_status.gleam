@@ -6,73 +6,73 @@
 pub type HttpStatus {
 
   // 1xx Informational
-  /// 100
+  /// `100`
   Continue
-  /// 101
+  /// `101`
   SwitchingProtocols
 
   // 2xx Success
-  /// 200
+  /// `200`
   Ok
-  /// 201
+  /// `201`
   Created
-  /// 202
+  /// `202`
   Accepted
-  /// 204
+  /// `204`
   NoContent
-  /// 206
+  /// `206`
   PartialContent
 
   // 3xx Redirection
-  /// 301
+  /// `301`
   MovedPermanently
-  /// 302
+  /// `302`
   Found
-  /// 303
+  /// `303`
   SeeOther
-  /// 304
+  /// `304`
   NotModified
-  /// 307
+  /// `307`
   TemporaryRedirect
-  /// 308
+  /// `308`
   PermanentRedirect
 
   // 4xx Client Error
-  /// 400
+  /// `400`
   BadRequest
-  /// 401
+  /// `401`
   Unauthorized
-  /// 403
+  /// `403`
   Forbidden
-  /// 404
+  /// `404`
   NotFound
-  /// 405
+  /// `405`
   MethodNotAllowed
-  /// 409
+  /// `409`
   Conflict
-  /// 410
+  /// `410`
   Gone
-  /// 413
+  /// `413`
   PayloadTooLarge
-  /// 415
+  /// `415`
   UnsupportedMediaType
-  /// 418
+  /// `418`
   ImATeapot
-  /// 422
+  /// `422`
   UnprocessableContent
-  /// 429
+  /// `429`
   TooManyRequests
 
   // 5xx Server Error
-  /// 500
+  /// `500`
   InternalServerError
-  /// 501
+  /// `501`
   NotImplemented
-  /// 502
+  /// `502`
   BadGateway
-  /// 503
+  /// `503`
   ServiceUnavailable
-  /// 504
+  /// `504`
   GatewayTimeout
 
   Other(Int)

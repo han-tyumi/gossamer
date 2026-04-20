@@ -112,7 +112,7 @@ pub fn slice_range(
 @external(javascript, "./uint8_array.ffi.mjs", "subarray")
 pub fn subarray(array: Uint8Array, from begin: Int, to end: Int) -> Uint8Array
 
-/// Copies `values` into `array` starting at index 0. Returns an error if
+/// Copies `values` into `array` starting at index `0`. Returns an error if
 /// `values` would extend past the end of `array`.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set")

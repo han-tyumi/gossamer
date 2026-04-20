@@ -17,7 +17,7 @@ pub fn any(signals: List(AbortSignal)) -> AbortSignal
 
 /// Creates an `AbortSignal` that aborts automatically after `milliseconds`.
 /// Returns an error if `milliseconds` is negative or greater than
-/// `4294967295` (the maximum value of an unsigned 32-bit integer).
+/// `4_294_967_295` (the maximum value of an unsigned 32-bit integer).
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
 pub fn timeout(milliseconds: Int) -> Result(AbortSignal, JsError)

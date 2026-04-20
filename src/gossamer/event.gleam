@@ -24,7 +24,7 @@ pub fn new(type_: String) -> Event
 @external(javascript, "./event.ffi.mjs", "new_with")
 pub fn new_with(type_: String, with init: List(EventInit)) -> Event
 
-/// Returns the type of the event (e.g., "click", "load").
+/// Returns the type of the event (e.g., `"click"`, `"load"`).
 ///
 @external(javascript, "./event.ffi.mjs", "type_")
 pub fn type_(of event: Event) -> String

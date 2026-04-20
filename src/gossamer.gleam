@@ -71,7 +71,7 @@ pub fn structured_clone(value: a) -> Result(a, JsError)
 pub fn atob(encoded: String) -> Result(String, JsError)
 
 /// Encodes a binary string as base64. Returns an error if `data` contains
-/// code points beyond 0xFF (use `uint8_array.to_base64` for arbitrary
+/// code points beyond `0xFF` (use `uint8_array.to_base64` for arbitrary
 /// bytes).
 ///
 @external(javascript, "./gossamer.ffi.mjs", "btoa")

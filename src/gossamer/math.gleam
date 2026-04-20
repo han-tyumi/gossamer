@@ -9,11 +9,11 @@ pub const pi = 3.141592653589793
 ///
 pub const e = 2.718281828459045
 
-/// The natural logarithm of 2.
+/// The natural logarithm of `2`.
 ///
 pub const ln2 = 0.6931471805599453
 
-/// The natural logarithm of 10.
+/// The natural logarithm of `10`.
 ///
 pub const ln10 = 2.302585092994046
 
@@ -25,7 +25,7 @@ pub const log2e = 1.4426950408889634
 ///
 pub const log10e = 0.4342944819032518
 
-/// The square root of 2.
+/// The square root of `2`.
 ///
 pub const sqrt2 = 1.4142135623730951
 
@@ -33,13 +33,13 @@ pub const sqrt2 = 1.4142135623730951
 ///
 pub const sqrt1_2 = 0.7071067811865476
 
-/// Returns a pseudo-random floating-point number between 0 (inclusive) and
-/// 1 (exclusive).
+/// Returns a pseudo-random floating-point number between `0` (inclusive) and
+/// `1` (exclusive).
 ///
 @external(javascript, "./math.ffi.mjs", "random")
 pub fn random() -> Float
 
-/// Returns the sign of a number: -1.0, 0.0, or 1.0.
+/// Returns the sign of a number: `-1.0`, `0.0`, or `1.0`.
 ///
 @external(javascript, "./math.ffi.mjs", "sign")
 pub fn sign(value: Float) -> Float
@@ -80,7 +80,7 @@ pub fn log2(value: Float) -> Result(Float, Nil)
 pub fn log10(value: Float) -> Result(Float, Nil)
 
 /// Returns the natural logarithm of 1 + x, precise for small values of x.
-/// Returns an error if x is less than or equal to -1.
+/// Returns an error if x is less than or equal to `-1`.
 ///
 @external(javascript, "./math.ffi.mjs", "log1p")
 pub fn log1p(value: Float) -> Result(Float, Nil)
@@ -101,13 +101,13 @@ pub fn cos(angle: Float) -> Float
 pub fn tan(angle: Float) -> Float
 
 /// Returns the arcsine of a number, in radians. Returns an error if the
-/// value is outside the range -1 to 1.
+/// value is outside the range `-1` to `1`.
 ///
 @external(javascript, "./math.ffi.mjs", "asin")
 pub fn asin(value: Float) -> Result(Float, Nil)
 
 /// Returns the arccosine of a number, in radians. Returns an error if the
-/// value is outside the range -1 to 1.
+/// value is outside the range `-1` to `1`.
 ///
 @external(javascript, "./math.ffi.mjs", "acos")
 pub fn acos(value: Float) -> Result(Float, Nil)
@@ -144,13 +144,13 @@ pub fn tanh(value: Float) -> Float
 pub fn asinh(value: Float) -> Float
 
 /// Returns the inverse hyperbolic cosine of a number. Returns an error if
-/// the value is less than 1.
+/// the value is less than `1`.
 ///
 @external(javascript, "./math.ffi.mjs", "acosh")
 pub fn acosh(value: Float) -> Result(Float, Nil)
 
 /// Returns the inverse hyperbolic tangent of a number. Returns an error if
-/// the absolute value is greater than or equal to 1.
+/// the absolute value is greater than or equal to `1`.
 ///
 @external(javascript, "./math.ffi.mjs", "atanh")
 pub fn atanh(value: Float) -> Result(Float, Nil)
@@ -160,7 +160,7 @@ pub fn atanh(value: Float) -> Result(Float, Nil)
 @external(javascript, "./math.ffi.mjs", "exp")
 pub fn exp(value: Float) -> Float
 
-/// Returns e raised to the power of a number minus 1, precise for small
+/// Returns e raised to the power of a number minus `1`, precise for small
 /// values.
 ///
 @external(javascript, "./math.ffi.mjs", "expm1")

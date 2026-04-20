@@ -11,7 +11,7 @@ pub const max_safe_integer = 9_007_199_254_740_991
 ///
 pub const min_safe_integer = -9_007_199_254_740_991
 
-/// The difference between 1 and the smallest floating-point number greater
+/// The difference between `1` and the smallest floating-point number greater
 /// than 1.
 ///
 @external(javascript, "./number.ffi.mjs", "epsilon")
@@ -50,20 +50,20 @@ pub fn is_integer(value: Float) -> Bool
 pub fn is_safe_integer(value: Float) -> Bool
 
 /// Formats a number using fixed-point notation with the specified number of
-/// decimal places. Returns an error if the digits are out of range (0–100).
+/// decimal places. Returns an error if the digits are out of range (`0`–`100`).
 ///
 @external(javascript, "./number.ffi.mjs", "to_fixed")
 pub fn to_fixed(value: Float, digits digits: Int) -> Result(String, JsError)
 
 /// Formats a number to the specified number of significant digits. Returns
-/// an error if the precision is out of range (1–100).
+/// an error if the precision is out of range (`1`–`100`).
 ///
 @external(javascript, "./number.ffi.mjs", "to_precision")
 pub fn to_precision(value: Float, digits digits: Int) -> Result(String, JsError)
 
 /// Formats a number in exponential (scientific) notation with the specified
 /// number of digits after the decimal point. Returns an error if the digits
-/// are out of range (0–100).
+/// are out of range (`0`–`100`).
 ///
 @external(javascript, "./number.ffi.mjs", "to_exponential")
 pub fn to_exponential(
@@ -71,7 +71,7 @@ pub fn to_exponential(
   digits digits: Int,
 ) -> Result(String, JsError)
 
-/// Converts an integer to a string in the specified radix (base 2–36).
+/// Converts an integer to a string in the specified radix (base `2`–`36`).
 /// Returns an error if the radix is out of range.
 ///
 @external(javascript, "./number.ffi.mjs", "to_string_with_radix")
@@ -85,7 +85,7 @@ pub fn to_string_with_radix(
 @external(javascript, "./number.ffi.mjs", "to_locale_string")
 pub fn to_locale_string(value: Float) -> String
 
-/// Parses a string as an integer in the specified radix (base 2–36). Returns
+/// Parses a string as an integer in the specified radix (base `2`–`36`). Returns
 /// an error if the string cannot be parsed.
 ///
 @external(javascript, "./number.ffi.mjs", "parse_int")

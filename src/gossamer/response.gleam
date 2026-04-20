@@ -36,7 +36,7 @@ pub fn new() -> Response
 pub fn from_string(body: String) -> Response
 
 /// Creates a `Response` with a string body and init options. Returns an
-/// error if `init` contains a status outside 200-599 or an invalid status
+/// error if `init` contains a status outside `200`–`599` or an invalid status
 /// text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_string_with")
@@ -51,7 +51,7 @@ pub fn from_string_with(
 pub fn from_bytes(body: Uint8Array) -> Response
 
 /// Creates a `Response` with a `Uint8Array` body and init options. Returns
-/// an error if `init` contains a status outside 200-599 or an invalid
+/// an error if `init` contains a status outside `200`–`599` or an invalid
 /// status text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_bytes_with")
@@ -66,7 +66,7 @@ pub fn from_bytes_with(
 pub fn from_blob(body: Blob) -> Response
 
 /// Creates a `Response` with a `Blob` body and init options. Returns an
-/// error if `init` contains a status outside 200-599 or an invalid status
+/// error if `init` contains a status outside `200`–`599` or an invalid status
 /// text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_blob_with")
@@ -81,7 +81,7 @@ pub fn from_blob_with(
 pub fn from_buffer(body: ArrayBuffer) -> Response
 
 /// Creates a `Response` with an `ArrayBuffer` body and init options.
-/// Returns an error if `init` contains a status outside 200-599 or an
+/// Returns an error if `init` contains a status outside `200`–`599` or an
 /// invalid status text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_buffer_with")
@@ -97,7 +97,7 @@ pub fn from_buffer_with(
 pub fn from_form_data(body: FormData) -> Response
 
 /// Creates a `Response` with a `FormData` body and init options. Returns
-/// an error if `init` contains a status outside 200-599 or an invalid
+/// an error if `init` contains a status outside `200`–`599` or an invalid
 /// status text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_form_data_with")
@@ -113,7 +113,7 @@ pub fn from_form_data_with(
 pub fn from_params(body: URLSearchParams) -> Response
 
 /// Creates a `Response` with a `URLSearchParams` body and init options.
-/// Returns an error if `init` contains a status outside 200-599 or an
+/// Returns an error if `init` contains a status outside `200`–`599` or an
 /// invalid status text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_params_with")
@@ -132,7 +132,7 @@ pub fn from_stream(
 
 /// Creates a `Response` with a `ReadableStream` body and init options.
 /// Returns an error if the stream is locked or has been disturbed, or
-/// `init` contains a status outside 200-599 or an invalid status text.
+/// `init` contains a status outside `200`–`599` or an invalid status text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_stream_with")
 pub fn from_stream_with(
@@ -148,7 +148,7 @@ pub fn from_json(data: a) -> Result(Response, JsError)
 
 /// Creates a `Response` with `data` serialized as JSON and init options.
 /// Returns an error if `data` is not serializable, or `init` contains a
-/// status outside 200-599 or an invalid status text.
+/// status outside `200`–`599` or an invalid status text.
 ///
 @external(javascript, "./response.ffi.mjs", "from_json_with")
 pub fn from_json_with(
@@ -162,7 +162,7 @@ pub fn from_json_with(
 @external(javascript, "./response.ffi.mjs", "error")
 pub fn error() -> Response
 
-/// Creates a redirect response to `url` with status 302 Found. Returns an
+/// Creates a redirect response to `url` with status `302` Found. Returns an
 /// error if `url` is not a valid URL.
 ///
 @external(javascript, "./response.ffi.mjs", "redirect")
@@ -187,7 +187,7 @@ pub fn redirect_with_status(
   status status: HttpStatus,
 ) -> Result(Response, JsError)
 
-/// Creates a redirect response to `url` with status 302 Found.
+/// Creates a redirect response to `url` with status `302` Found.
 ///
 @external(javascript, "./response.ffi.mjs", "redirect_url")
 pub fn redirect_url(url: URL) -> Response
@@ -204,7 +204,7 @@ pub fn redirect_url_with_status(
 @external(javascript, "./response.ffi.mjs", "headers_")
 pub fn headers(of response: Response) -> Headers
 
-/// Checks whether the status is in the 200-299 range.
+/// Checks whether the status is in the `200`–`299` range.
 ///
 @external(javascript, "./response.ffi.mjs", "is_ok")
 pub fn is_ok(response: Response) -> Bool

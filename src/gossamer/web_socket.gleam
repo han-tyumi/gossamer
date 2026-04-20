@@ -103,8 +103,8 @@ pub fn url(of socket: WebSocket) -> String
 pub fn close(socket: WebSocket) -> Nil
 
 /// Closes the WebSocket connection with the given code and reason. Returns an
-/// error if the code is invalid (must be 1000 or 3000–4999) or the reason
-/// exceeds 123 bytes.
+/// error if the code is invalid (must be `1000` or `3000`–`4999`) or the
+/// reason exceeds `123` bytes.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "close_with")
 pub fn close_with(
