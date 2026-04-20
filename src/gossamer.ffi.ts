@@ -71,3 +71,12 @@ export const fetch_url_with: typeof $gossamer.fetch_url_with = (
 export const fetch_request: typeof $gossamer.fetch_request = (request) => {
   return toResult.fromPromise(globalThis.fetch(request));
 };
+
+export const fetch_request_with: typeof $gossamer.fetch_request_with = (
+  request,
+  init,
+) => {
+  return toResult.fromPromise(
+    globalThis.fetch(request, toRequestInit(toArray(init))),
+  );
+};

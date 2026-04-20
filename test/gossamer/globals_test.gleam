@@ -110,6 +110,16 @@ pub fn fetch_request_data_url_test() {
   promise.resolve(Nil)
 }
 
+pub fn fetch_request_with_data_url_test() {
+  let assert Ok(req) =
+    request.from_url_string("data:text/plain,from_request_with")
+  use result <- promise.then(gossamer.fetch_request_with(req, []))
+  let assert Ok(resp) = result
+  use text <- promise.then(response.text(resp))
+  should.equal(text, Ok("from_request_with"))
+  promise.resolve(Nil)
+}
+
 pub fn fetch_url_data_url_test() {
   let assert Ok(u) = url.new("data:text/plain,from_url")
   use result <- promise.then(gossamer.fetch_url(u))

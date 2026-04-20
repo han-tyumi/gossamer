@@ -46,6 +46,16 @@ pub fn fetch_url_with(
 @external(javascript, "./gossamer.ffi.mjs", "fetch_request")
 pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
 
+/// Fetches a resource using a pre-built `Request`, with `init` options
+/// that override fields on `request`. Returns an error on network error,
+/// CORS failure, or if `init` is invalid.
+///
+@external(javascript, "./gossamer.ffi.mjs", "fetch_request_with")
+pub fn fetch_request_with(
+  request: Request,
+  with init: List(RequestInit),
+) -> Promise(Result(Response, String))
+
 /// Creates a deep clone of `value` using the structured clone algorithm.
 /// Returns an error if `value` contains a function, symbol, or other
 /// non-cloneable value.
