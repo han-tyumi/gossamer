@@ -113,8 +113,9 @@ pub fn close_with(
   reason reason: String,
 ) -> Result(Nil, JsError)
 
-/// Sends a string through the WebSocket. Returns an error if the connection
-/// is not open.
+/// Sends a string through the WebSocket. Returns an error if the
+/// connection is still connecting. Data sent after the connection is
+/// closing or closed is silently discarded.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_string")
 pub fn send_string(
@@ -122,8 +123,9 @@ pub fn send_string(
   data data: String,
 ) -> Result(Nil, JsError)
 
-/// Sends binary data as a `Uint8Array` through the WebSocket. Returns an
-/// error if the connection is not open.
+/// Sends binary data as a `Uint8Array` through the WebSocket. Returns
+/// an error if the connection is still connecting. Data sent after the
+/// connection is closing or closed is silently discarded.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_bytes")
 pub fn send_bytes(
@@ -131,14 +133,16 @@ pub fn send_bytes(
   data data: Uint8Array,
 ) -> Result(Nil, JsError)
 
-/// Sends a `Blob` through the WebSocket. Returns an error if the connection
-/// is not open.
+/// Sends a `Blob` through the WebSocket. Returns an error if the
+/// connection is still connecting. Data sent after the connection is
+/// closing or closed is silently discarded.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
 pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, JsError)
 
-/// Sends an `ArrayBuffer` through the WebSocket. Returns an error if the
-/// connection is not open.
+/// Sends an `ArrayBuffer` through the WebSocket. Returns an error if
+/// the connection is still connecting. Data sent after the connection
+/// is closing or closed is silently discarded.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_buffer")
 pub fn send_buffer(
