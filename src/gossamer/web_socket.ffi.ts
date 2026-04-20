@@ -25,6 +25,17 @@ export const new_with_protocols: typeof $webSocket.new_with_protocols = (
   return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
 };
 
+export const new_url: typeof $webSocket.new_url = (url) => {
+  return toResult.fromThrows(() => new WebSocket(url.toString()));
+};
+
+export const new_url_with_protocols: typeof $webSocket.new_url_with_protocols =
+  (url, protocols) => {
+    return toResult.fromThrows(
+      () => new WebSocket(url.toString(), toArray(protocols)),
+    );
+  };
+
 export const binary_type: typeof $webSocket.binary_type = (socket) => {
   return toBinaryType(socket.binaryType);
 };

@@ -4,6 +4,7 @@ import gossamer/blob.{type Blob}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
 import gossamer/uint8_array.{type Uint8Array}
+import gossamer/url.{type URL}
 
 // TODO: Most WebSocket functions are untested — requires a live WebSocket
 // server which can't be created cross-runtime from pure Gleam. Only `new`,
@@ -45,6 +46,23 @@ pub fn new(url: String) -> Result(WebSocket, String)
 @external(javascript, "./web_socket.ffi.mjs", "new_with_protocols")
 pub fn new_with_protocols(
   url: String,
+  with protocols: List(String),
+) -> Result(WebSocket, String)
+
+/// Creates a new `WebSocket` connection to the given URL. Returns an
+/// error if `url`'s scheme is not `ws:` or `wss:`.
+///
+@external(javascript, "./web_socket.ffi.mjs", "new_url")
+pub fn new_url(url: URL) -> Result(WebSocket, String)
+
+/// Creates a new `WebSocket` connection to the given URL with the
+/// specified sub-protocols. Returns an error if `url`'s scheme is not
+/// `ws:` or `wss:`, or if `protocols` contains duplicates or invalid
+/// entries.
+///
+@external(javascript, "./web_socket.ffi.mjs", "new_url_with_protocols")
+pub fn new_url_with_protocols(
+  url: URL,
   with protocols: List(String),
 ) -> Result(WebSocket, String)
 
