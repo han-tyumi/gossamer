@@ -59,9 +59,15 @@ pub fn append_blob_with_filename(
 @external(javascript, "./form_data.ffi.mjs", "delete_")
 pub fn delete(from form_data: FormData, name name: String) -> FormData
 
+/// Returns the first string value for `name`, or `Error(Nil)` if no such
+/// key exists or its first value is a file.
+///
 @external(javascript, "./form_data.ffi.mjs", "get")
 pub fn get(from form_data: FormData, name name: String) -> Result(String, Nil)
 
+/// Returns the first file value for `name`, or `Error(Nil)` if no such key
+/// exists or its first value is a string.
+///
 @external(javascript, "./form_data.ffi.mjs", "get_file")
 pub fn get_file(
   from form_data: FormData,

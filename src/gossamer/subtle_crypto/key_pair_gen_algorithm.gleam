@@ -7,6 +7,8 @@ import gossamer/uint8_array.{type Uint8Array}
 /// Algorithm parameters for `subtle_crypto.generate_key_pair`
 /// (asymmetric keys).
 ///
+/// Non-standard or unnamed algorithms use `Other(String)`.
+///
 pub type KeyPairGenAlgorithm {
   Rsa(
     name: RsaAlgorithm,

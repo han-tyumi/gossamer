@@ -26,7 +26,7 @@ pub fn new(
 pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 
 /// Collects all values from an async iterator into a list. Consumes the
-/// iterator.
+/// iterator. Rejects if any `next` call rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "to_list")
 pub fn to_list(

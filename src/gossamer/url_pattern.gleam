@@ -69,12 +69,17 @@ pub fn test_with_base(
   relative_to base_url: String,
 ) -> Bool
 
+/// Matches `input` against the pattern and returns the captured
+/// components, or `Error(Nil)` if there is no match.
+///
 @external(javascript, "./url_pattern.ffi.mjs", "exec")
 pub fn exec(
   pattern: URLPattern,
   against input: String,
 ) -> Result(URLPatternResult, Nil)
 
+/// Like `exec`, but resolves `input` against `base_url` before matching.
+///
 @external(javascript, "./url_pattern.ffi.mjs", "exec_with_base")
 pub fn exec_with_base(
   pattern: URLPattern,

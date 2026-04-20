@@ -4,6 +4,8 @@ import gossamer/uint8_array.{type Uint8Array}
 
 /// Algorithm parameters for `subtle_crypto.derive_bits` and `derive_key`.
 ///
+/// Non-standard or unnamed algorithms use `Other(String)`.
+///
 pub type DeriveAlgorithm {
   Hkdf(hash: HashAlgorithm, info: Uint8Array, salt: Uint8Array)
   Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: Uint8Array)

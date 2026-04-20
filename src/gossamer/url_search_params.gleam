@@ -37,6 +37,9 @@ pub fn delete_value(
   value value: String,
 ) -> URLSearchParams
 
+/// Returns the first value associated with `name`, or `Error(Nil)` if no
+/// such name exists.
+///
 @external(javascript, "./url_search_params.ffi.mjs", "get")
 pub fn get(
   from params: URLSearchParams,

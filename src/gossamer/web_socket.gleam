@@ -20,7 +20,8 @@ pub type CloseEvent {
 @external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket
 
-/// Creates a new `WebSocket` connection to the given URL.
+/// Creates a new `WebSocket` connection to the given URL. Returns an
+/// error if `url` is not a valid `ws:` or `wss:` URL.
 ///
 /// ## Examples
 ///
@@ -32,7 +33,8 @@ pub type WebSocket
 pub fn new(url: String) -> Result(WebSocket, String)
 
 /// Creates a new `WebSocket` connection to the given URL with the
-/// specified sub-protocols.
+/// specified sub-protocols. Returns an error if `url` is not a valid `ws:`
+/// or `wss:` URL, or if `protocols` contains duplicates or invalid entries.
 ///
 /// ## Examples
 ///

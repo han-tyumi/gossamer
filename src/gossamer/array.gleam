@@ -23,6 +23,9 @@ pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> b) -> Array(b)
 @external(javascript, "./array.ffi.mjs", "length")
 pub fn length(of array: Array(a)) -> Int
 
+/// Returns the element at `index`, or `Error(Nil)` if the index is out of
+/// range. Negative indices count from the end.
+///
 @external(javascript, "./array.ffi.mjs", "at")
 pub fn at(array: Array(a), index index: Int) -> Result(a, Nil)
 
@@ -36,9 +39,14 @@ pub fn includes_from(
   from index: Int,
 ) -> Bool
 
+/// Returns the first index of `value` in the array, or `Error(Nil)` if the
+/// value is not found.
+///
 @external(javascript, "./array.ffi.mjs", "index_of")
 pub fn index_of(in array: Array(a), value value: a) -> Result(Int, Nil)
 
+/// Like `index_of`, but starts searching from `index`.
+///
 @external(javascript, "./array.ffi.mjs", "index_of_from")
 pub fn index_of_from(
   in array: Array(a),
@@ -46,9 +54,14 @@ pub fn index_of_from(
   from index: Int,
 ) -> Result(Int, Nil)
 
+/// Returns the last index of `value` in the array, or `Error(Nil)` if the
+/// value is not found.
+///
 @external(javascript, "./array.ffi.mjs", "last_index_of")
 pub fn last_index_of(in array: Array(a), value value: a) -> Result(Int, Nil)
 
+/// Like `last_index_of`, but searches backwards from `index`.
+///
 @external(javascript, "./array.ffi.mjs", "last_index_of_from")
 pub fn last_index_of_from(
   in array: Array(a),

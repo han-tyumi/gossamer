@@ -22,12 +22,22 @@ pub fn from_code_point(code: Int) -> Result(String, String)
 @external(javascript, "./string.ffi.mjs", "from_code_points")
 pub fn from_code_points(codes: List(Int)) -> Result(String, String)
 
+/// Returns the UTF-16 code unit at `index` as a single-character string,
+/// or `Error(Nil)` if the index is out of range. Negative indices count
+/// from the end.
+///
 @external(javascript, "./string.ffi.mjs", "at")
 pub fn at(string: String, index index: Int) -> Result(String, Nil)
 
+/// Returns the UTF-16 code unit at `index`, or `Error(Nil)` if the index
+/// is out of range.
+///
 @external(javascript, "./string.ffi.mjs", "char_code_at")
 pub fn char_code_at(string: String, index index: Int) -> Result(Int, Nil)
 
+/// Returns the Unicode code point at `index`, or `Error(Nil)` if the index
+/// is out of range.
+///
 @external(javascript, "./string.ffi.mjs", "code_point_at")
 pub fn code_point_at(string: String, index index: Int) -> Result(Int, Nil)
 
@@ -54,9 +64,14 @@ pub fn is_well_formed(string: String) -> Bool
 @external(javascript, "./string.ffi.mjs", "to_well_formed")
 pub fn to_well_formed(string: String) -> String
 
+/// Returns the first index of `search` in the string, or `Error(Nil)` if
+/// not found.
+///
 @external(javascript, "./string.ffi.mjs", "index_of")
 pub fn index_of(in string: String, search search: String) -> Result(Int, Nil)
 
+/// Like `index_of`, but starts searching from `position`.
+///
 @external(javascript, "./string.ffi.mjs", "index_of_from")
 pub fn index_of_from(
   in string: String,
@@ -64,12 +79,17 @@ pub fn index_of_from(
   from position: Int,
 ) -> Result(Int, Nil)
 
+/// Returns the last index of `search` in the string, or `Error(Nil)` if
+/// not found.
+///
 @external(javascript, "./string.ffi.mjs", "last_index_of")
 pub fn last_index_of(
   in string: String,
   search search: String,
 ) -> Result(Int, Nil)
 
+/// Like `last_index_of`, but searches backwards from `position`.
+///
 @external(javascript, "./string.ffi.mjs", "last_index_of_from")
 pub fn last_index_of_from(
   in string: String,
@@ -77,6 +97,10 @@ pub fn last_index_of_from(
   from position: Int,
 ) -> Result(Int, Nil)
 
+/// Extracts a section of the string between `start` and `end`. Indices are
+/// UTF-16 code units — this differs from `gleam/string.slice` which counts
+/// grapheme clusters.
+///
 @external(javascript, "./string.ffi.mjs", "slice")
 pub fn slice(string: String, from start: Int, to end: Int) -> String
 
@@ -161,6 +185,10 @@ pub fn trim_start(string: String) -> String
 @external(javascript, "./string.ffi.mjs", "trim_end")
 pub fn trim_end(string: String) -> String
 
+/// Returns the string repeated `times` times. Returns an error if `times`
+/// is negative or the resulting string would exceed the maximum string
+/// length.
+///
 @external(javascript, "./string.ffi.mjs", "repeat")
 pub fn repeat(string: String, times times: Int) -> Result(String, String)
 
@@ -184,5 +212,9 @@ pub fn pad_end(
   with pad: String,
 ) -> String
 
+/// Like `slice`, but swaps `start` and `end` if `start` is greater, and
+/// treats negative values as zero. Indices are UTF-16 code units — this
+/// differs from `gleam/string.slice` which counts grapheme clusters.
+///
 @external(javascript, "./string.ffi.mjs", "substring")
 pub fn substring(string: String, from start: Int, to end: Int) -> String

@@ -35,8 +35,13 @@ pub fn name(of error: Error) -> String
 @external(javascript, "./error.ffi.mjs", "message")
 pub fn message(of error: Error) -> String
 
+/// The stack trace captured when the error was created, or `Error(Nil)` if
+/// the runtime didn't attach one.
+///
 @external(javascript, "./error.ffi.mjs", "stack")
 pub fn stack(of error: Error) -> Result(String, Nil)
 
+/// The cause attached to the error, or `Error(Nil)` if no cause was set.
+///
 @external(javascript, "./error.ffi.mjs", "cause")
 pub fn cause(of error: Error) -> Result(Dynamic, Nil)

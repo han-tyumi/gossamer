@@ -19,6 +19,9 @@ pub fn start_time(of entry: PerformanceEntry) -> Float
 @external(javascript, "./performance_entry.ffi.mjs", "duration")
 pub fn duration(of entry: PerformanceEntry) -> Float
 
+/// Extra data associated with the entry, or `Error(Nil)` if none was
+/// provided.
+///
 @external(javascript, "./performance_entry.ffi.mjs", "detail")
 pub fn detail(of entry: PerformanceEntry) -> Result(Dynamic, Nil)
 
