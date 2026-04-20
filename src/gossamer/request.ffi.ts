@@ -104,6 +104,19 @@ export const from_url_with_init: typeof $request.from_url_with_init = (
   );
 };
 
+export const from_request: typeof $request.from_request = (existing) => {
+  return toResult.fromThrows(() => new Request(existing));
+};
+
+export const from_request_with_init: typeof $request.from_request_with_init = (
+  existing,
+  init,
+) => {
+  return toResult.fromThrows(() =>
+    new Request(existing, toRequestInit(toArray(init)))
+  );
+};
+
 export const method: typeof $request.method = (request) => {
   return fromHttpMethod(request.method);
 };

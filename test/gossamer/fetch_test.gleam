@@ -168,6 +168,25 @@ pub fn request_from_url_with_init_test() {
   request.method(req) |> should.equal(http_method.Post)
 }
 
+pub fn request_from_request_test() {
+  let assert Ok(original) =
+    request.from_url_string_with_init("https://example.org", [
+      request.Method(http_method.Post),
+    ])
+  let assert Ok(copy) = request.from_request(original)
+  request.method(copy) |> should.equal(http_method.Post)
+  request.url(copy) |> should.equal("https://example.org/")
+}
+
+pub fn request_from_request_with_init_test() {
+  let assert Ok(original) = request.from_url_string("https://example.org")
+  let assert Ok(overridden) =
+    request.from_request_with_init(original, [
+      request.Method(http_method.Put),
+    ])
+  request.method(overridden) |> should.equal(http_method.Put)
+}
+
 pub fn request_body_stream_test() {
   let bytes = uint8_array.from_list([104, 105])
   let stream =

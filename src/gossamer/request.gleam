@@ -77,6 +77,24 @@ pub fn from_url_with_init(
   with init: List(RequestInit),
 ) -> Result(Request, String)
 
+/// Creates a new `Request` by copying `existing`. The body is shared with
+/// `existing` — after copying, `existing`'s body can no longer be
+/// consumed. Returns an error if `existing`'s body is already disturbed
+/// or locked.
+///
+@external(javascript, "./request.ffi.mjs", "from_request")
+pub fn from_request(existing: Request) -> Result(Request, String)
+
+/// Creates a new `Request` by copying `existing` and applying init
+/// options. Returns an error if `existing`'s body is disturbed or locked,
+/// or `init` contains an invalid method, header, or mode.
+///
+@external(javascript, "./request.ffi.mjs", "from_request_with_init")
+pub fn from_request_with_init(
+  existing: Request,
+  with init: List(RequestInit),
+) -> Result(Request, String)
+
 @external(javascript, "./request.ffi.mjs", "method")
 pub fn method(of request: Request) -> HttpMethod
 
