@@ -1,6 +1,5 @@
 import type * as $asyncIterator from "$/gossamer/gossamer/async_iterator.mjs";
 import type { List } from "$/prelude.mjs";
-import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $iteratorHandlerOutcome from "$/gossamer/gossamer/iterator_handler_outcome.mjs";
 import {
   List$isNonEmpty,
@@ -186,7 +185,7 @@ export const throw_: typeof $asyncIterator.throw$ = <T, TReturn, TNext>(
     );
   }
   return toResult.fromPromise(
-    iterator.throw($option.unwrap(reason, undefined)).then((result) =>
+    iterator.throw(reason).then((result) =>
       $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
       )

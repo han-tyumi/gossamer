@@ -109,6 +109,23 @@ pub fn throw_with_handler_test() {
   promise.resolve(Nil)
 }
 
+pub fn throw_passes_reason_test() {
+  let iter =
+    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    |> async_iterator.with_throw(fn(err) {
+      promise.resolve(iterator_result.Return(err))
+    })
+
+  use result <- promise.then(async_iterator.throw(iter, "specific-reason"))
+  should.equal(
+    result,
+    Ok(
+      iterator_handler_outcome.Handled(iterator_result.Return("specific-reason")),
+    ),
+  )
+  promise.resolve(Nil)
+}
+
 pub fn for_await_test() {
   // for_await calls next() without arguments (next is always None).
   // Use a finite iterator that returns done immediately.
