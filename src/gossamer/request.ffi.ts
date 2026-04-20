@@ -15,6 +15,10 @@ import {
 import { fromRequestDestination } from "~/gossamer/request_destination.ffi.ts";
 import { fromRequestMode, toRequestMode } from "~/gossamer/request_mode.ffi.ts";
 import {
+  fromRequestPriority,
+  toRequestPriority,
+} from "~/gossamer/request_priority.ffi.ts";
+import {
   fromRequestRedirect,
   toRequestRedirect,
 } from "~/gossamer/request_redirect.ffi.ts";
@@ -63,6 +67,9 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
       result.mode = toRequestMode(
         $request.RequestInit$Mode$0(option),
       ) as RequestMode;
+    } else if ($request.RequestInit$isPriority(option)) {
+      (result as RequestInit & { priority: string }).priority =
+        toRequestPriority($request.RequestInit$Priority$0(option));
     } else if ($request.RequestInit$isRedirect(option)) {
       result.redirect = toRequestRedirect(
         $request.RequestInit$Redirect$0(option),
@@ -148,6 +155,12 @@ export const referrer_policy: typeof $request.referrer_policy = (request) => {
 
 export const mode: typeof $request.mode = (request) => {
   return fromRequestMode(request.mode);
+};
+
+export const priority: typeof $request.priority = (request) => {
+  return fromRequestPriority(
+    (request as Request & { priority: string }).priority,
+  );
 };
 
 export const is_keepalive: typeof $request.is_keepalive = (request) => {

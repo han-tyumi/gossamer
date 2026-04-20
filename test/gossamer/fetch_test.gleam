@@ -9,6 +9,7 @@ import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/request
+import gossamer/request_priority
 import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
@@ -374,6 +375,19 @@ pub fn request_referrer_policy_test() {
 pub fn request_mode_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
   let _mode = request.mode(req)
+}
+
+pub fn request_priority_test() {
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  let _priority = request.priority(req)
+}
+
+pub fn request_init_priority_test() {
+  let assert Ok(req) =
+    request.from_url_string_with("https://example.org", [
+      request.Priority(request_priority.High),
+    ])
+  let _ = req
 }
 
 pub fn request_is_keepalive_test() {

@@ -12,6 +12,7 @@ import gossamer/request_cache.{type RequestCache}
 import gossamer/request_credentials.{type RequestCredentials}
 import gossamer/request_destination.{type RequestDestination}
 import gossamer/request_mode.{type RequestMode}
+import gossamer/request_priority.{type RequestPriority}
 import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
@@ -39,6 +40,7 @@ pub type RequestInit {
   Integrity(String)
   Keepalive(Bool)
   Mode(RequestMode)
+  Priority(RequestPriority)
   Redirect(RequestRedirect)
   Referrer(String)
   ReferrerPolicy(ReferrerPolicy)
@@ -157,6 +159,14 @@ pub fn referrer_policy(of request: Request) -> ReferrerPolicy
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
 pub fn mode(of request: Request) -> RequestMode
+
+/// Returns the priority hint associated with the request.
+///
+/// Note: Not available on Deno.
+/// See https://github.com/denoland/deno/issues/27763
+///
+@external(javascript, "./request.ffi.mjs", "priority")
+pub fn priority(of request: Request) -> RequestPriority
 
 /// Returns whether the request can outlive the global in which it was created.
 ///
