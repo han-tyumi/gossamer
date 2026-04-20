@@ -105,14 +105,13 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ### Events & DOM
 
-| Interface             | Status | Module                   |
-| --------------------- | ------ | ------------------------ |
-| Event                 | ✅     | `gossamer/event`         |
-| EventTarget           | ✅     | `gossamer/event_target`  |
-| CustomEvent           | ✅     | `gossamer/custom_event`  |
-| ErrorEvent            | ❌     | —                        |
-| PromiseRejectionEvent | ❌     | —                        |
-| DOMException          | ✅     | `gossamer/dom_exception` |
+| Interface             | Status | Module                  |
+| --------------------- | ------ | ----------------------- |
+| Event                 | ✅     | `gossamer/event`        |
+| EventTarget           | ✅     | `gossamer/event_target` |
+| CustomEvent           | ✅     | `gossamer/custom_event` |
+| ErrorEvent            | ❌     | —                       |
+| PromiseRejectionEvent | ❌     | —                       |
 
 ### Cancellation
 
@@ -171,7 +170,7 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | Symbol        | ✅     | `gossamer/symbol`         |                                                    |
 | Number        | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants        |
 | Math          | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants          |
-| Error types   | ✅     | `gossamer/error`          |                                                    |
+| Error types   | ✅     | `gossamer/js_error`       | Includes `JsErrorKind` classification              |
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 
