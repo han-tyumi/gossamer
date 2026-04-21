@@ -49,14 +49,15 @@ pub type RequestInit {
 }
 
 /// Creates a new `Request` from a URL given as a string. Returns an error
-/// if `url` is not a valid URL.
+/// if `url` is not a valid URL or contains credentials (the Fetch spec
+/// rejects `user:pass@` URLs).
 ///
 @external(javascript, "./request.ffi.mjs", "from_url_string")
 pub fn from_url_string(url: String) -> Result(Request, JsError)
 
 /// Creates a new `Request` from a URL given as a string, with init
-/// options. Returns an error if `url` is not a valid URL or `init`
-/// contains an invalid method, header, or mode.
+/// options. Returns an error if `url` is not a valid URL or contains
+/// credentials, or `init` contains an invalid method, header, or mode.
 ///
 @external(javascript, "./request.ffi.mjs", "from_url_string_with")
 pub fn from_url_string_with(
