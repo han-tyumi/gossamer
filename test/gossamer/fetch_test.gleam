@@ -256,6 +256,34 @@ pub fn response_redirect_url_with_status_test() {
   response.status(resp) |> should.equal(http_status.MovedPermanently)
 }
 
+pub fn response_redirect_parity_test() {
+  // String-input and URL-input redirect variants produce responses with
+  // the same observable location header and status.
+  let location = "https://example.org/new"
+  let assert Ok(u) = url.new(location)
+
+  let assert Ok(from_string) = response.redirect(location)
+  let from_url = response.redirect_url(u)
+
+  let hdr = fn(r) {
+    let assert Ok(h) = headers.get(response.headers(r), "location")
+    h
+  }
+  hdr(from_string) |> should.equal(hdr(from_url))
+  response.status(from_string) |> should.equal(response.status(from_url))
+}
+
+pub fn request_from_url_parity_test() {
+  // String and URL input produce Requests with the same observable url.
+  let href = "https://example.org/foo"
+  let assert Ok(u) = url.new(href)
+
+  let assert Ok(from_string) = request.from_url_string(href)
+  let assert Ok(from_url) = request.from_url(u)
+
+  request.url(from_string) |> should.equal(request.url(from_url))
+}
+
 pub fn response_clone_test() {
   let resp = response.from_string("hello")
   let assert Ok(cloned) = response.clone(resp)
