@@ -12,16 +12,12 @@ export function toRequestPriority(
 }
 
 export function fromRequestPriority(
-  value: string,
+  value: string | undefined,
 ): $requestPriority.RequestPriority$ {
-  switch (value) {
-    case "high":
-      return $requestPriority.RequestPriority$High();
-    case "low":
-      return $requestPriority.RequestPriority$Low();
-    case "auto":
-      return $requestPriority.RequestPriority$Auto();
-    default:
-      return $requestPriority.RequestPriority$Other(value);
+  if (value === undefined || value === "auto") {
+    return $requestPriority.RequestPriority$Auto();
   }
+  if (value === "high") return $requestPriority.RequestPriority$High();
+  if (value === "low") return $requestPriority.RequestPriority$Low();
+  return $requestPriority.RequestPriority$Other(value);
 }

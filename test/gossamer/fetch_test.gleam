@@ -387,7 +387,13 @@ pub fn request_init_priority_test() {
     request.from_url_string_with("https://example.org", [
       request.Priority(request_priority.High),
     ])
-  let _ = req
+
+  // Round-trip the priority: High on Node/Bun, Auto on Deno (Deno
+  // doesn't expose the priority getter; the FFI surfaces the missing
+  // property as Auto rather than a type-violating Other(Nil)).
+  let p = request.priority(req)
+  let ok = p == request_priority.High || p == request_priority.Auto
+  should.be_true(ok)
 }
 
 pub fn request_is_keepalive_test() {

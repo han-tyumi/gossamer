@@ -164,7 +164,9 @@ pub fn mode(of request: Request) -> RequestMode
 
 /// Returns the priority hint associated with the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Deno doesn't expose this getter; on Deno this returns
+/// `request_priority.Auto` regardless of the priority set on the
+/// request.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "priority")
