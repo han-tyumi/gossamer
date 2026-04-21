@@ -3,6 +3,7 @@ import gleeunit/should
 import gossamer
 import gossamer/js_error
 import gossamer/js_error/kind
+import gossamer/promise
 
 pub fn new_test() {
   let err = js_error.new("something went wrong")
@@ -148,4 +149,29 @@ pub fn kind_dom_exception_test() {
   let assert Error(err) = gossamer.atob("not valid base64!")
   js_error.kind(err)
   |> should.equal(kind.DomException(name: "InvalidCharacterError"))
+}
+
+pub fn kind_aggregate_error_test() {
+  // promise.any rejects with an AggregateError when every input rejects.
+  use result <- promise.then(
+    promise.any([promise.reject("err1"), promise.reject("err2")]),
+  )
+  let assert Error(err) = result
+  js_error.kind(err) |> should.equal(kind.AggregateError)
+  promise.resolve(Nil)
+}
+
+pub fn non_error_throw_preserves_original_via_cause_test() {
+  // When JS code throws a non-Error value, the FFI wraps it in an Error
+  // whose message is the stringified value and whose cause carries the
+  // original, so inspecting `cause` retrieves the original.
+  use result <- promise.then(
+    promise.new(fn(_resolve, reject) { reject("plain string") }),
+  )
+  let assert Error(err) = result
+  js_error.message(err) |> should.equal("plain string")
+  let assert Ok(cause) = js_error.cause(err)
+  let assert Ok(value) = decode.run(cause, decode.string)
+  should.equal(value, "plain string")
+  promise.resolve(Nil)
 }
