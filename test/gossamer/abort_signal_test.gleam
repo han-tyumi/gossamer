@@ -14,6 +14,10 @@ pub fn timeout_creates_unaborted_signal_test() {
   abort_signal.is_aborted(signal) |> should.be_false
 }
 
+pub fn timeout_negative_error_test() {
+  abort_signal.timeout(-1) |> should.be_error
+}
+
 pub fn reason_on_aborted_signal_test() {
   let signal = abort_signal.abort("the reason")
   let assert Ok(reason) = abort_signal.reason(signal)

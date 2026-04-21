@@ -15,6 +15,32 @@ import gossamer/writable_stream
 import gossamer/writable_stream/default_controller as writable_controller
 import gossamer/writable_stream/writer
 
+pub fn readable_stream_new_start_throws_test() {
+  readable_stream.new([
+    readable_stream.Start(fn(_controller) { panic as "boom" }),
+  ])
+  |> should.be_error
+}
+
+pub fn writable_stream_new_start_throws_test() {
+  writable_stream.new([
+    writable_stream.Start(fn(_controller) { panic as "boom" }),
+  ])
+  |> should.be_error
+}
+
+pub fn transform_stream_new_start_throws_test() {
+  transform_stream.new([
+    transform_stream.Start(fn(_controller) { panic as "boom" }),
+  ])
+  |> should.be_error
+}
+
+pub fn readable_stream_from_start_throws_test() {
+  readable_stream.from_start(fn(_controller) { panic as "boom" })
+  |> should.be_error
+}
+
 pub fn readable_stream_from_start_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
