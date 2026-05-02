@@ -161,7 +161,7 @@ export const reverse: typeof $uint8Array.reverse = (array) => {
 };
 
 export const with_: typeof $uint8Array.with$ = (array, index, value) => {
-  return array.with(index, value);
+  return toResult.fromThrows(() => array.with(index, value));
 };
 
 export const join: typeof $uint8Array.join = (array, separator) => {

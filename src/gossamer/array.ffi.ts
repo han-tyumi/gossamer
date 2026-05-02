@@ -139,7 +139,7 @@ export const to_sorted: typeof $array.to_sorted = (array, compare) =>
   array.toSorted(toCompareFn(compare));
 
 export const with_: typeof $array.with$ = (array, index, value) =>
-  array.with(index, value);
+  toResult.fromThrows(() => array.with(index, value));
 
 export const to_spliced: typeof $array.to_spliced = (array, start, count) =>
   array.toSpliced(start, count);

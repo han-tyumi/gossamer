@@ -96,9 +96,15 @@ pub fn reverse_test() {
 
 pub fn with_test() {
   let array = uint8_array.from_list([1, 2, 3])
-  let updated = uint8_array.with(array, 1, 42)
+  let assert Ok(updated) = uint8_array.with(array, 1, 42)
   uint8_array.at(updated, 1) |> should.equal(Ok(42))
   uint8_array.at(array, 1) |> should.equal(Ok(2))
+}
+
+pub fn with_out_of_range_test() {
+  let array = uint8_array.from_list([1, 2, 3])
+  let assert Error(_) = uint8_array.with(array, 100, 42)
+  let assert Error(_) = uint8_array.with(array, -100, 42)
 }
 
 pub fn set_test() {

@@ -165,12 +165,16 @@ pub fn fill_range(
 @external(javascript, "./uint8_array.ffi.mjs", "reverse")
 pub fn reverse(array: Uint8Array) -> Uint8Array
 
+/// Returns a copy of the array with the byte at `index` replaced by
+/// `value`. Negative indices count from the end. Returns an error if
+/// `index` is out of bounds.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "with_")
 pub fn with(
   array: Uint8Array,
   at_index index: Int,
   value value: Int,
-) -> Uint8Array
+) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./uint8_array.ffi.mjs", "join")
 pub fn join(array: Uint8Array, with separator: String) -> String

@@ -157,10 +157,15 @@ pub fn to_sorted_test() {
 
 pub fn with_test() {
   let a = array.from_list([1, 2, 3])
-  array.with(a, at_index: 1, value: 99)
-  |> array.to_list
-  |> should.equal([1, 99, 3])
+  let assert Ok(updated) = array.with(a, at_index: 1, value: 99)
+  array.to_list(updated) |> should.equal([1, 99, 3])
   array.to_list(a) |> should.equal([1, 2, 3])
+}
+
+pub fn with_out_of_range_test() {
+  let a = array.from_list([1, 2, 3])
+  let assert Error(_) = array.with(a, at_index: 100, value: 99)
+  let assert Error(_) = array.with(a, at_index: -100, value: 99)
 }
 
 pub fn to_spliced_test() {

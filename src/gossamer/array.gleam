@@ -1,5 +1,6 @@
 import gleam/order.{type Order}
 import gossamer/iterator.{type Iterator}
+import gossamer/js_error.{type JsError}
 
 /// A JS `Array` — an indexed, ordered, mutable list of values.
 ///
@@ -203,8 +204,16 @@ pub fn to_reversed(array: Array(a)) -> Array(a)
 @external(javascript, "./array.ffi.mjs", "to_sorted")
 pub fn to_sorted(array: Array(a), by compare: fn(a, a) -> Order) -> Array(a)
 
+/// Returns a copy of the array with the element at `index` replaced by
+/// `value`. Negative indices count from the end. Returns an error if
+/// `index` is out of range.
+///
 @external(javascript, "./array.ffi.mjs", "with_")
-pub fn with(array: Array(a), at_index index: Int, value value: a) -> Array(a)
+pub fn with(
+  array: Array(a),
+  at_index index: Int,
+  value value: a,
+) -> Result(Array(a), JsError)
 
 @external(javascript, "./array.ffi.mjs", "to_spliced")
 pub fn to_spliced(
