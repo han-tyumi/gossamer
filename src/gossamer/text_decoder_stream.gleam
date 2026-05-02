@@ -1,4 +1,5 @@
 import gossamer/encoding.{type Encoding}
+import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/text_decoder.{type TextDecoderOption}
 import gossamer/writable_stream.{type WritableStream}
@@ -21,7 +22,7 @@ pub fn new() -> TextDecoderStream
 pub fn new_with(
   label: String,
   with options: List(TextDecoderOption),
-) -> Result(TextDecoderStream, String)
+) -> Result(TextDecoderStream, JsError)
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "readable")
 pub fn readable(of decoder: TextDecoderStream) -> ReadableStream(String)

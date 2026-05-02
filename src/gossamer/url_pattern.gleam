@@ -1,4 +1,5 @@
 import gleam/dict.{type Dict}
+import gossamer/js_error.{type JsError}
 
 /// A pattern for matching URLs, with support for wildcards and named
 /// groups. Useful for routing and URL matching.
@@ -41,13 +42,13 @@ pub type URLPatternResult {
 /// if any pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "new_")
-pub fn new(init: List(URLPatternInit)) -> Result(URLPattern, String)
+pub fn new(init: List(URLPatternInit)) -> Result(URLPattern, JsError)
 
 /// Creates a `URLPattern` from a single pattern string. Returns an error
 /// if the pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string")
-pub fn from_string(pattern: String) -> Result(URLPattern, String)
+pub fn from_string(pattern: String) -> Result(URLPattern, JsError)
 
 /// Creates a `URLPattern` from a pattern string resolved against a base
 /// URL. Returns an error if the pattern is malformed or the base URL is
@@ -57,7 +58,7 @@ pub fn from_string(pattern: String) -> Result(URLPattern, String)
 pub fn from_string_with_base(
   pattern: String,
   relative_to base_url: String,
-) -> Result(URLPattern, String)
+) -> Result(URLPattern, JsError)
 
 @external(javascript, "./url_pattern.ffi.mjs", "test_")
 pub fn test_(pattern: URLPattern, against input: String) -> Bool

@@ -1,5 +1,6 @@
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/event.{type Event}
+import gossamer/js_error.{type JsError}
 
 /// An object that can receive events and have listeners for them.
 ///
@@ -69,4 +70,4 @@ pub fn remove_event_listener_with(
 pub fn dispatch_event(
   on target: EventTarget,
   event event: Event,
-) -> Result(Bool, String)
+) -> Result(Bool, JsError)

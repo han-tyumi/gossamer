@@ -1,3 +1,4 @@
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 
 /// A locked writer over a `WritableStream`.
@@ -11,7 +12,7 @@ pub type Writer(a)
 /// errored or the writer was released.
 ///
 @external(javascript, "./writer.ffi.mjs", "closed")
-pub fn closed(of writer: Writer(a)) -> Promise(Result(Nil, String))
+pub fn closed(of writer: Writer(a)) -> Promise(Result(Nil, JsError))
 
 /// The desired size to fill the stream's internal queue. Returns an error
 /// if the stream has been closed or errored.
@@ -23,7 +24,7 @@ pub fn desired_size(of writer: Writer(a)) -> Result(Int, Nil)
 /// has cleared). Returns an error if the stream errored.
 ///
 @external(javascript, "./writer.ffi.mjs", "ready")
-pub fn ready(of writer: Writer(a)) -> Promise(Result(Nil, String))
+pub fn ready(of writer: Writer(a)) -> Promise(Result(Nil, JsError))
 
 /// Aborts the stream. Returns an error if the underlying sink's abort
 /// callback throws or returns a rejecting promise.
@@ -32,20 +33,20 @@ pub fn ready(of writer: Writer(a)) -> Promise(Result(Nil, String))
 pub fn abort(
   writer: Writer(a),
   reason reason: r,
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))
 
 /// Closes the stream after all writes complete. Returns an error if the
 /// underlying sink's close callback throws or returns a rejecting
 /// promise.
 ///
 @external(javascript, "./writer.ffi.mjs", "close")
-pub fn close(writer: Writer(a)) -> Promise(Result(Nil, String))
+pub fn close(writer: Writer(a)) -> Promise(Result(Nil, JsError))
 
 /// Releases the writer's lock on the stream. Returns an error if there
 /// are outstanding writes.
 ///
 @external(javascript, "./writer.ffi.mjs", "release_lock")
-pub fn release_lock(writer: Writer(a)) -> Result(Writer(a), String)
+pub fn release_lock(writer: Writer(a)) -> Result(Writer(a), JsError)
 
 /// Writes `chunk` to the stream. Returns an error if the stream errored
 /// or was closed.
@@ -54,4 +55,4 @@ pub fn release_lock(writer: Writer(a)) -> Result(Writer(a), String)
 pub fn write(
   to writer: Writer(a),
   chunk chunk: a,
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))

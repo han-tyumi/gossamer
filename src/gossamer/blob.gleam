@@ -1,4 +1,5 @@
 import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
@@ -42,13 +43,13 @@ pub fn type_(of blob: Blob) -> String
 /// the blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "array_buffer")
-pub fn array_buffer(of blob: Blob) -> Promise(Result(ArrayBuffer, String))
+pub fn array_buffer(of blob: Blob) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Reads the blob's contents as a `Uint8Array`. Returns an error if the
 /// blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "bytes")
-pub fn bytes(of blob: Blob) -> Promise(Result(Uint8Array, String))
+pub fn bytes(of blob: Blob) -> Promise(Result(Uint8Array, JsError))
 
 @external(javascript, "./blob.ffi.mjs", "slice")
 pub fn slice(blob: Blob, from start: Int, to end: Int) -> Blob
@@ -68,4 +69,4 @@ pub fn stream(of blob: Blob) -> ReadableStream(Uint8Array)
 /// blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "text")
-pub fn text(of blob: Blob) -> Promise(Result(String, String))
+pub fn text(of blob: Blob) -> Promise(Result(String, JsError))

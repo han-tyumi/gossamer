@@ -1,4 +1,5 @@
 import gossamer/blob.{type Blob}
+import gossamer/js_error.{type JsError}
 import gossamer/url_search_params.{type URLSearchParams}
 
 /// A parsed URL. Mutable — setters like `set_hostname` modify the URL in
@@ -13,7 +14,7 @@ pub type URL
 /// valid absolute URL.
 ///
 @external(javascript, "./url.ffi.mjs", "new_")
-pub fn new(url: String) -> Result(URL, String)
+pub fn new(url: String) -> Result(URL, JsError)
 
 /// Parses `url`, resolving relative URLs against `base`. Returns an error
 /// if the resolved URL is invalid.
@@ -22,7 +23,7 @@ pub fn new(url: String) -> Result(URL, String)
 pub fn new_with_base(
   url: String,
   relative_to base: String,
-) -> Result(URL, String)
+) -> Result(URL, JsError)
 
 /// Like `new`, but returns `Error(Nil)` instead of an error message when
 /// the URL is invalid. Useful when the failure reason isn't needed.
@@ -70,7 +71,7 @@ pub fn href(of url: URL) -> String
 /// `href` is not a valid URL.
 ///
 @external(javascript, "./url.ffi.mjs", "set_href")
-pub fn set_href(of url: URL, to href: String) -> Result(URL, String)
+pub fn set_href(of url: URL, to href: String) -> Result(URL, JsError)
 
 @external(javascript, "./url.ffi.mjs", "origin")
 pub fn origin(of url: URL) -> String

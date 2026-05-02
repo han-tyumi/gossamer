@@ -1,6 +1,7 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/binary_type.{type BinaryType}
 import gossamer/blob.{type Blob}
+import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
 import gossamer/uint8_array.{type Uint8Array}
@@ -31,7 +32,7 @@ pub type WebSocket
 /// ```
 ///
 @external(javascript, "./web_socket.ffi.mjs", "from_url_string")
-pub fn from_url_string(url: String) -> Result(WebSocket, String)
+pub fn from_url_string(url: String) -> Result(WebSocket, JsError)
 
 /// Creates a new `WebSocket` connection to the URL given as a string, with
 /// the specified sub-protocols. Returns an error if `url` is not a valid
@@ -48,13 +49,13 @@ pub fn from_url_string(url: String) -> Result(WebSocket, String)
 pub fn from_url_string_with_protocols(
   url: String,
   with protocols: List(String),
-) -> Result(WebSocket, String)
+) -> Result(WebSocket, JsError)
 
 /// Creates a new `WebSocket` connection to `url`. Returns an error if
 /// `url`'s scheme is not `ws:` or `wss:`.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "from_url")
-pub fn from_url(url: URL) -> Result(WebSocket, String)
+pub fn from_url(url: URL) -> Result(WebSocket, JsError)
 
 /// Creates a new `WebSocket` connection to `url` with the specified
 /// sub-protocols. Returns an error if `url`'s scheme is not `ws:` or
@@ -64,7 +65,7 @@ pub fn from_url(url: URL) -> Result(WebSocket, String)
 pub fn from_url_with_protocols(
   url: URL,
   with protocols: List(String),
-) -> Result(WebSocket, String)
+) -> Result(WebSocket, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "binary_type")
 pub fn binary_type(of socket: WebSocket) -> BinaryType
@@ -110,7 +111,7 @@ pub fn close_with(
   socket: WebSocket,
   code code: Int,
   reason reason: String,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 /// Sends a string through the WebSocket. Returns an error if the connection
 /// is not open.
@@ -119,7 +120,7 @@ pub fn close_with(
 pub fn send_string(
   to socket: WebSocket,
   data data: String,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 /// Sends binary data as a `Uint8Array` through the WebSocket. Returns an
 /// error if the connection is not open.
@@ -128,13 +129,13 @@ pub fn send_string(
 pub fn send_bytes(
   to socket: WebSocket,
   data data: Uint8Array,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 /// Sends a `Blob` through the WebSocket. Returns an error if the connection
 /// is not open.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
-pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, String)
+pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, JsError)
 
 /// Sends an `ArrayBuffer` through the WebSocket. Returns an error if the
 /// connection is not open.
@@ -143,7 +144,7 @@ pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, String)
 pub fn send_buffer(
   to socket: WebSocket,
   data data: ArrayBuffer,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")
 pub fn on_open(socket: WebSocket, run handler: fn() -> a) -> Nil

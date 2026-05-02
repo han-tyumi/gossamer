@@ -1,3 +1,4 @@
+import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 
 /// One end of a `MessageChannel`, used to send and receive messages.
@@ -12,7 +13,7 @@ pub type MessagePort
 /// or non-cloneable object).
 ///
 @external(javascript, "./message_port.ffi.mjs", "post_message")
-pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, String)
+pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, JsError)
 
 @external(javascript, "./message_port.ffi.mjs", "start")
 pub fn start(port: MessagePort) -> Nil

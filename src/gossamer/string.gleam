@@ -4,6 +4,7 @@
 //// standard library.
 
 import gleam/order.{type Order}
+import gossamer/js_error.{type JsError}
 import gossamer/string/normalization_form.{type NormalizationForm}
 
 @external(javascript, "./string.ffi.mjs", "from_char_code")
@@ -15,12 +16,12 @@ pub fn from_char_codes(codes: List(Int)) -> String
 /// Returns an error if the code point is invalid.
 ///
 @external(javascript, "./string.ffi.mjs", "from_code_point")
-pub fn from_code_point(code: Int) -> Result(String, String)
+pub fn from_code_point(code: Int) -> Result(String, JsError)
 
 /// Returns an error if any code point is invalid.
 ///
 @external(javascript, "./string.ffi.mjs", "from_code_points")
-pub fn from_code_points(codes: List(Int)) -> Result(String, String)
+pub fn from_code_points(codes: List(Int)) -> Result(String, JsError)
 
 /// Returns the UTF-16 code unit at `index` as a single-character string,
 /// or `Error(Nil)` if the index is out of range. Negative indices count
@@ -190,7 +191,7 @@ pub fn trim_end(string: String) -> String
 /// length.
 ///
 @external(javascript, "./string.ffi.mjs", "repeat")
-pub fn repeat(string: String, times times: Int) -> Result(String, String)
+pub fn repeat(string: String, times times: Int) -> Result(String, JsError)
 
 /// Pads the start to reach `target_length` UTF-16 code units. This differs
 /// from `gleam/string.pad_start` which counts grapheme clusters.

@@ -1,5 +1,6 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
@@ -56,13 +57,13 @@ pub fn type_(of file: File) -> String
 /// the file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "array_buffer")
-pub fn array_buffer(of file: File) -> Promise(Result(ArrayBuffer, String))
+pub fn array_buffer(of file: File) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Reads the file's contents as a `Uint8Array`. Returns an error if the
 /// file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "bytes")
-pub fn bytes(of file: File) -> Promise(Result(Uint8Array, String))
+pub fn bytes(of file: File) -> Promise(Result(Uint8Array, JsError))
 
 @external(javascript, "./file.ffi.mjs", "slice")
 pub fn slice(file: File, from start: Int, to end: Int) -> Blob
@@ -82,4 +83,4 @@ pub fn stream(of file: File) -> ReadableStream(Uint8Array)
 /// file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "text")
-pub fn text(of file: File) -> Promise(Result(String, String))
+pub fn text(of file: File) -> Promise(Result(String, JsError))

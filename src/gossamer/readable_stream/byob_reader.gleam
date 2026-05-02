@@ -2,6 +2,7 @@
 // which gossamer doesn't expose yet. Add tests once byte stream support lands.
 
 import gossamer/array_buffer.{type ArrayBufferView}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/read_result.{type ReadResult}
 
@@ -21,7 +22,7 @@ pub type ByobReaderReadOption {
 /// errored.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "closed")
-pub fn closed(of reader: ByobReader(a)) -> Promise(Result(Nil, String))
+pub fn closed(of reader: ByobReader(a)) -> Promise(Result(Nil, JsError))
 
 /// Cancels the stream and releases the reader's lock. Returns an error
 /// if the underlying cancel fails.
@@ -30,7 +31,7 @@ pub fn closed(of reader: ByobReader(a)) -> Promise(Result(Nil, String))
 pub fn cancel(
   reader: ByobReader(a),
   reason reason: r,
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))
 
 /// Reads bytes from the stream into `view`. Returns an error if the
 /// stream errored or the reader was released.
@@ -40,10 +41,10 @@ pub fn read(
   reader: ByobReader(a),
   into view: ArrayBufferView,
   with options: List(ByobReaderReadOption),
-) -> Promise(Result(ReadResult(ArrayBufferView), String))
+) -> Promise(Result(ReadResult(ArrayBufferView), JsError))
 
 /// Releases the reader's lock on the stream. Returns an error if the
 /// reader has outstanding read requests.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "release_lock")
-pub fn release_lock(reader: ByobReader(a)) -> Result(ByobReader(a), String)
+pub fn release_lock(reader: ByobReader(a)) -> Result(ByobReader(a), JsError)

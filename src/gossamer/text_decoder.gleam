@@ -1,5 +1,6 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/encoding.{type Encoding}
+import gossamer/js_error.{type JsError}
 
 /// Decodes a stream of bytes into text using a specified character
 /// encoding.
@@ -33,7 +34,7 @@ pub fn new() -> TextDecoder
 pub fn new_with(
   label: String,
   with options: List(TextDecoderOption),
-) -> Result(TextDecoder, String)
+) -> Result(TextDecoder, JsError)
 
 @external(javascript, "./text_decoder.ffi.mjs", "encoding")
 pub fn encoding(of decoder: TextDecoder) -> Encoding
@@ -52,14 +53,14 @@ pub fn is_ignore_bom(decoder: TextDecoder) -> Bool
 pub fn decode_chunk(
   decoder: TextDecoder,
   input: ArrayBuffer,
-) -> Result(String, String)
+) -> Result(String, JsError)
 
 /// Emits any remaining bytes buffered from prior `decode_chunk` calls.
 /// Returns an error if the decoder was created with `Fatal` and an
 /// incomplete multi-byte sequence was left in the buffer.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "flush")
-pub fn flush(decoder: TextDecoder) -> Result(String, String)
+pub fn flush(decoder: TextDecoder) -> Result(String, JsError)
 
 /// Turns binary data, often in the form of a Uint8Array, into a string given
 /// the encoding.
@@ -76,4 +77,4 @@ pub fn decode_with(
   input: ArrayBuffer,
   label: String,
   with options: List(TextDecoderOption),
-) -> Result(String, String)
+) -> Result(String, JsError)

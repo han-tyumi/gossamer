@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/writable_stream/default_controller.{type DefaultController}
 import gossamer/writable_stream/writer.{type Writer}
@@ -44,17 +45,17 @@ pub fn is_locked(stream: WritableStream(a)) -> Bool
 pub fn abort(
   stream: WritableStream(a),
   reason reason: r,
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))
 
 /// Closes the stream after all writes complete. Returns an error if the
 /// underlying sink's close callback throws or returns a rejecting
 /// promise.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "close")
-pub fn close(stream: WritableStream(a)) -> Promise(Result(Nil, String))
+pub fn close(stream: WritableStream(a)) -> Promise(Result(Nil, JsError))
 
 /// Acquires a `Writer` that locks the stream. Returns an error if the
 /// stream is already locked.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "get_writer")
-pub fn get_writer(stream: WritableStream(a)) -> Result(Writer(a), String)
+pub fn get_writer(stream: WritableStream(a)) -> Result(Writer(a), JsError)

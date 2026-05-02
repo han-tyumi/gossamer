@@ -1,5 +1,6 @@
 import gleam/option.{type Option}
 import gossamer/iterator_result.{type IteratorResult}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 
 /// A pull-based iterator that yields values asynchronously. Each call to
@@ -31,7 +32,7 @@ pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 @external(javascript, "./async_iterator.ffi.mjs", "to_list")
 pub fn to_list(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(List(a), String))
+) -> Promise(Result(List(a), JsError))
 
 /// Adds a `return` handler called when the consumer ends iteration early.
 ///
@@ -56,7 +57,7 @@ pub fn with_throw(
 @external(javascript, "./async_iterator.ffi.mjs", "next")
 pub fn next(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(IteratorResult(a, return), String))
+) -> Promise(Result(IteratorResult(a, return), JsError))
 
 /// Advances the iterator, passing `value` to its internal logic. Returns
 /// an error if the underlying callback throws or returns a rejecting
@@ -66,7 +67,7 @@ pub fn next(
 pub fn next_with(
   iterator: AsyncIterator(a, return, next),
   value: next,
-) -> Promise(Result(IteratorResult(a, return), String))
+) -> Promise(Result(IteratorResult(a, return), JsError))
 
 /// Ends iteration early by invoking the iterator's `return` handler.
 /// Resolves with `Error(Nil)` if the iterator doesn't support `return`.
@@ -100,4 +101,4 @@ pub fn throw(
 pub fn for_await(
   in iterator: AsyncIterator(a, return, next),
   run fun: fn(a) -> any,
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))

@@ -1,6 +1,7 @@
 import gleam/order.{type Order}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/iterator.{type Iterator}
+import gossamer/js_error.{type JsError}
 
 /// A typed array of 8-bit unsigned integers (bytes).
 ///
@@ -16,7 +17,7 @@ pub fn new() -> Uint8Array
 /// if `length` is negative or exceeds the maximum allocatable size.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(Uint8Array, String)
+pub fn from_length(length: Int) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./uint8_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Uint8Array
@@ -31,13 +32,13 @@ pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
 /// `string` is not valid base64.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_base64")
-pub fn from_base64(string: String) -> Result(Uint8Array, String)
+pub fn from_base64(string: String) -> Result(Uint8Array, JsError)
 
 /// Decodes a hex string into a `Uint8Array`. Returns an error if `string`
 /// is not valid hex (non-hex characters or odd length).
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_hex")
-pub fn from_hex(string: String) -> Result(Uint8Array, String)
+pub fn from_hex(string: String) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./uint8_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Uint8Array) -> ArrayBuffer
@@ -118,7 +119,7 @@ pub fn subarray(array: Uint8Array, from begin: Int, to end: Int) -> Uint8Array
 pub fn set(
   in array: Uint8Array,
   values values: Uint8Array,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 /// Copies `values` into `array` starting at `offset`. Returns an error if
 /// `offset` is negative or the copy would extend past the end of `array`.
@@ -128,7 +129,7 @@ pub fn set_with_offset(
   in array: Uint8Array,
   values values: Uint8Array,
   offset offset: Int,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 @external(javascript, "./uint8_array.ffi.mjs", "copy_within")
 pub fn copy_within(
@@ -357,7 +358,7 @@ pub fn to_hex(array: Uint8Array) -> String
 pub fn set_from_base64(
   array: Uint8Array,
   string: String,
-) -> Result(#(Int, Int), String)
+) -> Result(#(Int, Int), JsError)
 
 /// Decodes `string` as hex into `array` in place. Returns the number of
 /// characters read and bytes written. Returns an error if `string` is not
@@ -367,4 +368,4 @@ pub fn set_from_base64(
 pub fn set_from_hex(
   array: Uint8Array,
   string: String,
-) -> Result(#(Int, Int), String)
+) -> Result(#(Int, Int), JsError)

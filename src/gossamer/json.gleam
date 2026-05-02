@@ -1,4 +1,5 @@
 import gleam/dict.{type Dict}
+import gossamer/js_error.{type JsError}
 
 /// A JSON value — one of null, boolean, number, string, array, or object.
 ///
@@ -15,7 +16,7 @@ pub type Json {
 /// string is not valid JSON.
 ///
 @external(javascript, "./json.ffi.mjs", "parse")
-pub fn parse(text: String) -> Result(Json, String)
+pub fn parse(text: String) -> Result(Json, JsError)
 
 /// Serializes a `Json` value into a JSON string.
 ///

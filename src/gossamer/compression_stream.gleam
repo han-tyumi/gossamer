@@ -1,4 +1,5 @@
 import gossamer/compression_format.{type CompressionFormat}
+import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
@@ -29,7 +30,7 @@ pub type CompressionStream
 /// Returns an error if the format is not supported.
 ///
 @external(javascript, "./compression_stream.ffi.mjs", "new_")
-pub fn new(format: CompressionFormat) -> Result(CompressionStream, String)
+pub fn new(format: CompressionFormat) -> Result(CompressionStream, JsError)
 
 @external(javascript, "./compression_stream.ffi.mjs", "readable")
 pub fn readable(of stream: CompressionStream) -> ReadableStream(Uint8Array)

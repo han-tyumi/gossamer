@@ -30,10 +30,14 @@ export const delete_: typeof $headers.delete$ = (headers, name) => {
 export const get: typeof $headers.get = (headers, name) => {
   try {
     const value = headers.get(name);
-    return value === null ? Result$Error("not found") : Result$Ok(value);
+    return value === null
+      ? Result$Error(new Error("not found"))
+      : Result$Ok(value);
   } catch (error) {
     return Result$Error(
-      error instanceof Error ? error.message : String(error),
+      error instanceof Error
+        ? error
+        : new Error(String(error), { cause: error }),
     );
   }
 };

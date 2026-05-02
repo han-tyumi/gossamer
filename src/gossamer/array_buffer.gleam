@@ -1,3 +1,5 @@
+import gossamer/js_error.{type JsError}
+
 /// A generic raw binary data buffer.
 ///
 /// See [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) on MDN.
@@ -14,7 +16,7 @@ pub type ArrayBufferView {
 /// size.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
-pub fn new(byte_length: Int) -> Result(ArrayBuffer, String)
+pub fn new(byte_length: Int) -> Result(ArrayBuffer, JsError)
 
 @external(javascript, "./array_buffer.ffi.mjs", "byte_length")
 pub fn byte_length(of array_buffer: ArrayBuffer) -> Int
@@ -27,7 +29,7 @@ pub fn byte_length(of array_buffer: ArrayBuffer) -> Int
 pub fn new_resizable(
   byte_length: Int,
   max_byte_length max: Int,
-) -> Result(ArrayBuffer, String)
+) -> Result(ArrayBuffer, JsError)
 
 @external(javascript, "./array_buffer.ffi.mjs", "max_byte_length")
 pub fn max_byte_length(of array_buffer: ArrayBuffer) -> Int
@@ -45,7 +47,7 @@ pub fn is_detached(array_buffer: ArrayBuffer) -> Bool
 /// original. Returns an error if the buffer is already detached.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "transfer")
-pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, String)
+pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, JsError)
 
 /// Resizes the `ArrayBuffer` to the specified byte length. The buffer must
 /// have been created with `new_resizable`. Returns an error if the new length
@@ -55,7 +57,7 @@ pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, String)
 pub fn resize(
   array_buffer: ArrayBuffer,
   to byte_length: Int,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)
 
 @external(javascript, "./array_buffer.ffi.mjs", "slice")
 pub fn slice(array_buffer: ArrayBuffer, from begin: Int) -> ArrayBuffer

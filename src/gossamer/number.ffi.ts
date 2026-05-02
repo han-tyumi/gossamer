@@ -1,5 +1,6 @@
 import type * as $number from "$/gossamer/gossamer/number.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export const epsilon: typeof $number.epsilon = () => Number.EPSILON;
 export const max_value: typeof $number.max_value = () => Number.MAX_VALUE;
@@ -17,41 +18,25 @@ export const is_safe_integer: typeof $number.is_safe_integer = (value) =>
   Number.isSafeInteger(value);
 
 export const to_fixed: typeof $number.to_fixed = (value, digits) => {
-  try {
-    return Result$Ok(value.toFixed(digits));
-  } catch (error) {
-    return Result$Error(error instanceof Error ? error.message : String(error));
-  }
+  return toResult.fromThrows(() => value.toFixed(digits));
 };
 
 export const to_precision: typeof $number.to_precision = (value, digits) => {
-  try {
-    return Result$Ok(value.toPrecision(digits));
-  } catch (error) {
-    return Result$Error(error instanceof Error ? error.message : String(error));
-  }
+  return toResult.fromThrows(() => value.toPrecision(digits));
 };
 
 export const to_exponential: typeof $number.to_exponential = (
   value,
   digits,
 ) => {
-  try {
-    return Result$Ok(value.toExponential(digits));
-  } catch (error) {
-    return Result$Error(error instanceof Error ? error.message : String(error));
-  }
+  return toResult.fromThrows(() => value.toExponential(digits));
 };
 
 export const to_string_with_radix: typeof $number.to_string_with_radix = (
   value,
   radix,
 ) => {
-  try {
-    return Result$Ok(value.toString(radix));
-  } catch (error) {
-    return Result$Error(error instanceof Error ? error.message : String(error));
-  }
+  return toResult.fromThrows(() => value.toString(radix));
 };
 
 export const to_locale_string: typeof $number.to_locale_string = (value) =>

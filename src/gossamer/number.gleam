@@ -1,6 +1,8 @@
 //// Numeric constants, type checks, parsing, and formatting that mirror
 //// JavaScript's `Number` object.
 
+import gossamer/js_error.{type JsError}
+
 /// The maximum safe integer in JavaScript (2^53 - 1).
 ///
 pub const max_safe_integer = 9_007_199_254_740_991
@@ -51,13 +53,13 @@ pub fn is_safe_integer(value: Float) -> Bool
 /// decimal places. Returns an error if the digits are out of range (0–100).
 ///
 @external(javascript, "./number.ffi.mjs", "to_fixed")
-pub fn to_fixed(value: Float, digits digits: Int) -> Result(String, String)
+pub fn to_fixed(value: Float, digits digits: Int) -> Result(String, JsError)
 
 /// Formats a number to the specified number of significant digits. Returns
 /// an error if the precision is out of range (1–100).
 ///
 @external(javascript, "./number.ffi.mjs", "to_precision")
-pub fn to_precision(value: Float, digits digits: Int) -> Result(String, String)
+pub fn to_precision(value: Float, digits digits: Int) -> Result(String, JsError)
 
 /// Formats a number in exponential (scientific) notation with the specified
 /// number of digits after the decimal point. Returns an error if the digits
@@ -67,7 +69,7 @@ pub fn to_precision(value: Float, digits digits: Int) -> Result(String, String)
 pub fn to_exponential(
   value: Float,
   digits digits: Int,
-) -> Result(String, String)
+) -> Result(String, JsError)
 
 /// Converts an integer to a string in the specified radix (base 2–36).
 /// Returns an error if the radix is out of range.
@@ -76,7 +78,7 @@ pub fn to_exponential(
 pub fn to_string_with_radix(
   value: Int,
   radix radix: Int,
-) -> Result(String, String)
+) -> Result(String, JsError)
 
 /// Returns a locale-sensitive string representation of the number.
 ///

@@ -1,3 +1,5 @@
+import gossamer/js_error.{type JsError}
+
 /// A point in time, represented as milliseconds since the Unix epoch.
 ///
 /// See [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date) on MDN.
@@ -232,7 +234,7 @@ pub fn to_time_string(date: Date) -> String
 /// "2026-04-09T14:30:00.000Z"). Returns an error if the date is invalid.
 ///
 @external(javascript, "./date.ffi.mjs", "to_iso_string")
-pub fn to_iso_string(date: Date) -> Result(String, String)
+pub fn to_iso_string(date: Date) -> Result(String, JsError)
 
 /// Returns the date as a UTC string (e.g.,
 /// "Thu, 09 Apr 2026 14:30:00 GMT").
@@ -244,7 +246,7 @@ pub fn to_utc_string(date: Date) -> String
 /// Returns an error if the date is invalid.
 ///
 @external(javascript, "./date.ffi.mjs", "to_json")
-pub fn to_json(date: Date) -> Result(String, String)
+pub fn to_json(date: Date) -> Result(String, JsError)
 
 /// Returns a locale-sensitive string representing the full date and time.
 ///

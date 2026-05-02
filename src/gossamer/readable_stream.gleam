@@ -2,6 +2,7 @@ import gleam/dynamic.{type Dynamic}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/async_iterator.{type AsyncIterator}
 import gossamer/iterator.{type Iterator}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/byob_reader.{type ByobReader}
 import gossamer/readable_stream/default_controller.{type DefaultController}
@@ -81,13 +82,13 @@ pub fn is_locked(stream: ReadableStream(a)) -> Bool
 pub fn cancel(
   stream: ReadableStream(a),
   reason reason: r,
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))
 
 /// Acquires a `Reader` that locks the stream. Returns an error if the
 /// stream is already locked.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "get_reader")
-pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), String)
+pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), JsError)
 
 /// Acquires a `ByobReader` for bring-your-own-buffer reads. Returns an
 /// error if the stream is already locked or is not a byte stream.
@@ -95,7 +96,7 @@ pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), String)
 @external(javascript, "./readable_stream.ffi.mjs", "get_byob_reader")
 pub fn get_byob_reader(
   stream: ReadableStream(a),
-) -> Result(ByobReader(a), String)
+) -> Result(ByobReader(a), JsError)
 
 /// Pipes the stream through a transform (a writable+readable pair),
 /// returning the readable side. Returns an error if this stream or the
@@ -106,7 +107,7 @@ pub fn pipe_through(
   stream: ReadableStream(a),
   transform: #(ReadableStream(b), WritableStream(a)),
   with options: List(StreamPipeOption),
-) -> Result(ReadableStream(b), String)
+) -> Result(ReadableStream(b), JsError)
 
 /// Pipes the stream to a `WritableStream`. Returns an error if piping
 /// fails (stream errored, destination errored, or either side already
@@ -117,7 +118,7 @@ pub fn pipe_to(
   stream: ReadableStream(a),
   destination: WritableStream(a),
   with options: List(StreamPipeOption),
-) -> Promise(Result(Nil, String))
+) -> Promise(Result(Nil, JsError))
 
 /// Splits the stream into two independent streams reading the same data.
 /// Returns an error if the stream is already locked.
@@ -125,7 +126,7 @@ pub fn pipe_to(
 @external(javascript, "./readable_stream.ffi.mjs", "tee")
 pub fn tee(
   stream: ReadableStream(a),
-) -> Result(#(ReadableStream(a), ReadableStream(a)), String)
+) -> Result(#(ReadableStream(a), ReadableStream(a)), JsError)
 
 /// Returns an `AsyncIterator` that reads from the stream. The iterator
 /// locks the stream until reading completes.

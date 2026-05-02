@@ -3,6 +3,7 @@
 //// (see `gossamer/url`, `gossamer/headers`, `gossamer/readable_stream`,
 //// etc.).
 
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/request.{type Request, type RequestInit}
 import gossamer/response.{type Response}
@@ -12,7 +13,7 @@ import gossamer/url.{type URL}
 /// CORS failure, or if the URL is invalid.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_")
-pub fn fetch(url: String) -> Promise(Result(Response, String))
+pub fn fetch(url: String) -> Promise(Result(Response, JsError))
 
 /// Fetches a resource from `url` with the given request init options.
 /// Returns an error on network error, CORS failure, or if the URL or
@@ -22,13 +23,13 @@ pub fn fetch(url: String) -> Promise(Result(Response, String))
 pub fn fetch_with(
   url: String,
   with init: List(RequestInit),
-) -> Promise(Result(Response, String))
+) -> Promise(Result(Response, JsError))
 
 /// Fetches a resource from `url`. Returns an error on network error or
 /// CORS failure.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_url")
-pub fn fetch_url(url: URL) -> Promise(Result(Response, String))
+pub fn fetch_url(url: URL) -> Promise(Result(Response, JsError))
 
 /// Fetches a resource from `url` with the given request init options.
 /// Returns an error on network error, CORS failure, or if `init` is
@@ -38,13 +39,13 @@ pub fn fetch_url(url: URL) -> Promise(Result(Response, String))
 pub fn fetch_url_with(
   url: URL,
   with init: List(RequestInit),
-) -> Promise(Result(Response, String))
+) -> Promise(Result(Response, JsError))
 
 /// Fetches a resource using a pre-built `Request`. Returns an error on
 /// network error or CORS failure.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "fetch_request")
-pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
+pub fn fetch_request(request: Request) -> Promise(Result(Response, JsError))
 
 /// Fetches a resource using a pre-built `Request`, with `init` options
 /// that override fields on `request`. Returns an error on network error,
@@ -54,27 +55,27 @@ pub fn fetch_request(request: Request) -> Promise(Result(Response, String))
 pub fn fetch_request_with(
   request: Request,
   with init: List(RequestInit),
-) -> Promise(Result(Response, String))
+) -> Promise(Result(Response, JsError))
 
 /// Creates a deep clone of `value` using the structured clone algorithm.
 /// Returns an error if `value` contains a function, symbol, or other
 /// non-cloneable value.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "structured_clone")
-pub fn structured_clone(value: a) -> Result(a, String)
+pub fn structured_clone(value: a) -> Result(a, JsError)
 
 /// Decodes a base64-encoded string. Returns an error if the string is
 /// not valid base64.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "atob")
-pub fn atob(encoded: String) -> Result(String, String)
+pub fn atob(encoded: String) -> Result(String, JsError)
 
 /// Encodes a binary string as base64. Returns an error if `data` contains
 /// code points beyond 0xFF (use `uint8_array.to_base64` for arbitrary
 /// bytes).
 ///
 @external(javascript, "./gossamer.ffi.mjs", "btoa")
-pub fn btoa(data: String) -> Result(String, String)
+pub fn btoa(data: String) -> Result(String, JsError)
 
 /// Cancels a repeating timer previously scheduled with `set_interval`.
 ///

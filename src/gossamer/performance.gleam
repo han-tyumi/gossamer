@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gossamer/js_error.{type JsError}
 import gossamer/performance_entry.{type PerformanceEntry}
 
 /// Returns a high-resolution timestamp (in milliseconds) relative to the
@@ -17,7 +18,7 @@ pub fn time_origin() -> Float
 /// error if `name` collides with a built-in timing mark.
 ///
 @external(javascript, "./performance.ffi.mjs", "mark")
-pub fn mark(name: String) -> Result(PerformanceEntry, String)
+pub fn mark(name: String) -> Result(PerformanceEntry, JsError)
 
 /// Records a measurement between two previously-recorded marks. Returns
 /// an error if either mark does not exist or `name` collides with a
@@ -28,7 +29,7 @@ pub fn measure(
   name: String,
   from start_mark: String,
   to end_mark: String,
-) -> Result(PerformanceEntry, String)
+) -> Result(PerformanceEntry, JsError)
 
 @external(javascript, "./performance.ffi.mjs", "clear_marks")
 pub fn clear_marks() -> Nil

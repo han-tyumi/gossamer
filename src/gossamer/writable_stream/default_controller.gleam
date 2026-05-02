@@ -1,4 +1,5 @@
 import gossamer/abort_signal.{type AbortSignal}
+import gossamer/js_error.{type JsError}
 
 /// A controller for a `WritableStream`'s underlying sink, passed to the
 /// `Start`, `Write`, `Close`, and `Abort` callbacks. Used to signal stream
@@ -19,4 +20,4 @@ pub fn signal(of controller: DefaultController) -> AbortSignal
 pub fn error(
   controller: DefaultController,
   reason reason: a,
-) -> Result(Nil, String)
+) -> Result(Nil, JsError)

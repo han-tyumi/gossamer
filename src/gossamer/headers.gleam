@@ -1,4 +1,5 @@
 import gossamer/iterator.{type Iterator}
+import gossamer/js_error.{type JsError}
 
 /// An HTTP header set used with `fetch`, `Request`, and `Response`. Headers
 /// are mutable — methods like `append`, `delete`, and `set` modify the set
@@ -16,7 +17,7 @@ pub fn new() -> Headers
 /// error if any name or value is not a valid ByteString.
 ///
 @external(javascript, "./headers.ffi.mjs", "from_pairs")
-pub fn from_pairs(pairs: List(#(String, String))) -> Result(Headers, String)
+pub fn from_pairs(pairs: List(#(String, String))) -> Result(Headers, JsError)
 
 /// Appends a new value onto an existing header, or adds the header if it does
 /// not already exist. Mutates the headers in-place and returns them for
@@ -27,7 +28,7 @@ pub fn append(
   to headers: Headers,
   name name: String,
   value value: String,
-) -> Result(Headers, String)
+) -> Result(Headers, JsError)
 
 /// Deletes a header. Mutates the headers in-place and returns them for
 /// chaining. Returns an error if the name is not a valid ByteString.
@@ -36,20 +37,20 @@ pub fn append(
 pub fn delete(
   from headers: Headers,
   name name: String,
-) -> Result(Headers, String)
+) -> Result(Headers, JsError)
 
 /// Returns the value for `name`, combining multiple values with `, `.
 /// Returns an error if `name` is not a valid ByteString or no such header
 /// exists.
 ///
 @external(javascript, "./headers.ffi.mjs", "get")
-pub fn get(from headers: Headers, name name: String) -> Result(String, String)
+pub fn get(from headers: Headers, name name: String) -> Result(String, JsError)
 
 /// Checks whether a header with `name` exists. Returns an error if `name`
 /// is not a valid ByteString.
 ///
 @external(javascript, "./headers.ffi.mjs", "has")
-pub fn has(in headers: Headers, name name: String) -> Result(Bool, String)
+pub fn has(in headers: Headers, name name: String) -> Result(Bool, JsError)
 
 /// Sets a new value for an existing header, or adds the header if it does not
 /// already exist. Mutates the headers in-place and returns them for chaining.
@@ -60,7 +61,7 @@ pub fn set(
   in headers: Headers,
   name name: String,
   value value: String,
-) -> Result(Headers, String)
+) -> Result(Headers, JsError)
 
 /// Returns the values of all `Set-Cookie` headers separately (rather than
 /// combining them with `, ` like `get` would).

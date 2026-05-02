@@ -1,5 +1,6 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
+import gossamer/js_error.{type JsError}
 
 /// A proxy for a value that may not be known when the promise is created.
 ///
@@ -15,7 +16,7 @@ pub type PromiseSettledResult(a) {
 
 pub type PromiseWithResolvers(a, r) {
   PromiseWithResolvers(
-    promise: Promise(Result(a, String)),
+    promise: Promise(Result(a, JsError)),
     resolve: fn(a) -> Nil,
     reject: fn(r) -> Nil,
   )
@@ -28,19 +29,19 @@ pub type PromiseWithResolvers(a, r) {
 @external(javascript, "./promise.ffi.mjs", "new_")
 pub fn new(
   executor: fn(fn(a) -> b, fn(r) -> c) -> d,
-) -> Promise(Result(a, String))
+) -> Promise(Result(a, JsError))
 
 /// Resolves with a list of the fulfilled values when all provided promises
 /// fulfill, or rejects as soon as any promise rejects.
 ///
 @external(javascript, "./promise.ffi.mjs", "all")
-pub fn all(values: List(Promise(a))) -> Promise(Result(List(a), String))
+pub fn all(values: List(Promise(a))) -> Promise(Result(List(a), JsError))
 
 /// Resolves or rejects as soon as any of the provided promises resolves or
 /// rejects, taking on that promise's value.
 ///
 @external(javascript, "./promise.ffi.mjs", "race")
-pub fn race(values: List(Promise(a))) -> Promise(Result(a, String))
+pub fn race(values: List(Promise(a))) -> Promise(Result(a, JsError))
 
 /// Creates a promise already rejected with `reason`.
 ///
@@ -64,14 +65,14 @@ pub fn all_settled(
 /// provided promises reject.
 ///
 @external(javascript, "./promise.ffi.mjs", "any")
-pub fn any(values: List(Promise(a))) -> Promise(Result(a, String))
+pub fn any(values: List(Promise(a))) -> Promise(Result(a, JsError))
 
 /// Runs `func` and wraps the result in a promise. The returned promise
 /// resolves with the function's return value or rejects if it throws or
 /// returns a rejecting promise.
 ///
 @external(javascript, "./promise.ffi.mjs", "try_")
-pub fn try(func: fn() -> a) -> Promise(Result(a, String))
+pub fn try(func: fn() -> a) -> Promise(Result(a, JsError))
 
 /// Creates a promise along with `resolve` and `reject` callbacks that can
 /// settle it from outside. Useful when the settling logic isn't known at

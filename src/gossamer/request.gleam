@@ -5,6 +5,7 @@ import gossamer/blob.{type Blob}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_method.{type HttpMethod}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/referrer_policy.{type ReferrerPolicy}
@@ -51,7 +52,7 @@ pub type RequestInit {
 /// if `url` is not a valid URL.
 ///
 @external(javascript, "./request.ffi.mjs", "from_url_string")
-pub fn from_url_string(url: String) -> Result(Request, String)
+pub fn from_url_string(url: String) -> Result(Request, JsError)
 
 /// Creates a new `Request` from a URL given as a string, with init
 /// options. Returns an error if `url` is not a valid URL or `init`
@@ -61,13 +62,13 @@ pub fn from_url_string(url: String) -> Result(Request, String)
 pub fn from_url_string_with(
   url: String,
   with init: List(RequestInit),
-) -> Result(Request, String)
+) -> Result(Request, JsError)
 
 /// Creates a new `Request` from `url`. Returns an error if `url` contains
 /// credentials (the Fetch spec rejects `user:pass@` URLs).
 ///
 @external(javascript, "./request.ffi.mjs", "from_url")
-pub fn from_url(url: URL) -> Result(Request, String)
+pub fn from_url(url: URL) -> Result(Request, JsError)
 
 /// Creates a new `Request` from `url` with init options. Returns an error
 /// if `url` contains credentials, or `init` contains an invalid method,
@@ -77,7 +78,7 @@ pub fn from_url(url: URL) -> Result(Request, String)
 pub fn from_url_with(
   url: URL,
   with init: List(RequestInit),
-) -> Result(Request, String)
+) -> Result(Request, JsError)
 
 /// Creates a new `Request` by copying `existing`. The body is shared with
 /// `existing` — after copying, `existing`'s body can no longer be
@@ -85,7 +86,7 @@ pub fn from_url_with(
 /// or locked.
 ///
 @external(javascript, "./request.ffi.mjs", "from_request")
-pub fn from_request(existing: Request) -> Result(Request, String)
+pub fn from_request(existing: Request) -> Result(Request, JsError)
 
 /// Creates a new `Request` by copying `existing` and applying init
 /// options. Returns an error if `existing`'s body is disturbed or locked,
@@ -95,7 +96,7 @@ pub fn from_request(existing: Request) -> Result(Request, String)
 pub fn from_request_with(
   existing: Request,
   with init: List(RequestInit),
-) -> Result(Request, String)
+) -> Result(Request, JsError)
 
 @external(javascript, "./request.ffi.mjs", "method")
 pub fn method(of request: Request) -> HttpMethod
@@ -188,7 +189,7 @@ pub fn integrity(of request: Request) -> String
 /// already been consumed or is locked to a reader.
 ///
 @external(javascript, "./request.ffi.mjs", "clone")
-pub fn clone(request: Request) -> Result(Request, String)
+pub fn clone(request: Request) -> Result(Request, JsError)
 
 /// The request body as a `ReadableStream`. Returns an error if the request
 /// has no body.
@@ -203,35 +204,37 @@ pub fn is_body_used(request: Request) -> Bool
 /// already been consumed or cannot be read.
 ///
 @external(javascript, "./request.ffi.mjs", "blob")
-pub fn blob(of request: Request) -> Promise(Result(Blob, String))
+pub fn blob(of request: Request) -> Promise(Result(Blob, JsError))
 
 /// Reads the request body as an `ArrayBuffer`. Returns an error if the
 /// body has already been consumed or cannot be read.
 ///
 @external(javascript, "./request.ffi.mjs", "array_buffer")
-pub fn array_buffer(of request: Request) -> Promise(Result(ArrayBuffer, String))
+pub fn array_buffer(
+  of request: Request,
+) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Reads the request body as a `Uint8Array`. Returns an error if the body
 /// has already been consumed or cannot be read.
 ///
 @external(javascript, "./request.ffi.mjs", "bytes")
-pub fn bytes(of request: Request) -> Promise(Result(Uint8Array, String))
+pub fn bytes(of request: Request) -> Promise(Result(Uint8Array, JsError))
 
 /// Reads the request body and parses it as JSON. Returns an error if the
 /// body has already been consumed or the content is not valid JSON.
 ///
 @external(javascript, "./request.ffi.mjs", "json")
-pub fn json(of request: Request) -> Promise(Result(Dynamic, String))
+pub fn json(of request: Request) -> Promise(Result(Dynamic, JsError))
 
 /// Reads the request body as `FormData`. Returns an error if the body has
 /// already been consumed or the `Content-Type` is not `multipart/form-data`
 /// or `application/x-www-form-urlencoded`.
 ///
 @external(javascript, "./request.ffi.mjs", "form_data")
-pub fn form_data(of request: Request) -> Promise(Result(FormData, String))
+pub fn form_data(of request: Request) -> Promise(Result(FormData, JsError))
 
 /// Reads the request body as text. Returns an error if the body has
 /// already been consumed or cannot be read.
 ///
 @external(javascript, "./request.ffi.mjs", "text")
-pub fn text(of request: Request) -> Promise(Result(String, String))
+pub fn text(of request: Request) -> Promise(Result(String, JsError))
