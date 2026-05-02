@@ -3,8 +3,6 @@ import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type URLPattern$ = URLPattern;
-
 function toURLPatternInit(
   options: $urlPattern.URLPatternInit$[],
 ): URLPatternInit {

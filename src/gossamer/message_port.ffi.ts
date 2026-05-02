@@ -1,8 +1,6 @@
 import type * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type MessagePort$ = MessagePort;
-
 export const post_message: typeof $messagePort.post_message = (port, data) => {
   return toResult.fromThrows(() => {
     port.postMessage(data);

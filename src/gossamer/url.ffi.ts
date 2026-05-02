@@ -1,8 +1,6 @@
 import type * as $url from "$/gossamer/gossamer/url.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type URL$ = URL;
-
 export const new_: typeof $url.new$ = (url) => {
   return toResult.fromThrows(() => new URL(url));
 };

@@ -2,8 +2,6 @@ import type * as $abortSignal from "$/gossamer/gossamer/abort_signal.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type AbortSignal$ = AbortSignal;
-
 export const abort: typeof $abortSignal.abort = (reason) => {
   return AbortSignal.abort(reason);
 };

@@ -2,8 +2,6 @@ import type * as $compressionStream from "$/gossamer/gossamer/compression_stream
 import { toCompressionFormat } from "~/gossamer/compression_format.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type CompressionStream$ = CompressionStream;
-
 export const new_: typeof $compressionStream.new$ = (format) => {
   return toResult.fromThrows(() =>
     new CompressionStream(toCompressionFormat(format))

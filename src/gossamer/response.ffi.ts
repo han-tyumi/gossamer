@@ -4,8 +4,6 @@ import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Response$ = Response;
-
 function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   const result: ResponseInit = {};
   for (const option of options) {

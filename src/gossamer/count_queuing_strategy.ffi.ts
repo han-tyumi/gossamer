@@ -1,7 +1,5 @@
 import type * as $countQueuingStrategy from "$/gossamer/gossamer/count_queuing_strategy.mjs";
 
-export type CountQueuingStrategy$ = CountQueuingStrategy;
-
 export const new_: typeof $countQueuingStrategy.new$ = (highWaterMark) => {
   return new CountQueuingStrategy({ highWaterMark });
 };

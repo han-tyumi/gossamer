@@ -25,8 +25,6 @@ import {
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Request$ = Request;
-
 export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
   const result: RequestInit = {};
   for (const option of options) {

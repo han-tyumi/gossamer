@@ -1,7 +1,5 @@
 import type * as $messageChannel from "$/gossamer/gossamer/message_channel.mjs";
 
-export type MessageChannel$ = MessageChannel;
-
 export const new_: typeof $messageChannel.new$ = () => {
   return new MessageChannel();
 };

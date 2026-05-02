@@ -3,8 +3,6 @@ import { fromEventPhase } from "~/gossamer/event_phase.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Event$ = Event;
-
 function toEventInit(options: $event.EventInit$[]): EventInit {
   const result: EventInit = {};
   for (const option of options) {

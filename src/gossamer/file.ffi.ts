@@ -2,8 +2,6 @@ import * as $file from "$/gossamer/gossamer/file.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type File$ = File;
-
 function toFileOptions(options: $file.FileOption$[]): FilePropertyBag {
   const result: FilePropertyBag = {};
   for (const option of options) {

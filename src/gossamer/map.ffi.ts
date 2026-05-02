@@ -2,8 +2,6 @@ import type * as $map from "$/gossamer/gossamer/map.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Map$<K, V> = Map<K, V>;
-
 export const new_: typeof $map.new$ = <K, V>() => {
   return new Map<K, V>();
 };

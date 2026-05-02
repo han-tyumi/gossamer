@@ -1,8 +1,6 @@
 import type * as $defaultController from "$/gossamer/gossamer/transform_stream/default_controller.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type DefaultController$<T> = TransformStreamDefaultController<T>;
-
 export const desired_size: typeof $defaultController.desired_size = (
   controller,
 ) => {

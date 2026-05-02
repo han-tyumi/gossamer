@@ -2,8 +2,6 @@ import type * as $urlSearchParams from "$/gossamer/gossamer/url_search_params.mj
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type URLSearchParams$ = URLSearchParams;
-
 export const new_: typeof $urlSearchParams.new$ = () => {
   return new URLSearchParams();
 };

@@ -2,8 +2,6 @@ import * as $transformStream from "$/gossamer/gossamer/transform_stream.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type TransformStream$<I, O> = TransformStream<I, O>;
-
 function toTransformer<I, O>(
   options: $transformStream.Transformer$<I, O>[],
 ): Transformer<I, O> {

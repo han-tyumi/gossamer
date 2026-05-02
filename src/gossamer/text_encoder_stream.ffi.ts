@@ -1,8 +1,6 @@
 import type * as $textEncoderStream from "$/gossamer/gossamer/text_encoder_stream.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 
-export type TextEncoderStream$ = TextEncoderStream;
-
 export const new_: typeof $textEncoderStream.new$ = () => {
   return new TextEncoderStream();
 };

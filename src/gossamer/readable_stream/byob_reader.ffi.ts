@@ -4,8 +4,6 @@ import { toReadResult } from "~/gossamer/readable_stream/read_result.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type ByobReader$<_T> = ReadableStreamBYOBReader;
-
 function toByobReaderReadOptions(
   options: List<$byobReader.ByobReaderReadOption$>,
 ): Partial<ReadableStreamBYOBReaderReadOptions> {

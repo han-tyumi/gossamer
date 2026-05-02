@@ -1,8 +1,6 @@
 import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type PerformanceEntry$ = PerformanceEntry;
-
 export const name: typeof $performanceEntry.name = (entry) => {
   return entry.name;
 };

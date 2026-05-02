@@ -1,7 +1,5 @@
 import type * as $messageEvent from "$/gossamer/gossamer/message_event.mjs";
 
-export type MessageEvent$ = MessageEvent;
-
 export const data: typeof $messageEvent.data = (event) => {
   return event.data;
 };

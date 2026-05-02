@@ -1,8 +1,6 @@
 import type * as $customEvent from "$/gossamer/gossamer/custom_event.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type CustomEvent$ = CustomEvent;
-
 export const new_: typeof $customEvent.new$ = (type) => {
   return new CustomEvent(type);
 };

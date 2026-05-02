@@ -3,8 +3,6 @@ import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type TextDecoderStream$ = TextDecoderStream;
-
 export const new_: typeof $textDecoderStream.new$ = () => {
   return new TextDecoderStream();
 };
