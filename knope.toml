@@ -8,10 +8,12 @@ name = "release"
 [[workflows.steps]]
 type = "Command"
 command = '[ "$(git branch --show-current)" = "main" ] || { echo "Must be on main" >&2; exit 1; }'
+shell = true
 
 [[workflows.steps]]
 type = "Command"
 command = '[ -z "$(git status --porcelain)" ] || { git status --short; echo "Working tree is dirty" >&2; exit 1; }'
+shell = true
 
 [[workflows.steps]]
 type = "Command"
