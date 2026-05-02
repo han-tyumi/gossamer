@@ -1,4 +1,5 @@
 import type * as $jsError from "$/gossamer/gossamer/js_error.mjs";
+import * as $kind from "$/gossamer/gossamer/js_error/kind.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export type JsError$ = Error;
@@ -93,4 +94,28 @@ export const stack: typeof $jsError.stack = (error) => {
 
 export const cause: typeof $jsError.cause = (error) => {
   return toResult(error.cause);
+};
+
+export const kind: typeof $jsError.kind = (error) => {
+  if (error instanceof DOMException) {
+    return $kind.JsErrorKind$DomException(error.name);
+  }
+  switch (error.name) {
+    case "TypeError":
+      return $kind.JsErrorKind$TypeError();
+    case "RangeError":
+      return $kind.JsErrorKind$RangeError();
+    case "ReferenceError":
+      return $kind.JsErrorKind$ReferenceError();
+    case "SyntaxError":
+      return $kind.JsErrorKind$SyntaxError();
+    case "URIError":
+      return $kind.JsErrorKind$UriError();
+    case "EvalError":
+      return $kind.JsErrorKind$EvalError();
+    case "AggregateError":
+      return $kind.JsErrorKind$AggregateError();
+    default:
+      return $kind.JsErrorKind$Other(error.name);
+  }
 };

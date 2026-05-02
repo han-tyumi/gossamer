@@ -1,6 +1,8 @@
 import gleam/dynamic/decode
 import gleeunit/should
+import gossamer
 import gossamer/js_error
+import gossamer/js_error/kind
 
 pub fn new_test() {
   let err = js_error.new("something went wrong")
@@ -98,4 +100,52 @@ pub fn eval_error_with_cause_test() {
   let err = js_error.eval_error_with_cause("eval failed", cause: "sandboxed")
   js_error.name(err) |> should.equal("EvalError")
   js_error.cause(err) |> should.be_ok
+}
+
+pub fn kind_type_error_test() {
+  js_error.type_error("bad")
+  |> js_error.kind
+  |> should.equal(kind.TypeError)
+}
+
+pub fn kind_range_error_test() {
+  js_error.range_error("oob")
+  |> js_error.kind
+  |> should.equal(kind.RangeError)
+}
+
+pub fn kind_reference_error_test() {
+  js_error.reference_error("undef")
+  |> js_error.kind
+  |> should.equal(kind.ReferenceError)
+}
+
+pub fn kind_syntax_error_test() {
+  js_error.syntax_error("oops")
+  |> js_error.kind
+  |> should.equal(kind.SyntaxError)
+}
+
+pub fn kind_uri_error_test() {
+  js_error.uri_error("bad uri")
+  |> js_error.kind
+  |> should.equal(kind.UriError)
+}
+
+pub fn kind_eval_error_test() {
+  js_error.eval_error("nope")
+  |> js_error.kind
+  |> should.equal(kind.EvalError)
+}
+
+pub fn kind_other_for_plain_error_test() {
+  js_error.new("generic")
+  |> js_error.kind
+  |> should.equal(kind.Other(name: "Error"))
+}
+
+pub fn kind_dom_exception_test() {
+  let assert Error(err) = gossamer.atob("not valid base64!")
+  js_error.kind(err)
+  |> should.equal(kind.DomException(name: "InvalidCharacterError"))
 }
