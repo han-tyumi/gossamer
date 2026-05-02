@@ -2,6 +2,7 @@ import * as $response from "$/gossamer/gossamer/response.mjs";
 import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
@@ -17,6 +18,21 @@ function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   }
   return result;
 }
+
+export const to_fields: typeof $response.to_fields = (response) => {
+  return $response.Fields$Fields(
+    toHttpStatus(response.status),
+    response.statusText,
+    fromResponseType(response.type),
+    response.url,
+    response.ok,
+    response.redirected,
+    response.headers,
+    toOption(
+      response.body as ReadableStream<Uint8Array> | null,
+    ),
+  );
+};
 
 export const new_: typeof $response.new$ = () => new Response();
 

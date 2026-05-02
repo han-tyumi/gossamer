@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/option.{type Option}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
 import gossamer/form_data.{type FormData}
@@ -18,6 +19,33 @@ import gossamer/url_search_params.{type URLSearchParams}
 ///
 @external(javascript, "./response.type.ts", "Response$")
 pub type Response
+
+pub type Fields {
+  Fields(
+    /// Well-known codes return a matching `HttpStatus` variant; other
+    /// codes return `http_status.Other(code)`.
+    status: HttpStatus,
+    status_text: String,
+    type_: ResponseType,
+    /// The final URL of the response, after any redirects. Empty for
+    /// responses constructed directly rather than received from `fetch`.
+    url: String,
+    /// Whether the status is in the `200`–`299` range.
+    is_ok: Bool,
+    /// Whether the response is the result of following a redirect.
+    is_redirected: Bool,
+    headers: Headers,
+    /// The body stream, or `None` if the response has no body. Single-use:
+    /// consuming it (via `blob`, `text`, `json`, etc., or via the stream
+    /// itself) drains all references to it. `Some(stream)` means a stream
+    /// object exists; whether it is still readable is governed by
+    /// `is_body_used` and the stream's own state.
+    body: Option(ReadableStream(Uint8Array)),
+  )
+}
+
+@external(javascript, "./response.ffi.mjs", "to_fields")
+pub fn to_fields(response: Response) -> Fields
 
 pub type ResponseInit {
   Headers(Headers)
@@ -204,18 +232,18 @@ pub fn redirect_url_with_status(
 @external(javascript, "./response.ffi.mjs", "headers_")
 pub fn headers(of response: Response) -> Headers
 
-/// Checks whether the status is in the `200`–`299` range.
+/// Whether the status is in the `200`–`299` range.
 ///
 @external(javascript, "./response.ffi.mjs", "is_ok")
 pub fn is_ok(response: Response) -> Bool
 
-/// Checks whether the response is the result of following a redirect.
+/// Whether the response is the result of following a redirect.
 ///
 @external(javascript, "./response.ffi.mjs", "is_redirected")
 pub fn is_redirected(response: Response) -> Bool
 
-/// The HTTP status of the response. Well-known codes return a matching
-/// `HttpStatus` variant; other codes return `http_status.Other(code)`.
+/// Well-known codes return a matching `HttpStatus` variant; other codes
+/// return `http_status.Other(code)`.
 ///
 @external(javascript, "./response.ffi.mjs", "status")
 pub fn status(of response: Response) -> HttpStatus
@@ -226,7 +254,8 @@ pub fn status_text(of response: Response) -> String
 @external(javascript, "./response.ffi.mjs", "type_")
 pub fn type_(of response: Response) -> ResponseType
 
-/// The final URL of the response, after any redirects.
+/// The final URL of the response, after any redirects. Empty for responses
+/// constructed directly rather than received from `fetch`.
 ///
 @external(javascript, "./response.ffi.mjs", "url")
 pub fn url(of response: Response) -> String
@@ -237,8 +266,11 @@ pub fn url(of response: Response) -> String
 @external(javascript, "./response.ffi.mjs", "clone")
 pub fn clone(response: Response) -> Result(Response, JsError)
 
-/// The response body as a `ReadableStream`. Returns an error if the response
-/// has no body.
+/// The body stream, or an error if the response has no body. Single-use:
+/// consuming it (via `blob`, `text`, `json`, etc., or via the stream itself)
+/// drains all references to it. `Ok(stream)` means a stream object exists;
+/// whether it is still readable is governed by `is_body_used` and the
+/// stream's own state.
 ///
 @external(javascript, "./response.ffi.mjs", "body")
 pub fn body(of response: Response) -> Result(ReadableStream(Uint8Array), Nil)

@@ -15,7 +15,10 @@ pub type CustomEvent
 /// and the functions in `gossamer/event`.
 ///
 pub type Fields {
-  Fields(detail: Option(Dynamic))
+  Fields(
+    /// The detail payload, or `None` if none was provided.
+    detail: Option(Dynamic),
+  )
 }
 
 @external(javascript, "./custom_event.ffi.mjs", "to_fields")
