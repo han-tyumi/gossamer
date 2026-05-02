@@ -105,13 +105,13 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ### Events & DOM
 
-| Interface             | Status | Module                  |
-| --------------------- | ------ | ----------------------- |
-| Event                 | ✅     | `gossamer/event`        |
-| EventTarget           | ✅     | `gossamer/event_target` |
-| CustomEvent           | ✅     | `gossamer/custom_event` |
-| ErrorEvent            | ❌     | —                       |
-| PromiseRejectionEvent | ❌     | —                       |
+| Interface             | Status | Module                  | Notes                                  |
+| --------------------- | ------ | ----------------------- | -------------------------------------- |
+| Event                 | ✅     | `gossamer/event`        |                                        |
+| EventTarget           | ✅     | `gossamer/event_target` |                                        |
+| CustomEvent           | ✅     | `gossamer/custom_event` |                                        |
+| ErrorEvent            | ✅     | `gossamer/error_event`  |                                        |
+| PromiseRejectionEvent | ❌     | —                       | Not exposed as a global on Node or Bun |
 
 ### Cancellation
 
