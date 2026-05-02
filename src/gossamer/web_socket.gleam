@@ -7,8 +7,8 @@ import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 
 // TODO: Most WebSocket functions are untested — requires a live WebSocket
-// server which can't be created cross-runtime from pure Gleam. Only `new`,
-// `new_with_protocols`, `ready_state`, and `close` are tested.
+// server which can't be created cross-runtime from pure Gleam. Only the
+// constructors, `ready_state`, and `close` are tested.
 
 pub type CloseEvent {
   CloseEvent(code: Int, reason: String, was_clean: Bool)
@@ -21,47 +21,47 @@ pub type CloseEvent {
 @external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket
 
-/// Creates a new `WebSocket` connection to the given URL. Returns an
-/// error if `url` is not a valid `ws:` or `wss:` URL.
+/// Creates a new `WebSocket` connection to the URL given as a string.
+/// Returns an error if `url` is not a valid `ws:` or `wss:` URL.
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(ws) = web_socket.new("ws://localhost:8080")
+/// let assert Ok(ws) = web_socket.from_url_string("ws://localhost:8080")
 /// ```
 ///
-@external(javascript, "./web_socket.ffi.mjs", "new_")
-pub fn new(url: String) -> Result(WebSocket, String)
+@external(javascript, "./web_socket.ffi.mjs", "from_url_string")
+pub fn from_url_string(url: String) -> Result(WebSocket, String)
 
-/// Creates a new `WebSocket` connection to the given URL with the
-/// specified sub-protocols. Returns an error if `url` is not a valid `ws:`
-/// or `wss:` URL, or if `protocols` contains duplicates or invalid entries.
+/// Creates a new `WebSocket` connection to the URL given as a string, with
+/// the specified sub-protocols. Returns an error if `url` is not a valid
+/// `ws:` or `wss:` URL, or if `protocols` contains duplicates or invalid
+/// entries.
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(ws) = web_socket.new_with_protocols("ws://localhost:8080", ["json"])
+/// let assert Ok(ws) = web_socket.from_url_string_with_protocols("ws://localhost:8080", ["json"])
 /// ```
 ///
-@external(javascript, "./web_socket.ffi.mjs", "new_with_protocols")
-pub fn new_with_protocols(
+@external(javascript, "./web_socket.ffi.mjs", "from_url_string_with_protocols")
+pub fn from_url_string_with_protocols(
   url: String,
   with protocols: List(String),
 ) -> Result(WebSocket, String)
 
-/// Creates a new `WebSocket` connection to the given URL. Returns an
-/// error if `url`'s scheme is not `ws:` or `wss:`.
+/// Creates a new `WebSocket` connection to `url`. Returns an error if
+/// `url`'s scheme is not `ws:` or `wss:`.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "new_url")
-pub fn new_url(url: URL) -> Result(WebSocket, String)
+@external(javascript, "./web_socket.ffi.mjs", "from_url")
+pub fn from_url(url: URL) -> Result(WebSocket, String)
 
-/// Creates a new `WebSocket` connection to the given URL with the
-/// specified sub-protocols. Returns an error if `url`'s scheme is not
-/// `ws:` or `wss:`, or if `protocols` contains duplicates or invalid
-/// entries.
+/// Creates a new `WebSocket` connection to `url` with the specified
+/// sub-protocols. Returns an error if `url`'s scheme is not `ws:` or
+/// `wss:`, or if `protocols` contains duplicates or invalid entries.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "new_url_with_protocols")
-pub fn new_url_with_protocols(
+@external(javascript, "./web_socket.ffi.mjs", "from_url_with_protocols")
+pub fn from_url_with_protocols(
   url: URL,
   with protocols: List(String),
 ) -> Result(WebSocket, String)

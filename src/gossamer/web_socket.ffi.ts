@@ -14,23 +14,21 @@ function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
   );
 }
 
-export const new_: typeof $webSocket.new$ = (url) => {
+export const from_url_string: typeof $webSocket.from_url_string = (url) => {
   return toResult.fromThrows(() => new WebSocket(url));
 };
 
-export const new_with_protocols: typeof $webSocket.new_with_protocols = (
-  url,
-  protocols,
-) => {
-  return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
-};
+export const from_url_string_with_protocols:
+  typeof $webSocket.from_url_string_with_protocols = (url, protocols) => {
+    return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
+  };
 
-export const new_url: typeof $webSocket.new_url = (url) => {
+export const from_url: typeof $webSocket.from_url = (url) => {
   return toResult.fromThrows(() => new WebSocket(url.toString()));
 };
 
-export const new_url_with_protocols: typeof $webSocket.new_url_with_protocols =
-  (url, protocols) => {
+export const from_url_with_protocols:
+  typeof $webSocket.from_url_with_protocols = (url, protocols) => {
     return toResult.fromThrows(
       () => new WebSocket(url.toString(), toArray(protocols)),
     );
