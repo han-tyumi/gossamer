@@ -20,9 +20,7 @@ function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   return result;
 }
 
-export const new_: typeof $response.new$ = (body) => {
-  return toResult.fromThrows(() => new Response(body));
-};
+export const new_: typeof $response.new$ = (body) => new Response(body);
 
 export const new_with_init: typeof $response.new_with_init = (body, init) => {
   return toResult.fromThrows(

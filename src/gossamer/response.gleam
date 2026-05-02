@@ -19,7 +19,7 @@ pub type ResponseInit {
 }
 
 @external(javascript, "./response.ffi.mjs", "new_")
-pub fn new(body: String) -> Result(Response, String)
+pub fn new(body: String) -> Response
 
 @external(javascript, "./response.ffi.mjs", "new_with_init")
 pub fn new_with_init(

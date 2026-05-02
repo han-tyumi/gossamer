@@ -88,7 +88,7 @@ pub fn request_text_test() {
 }
 
 pub fn response_new_test() {
-  let assert Ok(resp) = response.new("hello")
+  let resp = response.new("hello")
   response.status(resp) |> should.equal(http_status.Ok)
   response.is_ok(resp) |> should.be_true()
 }
@@ -105,7 +105,7 @@ pub fn response_new_with_init_test() {
 }
 
 pub fn response_text_test() {
-  let assert Ok(resp) = response.new("hello world")
+  let resp = response.new("hello world")
   use text <- promise.then(response.text(resp))
   should.equal(text, Ok("hello world"))
 }
@@ -125,7 +125,7 @@ pub fn response_redirect_test() {
 }
 
 pub fn response_clone_test() {
-  let assert Ok(resp) = response.new("hello")
+  let resp = response.new("hello")
   let assert Ok(cloned) = response.clone(resp)
   use text <- promise.then(response.text(cloned))
   should.equal(text, Ok("hello"))
@@ -151,7 +151,7 @@ pub fn request_blob_test() {
 }
 
 pub fn response_blob_test() {
-  let assert Ok(resp) = response.new("blob response")
+  let resp = response.new("blob response")
   use result <- promise.then(response.blob(resp))
   let assert Ok(b) = result
   should.equal(blob.size(b), 13)
@@ -312,17 +312,17 @@ pub fn response_from_json_test() {
 }
 
 pub fn response_is_body_used_test() {
-  let assert Ok(resp) = response.new("hello")
+  let resp = response.new("hello")
   response.is_body_used(resp) |> should.be_false
 }
 
 pub fn response_body_test() {
-  let assert Ok(resp) = response.new("hello")
+  let resp = response.new("hello")
   response.body(resp) |> should.be_ok
 }
 
 pub fn response_array_buffer_test() {
-  let assert Ok(resp) = response.new("hi")
+  let resp = response.new("hi")
   use result <- promise.then(response.array_buffer(resp))
   let assert Ok(buffer) = result
   array_buffer.byte_length(buffer) |> should.equal(2)
@@ -330,7 +330,7 @@ pub fn response_array_buffer_test() {
 }
 
 pub fn response_bytes_test() {
-  let assert Ok(resp) = response.new("abc")
+  let resp = response.new("abc")
   use result <- promise.then(response.bytes(resp))
   let assert Ok(bytes) = result
   uint8_array.byte_length(bytes) |> should.equal(3)
@@ -348,11 +348,11 @@ pub fn response_json_test() {
 }
 
 pub fn response_is_redirected_test() {
-  let assert Ok(resp) = response.new("hello")
+  let resp = response.new("hello")
   response.is_redirected(resp) |> should.be_false
 }
 
 pub fn response_url_test() {
-  let assert Ok(resp) = response.new("hello")
+  let resp = response.new("hello")
   response.url(resp) |> should.equal("")
 }
