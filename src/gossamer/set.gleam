@@ -7,6 +7,11 @@ import gossamer/iterator.{type Iterator}
 /// For most Gleam use cases, prefer `gleam/set.Set`. This binding exists
 /// for JS interop where a JS `Set` is specifically required.
 ///
+/// Object values (records, lists, tuples) are matched by JS reference
+/// identity, not value equality — two equal-by-value tuples constructed
+/// separately are distinct values. Primitive values (`Int`, `Float`,
+/// `String`, `Bool`) use value equality.
+///
 /// See [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) on MDN.
 ///
 @external(javascript, "./set.type.ts", "Set$")

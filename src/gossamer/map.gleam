@@ -7,6 +7,11 @@ import gossamer/iterator.{type Iterator}
 /// For most Gleam use cases, prefer `gleam/dict.Dict`. This binding
 /// exists for JS interop where a JS `Map` is specifically required.
 ///
+/// Object keys (records, lists, tuples) are matched by JS reference
+/// identity, not value equality — two equal-by-value tuples constructed
+/// separately are distinct keys. Primitive keys (`Int`, `Float`,
+/// `String`, `Bool`) use value equality.
+///
 /// See [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) on MDN.
 ///
 @external(javascript, "./map.type.ts", "Map$")
