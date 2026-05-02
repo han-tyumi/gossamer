@@ -1,3 +1,9 @@
+## 8.2.0 (2026-05-02)
+
+### Features
+
+- bind WeakMap and WeakSet
+
 ## 8.1.0 (2026-05-02)
 
 ### Features
