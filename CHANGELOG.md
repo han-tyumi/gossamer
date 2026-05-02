@@ -1,3 +1,9 @@
+## 8.3.0 (2026-05-02)
+
+### Features
+
+- bind WeakRef and FinalizationRegistry
+
 ## 8.2.0 (2026-05-02)
 
 ### Features
