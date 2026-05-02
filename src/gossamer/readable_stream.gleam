@@ -30,24 +30,31 @@ pub type StreamPipeOption {
 }
 
 /// Creates a `ReadableStream` driven by the given underlying-source
-/// callbacks (`Start`, `Pull`, `Cancel`).
+/// callbacks (`Start`, `Pull`, `Cancel`). Returns an error if the `Start`
+/// callback throws synchronously.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "new_")
-pub fn new(source: List(UnderlyingSource(a))) -> ReadableStream(a)
+pub fn new(
+  source: List(UnderlyingSource(a)),
+) -> Result(ReadableStream(a), JsError)
 
 /// Creates a `ReadableStream` from only a `Start` callback — use when all
-/// chunks can be enqueued up front.
+/// chunks can be enqueued up front. Returns an error if `start` throws
+/// synchronously.
 ///
-pub fn from_start(start: fn(DefaultController(a)) -> Nil) -> ReadableStream(a) {
+pub fn from_start(
+  start: fn(DefaultController(a)) -> Nil,
+) -> Result(ReadableStream(a), JsError) {
   new([Start(start)])
 }
 
 /// Creates a `ReadableStream` from only a `Pull` callback — use when chunks
-/// are produced on demand.
+/// are produced on demand. Returns an error if `pull` throws synchronously
+/// at construction.
 ///
 pub fn from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
-) -> ReadableStream(a) {
+) -> Result(ReadableStream(a), JsError) {
   new([Pull(pull)])
 }
 

@@ -46,7 +46,7 @@ pub fn text_decoder_stream_read_write_pair_test() {
 pub fn text_encode_decode_stream_roundtrip_test() {
   let encoder = text_encoder_stream.new()
 
-  let source =
+  let assert Ok(source) =
     readable_stream.from_start(fn(controller) {
       let _ = default_controller.enqueue(controller, "hello stream")
       let _ = default_controller.close(controller)

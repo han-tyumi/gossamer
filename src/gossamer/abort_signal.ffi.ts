@@ -13,7 +13,7 @@ export const any: typeof $abortSignal.any = (signals) => {
 };
 
 export const timeout: typeof $abortSignal.timeout = (milliseconds) => {
-  return AbortSignal.timeout(milliseconds);
+  return toResult.fromThrows(() => AbortSignal.timeout(milliseconds));
 };
 
 export const is_aborted: typeof $abortSignal.is_aborted = (signal) => {

@@ -191,11 +191,11 @@ pub fn repeat_test() {
 }
 
 pub fn pad_start_test() {
-  string.pad_start("5", to: 3, with: "0") |> should.equal("005")
+  string.pad_start("5", to: 3, with: "0") |> should.equal(Ok("005"))
 }
 
 pub fn pad_end_test() {
-  string.pad_end("5", to: 3, with: "0") |> should.equal("500")
+  string.pad_end("5", to: 3, with: "0") |> should.equal(Ok("500"))
 }
 
 pub fn substring_test() {

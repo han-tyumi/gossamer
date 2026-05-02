@@ -194,24 +194,26 @@ pub fn trim_end(string: String) -> String
 pub fn repeat(string: String, times times: Int) -> Result(String, JsError)
 
 /// Pads the start to reach `target_length` UTF-16 code units. This differs
-/// from `gleam/string.pad_start` which counts grapheme clusters.
+/// from `gleam/string.pad_start` which counts grapheme clusters. Returns
+/// an error if the padded string would exceed the maximum string length.
 ///
 @external(javascript, "./string.ffi.mjs", "pad_start")
 pub fn pad_start(
   string: String,
   to target_length: Int,
   with pad: String,
-) -> String
+) -> Result(String, JsError)
 
 /// Pads the end to reach `target_length` UTF-16 code units. This differs
-/// from `gleam/string.pad_end` which counts grapheme clusters.
+/// from `gleam/string.pad_end` which counts grapheme clusters. Returns
+/// an error if the padded string would exceed the maximum string length.
 ///
 @external(javascript, "./string.ffi.mjs", "pad_end")
 pub fn pad_end(
   string: String,
   to target_length: Int,
   with pad: String,
-) -> String
+) -> Result(String, JsError)
 
 /// Like `slice`, but swaps `start` and `end` if `start` is greater, and
 /// treats negative values as zero. Indices are UTF-16 code units — this

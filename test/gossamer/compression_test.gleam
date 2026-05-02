@@ -14,7 +14,7 @@ import gossamer/uint8_array
 pub fn gzip_round_trip_test() {
   let data = text_encoder.encode("Hello, compression!")
 
-  let input =
+  let assert Ok(input) =
     readable_stream.from_start(fn(controller) {
       let _ = default_controller.enqueue(controller, data)
       let _ = default_controller.close(controller)

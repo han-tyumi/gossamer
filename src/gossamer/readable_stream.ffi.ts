@@ -40,7 +40,9 @@ function toStreamPipeOptions(
 }
 
 export const new_: typeof $readableStream.new$ = (source) => {
-  return new ReadableStream(toUnderlyingSource(toArray(source)));
+  return toResult.fromThrows(() =>
+    new ReadableStream(toUnderlyingSource(toArray(source)))
+  );
 };
 
 export const from_iterator: typeof $readableStream.from_iterator = (

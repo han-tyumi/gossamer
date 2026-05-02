@@ -149,10 +149,10 @@ export const pad_start: typeof $string.pad_start = (
   string,
   target_length,
   pad,
-) => string.padStart(target_length, pad);
+) => toResult.fromThrows(() => string.padStart(target_length, pad));
 
 export const pad_end: typeof $string.pad_end = (string, target_length, pad) =>
-  string.padEnd(target_length, pad);
+  toResult.fromThrows(() => string.padEnd(target_length, pad));
 
 export const substring: typeof $string.substring = (string, start, end) =>
   string.substring(start, end);

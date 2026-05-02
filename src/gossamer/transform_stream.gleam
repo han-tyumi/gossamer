@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/transform_stream/default_controller.{type DefaultController}
@@ -20,19 +21,20 @@ pub type Transformer(input, output) {
 }
 
 /// Creates a `TransformStream` driven by the given transformer callbacks
-/// (`Start`, `Transform`, `Flush`, `Cancel`).
+/// (`Start`, `Transform`, `Flush`, `Cancel`). Returns an error if the
+/// `Start` callback throws synchronously.
 ///
 @external(javascript, "./transform_stream.ffi.mjs", "new_")
 pub fn new(
   transformer: List(Transformer(input, output)),
-) -> TransformStream(input, output)
+) -> Result(TransformStream(input, output), JsError)
 
 /// Creates a `TransformStream` from only a `Transform` callback — use when
 /// the transformer just maps input chunks to output chunks.
 ///
 pub fn from_transform(
   transform: fn(input, DefaultController(output)) -> Promise(Nil),
-) -> TransformStream(input, output) {
+) -> Result(TransformStream(input, output), JsError) {
   new([Transform(transform)])
 }
 

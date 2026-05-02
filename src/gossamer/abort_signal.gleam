@@ -15,8 +15,11 @@ pub fn abort(reason: r) -> AbortSignal
 @external(javascript, "./abort_signal.ffi.mjs", "any")
 pub fn any(signals: List(AbortSignal)) -> AbortSignal
 
+/// Creates an `AbortSignal` that aborts automatically after `milliseconds`.
+/// Returns an error if `milliseconds` is negative.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
-pub fn timeout(milliseconds: Int) -> AbortSignal
+pub fn timeout(milliseconds: Int) -> Result(AbortSignal, JsError)
 
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool

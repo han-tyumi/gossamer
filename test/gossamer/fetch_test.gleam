@@ -190,7 +190,7 @@ pub fn request_from_request_with_test() {
 
 pub fn request_body_stream_test() {
   let bytes = uint8_array.from_list([104, 105])
-  let stream =
+  let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
       let assert Ok(_) = default_controller.enqueue(controller, bytes)
       let assert Ok(_) = default_controller.close(controller)
@@ -558,7 +558,7 @@ pub fn response_from_params_test() {
 
 pub fn response_from_stream_test() {
   let bytes = uint8_array.from_list([104, 105])
-  let stream =
+  let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
       let assert Ok(_) = default_controller.enqueue(controller, bytes)
       let assert Ok(_) = default_controller.close(controller)

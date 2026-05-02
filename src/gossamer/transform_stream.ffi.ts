@@ -1,5 +1,6 @@
 import * as $transformStream from "$/gossamer/gossamer/transform_stream.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 export type TransformStream$<I, O> = TransformStream<I, O>;
 
@@ -22,7 +23,9 @@ function toTransformer<I, O>(
 }
 
 export const new_: typeof $transformStream.new$ = (transformer) => {
-  return new TransformStream(toTransformer(toArray(transformer)));
+  return toResult.fromThrows(() =>
+    new TransformStream(toTransformer(toArray(transformer)))
+  );
 };
 
 export const readable: typeof $transformStream.readable = (stream) => {

@@ -19,17 +19,18 @@ pub type UnderlyingSink(a) {
 }
 
 /// Creates a `WritableStream` driven by the given underlying-sink callbacks
-/// (`Start`, `Write`, `Close`, `Abort`).
+/// (`Start`, `Write`, `Close`, `Abort`). Returns an error if the `Start`
+/// callback throws synchronously.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "new_")
-pub fn new(sink: List(UnderlyingSink(a))) -> WritableStream(a)
+pub fn new(sink: List(UnderlyingSink(a))) -> Result(WritableStream(a), JsError)
 
 /// Creates a `WritableStream` from only a `Write` callback — use when the
 /// sink just needs to handle incoming chunks.
 ///
 pub fn from_write(
   write: fn(a, DefaultController) -> Promise(Nil),
-) -> WritableStream(a) {
+) -> Result(WritableStream(a), JsError) {
   new([Write(write)])
 }
 

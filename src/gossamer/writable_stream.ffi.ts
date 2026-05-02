@@ -23,7 +23,9 @@ function toUnderlyingSink<T>(
 }
 
 export const new_: typeof $writableStream.new$ = (sink) => {
-  return new WritableStream(toUnderlyingSink(toArray(sink)));
+  return toResult.fromThrows(() =>
+    new WritableStream(toUnderlyingSink(toArray(sink)))
+  );
 };
 
 export const is_locked: typeof $writableStream.is_locked = (
