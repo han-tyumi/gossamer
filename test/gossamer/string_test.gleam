@@ -190,12 +190,26 @@ pub fn repeat_test() {
   string.repeat("ab", times: 3) |> should.equal(Ok("ababab"))
 }
 
+pub fn repeat_overflow_test() {
+  // `2 ^ 32` exceeds the maximum string length on every runtime — V8
+  // (Deno/Node) caps near `2 ^ 29`, JSC (Bun) higher. Throws RangeError.
+  string.repeat("a", times: 4_294_967_296) |> should.be_error
+}
+
 pub fn pad_start_test() {
   string.pad_start("5", to: 3, with: "0") |> should.equal(Ok("005"))
 }
 
+pub fn pad_start_overflow_test() {
+  string.pad_start("a", to: 4_294_967_296, with: "b") |> should.be_error
+}
+
 pub fn pad_end_test() {
   string.pad_end("5", to: 3, with: "0") |> should.equal(Ok("500"))
+}
+
+pub fn pad_end_overflow_test() {
+  string.pad_end("a", to: 4_294_967_296, with: "b") |> should.be_error
 }
 
 pub fn substring_test() {

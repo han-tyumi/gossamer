@@ -1,5 +1,8 @@
 import gleeunit/should
+import gossamer/array_buffer
+import gossamer/blob
 import gossamer/ready_state
+import gossamer/uint8_array
 import gossamer/url
 import gossamer/web_socket
 
@@ -42,4 +45,44 @@ pub fn from_url_parity_test() {
   web_socket.url(from_string) |> should.equal(web_socket.url(from_url))
   web_socket.close(from_string)
   web_socket.close(from_url)
+}
+
+// `send` on a Connecting socket throws `InvalidStateError` per spec — we
+// can exercise the error path without a real server by sending before the
+// connection completes.
+
+pub fn send_string_while_connecting_test() {
+  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
+  web_socket.send_string(ws, "hello") |> should.be_error
+  web_socket.close(ws)
+}
+
+pub fn send_bytes_while_connecting_test() {
+  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
+  let bytes = uint8_array.from_list([1, 2, 3])
+  web_socket.send_bytes(ws, bytes) |> should.be_error
+  web_socket.close(ws)
+}
+
+pub fn send_blob_while_connecting_test() {
+  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
+  let b = blob.from_string("hello")
+  web_socket.send_blob(ws, b) |> should.be_error
+  web_socket.close(ws)
+}
+
+pub fn send_buffer_while_connecting_test() {
+  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
+  let assert Ok(buffer) = array_buffer.new(4)
+  web_socket.send_buffer(ws, buffer) |> should.be_error
+  web_socket.close(ws)
+}
+
+// Bun doesn't enforce the WebSocket close-code check (`InvalidAccessError`
+// for codes outside `1000` and `3000`–`4999`), so a portable invalid-code
+// error-path test isn't possible. The Result wrap is still exercised by the
+// `send_*` tests above on a Connecting socket.
+pub fn close_with_valid_code_test() {
+  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
+  web_socket.close_with(ws, 1000, "bye") |> should.equal(Ok(Nil))
 }

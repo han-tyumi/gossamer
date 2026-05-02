@@ -38,6 +38,12 @@ pub fn test_with_base_test() {
   |> should.be_true
 }
 
+pub fn test_with_base_invalid_test() {
+  let assert Ok(pattern) = url_pattern.new([url_pattern.Pathname("/api/*")])
+  url_pattern.test_with_base(pattern, "/api/data", "not a url")
+  |> should.be_false
+}
+
 pub fn exec_test() {
   let assert Ok(pattern) = url_pattern.new([url_pattern.Pathname("/users/:id")])
   let assert Ok(result) =
@@ -60,6 +66,20 @@ pub fn exec_with_base_test() {
     url_pattern.exec_with_base(pattern, "/items/widget", "https://example.com")
   let pathname = result.pathname
   dict.get(pathname.groups, "name") |> should.equal(Ok("widget"))
+}
+
+pub fn exec_with_base_no_match_test() {
+  let assert Ok(pattern) =
+    url_pattern.new([url_pattern.Pathname("/items/:name")])
+  url_pattern.exec_with_base(pattern, "/other/path", "https://example.com")
+  |> should.be_error
+}
+
+pub fn exec_with_base_invalid_test() {
+  let assert Ok(pattern) =
+    url_pattern.new([url_pattern.Pathname("/items/:name")])
+  url_pattern.exec_with_base(pattern, "/items/widget", "not a url")
+  |> should.be_error
 }
 
 pub fn properties_test() {

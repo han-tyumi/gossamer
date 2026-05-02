@@ -14,6 +14,10 @@ pub fn from_length_test() {
   array |> uint8_array.length() |> should.equal(5)
 }
 
+pub fn from_length_negative_test() {
+  uint8_array.from_length(-1) |> should.be_error
+}
+
 pub fn from_list_test() {
   let array = uint8_array.from_list([1, 2, 3])
   uint8_array.length(array) |> should.equal(3)
@@ -248,6 +252,14 @@ pub fn to_base64_test() {
   |> should.equal("SGVsbG8=")
 }
 
+pub fn from_base64_invalid_test() {
+  uint8_array.from_base64("!!!") |> should.be_error
+}
+
+pub fn from_hex_invalid_test() {
+  uint8_array.from_hex("xyz") |> should.be_error
+}
+
 pub fn from_base64_test() {
   let assert Ok(array) = uint8_array.from_base64("SGVsbG8=")
   array |> uint8_array.to_list() |> should.equal([72, 101, 108, 108, 111])
@@ -283,6 +295,14 @@ pub fn set_with_offset_test() {
   uint8_array.to_list(array) |> should.equal([0, 0, 10, 20, 0])
 }
 
+pub fn set_with_offset_overflow_test() {
+  let assert Ok(array) = uint8_array.from_length(3)
+  // Writing 3 bytes at offset 2 would extend past the end of a 3-byte
+  // array, so set throws RangeError.
+  uint8_array.set_with_offset(array, uint8_array.from_list([1, 2, 3]), 2)
+  |> should.be_error
+}
+
 pub fn fill_range_test() {
   let assert Ok(array) = uint8_array.from_length(5)
   uint8_array.fill_range(array, 99, 1, 3)
@@ -301,6 +321,16 @@ pub fn set_from_base64_test() {
     uint8_array.set_from_base64(array, "SGVsbG8=")
   read |> should.equal(8)
   written |> should.equal(5)
+}
+
+pub fn set_from_base64_invalid_test() {
+  let assert Ok(array) = uint8_array.from_length(10)
+  uint8_array.set_from_base64(array, "!!!") |> should.be_error
+}
+
+pub fn set_from_hex_invalid_test() {
+  let assert Ok(array) = uint8_array.from_length(10)
+  uint8_array.set_from_hex(array, "xyz") |> should.be_error
 }
 
 pub fn set_from_hex_test() {
