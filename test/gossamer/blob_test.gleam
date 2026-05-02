@@ -7,20 +7,20 @@ import gossamer/uint8_array
 
 pub fn blob_from_string_test() {
   let b = blob.from_string("hello")
-  should.equal(blob.size(b), 5)
-  should.equal(blob.type_(b), "")
+  b.size |> should.equal(5)
+  b.type_ |> should.equal("")
 }
 
 pub fn blob_from_string_with_type_test() {
   let b = blob.from_string_with_type("hello", "text/plain")
-  should.equal(blob.size(b), 5)
+  b.size |> should.equal(5)
   // Bun may append charset info (e.g., "text/plain;charset=utf-8").
-  should.be_true(string.starts_with(blob.type_(b), "text/plain"))
+  should.be_true(string.starts_with(b.type_, "text/plain"))
 }
 
 pub fn blob_from_bytes_test() {
   let b = blob.from_bytes(uint8_array.from_list([1, 2, 3]))
-  should.equal(blob.size(b), 3)
+  b.size |> should.equal(3)
 }
 
 pub fn blob_text_test() {
@@ -56,7 +56,7 @@ pub fn blob_slice_test() {
 
 pub fn blob_empty_test() {
   let b = blob.new()
-  should.equal(blob.size(b), 0)
+  b.size |> should.equal(0)
 }
 
 pub fn blob_from_bytes_with_type_test() {
@@ -65,15 +65,15 @@ pub fn blob_from_bytes_with_type_test() {
       uint8_array.from_list([72, 101, 108, 108, 111]),
       "application/octet-stream",
     )
-  should.equal(blob.size(b), 5)
-  should.equal(blob.type_(b), "application/octet-stream")
+  b.size |> should.equal(5)
+  b.type_ |> should.equal("application/octet-stream")
 }
 
 pub fn blob_slice_with_type_test() {
   let b = blob.from_string("hello world")
   let sliced = blob.slice_with_type(b, 0, 5, "text/plain")
-  should.equal(blob.size(sliced), 5)
-  should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
+  sliced.size |> should.equal(5)
+  should.be_true(string.starts_with(sliced.type_, "text/plain"))
   use text <- promise.then(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)

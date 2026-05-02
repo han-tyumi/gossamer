@@ -1,4 +1,5 @@
 import * as $file from "$/gossamer/gossamer/file.mjs";
+import { blobRef, toBlob } from "~/gossamer/blob.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -27,7 +28,7 @@ export const from_strings_with: typeof $file.from_strings_with = (
 };
 
 export const from_blob: typeof $file.from_blob = (blob, name) => {
-  return new File([blob], name);
+  return new File([blobRef(blob)], name);
 };
 
 export const from_blob_with: typeof $file.from_blob_with = (
@@ -35,7 +36,7 @@ export const from_blob_with: typeof $file.from_blob_with = (
   name,
   options,
 ) => {
-  return new File([blob], name, toFileOptions(toArray(options)));
+  return new File([blobRef(blob)], name, toFileOptions(toArray(options)));
 };
 
 export const name: typeof $file.name = (file) => {
@@ -47,7 +48,7 @@ export const last_modified: typeof $file.last_modified = (file) => {
 };
 
 export const to_blob: typeof $file.to_blob = (file) => {
-  return file;
+  return toBlob(file);
 };
 
 export const size: typeof $file.size = (file) => {
@@ -67,7 +68,7 @@ export const bytes: typeof $file.bytes = (file) => {
 };
 
 export const slice: typeof $file.slice = (file, start, end) => {
-  return file.slice(start, end);
+  return toBlob(file.slice(start, end));
 };
 
 export const slice_with_type: typeof $file.slice_with_type = (
@@ -76,7 +77,7 @@ export const slice_with_type: typeof $file.slice_with_type = (
   end,
   contentType,
 ) => {
-  return file.slice(start, end, contentType);
+  return toBlob(file.slice(start, end, contentType));
 };
 
 export const stream: typeof $file.stream = (file) => {

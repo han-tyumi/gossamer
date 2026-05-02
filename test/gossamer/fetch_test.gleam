@@ -325,7 +325,7 @@ pub fn request_blob_test() {
     ])
   use result <- promise.then(request.blob(req))
   let assert Ok(b) = result
-  should.equal(blob.size(b), 12)
+  b.size |> should.equal(12)
   promise.resolve(Nil)
 }
 
@@ -333,7 +333,7 @@ pub fn response_blob_test() {
   let resp = response.from_string("blob response")
   use result <- promise.then(response.blob(resp))
   let assert Ok(b) = result
-  should.equal(blob.size(b), 13)
+  b.size |> should.equal(13)
   promise.resolve(Nil)
 }
 

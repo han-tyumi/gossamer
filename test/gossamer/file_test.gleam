@@ -85,7 +85,7 @@ pub fn file_slice_test() {
 pub fn file_slice_with_type_test() {
   let f = file.from_strings(["hello world"], "slice-type.txt")
   let sliced = file.slice_with_type(f, 0, 5, "text/plain")
-  should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
+  should.be_true(string.starts_with(sliced.type_, "text/plain"))
 }
 
 pub fn file_stream_test() {

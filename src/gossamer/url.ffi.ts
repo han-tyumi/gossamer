@@ -1,4 +1,5 @@
 import type * as $url from "$/gossamer/gossamer/url.mjs";
+import { blobRef } from "~/gossamer/blob.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $url.new$ = (url) => {
@@ -100,7 +101,7 @@ export const to_string: typeof $url.to_string = (url) => url.toString();
 export const to_json: typeof $url.to_json = (url) => url.toJSON();
 
 export const create_object_url: typeof $url.create_object_url = (blob) => {
-  return URL.createObjectURL(blob);
+  return URL.createObjectURL(blobRef(blob));
 };
 
 export const revoke_object_url: typeof $url.revoke_object_url = (url) => {

@@ -4,13 +4,23 @@ import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 
+@external(javascript, "./blob_ref.type.ts", "BlobRef$")
+@internal
+pub type BlobRef
+
 /// A file-like object of immutable, raw data. Can be read as text, bytes,
 /// or a stream.
 ///
 /// See [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob) on MDN.
 ///
-@external(javascript, "./blob.type.ts", "Blob$")
-pub type Blob
+pub type Blob {
+  Blob(
+    size: Int,
+    type_: String,
+    /// Internal handle to the underlying JS `Blob`.
+    ref: BlobRef,
+  )
+}
 
 @external(javascript, "./blob.ffi.mjs", "new_")
 pub fn new() -> Blob
@@ -32,12 +42,6 @@ pub fn from_bytes_with_type(
   bytes: Uint8Array,
   content_type content_type: String,
 ) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "size")
-pub fn size(of blob: Blob) -> Int
-
-@external(javascript, "./blob.ffi.mjs", "type_")
-pub fn type_(of blob: Blob) -> String
 
 /// Reads the blob's contents as an `ArrayBuffer`. Returns an error if
 /// the blob cannot be read.

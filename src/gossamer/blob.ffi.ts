@@ -1,50 +1,50 @@
-import type * as $blob from "$/gossamer/gossamer/blob.mjs";
+import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
+export function toBlob(blob: Blob): $blob.Blob$ {
+  return $blob.Blob$Blob(blob.size, blob.type, blob);
+}
+
+export function blobRef(blob: $blob.Blob$): Blob {
+  return $blob.Blob$Blob$ref(blob);
+}
+
 export const new_: typeof $blob.new$ = () => {
-  return new Blob();
+  return toBlob(new Blob());
 };
 
 export const from_string: typeof $blob.from_string = (content) => {
-  return new Blob([content]);
+  return toBlob(new Blob([content]));
 };
 
 export const from_string_with_type: typeof $blob.from_string_with_type = (
   content,
   mimeType,
 ) => {
-  return new Blob([content], { type: mimeType });
+  return toBlob(new Blob([content], { type: mimeType }));
 };
 
 export const from_bytes: typeof $blob.from_bytes = (bytes) => {
-  return new Blob([bytes as unknown as BlobPart]);
+  return toBlob(new Blob([bytes as unknown as BlobPart]));
 };
 
 export const from_bytes_with_type: typeof $blob.from_bytes_with_type = (
   bytes,
   mimeType,
 ) => {
-  return new Blob([bytes as unknown as BlobPart], { type: mimeType });
-};
-
-export const size: typeof $blob.size = (blob) => {
-  return blob.size;
-};
-
-export const type_: typeof $blob.type_ = (blob) => {
-  return blob.type;
+  return toBlob(new Blob([bytes as unknown as BlobPart], { type: mimeType }));
 };
 
 export const array_buffer: typeof $blob.array_buffer = (blob) => {
-  return toResult.fromPromise(blob.arrayBuffer());
+  return toResult.fromPromise(blobRef(blob).arrayBuffer());
 };
 
 export const bytes: typeof $blob.bytes = (blob) => {
-  return toResult.fromPromise(blob.bytes());
+  return toResult.fromPromise(blobRef(blob).bytes());
 };
 
 export const slice: typeof $blob.slice = (blob, start, end) => {
-  return blob.slice(start, end);
+  return toBlob(blobRef(blob).slice(start, end));
 };
 
 export const slice_with_type: typeof $blob.slice_with_type = (
@@ -53,13 +53,13 @@ export const slice_with_type: typeof $blob.slice_with_type = (
   end,
   contentType,
 ) => {
-  return blob.slice(start, end, contentType);
+  return toBlob(blobRef(blob).slice(start, end, contentType));
 };
 
 export const stream: typeof $blob.stream = (blob) => {
-  return blob.stream() as unknown as ReadableStream<Uint8Array>;
+  return blobRef(blob).stream() as unknown as ReadableStream<Uint8Array>;
 };
 
 export const text: typeof $blob.text = (blob) => {
-  return toResult.fromPromise(blob.text());
+  return toResult.fromPromise(blobRef(blob).text());
 };

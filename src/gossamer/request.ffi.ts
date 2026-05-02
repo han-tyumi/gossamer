@@ -1,4 +1,5 @@
 import * as $request from "$/gossamer/gossamer/request.mjs";
+import { blobRef, toBlob } from "~/gossamer/blob.ffi.ts";
 import {
   fromReferrerPolicy,
   toReferrerPolicy,
@@ -38,7 +39,7 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
     } else if ($request.RequestInit$isBodyBytes(option)) {
       result.body = $request.RequestInit$BodyBytes$0(option) as BodyInit;
     } else if ($request.RequestInit$isBodyBlob(option)) {
-      result.body = $request.RequestInit$BodyBlob$0(option);
+      result.body = blobRef($request.RequestInit$BodyBlob$0(option));
     } else if ($request.RequestInit$isBodyBuffer(option)) {
       result.body = $request.RequestInit$BodyBuffer$0(option);
     } else if ($request.RequestInit$isBodyFormData(option)) {
@@ -164,7 +165,7 @@ export const is_body_used: typeof $request.is_body_used = (request) => {
 };
 
 export const blob: typeof $request.blob = (request) => {
-  return toResult.fromPromise(ref(request).blob());
+  return toResult.fromPromise(ref(request).blob().then(toBlob));
 };
 
 export const array_buffer: typeof $request.array_buffer = (request) => {

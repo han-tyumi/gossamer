@@ -1,4 +1,5 @@
 import * as $response from "$/gossamer/gossamer/response.mjs";
+import { blobRef, toBlob } from "~/gossamer/blob.ffi.ts";
 import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
@@ -67,7 +68,7 @@ export const from_bytes_with: typeof $response.from_bytes_with = (
 };
 
 export const from_blob: typeof $response.from_blob = (body) => {
-  return toResponse(new Response(body));
+  return toResponse(new Response(blobRef(body)));
 };
 
 export const from_blob_with: typeof $response.from_blob_with = (
@@ -75,7 +76,8 @@ export const from_blob_with: typeof $response.from_blob_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
+    () =>
+      toResponse(new Response(blobRef(body), toResponseInit(toArray(init)))),
   );
 };
 
@@ -181,7 +183,7 @@ export const is_body_used: typeof $response.is_body_used = (response) => {
 };
 
 export const blob: typeof $response.blob = (response) => {
-  return toResult.fromPromise(ref(response).blob());
+  return toResult.fromPromise(ref(response).blob().then(toBlob));
 };
 
 export const array_buffer: typeof $response.array_buffer = (response) => {
