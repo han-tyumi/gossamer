@@ -1,5 +1,6 @@
 import type * as $gossamer from "$/gossamer/gossamer.mjs";
-import { toRequestInit } from "~/gossamer/request.ffi.ts";
+import { requestRef, toRequestInit } from "~/gossamer/request.ffi.ts";
+import { toResponse } from "~/gossamer/response.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -48,11 +49,11 @@ export const user_agent: typeof $gossamer.user_agent = () => {
 };
 
 export const fetch_: typeof $gossamer.fetch = (url) => {
-  return toResult.fromPromise(globalThis.fetch(url));
+  return toResult.fromPromise(globalThis.fetch(url).then(toResponse));
 };
 
 export const fetch_url: typeof $gossamer.fetch_url = (url) => {
-  return toResult.fromPromise(globalThis.fetch(url));
+  return toResult.fromPromise(globalThis.fetch(url).then(toResponse));
 };
 
 export const fetch_with: typeof $gossamer.fetch_with = (
@@ -60,7 +61,7 @@ export const fetch_with: typeof $gossamer.fetch_with = (
   init,
 ) => {
   return toResult.fromPromise(
-    globalThis.fetch(url, toRequestInit(toArray(init))),
+    globalThis.fetch(url, toRequestInit(toArray(init))).then(toResponse),
   );
 };
 
@@ -69,12 +70,14 @@ export const fetch_url_with: typeof $gossamer.fetch_url_with = (
   init,
 ) => {
   return toResult.fromPromise(
-    globalThis.fetch(url, toRequestInit(toArray(init))),
+    globalThis.fetch(url, toRequestInit(toArray(init))).then(toResponse),
   );
 };
 
 export const fetch_request: typeof $gossamer.fetch_request = (request) => {
-  return toResult.fromPromise(globalThis.fetch(request));
+  return toResult.fromPromise(
+    globalThis.fetch(requestRef(request)).then(toResponse),
+  );
 };
 
 export const fetch_request_with: typeof $gossamer.fetch_request_with = (
@@ -82,6 +85,7 @@ export const fetch_request_with: typeof $gossamer.fetch_request_with = (
   init,
 ) => {
   return toResult.fromPromise(
-    globalThis.fetch(request, toRequestInit(toArray(init))),
+    globalThis.fetch(requestRef(request), toRequestInit(toArray(init)))
+      .then(toResponse),
   );
 };

@@ -1,4 +1,5 @@
 import gleam/option.{None, Some}
+import gossamer/abort_signal
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/form_data
@@ -9,7 +10,12 @@ import gossamer/iterator
 import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
+import gossamer/referrer_policy
 import gossamer/request
+import gossamer/request_cache
+import gossamer/request_credentials
+import gossamer/request_destination
+import gossamer/request_mode
 import gossamer/request_priority
 import gossamer/request_redirect
 import gossamer/response
@@ -75,8 +81,8 @@ pub fn headers_entries_test() {
 
 pub fn request_from_url_string_test() {
   let assert Ok(req) = request.from_url_string("https://example.org/foo")
-  request.method(req) |> should.equal(http_method.Get)
-  request.url(req) |> should.equal("https://example.org/foo")
+  req.method |> should.equal(http_method.Get)
+  req.url |> should.equal("https://example.org/foo")
 }
 
 pub fn request_from_url_string_with_test() {
@@ -84,7 +90,7 @@ pub fn request_from_url_string_with_test() {
     request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
     ])
-  request.method(req) |> should.equal(http_method.Post)
+  req.method |> should.equal(http_method.Post)
 }
 
 pub fn request_headers_test() {
@@ -94,7 +100,7 @@ pub fn request_headers_test() {
     request.from_url_string_with("https://example.org", [
       request.Headers(hdrs),
     ])
-  headers.get(request.headers(req), "content-type")
+  headers.get(req.headers, "content-type")
   |> should.equal(Ok(Some("application/json")))
 }
 
@@ -172,14 +178,14 @@ pub fn request_body_form_data_test() {
 pub fn request_from_url_test() {
   let assert Ok(u) = url.new("https://example.org")
   let assert Ok(req) = request.from_url(u)
-  request.url(req) |> should.equal("https://example.org/")
+  req.url |> should.equal("https://example.org/")
 }
 
 pub fn request_from_url_with_test() {
   let assert Ok(u) = url.new("https://example.org")
   let assert Ok(req) =
     request.from_url_with(u, [request.Method(http_method.Post)])
-  request.method(req) |> should.equal(http_method.Post)
+  req.method |> should.equal(http_method.Post)
 }
 
 pub fn request_from_request_test() {
@@ -188,8 +194,8 @@ pub fn request_from_request_test() {
       request.Method(http_method.Post),
     ])
   let assert Ok(copy) = request.from_request(original)
-  request.method(copy) |> should.equal(http_method.Post)
-  request.url(copy) |> should.equal("https://example.org/")
+  copy.method |> should.equal(http_method.Post)
+  copy.url |> should.equal("https://example.org/")
 }
 
 pub fn request_from_request_with_test() {
@@ -198,7 +204,7 @@ pub fn request_from_request_with_test() {
     request.from_request_with(original, [
       request.Method(http_method.Put),
     ])
-  request.method(overridden) |> should.equal(http_method.Put)
+  overridden.method |> should.equal(http_method.Put)
 }
 
 pub fn request_body_stream_test() {
@@ -221,8 +227,8 @@ pub fn request_body_stream_test() {
 
 pub fn response_from_string_test() {
   let resp = response.from_string("hello")
-  response.status(resp) |> should.equal(http_status.Ok)
-  response.is_ok(resp) |> should.be_true()
+  resp.status |> should.equal(http_status.Ok)
+  resp.is_ok |> should.be_true()
 }
 
 pub fn response_from_string_with_test() {
@@ -231,9 +237,9 @@ pub fn response_from_string_with_test() {
       response.Status(http_status.NotFound),
       response.StatusText("Not Found"),
     ])
-  response.status(resp) |> should.equal(http_status.NotFound)
-  response.status_text(resp) |> should.equal("Not Found")
-  response.is_ok(resp) |> should.be_false()
+  resp.status |> should.equal(http_status.NotFound)
+  resp.status_text |> should.equal("Not Found")
+  resp.is_ok |> should.be_false()
 }
 
 pub fn response_text_test() {
@@ -244,7 +250,7 @@ pub fn response_text_test() {
 
 pub fn response_error_test() {
   let resp = response.error()
-  response.type_(resp) |> should.equal(response_type.Error)
+  resp.type_ |> should.equal(response_type.Error)
 }
 
 pub fn response_redirect_test() {
@@ -253,20 +259,20 @@ pub fn response_redirect_test() {
       "https://example.org",
       http_status.MovedPermanently,
     )
-  response.status(resp) |> should.equal(http_status.MovedPermanently)
+  resp.status |> should.equal(http_status.MovedPermanently)
 }
 
 pub fn response_redirect_url_test() {
   let assert Ok(u) = url.new("https://example.org")
   let resp = response.redirect_url(u)
-  response.status(resp) |> should.equal(http_status.Found)
+  resp.status |> should.equal(http_status.Found)
 }
 
 pub fn response_redirect_url_with_status_test() {
   let assert Ok(u) = url.new("https://example.org")
   let assert Ok(resp) =
     response.redirect_url_with_status(u, http_status.MovedPermanently)
-  response.status(resp) |> should.equal(http_status.MovedPermanently)
+  resp.status |> should.equal(http_status.MovedPermanently)
 }
 
 pub fn response_redirect_parity_test() {
@@ -278,12 +284,12 @@ pub fn response_redirect_parity_test() {
   let assert Ok(from_string) = response.redirect(location)
   let from_url = response.redirect_url(u)
 
-  let hdr = fn(r) {
-    let assert Ok(Some(h)) = headers.get(response.headers(r), "location")
+  let hdr = fn(r: response.Response) {
+    let assert Ok(Some(h)) = headers.get(r.headers, "location")
     h
   }
   hdr(from_string) |> should.equal(hdr(from_url))
-  response.status(from_string) |> should.equal(response.status(from_url))
+  from_string.status |> should.equal(from_url.status)
 }
 
 pub fn request_from_url_parity_test() {
@@ -294,7 +300,7 @@ pub fn request_from_url_parity_test() {
   let assert Ok(from_string) = request.from_url_string(href)
   let assert Ok(from_url) = request.from_url(u)
 
-  request.url(from_string) |> should.equal(request.url(from_url))
+  from_string.url |> should.equal(from_url.url)
 }
 
 pub fn response_clone_test() {
@@ -307,8 +313,8 @@ pub fn response_clone_test() {
 pub fn response_get_not_found_test() {
   let assert Ok(resp) =
     response.from_string_with("", [response.Status(http_status.NotFound)])
-  response.is_ok(resp) |> should.be_false()
-  response.status(resp) |> should.equal(http_status.NotFound)
+  resp.is_ok |> should.be_false()
+  resp.status |> should.equal(http_status.NotFound)
 }
 
 pub fn request_blob_test() {
@@ -380,57 +386,54 @@ pub fn headers_get_set_cookie_test() {
 
 pub fn request_cache_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _cache = request.cache(req)
+  req.cache |> should.equal(request_cache.Default)
 }
 
 pub fn request_credentials_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _creds = request.credentials(req)
+  case runtime.current() {
+    runtime.Bun -> req.credentials |> should.equal(request_credentials.Include)
+    _ -> req.credentials |> should.equal(request_credentials.SameOrigin)
+  }
 }
 
 pub fn request_destination_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _destination = request.destination(req)
+  req.destination |> should.equal(request_destination.Empty)
 }
 
 pub fn request_redirect_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.redirect(req) |> should.equal(request_redirect.Follow)
+  req.redirect |> should.equal(request_redirect.Follow)
 }
 
 pub fn request_signal_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _signal = request.signal(req)
+  abort_signal.is_aborted(req.signal) |> should.be_false
 }
 
 pub fn request_referrer_test() {
-  use <- runtime.skip_on(runtime.Deno)
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _ = request.referrer(req)
-}
-
-pub fn request_referrer_panics_on_deno_test() {
-  use <- runtime.only_on(runtime.Deno)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.referrer(req) })
+  case runtime.current() {
+    runtime.Bun -> req.referrer |> should.equal("")
+    _ -> req.referrer |> should.equal("about:client")
+  }
 }
 
 pub fn request_referrer_policy_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _referrer_policy = request.referrer_policy(req)
+  req.referrer_policy
+  |> should.equal(referrer_policy.StrictOriginWhenCrossOrigin)
 }
 
 pub fn request_mode_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _mode = request.mode(req)
+  req.mode |> should.equal(request_mode.Cors)
 }
 
 pub fn request_priority_test() {
-  // Default priority is `Auto` per Fetch spec. On Deno the getter is
-  // unimplemented, but the FFI surfaces the undefined as `Auto` so the
-  // value is the same across runtimes.
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.priority(req) |> should.equal(request_priority.Auto)
+  req.priority |> should.equal(request_priority.Auto)
 }
 
 pub fn request_init_priority_test() {
@@ -439,48 +442,24 @@ pub fn request_init_priority_test() {
       request.Priority(request_priority.High),
     ])
 
-  // Round-trip the priority: High on Node/Bun, Auto on Deno (Deno
-  // doesn't expose the priority getter; the FFI surfaces the missing
-  // property as Auto rather than a type-violating Other(Nil)).
-  let p = request.priority(req)
-  let ok = p == request_priority.High || p == request_priority.Auto
-  should.be_true(ok)
+  // Reads back as `Auto` on all runtimes — see `priority` field doc.
+  req.priority |> should.equal(request_priority.Auto)
 }
 
 pub fn request_is_keepalive_test() {
-  use <- runtime.skip_on_any([runtime.Deno, runtime.Bun])
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.is_keepalive(req) |> should.be_false
-}
-
-pub fn request_is_keepalive_panics_on_deno_test() {
-  use <- runtime.only_on(runtime.Deno)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.is_keepalive(req) })
-}
-
-pub fn request_is_keepalive_panics_on_bun_test() {
-  use <- runtime.only_on(runtime.Bun)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.is_keepalive(req) })
+  req.is_keepalive |> should.be_false
 }
 
 pub fn request_integrity_test() {
-  use <- runtime.skip_on(runtime.Deno)
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.integrity(req) |> should.equal("")
-}
-
-pub fn request_integrity_panics_on_deno_test() {
-  use <- runtime.only_on(runtime.Deno)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.integrity(req) })
+  req.integrity |> should.equal("")
 }
 
 pub fn request_clone_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
   let assert Ok(cloned) = request.clone(req)
-  request.url(cloned) |> should.equal("https://example.org/")
+  cloned.url |> should.equal("https://example.org/")
 }
 
 pub fn request_is_body_used_test() {
@@ -527,7 +506,7 @@ pub fn request_json_test() {
 
 pub fn response_from_json_test() {
   let assert Ok(resp) = response.from_json(42)
-  response.status(resp) |> should.equal(http_status.Ok)
+  resp.status |> should.equal(http_status.Ok)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("42"))
   promise.resolve(Nil)
@@ -540,7 +519,7 @@ pub fn response_is_body_used_test() {
 
 pub fn response_body_test() {
   let resp = response.from_string("hello")
-  response.body(resp) |> should.be_ok
+  resp.body |> should.be_some
 }
 
 pub fn response_array_buffer_test() {
@@ -571,12 +550,12 @@ pub fn response_json_test() {
 
 pub fn response_is_redirected_test() {
   let resp = response.from_string("hello")
-  response.is_redirected(resp) |> should.be_false
+  resp.is_redirected |> should.be_false
 }
 
 pub fn response_url_test() {
   let resp = response.from_string("hello")
-  response.url(resp) |> should.equal("")
+  resp.url |> should.equal("")
 }
 
 pub fn response_new_empty_test() {
@@ -598,7 +577,7 @@ pub fn response_from_bytes_with_test() {
     response.from_bytes_with(bytes, [
       response.Status(http_status.Created),
     ])
-  response.status(resp) |> should.equal(http_status.Created)
+  resp.status |> should.equal(http_status.Created)
 }
 
 pub fn response_from_blob_test() {
@@ -622,7 +601,7 @@ pub fn response_from_form_data_test() {
   let fd = form_data.new()
   let fd = form_data.append(fd, "key", "value")
   let resp = response.from_form_data(fd)
-  response.status(resp) |> should.equal(http_status.Ok)
+  resp.status |> should.equal(http_status.Ok)
 }
 
 pub fn response_from_params_test() {
@@ -652,5 +631,5 @@ pub fn response_from_json_with_test() {
     response.from_json_with(42, [
       response.Status(http_status.Created),
     ])
-  response.status(resp) |> should.equal(http_status.Created)
+  resp.status |> should.equal(http_status.Created)
 }

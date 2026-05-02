@@ -2,9 +2,10 @@ import * as $response from "$/gossamer/gossamer/response.mjs";
 import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Response$ = Response;
+export type ResponseRef$ = Response;
 
 function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   const result: ResponseInit = {};
@@ -20,10 +21,28 @@ function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   return result;
 }
 
-export const new_: typeof $response.new$ = () => new Response();
+export function toResponse(response: Response): $response.Response$ {
+  return $response.Response$Response(
+    toHttpStatus(response.status),
+    response.statusText,
+    fromResponseType(response.type),
+    response.url,
+    response.ok,
+    response.redirected,
+    response.headers,
+    toOption(response.body),
+    response,
+  );
+}
+
+function ref(response: $response.Response$): Response {
+  return $response.Response$Response$ref(response);
+}
+
+export const new_: typeof $response.new$ = () => toResponse(new Response());
 
 export const from_string: typeof $response.from_string = (body) => {
-  return new Response(body);
+  return toResponse(new Response(body));
 };
 
 export const from_string_with: typeof $response.from_string_with = (
@@ -31,12 +50,12 @@ export const from_string_with: typeof $response.from_string_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
+    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_bytes: typeof $response.from_bytes = (body) => {
-  return new Response(body as BodyInit);
+  return toResponse(new Response(body as BodyInit));
 };
 
 export const from_bytes_with: typeof $response.from_bytes_with = (
@@ -44,12 +63,13 @@ export const from_bytes_with: typeof $response.from_bytes_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body as BodyInit, toResponseInit(toArray(init))),
+    () =>
+      toResponse(new Response(body as BodyInit, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_blob: typeof $response.from_blob = (body) => {
-  return new Response(body);
+  return toResponse(new Response(body));
 };
 
 export const from_blob_with: typeof $response.from_blob_with = (
@@ -57,12 +77,12 @@ export const from_blob_with: typeof $response.from_blob_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
+    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_buffer: typeof $response.from_buffer = (body) => {
-  return new Response(body);
+  return toResponse(new Response(body));
 };
 
 export const from_buffer_with: typeof $response.from_buffer_with = (
@@ -70,12 +90,12 @@ export const from_buffer_with: typeof $response.from_buffer_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
+    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_form_data: typeof $response.from_form_data = (body) => {
-  return new Response(body);
+  return toResponse(new Response(body));
 };
 
 export const from_form_data_with: typeof $response.from_form_data_with = (
@@ -83,12 +103,12 @@ export const from_form_data_with: typeof $response.from_form_data_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
+    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_params: typeof $response.from_params = (body) => {
-  return new Response(body);
+  return toResponse(new Response(body));
 };
 
 export const from_params_with: typeof $response.from_params_with = (
@@ -96,12 +116,12 @@ export const from_params_with: typeof $response.from_params_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
+    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_stream: typeof $response.from_stream = (body) => {
-  return toResult.fromThrows(() => new Response(body));
+  return toResult.fromThrows(() => toResponse(new Response(body)));
 };
 
 export const from_stream_with: typeof $response.from_stream_with = (
@@ -109,12 +129,12 @@ export const from_stream_with: typeof $response.from_stream_with = (
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
+    () => toResponse(new Response(body, toResponseInit(toArray(init)))),
   );
 };
 
 export const from_json: typeof $response.from_json = (data) => {
-  return toResult.fromThrows(() => Response.json(data));
+  return toResult.fromThrows(() => toResponse(Response.json(data)));
 };
 
 export const from_json_with: typeof $response.from_json_with = (
@@ -122,20 +142,20 @@ export const from_json_with: typeof $response.from_json_with = (
   init,
 ) => {
   return toResult.fromThrows(() =>
-    Response.json(data, toResponseInit(toArray(init)))
+    toResponse(Response.json(data, toResponseInit(toArray(init))))
   );
 };
 
 export const error: typeof $response.error = () => {
-  return Response.error();
+  return toResponse(Response.error());
 };
 
 export const redirect: typeof $response.redirect = (url) => {
-  return toResult.fromThrows(() => Response.redirect(url));
+  return toResult.fromThrows(() => toResponse(Response.redirect(url)));
 };
 
 export const redirect_url: typeof $response.redirect_url = (url) => {
-  return Response.redirect(url.toString());
+  return toResponse(Response.redirect(url.toString()));
 };
 
 export const redirect_with_status: typeof $response.redirect_with_status = (
@@ -143,73 +163,45 @@ export const redirect_with_status: typeof $response.redirect_with_status = (
   status,
 ) => {
   return toResult.fromThrows(() =>
-    Response.redirect(url, fromHttpStatus(status))
+    toResponse(Response.redirect(url, fromHttpStatus(status)))
   );
 };
 
 export const redirect_url_with_status:
   typeof $response.redirect_url_with_status = (url, status) => {
     return toResult.fromThrows(() =>
-      Response.redirect(url.toString(), fromHttpStatus(status))
+      toResponse(Response.redirect(url.toString(), fromHttpStatus(status)))
     );
   };
 
-export const headers_: typeof $response.headers = (response) => {
-  return response.headers;
-};
-
-export const is_ok: typeof $response.is_ok = (response) => response.ok;
-
-export const is_redirected: typeof $response.is_redirected = (response) => {
-  return response.redirected;
-};
-
-export const status: typeof $response.status = (response) => {
-  return toHttpStatus(response.status);
-};
-
-export const status_text: typeof $response.status_text = (response) => {
-  return response.statusText;
-};
-
-export const type_: typeof $response.type_ = (response) => {
-  return fromResponseType(response.type);
-};
-
-export const url: typeof $response.url = (response) => response.url;
-
 export const clone: typeof $response.clone = (response) => {
-  return toResult.fromThrows(() => response.clone());
-};
-
-export const body: typeof $response.body = (response) => {
-  return toResult(response.body);
+  return toResult.fromThrows(() => toResponse(ref(response).clone()));
 };
 
 export const is_body_used: typeof $response.is_body_used = (response) => {
-  return response.bodyUsed;
+  return ref(response).bodyUsed;
 };
 
 export const blob: typeof $response.blob = (response) => {
-  return toResult.fromPromise(response.blob());
+  return toResult.fromPromise(ref(response).blob());
 };
 
 export const array_buffer: typeof $response.array_buffer = (response) => {
-  return toResult.fromPromise(response.arrayBuffer());
+  return toResult.fromPromise(ref(response).arrayBuffer());
 };
 
 export const bytes: typeof $response.bytes = (response) => {
-  return toResult.fromPromise(response.bytes());
+  return toResult.fromPromise(ref(response).bytes());
 };
 
 export const json: typeof $response.json = (response) => {
-  return toResult.fromPromise(response.json());
+  return toResult.fromPromise(ref(response).json());
 };
 
 export const form_data: typeof $response.form_data = (response) => {
-  return toResult.fromPromise(response.formData());
+  return toResult.fromPromise(ref(response).formData());
 };
 
 export const text: typeof $response.text = (response) => {
-  return toResult.fromPromise(response.text());
+  return toResult.fromPromise(ref(response).text());
 };

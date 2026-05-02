@@ -1,0 +1,1 @@
+export type ResponseRef$ = Response;

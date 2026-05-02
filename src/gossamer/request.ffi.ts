@@ -23,9 +23,10 @@ import {
   toRequestRedirect,
 } from "~/gossamer/request_redirect.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Request$ = Request;
+export type RequestRef$ = Request;
 
 export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
   const result: RequestInit = {};
@@ -87,8 +88,38 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
   return result;
 }
 
+export function toRequest(request: Request): $request.Request$ {
+  const priority = (request as Request & { priority: string }).priority;
+  return $request.Request$Request(
+    fromHttpMethod(request.method),
+    request.url,
+    request.headers,
+    fromRequestCache(request.cache),
+    fromRequestCredentials(request.credentials),
+    fromRequestDestination(request.destination),
+    fromRequestMode(request.mode),
+    fromRequestPriority(priority),
+    fromRequestRedirect(request.redirect),
+    fromReferrerPolicy(request.referrerPolicy),
+    request.signal,
+    request.referrer ?? "about:client",
+    request.integrity ?? "",
+    request.keepalive ?? false,
+    toOption(request.body),
+    request,
+  );
+}
+
+export function requestRef(request: $request.Request$): Request {
+  return $request.Request$Request$ref(request);
+}
+
+function ref(request: $request.Request$): Request {
+  return requestRef(request);
+}
+
 export const from_url_string: typeof $request.from_url_string = (url) => {
-  return toResult.fromThrows(() => new Request(url));
+  return toResult.fromThrows(() => toRequest(new Request(url)));
 };
 
 export const from_url_string_with: typeof $request.from_url_string_with = (
@@ -96,12 +127,12 @@ export const from_url_string_with: typeof $request.from_url_string_with = (
   init,
 ) => {
   return toResult.fromThrows(() =>
-    new Request(url, toRequestInit(toArray(init)))
+    toRequest(new Request(url, toRequestInit(toArray(init))))
   );
 };
 
 export const from_url: typeof $request.from_url = (url) => {
-  return toResult.fromThrows(() => new Request(url.toString()));
+  return toResult.fromThrows(() => toRequest(new Request(url.toString())));
 };
 
 export const from_url_with: typeof $request.from_url_with = (
@@ -109,12 +140,12 @@ export const from_url_with: typeof $request.from_url_with = (
   init,
 ) => {
   return toResult.fromThrows(() =>
-    new Request(url.toString(), toRequestInit(toArray(init)))
+    toRequest(new Request(url.toString(), toRequestInit(toArray(init))))
   );
 };
 
 export const from_request: typeof $request.from_request = (existing) => {
-  return toResult.fromThrows(() => new Request(existing));
+  return toResult.fromThrows(() => toRequest(new Request(ref(existing))));
 };
 
 export const from_request_with: typeof $request.from_request_with = (
@@ -122,105 +153,38 @@ export const from_request_with: typeof $request.from_request_with = (
   init,
 ) => {
   return toResult.fromThrows(() =>
-    new Request(existing, toRequestInit(toArray(init)))
+    toRequest(new Request(ref(existing), toRequestInit(toArray(init))))
   );
-};
-
-export const method: typeof $request.method = (request) => {
-  return fromHttpMethod(request.method);
-};
-export const url: typeof $request.url = (request) => request.url;
-export const headers: typeof $request.headers = (request) => request.headers;
-export const cache: typeof $request.cache = (request) => {
-  return fromRequestCache(request.cache);
-};
-
-export const credentials: typeof $request.credentials = (request) => {
-  return fromRequestCredentials(request.credentials);
-};
-
-export const destination: typeof $request.destination = (request) => {
-  return fromRequestDestination(request.destination);
-};
-
-export const redirect: typeof $request.redirect = (request) => {
-  return fromRequestRedirect(request.redirect);
-};
-export const signal: typeof $request.signal = (request) => request.signal;
-
-export const referrer: typeof $request.referrer = (request) => {
-  if (request.referrer === undefined) {
-    throw new Error(
-      "request.referrer is unavailable on Deno - see https://github.com/denoland/deno/issues/27763",
-    );
-  }
-  return request.referrer;
-};
-
-export const referrer_policy: typeof $request.referrer_policy = (request) => {
-  return fromReferrerPolicy(request.referrerPolicy);
-};
-
-export const mode: typeof $request.mode = (request) => {
-  return fromRequestMode(request.mode);
-};
-
-export const priority: typeof $request.priority = (request) => {
-  return fromRequestPriority(
-    (request as Request & { priority: string }).priority,
-  );
-};
-
-export const is_keepalive: typeof $request.is_keepalive = (request) => {
-  if (request.keepalive === undefined) {
-    throw new Error(
-      "request.is_keepalive is unavailable on Deno and Bun - see https://github.com/denoland/deno/issues/27763",
-    );
-  }
-  return request.keepalive;
-};
-
-export const integrity: typeof $request.integrity = (request) => {
-  if (request.integrity === undefined) {
-    throw new Error(
-      "request.integrity is unavailable on Deno - see https://github.com/denoland/deno/issues/27763",
-    );
-  }
-  return request.integrity;
 };
 
 export const clone: typeof $request.clone = (request) => {
-  return toResult.fromThrows(() => request.clone());
-};
-
-export const body: typeof $request.body = (request) => {
-  return toResult(request.body);
+  return toResult.fromThrows(() => toRequest(ref(request).clone()));
 };
 
 export const is_body_used: typeof $request.is_body_used = (request) => {
-  return request.bodyUsed;
+  return ref(request).bodyUsed;
 };
 
 export const blob: typeof $request.blob = (request) => {
-  return toResult.fromPromise(request.blob());
+  return toResult.fromPromise(ref(request).blob());
 };
 
 export const array_buffer: typeof $request.array_buffer = (request) => {
-  return toResult.fromPromise(request.arrayBuffer());
+  return toResult.fromPromise(ref(request).arrayBuffer());
 };
 
 export const bytes: typeof $request.bytes = (request) => {
-  return toResult.fromPromise(request.bytes());
+  return toResult.fromPromise(ref(request).bytes());
 };
 
 export const json: typeof $request.json = (request) => {
-  return toResult.fromPromise(request.json());
+  return toResult.fromPromise(ref(request).json());
 };
 
 export const form_data: typeof $request.form_data = (request) => {
-  return toResult.fromPromise(request.formData());
+  return toResult.fromPromise(ref(request).formData());
 };
 
 export const text: typeof $request.text = (request) => {
-  return toResult.fromPromise(request.text());
+  return toResult.fromPromise(ref(request).text());
 };
