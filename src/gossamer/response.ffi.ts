@@ -20,15 +20,105 @@ function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   return result;
 }
 
-export const new_: typeof $response.new$ = (body) => new Response(body);
+export const new_: typeof $response.new$ = () => new Response();
 
-export const new_with_init: typeof $response.new_with_init = (body, init) => {
+export const from_string: typeof $response.from_string = (body) => {
+  return new Response(body);
+};
+
+export const from_string_with_init: typeof $response.from_string_with_init = (
+  body,
+  init,
+) => {
   return toResult.fromThrows(
     () => new Response(body, toResponseInit(toArray(init))),
   );
 };
 
-export const from_json: typeof $response.from_json = (data, init) => {
+export const from_bytes: typeof $response.from_bytes = (body) => {
+  return new Response(body as BodyInit);
+};
+
+export const from_bytes_with_init: typeof $response.from_bytes_with_init = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () => new Response(body as BodyInit, toResponseInit(toArray(init))),
+  );
+};
+
+export const from_blob: typeof $response.from_blob = (body) => {
+  return new Response(body);
+};
+
+export const from_blob_with_init: typeof $response.from_blob_with_init = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () => new Response(body, toResponseInit(toArray(init))),
+  );
+};
+
+export const from_buffer: typeof $response.from_buffer = (body) => {
+  return new Response(body);
+};
+
+export const from_buffer_with_init: typeof $response.from_buffer_with_init = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () => new Response(body, toResponseInit(toArray(init))),
+  );
+};
+
+export const from_form_data: typeof $response.from_form_data = (body) => {
+  return new Response(body);
+};
+
+export const from_form_data_with_init:
+  typeof $response.from_form_data_with_init = (body, init) => {
+    return toResult.fromThrows(
+      () => new Response(body, toResponseInit(toArray(init))),
+    );
+  };
+
+export const from_params: typeof $response.from_params = (body) => {
+  return new Response(body);
+};
+
+export const from_params_with_init: typeof $response.from_params_with_init = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () => new Response(body, toResponseInit(toArray(init))),
+  );
+};
+
+export const from_stream: typeof $response.from_stream = (body) => {
+  return toResult.fromThrows(() => new Response(body));
+};
+
+export const from_stream_with_init: typeof $response.from_stream_with_init = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () => new Response(body, toResponseInit(toArray(init))),
+  );
+};
+
+export const from_json: typeof $response.from_json = (data) => {
+  return toResult.fromThrows(() => Response.json(data));
+};
+
+export const from_json_with_init: typeof $response.from_json_with_init = (
+  data,
+  init,
+) => {
   return toResult.fromThrows(() =>
     Response.json(data, toResponseInit(toArray(init)))
   );

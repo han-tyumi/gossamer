@@ -8,6 +8,7 @@ import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
 import gossamer/uint8_array.{type Uint8Array}
+import gossamer/url_search_params.{type URLSearchParams}
 
 /// The response to an HTTP request.
 ///
@@ -22,25 +23,131 @@ pub type ResponseInit {
   StatusText(String)
 }
 
-@external(javascript, "./response.ffi.mjs", "new_")
-pub fn new(body: String) -> Response
-
-/// Creates a new `Response` with the given body and init options. Returns an
-/// error if `init` contains an invalid status code (outside 200-599) or an
-/// invalid status text.
+/// Creates an empty `Response` with no body.
 ///
-@external(javascript, "./response.ffi.mjs", "new_with_init")
-pub fn new_with_init(
+@external(javascript, "./response.ffi.mjs", "new_")
+pub fn new() -> Response
+
+/// Creates a `Response` with a string body.
+///
+@external(javascript, "./response.ffi.mjs", "from_string")
+pub fn from_string(body: String) -> Response
+
+/// Creates a `Response` with a string body and init options. Returns an
+/// error if `init` contains a status outside 200-599 or an invalid status
+/// text.
+///
+@external(javascript, "./response.ffi.mjs", "from_string_with_init")
+pub fn from_string_with_init(
   body: String,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
 
-/// Creates a new `Response` with `data` serialized as JSON and `Content-Type`
-/// set to `application/json`. Returns an error if `data` cannot be serialized
-/// or `init` contains an invalid status code.
+/// Creates a `Response` with a `Uint8Array` body.
+///
+@external(javascript, "./response.ffi.mjs", "from_bytes")
+pub fn from_bytes(body: Uint8Array) -> Response
+
+/// Creates a `Response` with a `Uint8Array` body and init options. Returns
+/// an error if `init` contains a status outside 200-599 or an invalid
+/// status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_bytes_with_init")
+pub fn from_bytes_with_init(
+  body: Uint8Array,
+  with init: List(ResponseInit),
+) -> Result(Response, String)
+
+/// Creates a `Response` with a `Blob` body.
+///
+@external(javascript, "./response.ffi.mjs", "from_blob")
+pub fn from_blob(body: Blob) -> Response
+
+/// Creates a `Response` with a `Blob` body and init options. Returns an
+/// error if `init` contains a status outside 200-599 or an invalid status
+/// text.
+///
+@external(javascript, "./response.ffi.mjs", "from_blob_with_init")
+pub fn from_blob_with_init(
+  body: Blob,
+  with init: List(ResponseInit),
+) -> Result(Response, String)
+
+/// Creates a `Response` with an `ArrayBuffer` body.
+///
+@external(javascript, "./response.ffi.mjs", "from_buffer")
+pub fn from_buffer(body: ArrayBuffer) -> Response
+
+/// Creates a `Response` with an `ArrayBuffer` body and init options.
+/// Returns an error if `init` contains a status outside 200-599 or an
+/// invalid status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_buffer_with_init")
+pub fn from_buffer_with_init(
+  body: ArrayBuffer,
+  with init: List(ResponseInit),
+) -> Result(Response, String)
+
+/// Creates a `Response` with a `FormData` body. The content type is set
+/// to `multipart/form-data` automatically.
+///
+@external(javascript, "./response.ffi.mjs", "from_form_data")
+pub fn from_form_data(body: FormData) -> Response
+
+/// Creates a `Response` with a `FormData` body and init options. Returns
+/// an error if `init` contains a status outside 200-599 or an invalid
+/// status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_form_data_with_init")
+pub fn from_form_data_with_init(
+  body: FormData,
+  with init: List(ResponseInit),
+) -> Result(Response, String)
+
+/// Creates a `Response` with a `URLSearchParams` body. The content type
+/// is set to `application/x-www-form-urlencoded` automatically.
+///
+@external(javascript, "./response.ffi.mjs", "from_params")
+pub fn from_params(body: URLSearchParams) -> Response
+
+/// Creates a `Response` with a `URLSearchParams` body and init options.
+/// Returns an error if `init` contains a status outside 200-599 or an
+/// invalid status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_params_with_init")
+pub fn from_params_with_init(
+  body: URLSearchParams,
+  with init: List(ResponseInit),
+) -> Result(Response, String)
+
+/// Creates a `Response` with a `ReadableStream` body. Returns an error if
+/// the stream is locked to a reader or has been disturbed.
+///
+@external(javascript, "./response.ffi.mjs", "from_stream")
+pub fn from_stream(body: ReadableStream(Uint8Array)) -> Result(Response, String)
+
+/// Creates a `Response` with a `ReadableStream` body and init options.
+/// Returns an error if the stream is locked or has been disturbed, or
+/// `init` contains a status outside 200-599 or an invalid status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_stream_with_init")
+pub fn from_stream_with_init(
+  body: ReadableStream(Uint8Array),
+  with init: List(ResponseInit),
+) -> Result(Response, String)
+
+/// Creates a `Response` with `data` serialized as JSON. Returns an error
+/// if `data` contains cycles or non-serializable values.
 ///
 @external(javascript, "./response.ffi.mjs", "from_json")
-pub fn from_json(
+pub fn from_json(data: a) -> Result(Response, String)
+
+/// Creates a `Response` with `data` serialized as JSON and init options.
+/// Returns an error if `data` is not serializable, or `init` contains a
+/// status outside 200-599 or an invalid status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_json_with_init")
+pub fn from_json_with_init(
   data: a,
   with init: List(ResponseInit),
 ) -> Result(Response, String)

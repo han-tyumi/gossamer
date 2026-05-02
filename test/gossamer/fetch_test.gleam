@@ -1,15 +1,19 @@
 import gossamer/array_buffer
 import gossamer/blob
+import gossamer/form_data
 import gossamer/headers
 import gossamer/http_method
 import gossamer/http_status
 import gossamer/iterator
 import gossamer/promise
+import gossamer/readable_stream
+import gossamer/readable_stream/default_controller
 import gossamer/request
 import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
 import gossamer/uint8_array
+import gossamer/url_search_params
 
 import gleeunit/should
 
@@ -87,15 +91,15 @@ pub fn request_text_test() {
   should.equal(text, Ok("hello"))
 }
 
-pub fn response_new_test() {
-  let resp = response.new("hello")
+pub fn response_from_string_test() {
+  let resp = response.from_string("hello")
   response.status(resp) |> should.equal(http_status.Ok)
   response.is_ok(resp) |> should.be_true()
 }
 
-pub fn response_new_with_init_test() {
+pub fn response_from_string_with_init_test() {
   let assert Ok(resp) =
-    response.new_with_init("not found", [
+    response.from_string_with_init("not found", [
       response.Status(http_status.NotFound),
       response.StatusText("Not Found"),
     ])
@@ -105,7 +109,7 @@ pub fn response_new_with_init_test() {
 }
 
 pub fn response_text_test() {
-  let resp = response.new("hello world")
+  let resp = response.from_string("hello world")
   use text <- promise.then(response.text(resp))
   should.equal(text, Ok("hello world"))
 }
@@ -125,7 +129,7 @@ pub fn response_redirect_test() {
 }
 
 pub fn response_clone_test() {
-  let resp = response.new("hello")
+  let resp = response.from_string("hello")
   let assert Ok(cloned) = response.clone(resp)
   use text <- promise.then(response.text(cloned))
   should.equal(text, Ok("hello"))
@@ -133,7 +137,7 @@ pub fn response_clone_test() {
 
 pub fn response_get_not_found_test() {
   let assert Ok(resp) =
-    response.new_with_init("", [response.Status(http_status.NotFound)])
+    response.from_string_with_init("", [response.Status(http_status.NotFound)])
   response.is_ok(resp) |> should.be_false()
   response.status(resp) |> should.equal(http_status.NotFound)
 }
@@ -151,7 +155,7 @@ pub fn request_blob_test() {
 }
 
 pub fn response_blob_test() {
-  let resp = response.new("blob response")
+  let resp = response.from_string("blob response")
   use result <- promise.then(response.blob(resp))
   let assert Ok(b) = result
   should.equal(blob.size(b), 13)
@@ -180,7 +184,7 @@ pub fn response_form_data_test() {
       #("content-type", "application/x-www-form-urlencoded"),
     ])
   let assert Ok(resp) =
-    response.new_with_init("key=value", [response.Headers(hdrs)])
+    response.from_string_with_init("key=value", [response.Headers(hdrs)])
   use result <- promise.then(response.form_data(resp))
   let assert Ok(_fd) = result
   promise.resolve(Nil)
@@ -304,7 +308,7 @@ pub fn request_json_test() {
 // Response additional body tests
 
 pub fn response_from_json_test() {
-  let assert Ok(resp) = response.from_json(42, [])
+  let assert Ok(resp) = response.from_json(42)
   response.status(resp) |> should.equal(http_status.Ok)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("42"))
@@ -312,17 +316,17 @@ pub fn response_from_json_test() {
 }
 
 pub fn response_is_body_used_test() {
-  let resp = response.new("hello")
+  let resp = response.from_string("hello")
   response.is_body_used(resp) |> should.be_false
 }
 
 pub fn response_body_test() {
-  let resp = response.new("hello")
+  let resp = response.from_string("hello")
   response.body(resp) |> should.be_ok
 }
 
 pub fn response_array_buffer_test() {
-  let resp = response.new("hi")
+  let resp = response.from_string("hi")
   use result <- promise.then(response.array_buffer(resp))
   let assert Ok(buffer) = result
   array_buffer.byte_length(buffer) |> should.equal(2)
@@ -330,7 +334,7 @@ pub fn response_array_buffer_test() {
 }
 
 pub fn response_bytes_test() {
-  let resp = response.new("abc")
+  let resp = response.from_string("abc")
   use result <- promise.then(response.bytes(resp))
   let assert Ok(bytes) = result
   uint8_array.byte_length(bytes) |> should.equal(3)
@@ -341,18 +345,94 @@ pub fn response_json_test() {
   let assert Ok(hdrs) =
     headers.from_pairs([#("content-type", "application/json")])
   let assert Ok(resp) =
-    response.new_with_init("{\"a\":1}", [response.Headers(hdrs)])
+    response.from_string_with_init("{\"a\":1}", [response.Headers(hdrs)])
   use result <- promise.then(response.json(resp))
   should.be_ok(result)
   promise.resolve(Nil)
 }
 
 pub fn response_is_redirected_test() {
-  let resp = response.new("hello")
+  let resp = response.from_string("hello")
   response.is_redirected(resp) |> should.be_false
 }
 
 pub fn response_url_test() {
-  let resp = response.new("hello")
+  let resp = response.from_string("hello")
   response.url(resp) |> should.equal("")
+}
+
+pub fn response_new_empty_test() {
+  let resp = response.new()
+  response.is_body_used(resp) |> should.be_false
+}
+
+pub fn response_from_bytes_test() {
+  let bytes = uint8_array.from_list([104, 105])
+  let resp = response.from_bytes(bytes)
+  use result <- promise.then(response.text(resp))
+  should.equal(result, Ok("hi"))
+  promise.resolve(Nil)
+}
+
+pub fn response_from_bytes_with_init_test() {
+  let bytes = uint8_array.from_list([104, 105])
+  let assert Ok(resp) =
+    response.from_bytes_with_init(bytes, [
+      response.Status(http_status.Created),
+    ])
+  response.status(resp) |> should.equal(http_status.Created)
+}
+
+pub fn response_from_blob_test() {
+  let b = blob.from_string("hello")
+  let resp = response.from_blob(b)
+  use result <- promise.then(response.text(resp))
+  should.equal(result, Ok("hello"))
+  promise.resolve(Nil)
+}
+
+pub fn response_from_buffer_test() {
+  let bytes = uint8_array.from_list([97, 98, 99])
+  let buffer = uint8_array.buffer(bytes)
+  let resp = response.from_buffer(buffer)
+  use result <- promise.then(response.text(resp))
+  should.equal(result, Ok("abc"))
+  promise.resolve(Nil)
+}
+
+pub fn response_from_form_data_test() {
+  let fd = form_data.new()
+  let fd = form_data.append(fd, "key", "value")
+  let resp = response.from_form_data(fd)
+  response.status(resp) |> should.equal(http_status.Ok)
+}
+
+pub fn response_from_params_test() {
+  let params = url_search_params.from_string("a=1&b=2")
+  let resp = response.from_params(params)
+  use result <- promise.then(response.text(resp))
+  should.equal(result, Ok("a=1&b=2"))
+  promise.resolve(Nil)
+}
+
+pub fn response_from_stream_test() {
+  let bytes = uint8_array.from_list([104, 105])
+  let stream =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, bytes)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  let assert Ok(resp) = response.from_stream(stream)
+  use result <- promise.then(response.text(resp))
+  should.equal(result, Ok("hi"))
+  promise.resolve(Nil)
+}
+
+pub fn response_from_json_with_init_test() {
+  let assert Ok(resp) =
+    response.from_json_with_init(42, [
+      response.Status(http_status.Created),
+    ])
+  response.status(resp) |> should.equal(http_status.Created)
 }
