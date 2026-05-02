@@ -1,6 +1,5 @@
 import * as $byobReader from "$/gossamer/gossamer/readable_stream/byob_reader.mjs";
 import type { List } from "$/prelude.mjs";
-import { toArrayBufferViewType } from "~/gossamer/array_buffer.ffi.ts";
 import { toReadResult } from "~/gossamer/readable_stream/read_result.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -32,26 +31,15 @@ export const cancel: typeof $byobReader.cancel = (
   return toResult.fromPromise(reader.cancel(reason).then(() => undefined));
 };
 
-// TODO(@han-tyumi): Revisit BYOB reader types - the ArrayBufferView/ArrayBufferLike
-// conversions are complex and require casts. May need to rethink how these are exposed.
-export const read: typeof $byobReader.read = ((
+export const read: typeof $byobReader.read = (
   reader: ReadableStreamBYOBReader,
-  view: { buffer: ArrayBufferLike; byte_length: number; byte_offset: number },
-  options: Parameters<typeof $byobReader.read>[2],
+  view,
+  options,
 ) => {
   return toResult.fromPromise(
-    reader.read({
-      buffer: view.buffer as ArrayBuffer,
-      byteLength: view.byte_length,
-      byteOffset: view.byte_offset,
-    }, toByobReaderReadOptions(options)).then((result) => {
-      const newValue = result.value
-        ? toArrayBufferViewType(result.value)
-        : result.value;
-      return toReadResult({ done: result.done, value: newValue });
-    }),
+    reader.read(view, toByobReaderReadOptions(options)).then(toReadResult),
   );
-}) as typeof $byobReader.read;
+};
 
 export const release_lock: typeof $byobReader.release_lock = (
   reader: ReadableStreamBYOBReader,

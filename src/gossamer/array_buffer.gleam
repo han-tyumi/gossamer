@@ -7,10 +7,6 @@ import gossamer/js_error.{type JsError}
 @external(javascript, "./array_buffer.type.ts", "ArrayBuffer$")
 pub type ArrayBuffer
 
-pub type ArrayBufferView {
-  ArrayBufferView(buffer: ArrayBuffer, byte_length: Int, byte_offset: Int)
-}
-
 /// Creates a fixed-size `ArrayBuffer` of `byte_length` bytes. Returns an
 /// error if `byte_length` is negative or exceeds the maximum allocatable
 /// size.

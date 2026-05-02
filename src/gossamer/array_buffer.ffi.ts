@@ -1,17 +1,7 @@
-import * as $arrayBuffer from "$/gossamer/gossamer/array_buffer.mjs";
+import type * as $arrayBuffer from "$/gossamer/gossamer/array_buffer.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export type ArrayBuffer$ = ArrayBuffer;
-
-export function toArrayBufferViewType(
-  view: ArrayBufferView & { buffer: ArrayBuffer },
-) {
-  return $arrayBuffer.ArrayBufferView$ArrayBufferView(
-    view.buffer,
-    view.byteLength,
-    view.byteOffset,
-  );
-}
 
 export const new_: typeof $arrayBuffer.new$ = (byteLength) => {
   return toResult.fromThrows(() => new ArrayBuffer(byteLength));
