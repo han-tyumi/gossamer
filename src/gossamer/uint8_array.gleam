@@ -19,6 +19,11 @@ pub fn new() -> Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "from_length")
 pub fn from_length(length: Int) -> Result(Uint8Array, JsError)
 
+/// Creates a `Uint8Array` from a list of byte values. Values outside
+/// `0`–`255` are wrapped modulo `256`, matching the JS `Uint8Array`
+/// constructor — `from_list([257])` yields a one-byte array containing
+/// `1`.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Uint8Array
 

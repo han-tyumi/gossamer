@@ -63,6 +63,10 @@ pub fn from_string_with_base(
 @external(javascript, "./url_pattern.ffi.mjs", "test_")
 pub fn test_(pattern: URLPattern, against input: String) -> Bool
 
+/// Like `test`, but resolves `input` against `base_url` before matching.
+/// Returns `False` if `base_url` is not a valid URL (the match algorithm
+/// returns null rather than throwing).
+///
 @external(javascript, "./url_pattern.ffi.mjs", "test_with_base")
 pub fn test_with_base(
   pattern: URLPattern,
@@ -80,6 +84,8 @@ pub fn exec(
 ) -> Result(URLPatternResult, Nil)
 
 /// Like `exec`, but resolves `input` against `base_url` before matching.
+/// Returns `Error(Nil)` if there is no match or `base_url` is not a valid
+/// URL.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "exec_with_base")
 pub fn exec_with_base(

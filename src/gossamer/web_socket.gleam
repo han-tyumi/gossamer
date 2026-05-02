@@ -7,9 +7,10 @@ import gossamer/ready_state.{type ReadyState}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 
-// TODO: Most WebSocket functions are untested — requires a live WebSocket
-// server which can't be created cross-runtime from pure Gleam. Only the
-// constructors, `ready_state`, and `close` are tested.
+// TODO: Happy-path coverage for `send_*` and `on_*` requires a live
+// WebSocket server, which can't be created cross-runtime from pure
+// Gleam. Tests currently cover the constructors, `ready_state`, `close`,
+// `close_with`, and the `send_*` error path on a Connecting socket.
 
 pub type CloseEvent {
   CloseEvent(code: Int, reason: String, was_clean: Bool)
