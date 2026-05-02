@@ -79,12 +79,9 @@ just
 just watch build test
 ```
 
-### Publishing
+### Commits & Releases
 
-`gleam publish` packages the contents of `src/` as-is, including the bundled
-`*.ffi.mjs` outputs from esbuild. Run a clean rebuild first so a stale or
-deleted module's bundle can't ship to Hex:
-
-```sh
-just clean build publish
-```
+Commits use [Conventional Commits](https://www.conventionalcommits.org/).
+[knope](https://knope.tech/) reads them to generate the changelog and bump the
+version — see `knope.toml` for the release workflow. Run `knope release` from a
+clean `main` to release.
