@@ -1,5 +1,9 @@
-import type * as $blob from "$/gossamer/gossamer/blob.mjs";
+import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
+
+export const to_fields: typeof $blob.to_fields = (blob) => {
+  return $blob.Fields$Fields(blob.size, blob.type);
+};
 
 export const new_: typeof $blob.new$ = () => {
   return new Blob();

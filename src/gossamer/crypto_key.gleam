@@ -15,6 +15,18 @@ import gossamer/uint8_array.{type Uint8Array}
 @external(javascript, "./crypto_key.type.ts", "CryptoKey$")
 pub type CryptoKey
 
+pub type Fields {
+  Fields(
+    algorithm: KeyAlgorithm,
+    is_extractable: Bool,
+    type_: KeyType,
+    usages: List(KeyUsage),
+  )
+}
+
+@external(javascript, "./crypto_key.ffi.mjs", "to_fields")
+pub fn to_fields(key: CryptoKey) -> Fields
+
 pub type KeyAlgorithm {
   Aes(name: AesAlgorithm, length: Int)
   Ec(name: EcAlgorithm, named_curve: NamedCurve)

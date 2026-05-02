@@ -13,6 +13,13 @@ import gossamer/uint8_array.{type Uint8Array}
 @external(javascript, "./file.type.ts", "File$")
 pub type File
 
+pub type Fields {
+  Fields(name: String, last_modified: Int, size: Int, type_: String)
+}
+
+@external(javascript, "./file.ffi.mjs", "to_fields")
+pub fn to_fields(file: File) -> Fields
+
 pub type FileOption {
   Type(String)
   LastModified(Int)

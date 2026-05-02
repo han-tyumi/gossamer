@@ -12,6 +12,13 @@ import gossamer/uint8_array.{type Uint8Array}
 @external(javascript, "./blob.type.ts", "Blob$")
 pub type Blob
 
+pub type Fields {
+  Fields(size: Int, type_: String)
+}
+
+@external(javascript, "./blob.ffi.mjs", "to_fields")
+pub fn to_fields(blob: Blob) -> Fields
+
 @external(javascript, "./blob.ffi.mjs", "new_")
 pub fn new() -> Blob
 

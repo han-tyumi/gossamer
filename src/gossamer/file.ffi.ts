@@ -2,6 +2,15 @@ import * as $file from "$/gossamer/gossamer/file.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
+export const to_fields: typeof $file.to_fields = (file) => {
+  return $file.Fields$Fields(
+    file.name,
+    file.lastModified,
+    file.size,
+    file.type,
+  );
+};
+
 function toFileOptions(options: $file.FileOption$[]): FilePropertyBag {
   const result: FilePropertyBag = {};
   for (const option of options) {

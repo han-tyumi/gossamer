@@ -67,6 +67,15 @@ export function toKeyAlgorithm(
   );
 }
 
+export const to_fields: typeof $cryptoKey.to_fields = (key) => {
+  return $cryptoKey.Fields$Fields(
+    toKeyAlgorithm(key.algorithm),
+    key.extractable,
+    toKeyType(key.type),
+    fromArrayMapped(key.usages, fromKeyUsage),
+  );
+};
+
 export const algorithm: typeof $cryptoKey.algorithm = (key) => {
   return toKeyAlgorithm(key.algorithm);
 };
