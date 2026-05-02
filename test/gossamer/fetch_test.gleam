@@ -59,15 +59,15 @@ pub fn headers_entries_test() {
   headers.entries(hdrs) |> iterator.to_list |> should.equal([#("a", "1")])
 }
 
-pub fn request_new_test() {
-  let assert Ok(req) = request.new("https://example.org/foo")
+pub fn request_from_url_string_test() {
+  let assert Ok(req) = request.from_url_string("https://example.org/foo")
   request.method(req) |> should.equal(http_method.Get)
   request.url(req) |> should.equal("https://example.org/foo")
 }
 
-pub fn request_new_with_init_test() {
+pub fn request_from_url_string_with_init_test() {
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
     ])
   request.method(req) |> should.equal(http_method.Post)
@@ -77,14 +77,16 @@ pub fn request_headers_test() {
   let assert Ok(hdrs) =
     headers.from_pairs([#("content-type", "application/json")])
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [request.Headers(hdrs)])
+    request.from_url_string_with_init("https://example.org", [
+      request.Headers(hdrs),
+    ])
   headers.get(request.headers(req), "content-type")
   |> should.equal(Ok("application/json"))
 }
 
 pub fn request_text_test() {
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.Body("hello"),
     ])
@@ -95,7 +97,7 @@ pub fn request_text_test() {
 pub fn request_body_bytes_test() {
   let bytes = uint8_array.from_list([104, 105])
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.BodyBytes(bytes),
     ])
@@ -107,7 +109,7 @@ pub fn request_body_bytes_test() {
 pub fn request_body_blob_test() {
   let b = blob.from_string("blob body")
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.BodyBlob(b),
     ])
@@ -120,7 +122,7 @@ pub fn request_body_buffer_test() {
   let bytes = uint8_array.from_list([97, 98, 99])
   let buffer = uint8_array.buffer(bytes)
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.BodyBuffer(buffer),
     ])
@@ -132,7 +134,7 @@ pub fn request_body_buffer_test() {
 pub fn request_body_params_test() {
   let params = url_search_params.from_string("a=1&b=2")
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.BodyParams(params),
     ])
@@ -144,13 +146,26 @@ pub fn request_body_params_test() {
 pub fn request_body_form_data_test() {
   let fd = form_data.new() |> form_data.append("key", "value")
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.BodyFormData(fd),
     ])
   use result <- promise.then(request.form_data(req))
   should.be_ok(result)
   promise.resolve(Nil)
+}
+
+pub fn request_from_url_test() {
+  let assert Ok(u) = url.new("https://example.org")
+  let assert Ok(req) = request.from_url(u)
+  request.url(req) |> should.equal("https://example.org/")
+}
+
+pub fn request_from_url_with_init_test() {
+  let assert Ok(u) = url.new("https://example.org")
+  let assert Ok(req) =
+    request.from_url_with_init(u, [request.Method(http_method.Post)])
+  request.method(req) |> should.equal(http_method.Post)
 }
 
 pub fn request_body_stream_test() {
@@ -162,7 +177,7 @@ pub fn request_body_stream_test() {
       Nil
     })
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.BodyStream(stream),
     ])
@@ -237,7 +252,7 @@ pub fn response_get_not_found_test() {
 
 pub fn request_blob_test() {
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.Body("blob content"),
     ])
@@ -261,7 +276,7 @@ pub fn request_form_data_test() {
       #("content-type", "application/x-www-form-urlencoded"),
     ])
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.Headers(hdrs),
       request.Body("key=value&foo=bar"),
@@ -303,69 +318,69 @@ pub fn headers_get_set_cookie_test() {
 // Request property tests
 
 pub fn request_cache_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _cache = request.cache(req)
 }
 
 pub fn request_credentials_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _creds = request.credentials(req)
 }
 
 pub fn request_destination_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _destination = request.destination(req)
 }
 
 pub fn request_redirect_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   request.redirect(req) |> should.equal(request_redirect.Follow)
 }
 
 pub fn request_signal_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _signal = request.signal(req)
 }
 
 pub fn request_referrer_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _referrer = request.referrer(req)
 }
 
 pub fn request_referrer_policy_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _referrer_policy = request.referrer_policy(req)
 }
 
 pub fn request_mode_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _mode = request.mode(req)
 }
 
 pub fn request_is_keepalive_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _keepalive = request.is_keepalive(req)
 }
 
 pub fn request_integrity_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let _integrity = request.integrity(req)
 }
 
 pub fn request_clone_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   let assert Ok(cloned) = request.clone(req)
   request.url(cloned) |> should.equal("https://example.org/")
 }
 
 pub fn request_is_body_used_test() {
-  let assert Ok(req) = request.new("https://example.org")
+  let assert Ok(req) = request.from_url_string("https://example.org")
   request.is_body_used(req) |> should.be_false
 }
 
 pub fn request_array_buffer_test() {
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.Body("hi"),
     ])
@@ -377,7 +392,7 @@ pub fn request_array_buffer_test() {
 
 pub fn request_bytes_test() {
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.Body("abc"),
     ])
@@ -389,7 +404,7 @@ pub fn request_bytes_test() {
 
 pub fn request_json_test() {
   let assert Ok(req) =
-    request.new_with_init("https://example.org", [
+    request.from_url_string_with_init("https://example.org", [
       request.Method(http_method.Post),
       request.Body("{\"a\":1}"),
     ])

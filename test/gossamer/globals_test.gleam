@@ -104,7 +104,7 @@ pub fn fetch_with_init_data_url_test() {
 }
 
 pub fn fetch_request_data_url_test() {
-  let assert Ok(req) = request.new("data:text/plain,from_request")
+  let assert Ok(req) = request.from_url_string("data:text/plain,from_request")
   use result <- promise.then(gossamer.fetch_request(req))
   let assert Ok(resp) = result
   use text <- promise.then(response.text(resp))

@@ -80,13 +80,27 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
   return result;
 }
 
-export const new_: typeof $request.new$ = (input) => {
-  return toResult.fromThrows(() => new Request(input));
+export const from_url_string: typeof $request.from_url_string = (url) => {
+  return toResult.fromThrows(() => new Request(url));
 };
 
-export const new_with_init: typeof $request.new_with_init = (input, init) => {
+export const from_url_string_with_init:
+  typeof $request.from_url_string_with_init = (url, init) => {
+    return toResult.fromThrows(() =>
+      new Request(url, toRequestInit(toArray(init)))
+    );
+  };
+
+export const from_url: typeof $request.from_url = (url) => {
+  return toResult.fromThrows(() => new Request(url.toString()));
+};
+
+export const from_url_with_init: typeof $request.from_url_with_init = (
+  url,
+  init,
+) => {
   return toResult.fromThrows(() =>
-    new Request(input, toRequestInit(toArray(init)))
+    new Request(url.toString(), toRequestInit(toArray(init)))
   );
 };
 

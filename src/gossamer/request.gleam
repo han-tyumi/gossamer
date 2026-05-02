@@ -14,6 +14,7 @@ import gossamer/request_destination.{type RequestDestination}
 import gossamer/request_mode.{type RequestMode}
 import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/uint8_array.{type Uint8Array}
+import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
 
 /// An HTTP request.
@@ -44,19 +45,35 @@ pub type RequestInit {
   Signal(AbortSignal)
 }
 
-/// Creates a new `Request` from a URL string. Returns an error if `input`
-/// is not a valid URL.
+/// Creates a new `Request` from a URL given as a string. Returns an error
+/// if `url` is not a valid URL.
 ///
-@external(javascript, "./request.ffi.mjs", "new_")
-pub fn new(input: String) -> Result(Request, String)
+@external(javascript, "./request.ffi.mjs", "from_url_string")
+pub fn from_url_string(url: String) -> Result(Request, String)
 
-/// Creates a new `Request` with init options. Returns an error if `input`
-/// is not a valid URL or `init` contains an invalid method, header, or
-/// mode.
+/// Creates a new `Request` from a URL given as a string, with init
+/// options. Returns an error if `url` is not a valid URL or `init`
+/// contains an invalid method, header, or mode.
 ///
-@external(javascript, "./request.ffi.mjs", "new_with_init")
-pub fn new_with_init(
-  input: String,
+@external(javascript, "./request.ffi.mjs", "from_url_string_with_init")
+pub fn from_url_string_with_init(
+  url: String,
+  with init: List(RequestInit),
+) -> Result(Request, String)
+
+/// Creates a new `Request` from `url`. Returns an error if `url` contains
+/// credentials (the Fetch spec rejects `user:pass@` URLs).
+///
+@external(javascript, "./request.ffi.mjs", "from_url")
+pub fn from_url(url: URL) -> Result(Request, String)
+
+/// Creates a new `Request` from `url` with init options. Returns an error
+/// if `url` contains credentials, or `init` contains an invalid method,
+/// header, or mode.
+///
+@external(javascript, "./request.ffi.mjs", "from_url_with_init")
+pub fn from_url_with_init(
+  url: URL,
   with init: List(RequestInit),
 ) -> Result(Request, String)
 
