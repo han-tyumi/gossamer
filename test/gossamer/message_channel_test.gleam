@@ -54,8 +54,10 @@ pub fn message_event_properties_test() {
   let resolvers = promise.with_resolvers()
 
   message_port.on_message(port2, fn(event) {
-    let _origin = message_event.origin(event)
-    let _last_event_id = message_event.last_event_id(event)
+    let message_event.Fields(origin:, last_event_id:, ..) =
+      message_event.to_fields(event)
+    origin |> should.equal("")
+    last_event_id |> should.equal("")
     resolvers.resolve(Nil)
     Nil
   })

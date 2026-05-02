@@ -1,5 +1,10 @@
-import type * as $customEvent from "$/gossamer/gossamer/custom_event.mjs";
+import * as $customEvent from "$/gossamer/gossamer/custom_event.mjs";
+import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+export const to_fields: typeof $customEvent.to_fields = (event) => {
+  return $customEvent.Fields$Fields(toOption(event.detail));
+};
 
 export const new_: typeof $customEvent.new$ = (type) => {
   return new CustomEvent(type);

@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/option.{type Option}
 import gossamer/event.{type Event}
 
 /// An `Event` with a custom `detail` payload that can be dispatched from
@@ -8,6 +9,17 @@ import gossamer/event.{type Event}
 ///
 @external(javascript, "./custom_event.type.ts", "CustomEvent$")
 pub type CustomEvent
+
+/// The data carried by a `CustomEvent`. Inherited `Event` properties
+/// (`type`, `bubbles`, `cancelable`, etc.) are reachable via `to_event`
+/// and the functions in `gossamer/event`.
+///
+pub type Fields {
+  Fields(detail: Option(Dynamic))
+}
+
+@external(javascript, "./custom_event.ffi.mjs", "to_fields")
+pub fn to_fields(event: CustomEvent) -> Fields
 
 /// Creates a new `CustomEvent` with the given type.
 ///

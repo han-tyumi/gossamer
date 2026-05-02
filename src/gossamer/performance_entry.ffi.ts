@@ -1,5 +1,14 @@
-import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
+import * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
+
+export const to_fields: typeof $performanceEntry.to_fields = (entry) => {
+  return $performanceEntry.Fields$Fields(
+    entry.name,
+    entry.entryType,
+    entry.startTime,
+    entry.duration,
+  );
+};
 
 export const name: typeof $performanceEntry.name = (entry) => {
   return entry.name;

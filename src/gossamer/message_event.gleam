@@ -7,6 +7,13 @@ import gleam/dynamic.{type Dynamic}
 @external(javascript, "./message_event.type.ts", "MessageEvent$")
 pub type MessageEvent
 
+pub type Fields {
+  Fields(data: Dynamic, origin: String, last_event_id: String)
+}
+
+@external(javascript, "./message_event.ffi.mjs", "to_fields")
+pub fn to_fields(event: MessageEvent) -> Fields
+
 @external(javascript, "./message_event.ffi.mjs", "data")
 pub fn data(event: MessageEvent) -> Dynamic
 

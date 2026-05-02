@@ -7,6 +7,17 @@ import gleam/dynamic.{type Dynamic}
 @external(javascript, "./performance_entry.type.ts", "PerformanceEntry$")
 pub type PerformanceEntry
 
+/// The stable properties shared by every `PerformanceEntry`. Subtype-specific
+/// properties (`detail`) and the JSON view (`to_json`) stay as separate
+/// functions.
+///
+pub type Fields {
+  Fields(name: String, entry_type: String, start_time: Float, duration: Float)
+}
+
+@external(javascript, "./performance_entry.ffi.mjs", "to_fields")
+pub fn to_fields(entry: PerformanceEntry) -> Fields
+
 @external(javascript, "./performance_entry.ffi.mjs", "name")
 pub fn name(of entry: PerformanceEntry) -> String
 

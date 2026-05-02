@@ -1,4 +1,12 @@
-import type * as $messageEvent from "$/gossamer/gossamer/message_event.mjs";
+import * as $messageEvent from "$/gossamer/gossamer/message_event.mjs";
+
+export const to_fields: typeof $messageEvent.to_fields = (event) => {
+  return $messageEvent.Fields$Fields(
+    event.data,
+    event.origin,
+    event.lastEventId,
+  );
+};
 
 export const data: typeof $messageEvent.data = (event) => {
   return event.data;
