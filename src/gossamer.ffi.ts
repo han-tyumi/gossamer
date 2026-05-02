@@ -27,15 +27,20 @@ export const queue_microtask: typeof $gossamer.queue_microtask = (func) => {
   globalThis.queueMicrotask(func);
 };
 
+// Node's `setTimeout`/`setInterval` return a `Timeout` object whose
+// `Symbol.toPrimitive` is the numeric id. Coerce to a number so the Gleam
+// `Int` type holds an actual integer on every runtime. `clearInterval` /
+// `clearTimeout` accept the numeric id on Node.
+
 export const set_interval: typeof $gossamer.set_interval = (
   delay,
   callback,
 ) => {
-  return globalThis.setInterval(callback, delay);
+  return Number(globalThis.setInterval(callback, delay));
 };
 
 export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
-  return globalThis.setTimeout(callback, delay);
+  return Number(globalThis.setTimeout(callback, delay));
 };
 
 export const user_agent: typeof $gossamer.user_agent = () => {
