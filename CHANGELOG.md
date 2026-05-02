@@ -1,3 +1,9 @@
+## 8.4.0 (2026-05-02)
+
+### Features
+
+- bind ErrorEvent
+
 ## 8.3.0 (2026-05-02)
 
 ### Features
