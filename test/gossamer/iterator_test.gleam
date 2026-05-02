@@ -1,6 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer/iterator
+import gossamer/iterator_handler_outcome
 import gossamer/iterator_result
 
 pub fn new_and_next_test() {
@@ -55,9 +56,8 @@ pub fn stateful_iterator_test() {
 
 pub fn return_test() {
   let iter = iterator.new(fn(_) { iterator_result.Yield(1) })
-
-  // Without a return handler, return should be Error.
-  iterator.return(iter) |> should.be_error
+  iterator.return(iter)
+  |> should.equal(Ok(iterator_handler_outcome.NoHandler))
 }
 
 pub fn return_with_handler_test() {
@@ -65,8 +65,10 @@ pub fn return_with_handler_test() {
     iterator.new(fn(_) { iterator_result.Yield(1) })
     |> iterator.with_return(fn(_value) { iterator_result.Return(Nil) })
 
-  let result = iterator.return(iter)
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  iterator.return(iter)
+  |> should.equal(
+    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
+  )
 }
 
 pub fn return_with_value_test() {
@@ -79,15 +81,16 @@ pub fn return_with_value_test() {
       }
     })
 
-  let result = iterator.return_with(iter, 42)
-  should.equal(result, Ok(iterator_result.Return(42)))
+  iterator.return_with(iter, 42)
+  |> should.equal(
+    Ok(iterator_handler_outcome.Handled(iterator_result.Return(42))),
+  )
 }
 
 pub fn throw_test() {
   let iter = iterator.new(fn(_) { iterator_result.Yield(1) })
-
-  // Without a throw handler, throw should be Error.
-  iterator.throw(iter, "error") |> should.be_error
+  iterator.throw(iter, "error")
+  |> should.equal(Ok(iterator_handler_outcome.NoHandler))
 }
 
 pub fn throw_with_handler_test() {
@@ -95,8 +98,10 @@ pub fn throw_with_handler_test() {
     iterator.new(fn(_) { iterator_result.Yield(1) })
     |> iterator.with_throw(fn(_err) { iterator_result.Return(Nil) })
 
-  let result = iterator.throw(iter, "error")
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  iterator.throw(iter, "error")
+  |> should.equal(
+    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
+  )
 }
 
 pub fn for_test() {

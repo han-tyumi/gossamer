@@ -1,6 +1,7 @@
 import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer/async_iterator
+import gossamer/iterator_handler_outcome
 import gossamer/iterator_result
 import gossamer/promise
 
@@ -47,7 +48,7 @@ pub fn return_no_handler_test() {
     async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
 
   use result <- promise.then(async_iterator.return(iter))
-  should.be_error(result)
+  should.equal(result, Ok(iterator_handler_outcome.NoHandler))
   promise.resolve(Nil)
 }
 
@@ -59,7 +60,10 @@ pub fn return_with_handler_test() {
     })
 
   use result <- promise.then(async_iterator.return(iter))
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  should.equal(
+    result,
+    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
+  )
   promise.resolve(Nil)
 }
 
@@ -74,7 +78,10 @@ pub fn return_with_value_test() {
     })
 
   use result <- promise.then(async_iterator.return_with(iter, 42))
-  should.equal(result, Ok(iterator_result.Return(42)))
+  should.equal(
+    result,
+    Ok(iterator_handler_outcome.Handled(iterator_result.Return(42))),
+  )
   promise.resolve(Nil)
 }
 
@@ -83,7 +90,7 @@ pub fn throw_no_handler_test() {
     async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
 
   use result <- promise.then(async_iterator.throw(iter, "error"))
-  should.be_error(result)
+  should.equal(result, Ok(iterator_handler_outcome.NoHandler))
   promise.resolve(Nil)
 }
 
@@ -95,7 +102,10 @@ pub fn throw_with_handler_test() {
     })
 
   use result <- promise.then(async_iterator.throw(iter, "error"))
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  should.equal(
+    result,
+    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
+  )
   promise.resolve(Nil)
 }
 

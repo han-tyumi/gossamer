@@ -1,4 +1,5 @@
 import gleam/option.{type Option}
+import gossamer/iterator_handler_outcome.{type IteratorHandlerOutcome}
 import gossamer/iterator_result.{type IteratorResult}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
@@ -69,13 +70,15 @@ pub fn next_with(
   value: next,
 ) -> Promise(Result(IteratorResult(a, return), JsError))
 
-/// Ends iteration early by invoking the iterator's `return` handler.
-/// Resolves with `Error(Nil)` if the iterator doesn't support `return`.
+/// Ends iteration early by invoking the iterator's optional `return`
+/// handler. `NoHandler` signals the iterator doesn't define one;
+/// otherwise `Handled` carries the result. Returns an error if the
+/// handler rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(IteratorResult(a, return), Nil))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
 
 /// Like `return`, but passes `value` to the iterator's `return` handler.
 ///
@@ -83,16 +86,18 @@ pub fn return(
 pub fn return_with(
   iterator: AsyncIterator(a, return, next),
   value: return,
-) -> Promise(Result(IteratorResult(a, return), Nil))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
 
-/// Signals an error to the iterator by invoking its `throw` handler.
-/// Resolves with `Error(Nil)` if the iterator doesn't support `throw`.
+/// Signals an error to the iterator by invoking its optional `throw`
+/// handler. `NoHandler` signals the iterator doesn't define one;
+/// otherwise `Handled` carries the result. Returns an error if the
+/// handler rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: AsyncIterator(a, return, next),
   reason reason: e,
-) -> Promise(Result(IteratorResult(a, return), Nil))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
 
 /// Consumes the iterator, calling `fun` on each yielded value. Returns
 /// an error if the iterator or callback throws.

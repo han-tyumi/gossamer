@@ -1,12 +1,11 @@
 import type * as $asyncIterator from "$/gossamer/gossamer/async_iterator.mjs";
 import type { List } from "$/prelude.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
+import * as $iteratorHandlerOutcome from "$/gossamer/gossamer/iterator_handler_outcome.mjs";
 import {
   List$isNonEmpty,
   List$NonEmpty$first,
   List$NonEmpty$rest,
-  Result$Error,
-  Result$Ok,
 } from "$/prelude.mjs";
 import {
   toGleamIteratorResult,
@@ -132,18 +131,26 @@ export const next_with: typeof $asyncIterator.next_with = <
   );
 };
 
-export const return_: typeof $asyncIterator.return$ = async <T, TReturn, TNext>(
+export const return_: typeof $asyncIterator.return$ = <T, TReturn, TNext>(
   iterator: AsyncIterator<T, TReturn, TNext>,
 ) => {
   if (!iterator.return) {
-    return Result$Error(undefined);
+    return Promise.resolve(
+      toResult.fromThrows(() =>
+        $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
+      ),
+    );
   }
-
-  const result = await iterator.return();
-  return Result$Ok(toGleamIteratorResult(result));
+  return toResult.fromPromise(
+    iterator.return().then((result) =>
+      $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+        toGleamIteratorResult(result),
+      )
+    ),
+  );
 };
 
-export const return_with: typeof $asyncIterator.return_with = async <
+export const return_with: typeof $asyncIterator.return_with = <
   T,
   TReturn,
   TNext,
@@ -152,23 +159,39 @@ export const return_with: typeof $asyncIterator.return_with = async <
   value: Parameters<typeof $asyncIterator.return_with<T, TReturn>>[1],
 ) => {
   if (!iterator.return) {
-    return Result$Error(undefined);
+    return Promise.resolve(
+      toResult.fromThrows(() =>
+        $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
+      ),
+    );
   }
-
-  const result = await iterator.return(value);
-  return Result$Ok(toGleamIteratorResult(result));
+  return toResult.fromPromise(
+    iterator.return(value).then((result) =>
+      $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+        toGleamIteratorResult(result),
+      )
+    ),
+  );
 };
 
-export const throw_: typeof $asyncIterator.throw$ = async <T, TReturn, TNext>(
+export const throw_: typeof $asyncIterator.throw$ = <T, TReturn, TNext>(
   iterator: AsyncIterator<T, TReturn, TNext>,
   reason: Parameters<typeof $asyncIterator.throw$<T, TReturn>>[1],
 ) => {
   if (!iterator.throw) {
-    return Result$Error(undefined);
+    return Promise.resolve(
+      toResult.fromThrows(() =>
+        $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
+      ),
+    );
   }
-
-  const result = await iterator.throw($option.unwrap(reason, undefined));
-  return Result$Ok(toGleamIteratorResult(result));
+  return toResult.fromPromise(
+    iterator.throw($option.unwrap(reason, undefined)).then((result) =>
+      $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+        toGleamIteratorResult(result),
+      )
+    ),
+  );
 };
 
 export const for_await: typeof $asyncIterator.for_await = <

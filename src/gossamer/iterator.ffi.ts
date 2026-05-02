@@ -1,12 +1,11 @@
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
+import * as $iteratorHandlerOutcome from "$/gossamer/gossamer/iterator_handler_outcome.mjs";
 import type * as $iterator from "$/gossamer/gossamer/iterator.mjs";
 import type { List } from "$/prelude.mjs";
 import {
   List$isNonEmpty,
   List$NonEmpty$first,
   List$NonEmpty$rest,
-  Result$Error,
-  Result$Ok,
 } from "$/prelude.mjs";
 import {
   toGleamIteratorResult,
@@ -116,36 +115,53 @@ export const next_with: typeof $iterator.next_with = <T, TReturn, TNext>(
 export const return_: typeof $iterator.return$ = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
 ) => {
-  if (!iterator.return) {
-    return Result$Error(undefined);
+  const returnFn = iterator.return;
+  if (!returnFn) {
+    return toResult.fromThrows(() =>
+      $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
+    );
   }
-
-  const result = iterator.return();
-  return Result$Ok(toGleamIteratorResult(result));
+  return toResult.fromThrows(() =>
+    $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+      toGleamIteratorResult(returnFn.call(iterator)),
+    )
+  );
 };
 
 export const return_with: typeof $iterator.return_with = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
   value: Parameters<typeof $iterator.return_with<T, TReturn>>[1],
 ) => {
-  if (!iterator.return) {
-    return Result$Error(undefined);
+  const returnFn = iterator.return;
+  if (!returnFn) {
+    return toResult.fromThrows(() =>
+      $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
+    );
   }
-
-  const result = iterator.return(value);
-  return Result$Ok(toGleamIteratorResult(result));
+  return toResult.fromThrows(() =>
+    $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+      toGleamIteratorResult(returnFn.call(iterator, value)),
+    )
+  );
 };
 
 export const throw_: typeof $iterator.throw$ = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
   reason: Parameters<typeof $iterator.throw$<T, TReturn>>[1],
 ) => {
-  if (!iterator.throw) {
-    return Result$Error(undefined);
+  const throwFn = iterator.throw;
+  if (!throwFn) {
+    return toResult.fromThrows(() =>
+      $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()
+    );
   }
-
-  const result = iterator.throw($option.unwrap(reason, undefined));
-  return Result$Ok(toGleamIteratorResult(result));
+  return toResult.fromThrows(() =>
+    $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+      toGleamIteratorResult(
+        throwFn.call(iterator, $option.unwrap(reason, undefined)),
+      ),
+    )
+  );
 };
 
 export const for_: typeof $iterator.for$ = <T, TReturn, TNext>(

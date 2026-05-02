@@ -1,5 +1,7 @@
 import gleam/option.{type Option}
+import gossamer/iterator_handler_outcome.{type IteratorHandlerOutcome}
 import gossamer/iterator_result.{type IteratorResult}
+import gossamer/js_error.{type JsError}
 
 /// A pull-based iterator that yields values one at a time. `a` is the
 /// yielded value type, `return` is the final return value, `next` is the
@@ -59,13 +61,15 @@ pub fn next_with(
   value: next,
 ) -> IteratorResult(a, return)
 
-/// Ends iteration early by invoking the iterator's `return` handler.
-/// Returns `Error(Nil)` if the iterator doesn't support `return`.
+/// Ends iteration early by invoking the iterator's optional `return`
+/// handler. `NoHandler` signals the iterator doesn't define one;
+/// otherwise `Handled` carries the result. Returns an error if the
+/// handler throws.
 ///
 @external(javascript, "./iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: Iterator(a, return, next),
-) -> Result(IteratorResult(a, return), Nil)
+) -> Result(IteratorHandlerOutcome(a, return), JsError)
 
 /// Like `return`, but passes `value` to the iterator's `return` handler.
 ///
@@ -73,16 +77,18 @@ pub fn return(
 pub fn return_with(
   iterator: Iterator(a, return, next),
   value: return,
-) -> Result(IteratorResult(a, return), Nil)
+) -> Result(IteratorHandlerOutcome(a, return), JsError)
 
-/// Signals an error to the iterator by invoking its `throw` handler.
-/// Returns `Error(Nil)` if the iterator doesn't support `throw`.
+/// Signals an error to the iterator by invoking its optional `throw`
+/// handler. `NoHandler` signals the iterator doesn't define one;
+/// otherwise `Handled` carries the result. Returns an error if the
+/// handler throws.
 ///
 @external(javascript, "./iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: Iterator(a, return, next),
   reason reason: e,
-) -> Result(IteratorResult(a, return), Nil)
+) -> Result(IteratorHandlerOutcome(a, return), JsError)
 
 @external(javascript, "./iterator.ffi.mjs", "for_")
 pub fn for(in iterator: Iterator(a, return, next), run fun: fn(a) -> any) -> Nil
