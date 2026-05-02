@@ -38,6 +38,23 @@ pub type URLPatternResult {
   )
 }
 
+pub type Fields {
+  Fields(
+    protocol: String,
+    username: String,
+    password: String,
+    hostname: String,
+    port: String,
+    pathname: String,
+    search: String,
+    hash: String,
+    has_reg_exp_groups: Bool,
+  )
+}
+
+@external(javascript, "./url_pattern.ffi.mjs", "to_fields")
+pub fn to_fields(pattern: URLPattern) -> Fields
+
 /// Creates a `URLPattern` from per-component patterns. Returns an error
 /// if any pattern is malformed.
 ///
