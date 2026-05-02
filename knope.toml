@@ -22,9 +22,17 @@ command = "just clean build check test examples"
 [[workflows.steps]]
 type = "PrepareRelease"
 
+# Refresh each example's lock so the new gleam.toml version doesn't leave
+# them stale. Folded into the prepare-release commit below.
 [[workflows.steps]]
 type = "Command"
-command = 'git commit -m "chore: prepare release $version"'
+command = 'for dir in examples/*/; do (cd "$dir" && gleam deps update gossamer) || exit 1; done'
+shell = true
+
+[[workflows.steps]]
+type = "Command"
+command = 'git add gleam.toml CHANGELOG.md examples/*/manifest.toml && git commit -m "chore: prepare release $version"'
+shell = true
 
 [[workflows.steps]]
 type = "Command"
