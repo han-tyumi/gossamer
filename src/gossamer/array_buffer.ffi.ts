@@ -61,15 +61,21 @@ export const resize: typeof $arrayBuffer.resize = (
 
 export const slice: typeof $arrayBuffer.slice = (
   arrayBuffer: ArrayBuffer,
-  begin,
 ) => {
-  return arrayBuffer.slice(begin);
+  return arrayBuffer.slice(0);
 };
 
-export const slice_with_end: typeof $arrayBuffer.slice_with_end = (
+export const slice_from: typeof $arrayBuffer.slice_from = (
   arrayBuffer: ArrayBuffer,
-  begin,
+  start,
+) => {
+  return arrayBuffer.slice(start);
+};
+
+export const slice_range: typeof $arrayBuffer.slice_range = (
+  arrayBuffer: ArrayBuffer,
+  start,
   end,
 ) => {
-  return arrayBuffer.slice(begin, end);
+  return arrayBuffer.slice(start, end);
 };

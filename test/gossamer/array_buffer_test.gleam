@@ -36,13 +36,19 @@ pub fn transfer_test() {
 
 pub fn slice_test() {
   let assert Ok(buffer) = array_buffer.new(8)
-  let sliced = array_buffer.slice(buffer, 4)
+  let copy = array_buffer.slice(buffer)
+  array_buffer.byte_length(copy) |> should.equal(8)
+}
+
+pub fn slice_from_test() {
+  let assert Ok(buffer) = array_buffer.new(8)
+  let sliced = array_buffer.slice_from(buffer, 4)
   array_buffer.byte_length(sliced) |> should.equal(4)
 }
 
-pub fn slice_with_end_test() {
+pub fn slice_range_test() {
   let assert Ok(buffer) = array_buffer.new(8)
-  let sliced = array_buffer.slice_with_end(buffer, 2, 6)
+  let sliced = array_buffer.slice_range(buffer, 2, 6)
   array_buffer.byte_length(sliced) |> should.equal(4)
 }
 

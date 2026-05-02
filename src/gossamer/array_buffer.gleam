@@ -56,11 +56,14 @@ pub fn resize(
 ) -> Result(Nil, JsError)
 
 @external(javascript, "./array_buffer.ffi.mjs", "slice")
-pub fn slice(array_buffer: ArrayBuffer, from begin: Int) -> ArrayBuffer
+pub fn slice(array_buffer: ArrayBuffer) -> ArrayBuffer
 
-@external(javascript, "./array_buffer.ffi.mjs", "slice_with_end")
-pub fn slice_with_end(
+@external(javascript, "./array_buffer.ffi.mjs", "slice_from")
+pub fn slice_from(array_buffer: ArrayBuffer, start: Int) -> ArrayBuffer
+
+@external(javascript, "./array_buffer.ffi.mjs", "slice_range")
+pub fn slice_range(
   array_buffer: ArrayBuffer,
-  from begin: Int,
+  from start: Int,
   to end: Int,
 ) -> ArrayBuffer
