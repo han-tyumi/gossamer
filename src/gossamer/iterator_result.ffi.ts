@@ -17,7 +17,7 @@ export function toIteratorResult<T, TReturn>(
 
 export function toGleamIteratorResult<T, TReturn>(
   result: IteratorResult<T, TReturn>,
-): $iteratorResult.IteratorResult$<TReturn, T> {
+): $iteratorResult.IteratorResult$<T, TReturn> {
   if (result.done) {
     return $iteratorResult.IteratorResult$Return(result.value);
   }
