@@ -46,15 +46,15 @@ pub fn new(init: List(URLPatternInit)) -> Result(URLPattern, String)
 /// Creates a `URLPattern` from a single pattern string. Returns an error
 /// if the pattern is malformed.
 ///
-@external(javascript, "./url_pattern.ffi.mjs", "new_from_string")
-pub fn new_from_string(pattern: String) -> Result(URLPattern, String)
+@external(javascript, "./url_pattern.ffi.mjs", "from_string")
+pub fn from_string(pattern: String) -> Result(URLPattern, String)
 
 /// Creates a `URLPattern` from a pattern string resolved against a base
 /// URL. Returns an error if the pattern is malformed or the base URL is
 /// invalid.
 ///
-@external(javascript, "./url_pattern.ffi.mjs", "new_from_string_with_base")
-pub fn new_from_string_with_base(
+@external(javascript, "./url_pattern.ffi.mjs", "from_string_with_base")
+pub fn from_string_with_base(
   pattern: String,
   relative_to base_url: String,
 ) -> Result(URLPattern, String)

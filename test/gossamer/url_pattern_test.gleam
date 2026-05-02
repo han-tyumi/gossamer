@@ -7,15 +7,15 @@ pub fn new_test() {
   url_pattern.pathname(pattern) |> should.equal("/foo/:id")
 }
 
-pub fn new_from_string_test() {
-  let assert Ok(pattern) = url_pattern.new_from_string("https://example.com/*")
+pub fn from_string_test() {
+  let assert Ok(pattern) = url_pattern.from_string("https://example.com/*")
   url_pattern.protocol(pattern) |> should.equal("https")
   url_pattern.hostname(pattern) |> should.equal("example.com")
 }
 
-pub fn new_from_string_with_base_test() {
+pub fn from_string_with_base_test() {
   let assert Ok(pattern) =
-    url_pattern.new_from_string_with_base("/foo/*", "https://example.com")
+    url_pattern.from_string_with_base("/foo/*", "https://example.com")
   url_pattern.hostname(pattern) |> should.equal("example.com")
   url_pattern.pathname(pattern) |> should.equal("/foo/*")
 }

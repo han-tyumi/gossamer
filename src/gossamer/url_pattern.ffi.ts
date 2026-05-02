@@ -66,19 +66,18 @@ export const new_: typeof $urlPattern.new$ = (init) => {
   );
 };
 
-export const new_from_string: typeof $urlPattern.new_from_string = (
+export const from_string: typeof $urlPattern.from_string = (
   pattern,
 ) => {
   return toResult.fromThrows(() => new URLPattern(pattern));
 };
 
-export const new_from_string_with_base:
-  typeof $urlPattern.new_from_string_with_base = (
-    pattern,
-    baseURL,
-  ) => {
-    return toResult.fromThrows(() => new URLPattern(pattern, baseURL));
-  };
+export const from_string_with_base: typeof $urlPattern.from_string_with_base = (
+  pattern,
+  baseURL,
+) => {
+  return toResult.fromThrows(() => new URLPattern(pattern, baseURL));
+};
 
 export const test_: typeof $urlPattern.test_ = (pattern, input) => {
   return pattern.test(input);
