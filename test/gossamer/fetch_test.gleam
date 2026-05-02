@@ -65,9 +65,9 @@ pub fn request_from_url_string_test() {
   request.url(req) |> should.equal("https://example.org/foo")
 }
 
-pub fn request_from_url_string_with_init_test() {
+pub fn request_from_url_string_with_test() {
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
     ])
   request.method(req) |> should.equal(http_method.Post)
@@ -77,7 +77,7 @@ pub fn request_headers_test() {
   let assert Ok(hdrs) =
     headers.from_pairs([#("content-type", "application/json")])
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Headers(hdrs),
     ])
   headers.get(request.headers(req), "content-type")
@@ -86,7 +86,7 @@ pub fn request_headers_test() {
 
 pub fn request_text_test() {
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.Body("hello"),
     ])
@@ -97,7 +97,7 @@ pub fn request_text_test() {
 pub fn request_body_bytes_test() {
   let bytes = uint8_array.from_list([104, 105])
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.BodyBytes(bytes),
     ])
@@ -109,7 +109,7 @@ pub fn request_body_bytes_test() {
 pub fn request_body_blob_test() {
   let b = blob.from_string("blob body")
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.BodyBlob(b),
     ])
@@ -122,7 +122,7 @@ pub fn request_body_buffer_test() {
   let bytes = uint8_array.from_list([97, 98, 99])
   let buffer = uint8_array.buffer(bytes)
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.BodyBuffer(buffer),
     ])
@@ -134,7 +134,7 @@ pub fn request_body_buffer_test() {
 pub fn request_body_params_test() {
   let params = url_search_params.from_string("a=1&b=2")
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.BodyParams(params),
     ])
@@ -146,7 +146,7 @@ pub fn request_body_params_test() {
 pub fn request_body_form_data_test() {
   let fd = form_data.new() |> form_data.append("key", "value")
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.BodyFormData(fd),
     ])
@@ -161,16 +161,16 @@ pub fn request_from_url_test() {
   request.url(req) |> should.equal("https://example.org/")
 }
 
-pub fn request_from_url_with_init_test() {
+pub fn request_from_url_with_test() {
   let assert Ok(u) = url.new("https://example.org")
   let assert Ok(req) =
-    request.from_url_with_init(u, [request.Method(http_method.Post)])
+    request.from_url_with(u, [request.Method(http_method.Post)])
   request.method(req) |> should.equal(http_method.Post)
 }
 
 pub fn request_from_request_test() {
   let assert Ok(original) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
     ])
   let assert Ok(copy) = request.from_request(original)
@@ -178,10 +178,10 @@ pub fn request_from_request_test() {
   request.url(copy) |> should.equal("https://example.org/")
 }
 
-pub fn request_from_request_with_init_test() {
+pub fn request_from_request_with_test() {
   let assert Ok(original) = request.from_url_string("https://example.org")
   let assert Ok(overridden) =
-    request.from_request_with_init(original, [
+    request.from_request_with(original, [
       request.Method(http_method.Put),
     ])
   request.method(overridden) |> should.equal(http_method.Put)
@@ -196,7 +196,7 @@ pub fn request_body_stream_test() {
       Nil
     })
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.BodyStream(stream),
     ])
@@ -211,9 +211,9 @@ pub fn response_from_string_test() {
   response.is_ok(resp) |> should.be_true()
 }
 
-pub fn response_from_string_with_init_test() {
+pub fn response_from_string_with_test() {
   let assert Ok(resp) =
-    response.from_string_with_init("not found", [
+    response.from_string_with("not found", [
       response.Status(http_status.NotFound),
       response.StatusText("Not Found"),
     ])
@@ -264,14 +264,14 @@ pub fn response_clone_test() {
 
 pub fn response_get_not_found_test() {
   let assert Ok(resp) =
-    response.from_string_with_init("", [response.Status(http_status.NotFound)])
+    response.from_string_with("", [response.Status(http_status.NotFound)])
   response.is_ok(resp) |> should.be_false()
   response.status(resp) |> should.equal(http_status.NotFound)
 }
 
 pub fn request_blob_test() {
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.Body("blob content"),
     ])
@@ -295,7 +295,7 @@ pub fn request_form_data_test() {
       #("content-type", "application/x-www-form-urlencoded"),
     ])
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.Headers(hdrs),
       request.Body("key=value&foo=bar"),
@@ -311,7 +311,7 @@ pub fn response_form_data_test() {
       #("content-type", "application/x-www-form-urlencoded"),
     ])
   let assert Ok(resp) =
-    response.from_string_with_init("key=value", [response.Headers(hdrs)])
+    response.from_string_with("key=value", [response.Headers(hdrs)])
   use result <- promise.then(response.form_data(resp))
   let assert Ok(_fd) = result
   promise.resolve(Nil)
@@ -399,7 +399,7 @@ pub fn request_is_body_used_test() {
 
 pub fn request_array_buffer_test() {
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.Body("hi"),
     ])
@@ -411,7 +411,7 @@ pub fn request_array_buffer_test() {
 
 pub fn request_bytes_test() {
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.Body("abc"),
     ])
@@ -423,7 +423,7 @@ pub fn request_bytes_test() {
 
 pub fn request_json_test() {
   let assert Ok(req) =
-    request.from_url_string_with_init("https://example.org", [
+    request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
       request.Body("{\"a\":1}"),
     ])
@@ -472,7 +472,7 @@ pub fn response_json_test() {
   let assert Ok(hdrs) =
     headers.from_pairs([#("content-type", "application/json")])
   let assert Ok(resp) =
-    response.from_string_with_init("{\"a\":1}", [response.Headers(hdrs)])
+    response.from_string_with("{\"a\":1}", [response.Headers(hdrs)])
   use result <- promise.then(response.json(resp))
   should.be_ok(result)
   promise.resolve(Nil)
@@ -501,10 +501,10 @@ pub fn response_from_bytes_test() {
   promise.resolve(Nil)
 }
 
-pub fn response_from_bytes_with_init_test() {
+pub fn response_from_bytes_with_test() {
   let bytes = uint8_array.from_list([104, 105])
   let assert Ok(resp) =
-    response.from_bytes_with_init(bytes, [
+    response.from_bytes_with(bytes, [
       response.Status(http_status.Created),
     ])
   response.status(resp) |> should.equal(http_status.Created)
@@ -556,9 +556,9 @@ pub fn response_from_stream_test() {
   promise.resolve(Nil)
 }
 
-pub fn response_from_json_with_init_test() {
+pub fn response_from_json_with_test() {
   let assert Ok(resp) =
-    response.from_json_with_init(42, [
+    response.from_json_with(42, [
       response.Status(http_status.Created),
     ])
   response.status(resp) |> should.equal(http_status.Created)

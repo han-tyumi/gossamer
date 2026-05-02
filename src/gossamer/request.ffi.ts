@@ -84,18 +84,20 @@ export const from_url_string: typeof $request.from_url_string = (url) => {
   return toResult.fromThrows(() => new Request(url));
 };
 
-export const from_url_string_with_init:
-  typeof $request.from_url_string_with_init = (url, init) => {
-    return toResult.fromThrows(() =>
-      new Request(url, toRequestInit(toArray(init)))
-    );
-  };
+export const from_url_string_with: typeof $request.from_url_string_with = (
+  url,
+  init,
+) => {
+  return toResult.fromThrows(() =>
+    new Request(url, toRequestInit(toArray(init)))
+  );
+};
 
 export const from_url: typeof $request.from_url = (url) => {
   return toResult.fromThrows(() => new Request(url.toString()));
 };
 
-export const from_url_with_init: typeof $request.from_url_with_init = (
+export const from_url_with: typeof $request.from_url_with = (
   url,
   init,
 ) => {
@@ -108,7 +110,7 @@ export const from_request: typeof $request.from_request = (existing) => {
   return toResult.fromThrows(() => new Request(existing));
 };
 
-export const from_request_with_init: typeof $request.from_request_with_init = (
+export const from_request_with: typeof $request.from_request_with = (
   existing,
   init,
 ) => {

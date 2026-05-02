@@ -18,8 +18,8 @@ pub fn fetch(url: String) -> Promise(Result(Response, String))
 /// Rejects on network error, CORS failure, or if the URL or init is
 /// invalid.
 ///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_with_init")
-pub fn fetch_with_init(
+@external(javascript, "./gossamer.ffi.mjs", "fetch_with")
+pub fn fetch_with(
   url: String,
   with init: List(RequestInit),
 ) -> Promise(Result(Response, String))
@@ -33,8 +33,8 @@ pub fn fetch_url(url: URL) -> Promise(Result(Response, String))
 /// Fetches a resource from `url` with the given request init options.
 /// Rejects on network error, CORS failure, or if `init` is invalid.
 ///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_url_with_init")
-pub fn fetch_url_with_init(
+@external(javascript, "./gossamer.ffi.mjs", "fetch_url_with")
+pub fn fetch_url_with(
   url: URL,
   with init: List(RequestInit),
 ) -> Promise(Result(Response, String))

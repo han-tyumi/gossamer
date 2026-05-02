@@ -93,10 +93,8 @@ pub fn fetch_data_url_test() {
   promise.resolve(Nil)
 }
 
-pub fn fetch_with_init_data_url_test() {
-  use result <- promise.then(
-    gossamer.fetch_with_init("data:text/plain,init", []),
-  )
+pub fn fetch_with_data_url_test() {
+  use result <- promise.then(gossamer.fetch_with("data:text/plain,init", []))
   let assert Ok(resp) = result
   use text <- promise.then(response.text(resp))
   should.equal(text, Ok("init"))
@@ -121,9 +119,9 @@ pub fn fetch_url_data_url_test() {
   promise.resolve(Nil)
 }
 
-pub fn fetch_url_with_init_data_url_test() {
+pub fn fetch_url_with_data_url_test() {
   let assert Ok(u) = url.new("data:text/plain,from_url_init")
-  use result <- promise.then(gossamer.fetch_url_with_init(u, []))
+  use result <- promise.then(gossamer.fetch_url_with(u, []))
   let assert Ok(resp) = result
   use text <- promise.then(response.text(resp))
   should.equal(text, Ok("from_url_init"))

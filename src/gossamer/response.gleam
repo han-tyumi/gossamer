@@ -38,8 +38,8 @@ pub fn from_string(body: String) -> Response
 /// error if `init` contains a status outside 200-599 or an invalid status
 /// text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_string_with_init")
-pub fn from_string_with_init(
+@external(javascript, "./response.ffi.mjs", "from_string_with")
+pub fn from_string_with(
   body: String,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -53,8 +53,8 @@ pub fn from_bytes(body: Uint8Array) -> Response
 /// an error if `init` contains a status outside 200-599 or an invalid
 /// status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_bytes_with_init")
-pub fn from_bytes_with_init(
+@external(javascript, "./response.ffi.mjs", "from_bytes_with")
+pub fn from_bytes_with(
   body: Uint8Array,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -68,8 +68,8 @@ pub fn from_blob(body: Blob) -> Response
 /// error if `init` contains a status outside 200-599 or an invalid status
 /// text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_blob_with_init")
-pub fn from_blob_with_init(
+@external(javascript, "./response.ffi.mjs", "from_blob_with")
+pub fn from_blob_with(
   body: Blob,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -83,8 +83,8 @@ pub fn from_buffer(body: ArrayBuffer) -> Response
 /// Returns an error if `init` contains a status outside 200-599 or an
 /// invalid status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_buffer_with_init")
-pub fn from_buffer_with_init(
+@external(javascript, "./response.ffi.mjs", "from_buffer_with")
+pub fn from_buffer_with(
   body: ArrayBuffer,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -99,8 +99,8 @@ pub fn from_form_data(body: FormData) -> Response
 /// an error if `init` contains a status outside 200-599 or an invalid
 /// status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_form_data_with_init")
-pub fn from_form_data_with_init(
+@external(javascript, "./response.ffi.mjs", "from_form_data_with")
+pub fn from_form_data_with(
   body: FormData,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -115,8 +115,8 @@ pub fn from_params(body: URLSearchParams) -> Response
 /// Returns an error if `init` contains a status outside 200-599 or an
 /// invalid status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_params_with_init")
-pub fn from_params_with_init(
+@external(javascript, "./response.ffi.mjs", "from_params_with")
+pub fn from_params_with(
   body: URLSearchParams,
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -131,8 +131,8 @@ pub fn from_stream(body: ReadableStream(Uint8Array)) -> Result(Response, String)
 /// Returns an error if the stream is locked or has been disturbed, or
 /// `init` contains a status outside 200-599 or an invalid status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_stream_with_init")
-pub fn from_stream_with_init(
+@external(javascript, "./response.ffi.mjs", "from_stream_with")
+pub fn from_stream_with(
   body: ReadableStream(Uint8Array),
   with init: List(ResponseInit),
 ) -> Result(Response, String)
@@ -147,8 +147,8 @@ pub fn from_json(data: a) -> Result(Response, String)
 /// Returns an error if `data` is not serializable, or `init` contains a
 /// status outside 200-599 or an invalid status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_json_with_init")
-pub fn from_json_with_init(
+@external(javascript, "./response.ffi.mjs", "from_json_with")
+pub fn from_json_with(
   data: a,
   with init: List(ResponseInit),
 ) -> Result(Response, String)

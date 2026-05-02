@@ -50,7 +50,7 @@ export const fetch_url: typeof $gossamer.fetch_url = (url) => {
   return toResult.fromPromise(globalThis.fetch(url));
 };
 
-export const fetch_with_init: typeof $gossamer.fetch_with_init = (
+export const fetch_with: typeof $gossamer.fetch_with = (
   url,
   init,
 ) => {
@@ -59,7 +59,7 @@ export const fetch_with_init: typeof $gossamer.fetch_with_init = (
   );
 };
 
-export const fetch_url_with_init: typeof $gossamer.fetch_url_with_init = (
+export const fetch_url_with: typeof $gossamer.fetch_url_with = (
   url,
   init,
 ) => {

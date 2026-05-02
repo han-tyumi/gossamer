@@ -55,8 +55,8 @@ pub fn from_url_string(url: String) -> Result(Request, String)
 /// options. Returns an error if `url` is not a valid URL or `init`
 /// contains an invalid method, header, or mode.
 ///
-@external(javascript, "./request.ffi.mjs", "from_url_string_with_init")
-pub fn from_url_string_with_init(
+@external(javascript, "./request.ffi.mjs", "from_url_string_with")
+pub fn from_url_string_with(
   url: String,
   with init: List(RequestInit),
 ) -> Result(Request, String)
@@ -71,8 +71,8 @@ pub fn from_url(url: URL) -> Result(Request, String)
 /// if `url` contains credentials, or `init` contains an invalid method,
 /// header, or mode.
 ///
-@external(javascript, "./request.ffi.mjs", "from_url_with_init")
-pub fn from_url_with_init(
+@external(javascript, "./request.ffi.mjs", "from_url_with")
+pub fn from_url_with(
   url: URL,
   with init: List(RequestInit),
 ) -> Result(Request, String)
@@ -89,8 +89,8 @@ pub fn from_request(existing: Request) -> Result(Request, String)
 /// options. Returns an error if `existing`'s body is disturbed or locked,
 /// or `init` contains an invalid method, header, or mode.
 ///
-@external(javascript, "./request.ffi.mjs", "from_request_with_init")
-pub fn from_request_with_init(
+@external(javascript, "./request.ffi.mjs", "from_request_with")
+pub fn from_request_with(
   existing: Request,
   with init: List(RequestInit),
 ) -> Result(Request, String)
