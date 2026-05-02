@@ -157,20 +157,21 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface     | Status | Module                    | Notes                                              |
-| ------------- | ------ | ------------------------- | -------------------------------------------------- |
-| Promise       | ✅     | `gossamer/promise`        |                                                    |
-| Uint8Array    | ✅     | `gossamer/uint8_array`    |                                                    |
-| ArrayBuffer   | ✅     | `gossamer/array_buffer`   |                                                    |
-| Iterator      | ✅     | `gossamer/iterator`       |                                                    |
-| AsyncIterator | ✅     | `gossamer/async_iterator` |                                                    |
-| JSON          | ✅     | `gossamer/json`           |                                                    |
-| Date          | ✅     | `gossamer/date`           |                                                    |
-| RegExp        | ❌     | —                         | Low priority; `gleam_regexp` covers most use cases |
-| Symbol        | ✅     | `gossamer/symbol`         |                                                    |
-| Number        | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants        |
-| Math          | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants          |
-| Error types   | ✅     | `gossamer/js_error`       | Includes `JsErrorKind` classification              |
+| Interface          | Status | Module                    | Notes                                                   |
+| ------------------ | ------ | ------------------------- | ------------------------------------------------------- |
+| Promise            | ✅     | `gossamer/promise`        |                                                         |
+| Uint8Array         | ✅     | `gossamer/uint8_array`    |                                                         |
+| ArrayBuffer        | ✅     | `gossamer/array_buffer`   |                                                         |
+| Other typed arrays | ⚠️     | —                         | See [Typed array coverage](#typed-array-coverage) below |
+| Iterator           | ✅     | `gossamer/iterator`       |                                                         |
+| AsyncIterator      | ✅     | `gossamer/async_iterator` |                                                         |
+| JSON               | ✅     | `gossamer/json`           |                                                         |
+| Date               | ✅     | `gossamer/date`           |                                                         |
+| RegExp             | ❌     | —                         | Low priority; `gleam_regexp` covers most use cases      |
+| Symbol             | ✅     | `gossamer/symbol`         |                                                         |
+| Number             | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants             |
+| Math               | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants               |
+| Error types        | ✅     | `gossamer/js_error`       | Includes `JsErrorKind` classification                   |
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 
@@ -188,6 +189,18 @@ types, and expose functionality Gleam's stdlib doesn't cover.
 | FinalizationRegistry | ❌     | —                 | Cleanup callbacks when objects are GC'd                  |
 | Array                | ✅     | `gossamer/array`  | Gleam List is not a JS Array; needed for JS interop      |
 | String               | ✅     | `gossamer/string` | `normalize()`, `localeCompare()`, locale case conversion |
+
+## Typed array coverage
+
+`Uint8Array` and `ArrayBuffer` are bound. The remaining typed arrays —
+`Int8Array`, `Uint8ClampedArray`, `Int16Array`/`Uint16Array`,
+`Int32Array`/`Uint32Array`, `Float16Array`/`Float32Array`/`Float64Array`,
+`BigInt64Array`/`BigUint64Array`, and `DataView` — are not yet bound.
+
+Web APIs that accept any `ArrayBufferView` (`byob_reader.read`,
+`subtle_crypto.*`, `web_socket.send_*`, `crypto.get_random_values`) take
+`Uint8Array` only in gossamer. Additional typed-array bindings are additive and
+will be added as needed.
 
 ## Out of Scope
 
