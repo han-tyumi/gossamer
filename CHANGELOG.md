@@ -1,3 +1,14 @@
+## 8.1.0 (2026-05-02)
+
+### Features
+
+- add Fields snapshot to PerformanceEntry, CustomEvent, MessageEvent
+- add Fields snapshot to URLPattern
+- add Fields snapshot to Blob, File, CryptoKey
+- add Fields snapshot to Response
+- add Fields snapshot to Request; getters that panicked on Deno/Bun now return
+  spec defaults
+
 ## 8.0.0 (2026-05-02)
 
 ### Breaking Changes
