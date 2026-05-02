@@ -179,16 +179,16 @@ Gleam has conceptual equivalents for these, but they are not the native JS
 types. These bindings enable interop with JS APIs that return or accept native
 types, and expose functionality Gleam's stdlib doesn't cover.
 
-| Interface            | Status | Module              | Notes                                                    |
-| -------------------- | ------ | ------------------- | -------------------------------------------------------- |
-| Map                  | ✅     | `gossamer/map`      | Gleam Dict is not a JS Map; needed for JS interop        |
-| Set                  | ✅     | `gossamer/set`      | Gleam Set is not a JS Set; needed for JS interop         |
-| WeakMap              | ✅     | `gossamer/weak_map` | Metadata/caching on JS objects without preventing GC     |
-| WeakSet              | ✅     | `gossamer/weak_set` | Tracking JS objects without preventing GC                |
-| WeakRef              | ❌     | —                   | Weak references to objects                               |
-| FinalizationRegistry | ❌     | —                   | Cleanup callbacks when objects are GC'd                  |
-| Array                | ✅     | `gossamer/array`    | Gleam List is not a JS Array; needed for JS interop      |
-| String               | ✅     | `gossamer/string`   | `normalize()`, `localeCompare()`, locale case conversion |
+| Interface            | Status | Module                           | Notes                                                    |
+| -------------------- | ------ | -------------------------------- | -------------------------------------------------------- |
+| Map                  | ✅     | `gossamer/map`                   | Gleam Dict is not a JS Map; needed for JS interop        |
+| Set                  | ✅     | `gossamer/set`                   | Gleam Set is not a JS Set; needed for JS interop         |
+| WeakMap              | ✅     | `gossamer/weak_map`              | Metadata/caching on JS objects without preventing GC     |
+| WeakSet              | ✅     | `gossamer/weak_set`              | Tracking JS objects without preventing GC                |
+| WeakRef              | ✅     | `gossamer/weak_ref`              | Weak references to objects                               |
+| FinalizationRegistry | ✅     | `gossamer/finalization_registry` | Cleanup callbacks when objects are GC'd                  |
+| Array                | ✅     | `gossamer/array`                 | Gleam List is not a JS Array; needed for JS interop      |
+| String               | ✅     | `gossamer/string`                | `normalize()`, `localeCompare()`, locale case conversion |
 
 ## Typed array coverage
 
