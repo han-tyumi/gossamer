@@ -19,6 +19,7 @@ import gossamer/url
 import gossamer/url_search_params
 
 import gleeunit/should
+import runtime
 
 pub fn headers_new_test() {
   let hdrs = headers.new()
@@ -402,6 +403,18 @@ pub fn request_signal_test() {
   let _signal = request.signal(req)
 }
 
+pub fn request_referrer_test() {
+  use <- runtime.skip_on(runtime.Deno)
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  let _ = request.referrer(req)
+}
+
+pub fn request_referrer_panics_on_deno_test() {
+  use <- runtime.only_on(runtime.Deno)
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  let assert Error(_) = runtime.catching(fn() { request.referrer(req) })
+}
+
 pub fn request_referrer_policy_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
   let _referrer_policy = request.referrer_policy(req)
@@ -432,6 +445,36 @@ pub fn request_init_priority_test() {
   let p = request.priority(req)
   let ok = p == request_priority.High || p == request_priority.Auto
   should.be_true(ok)
+}
+
+pub fn request_is_keepalive_test() {
+  use <- runtime.skip_on_any([runtime.Deno, runtime.Bun])
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  request.is_keepalive(req) |> should.be_false
+}
+
+pub fn request_is_keepalive_panics_on_deno_test() {
+  use <- runtime.only_on(runtime.Deno)
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  let assert Error(_) = runtime.catching(fn() { request.is_keepalive(req) })
+}
+
+pub fn request_is_keepalive_panics_on_bun_test() {
+  use <- runtime.only_on(runtime.Bun)
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  let assert Error(_) = runtime.catching(fn() { request.is_keepalive(req) })
+}
+
+pub fn request_integrity_test() {
+  use <- runtime.skip_on(runtime.Deno)
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  request.integrity(req) |> should.equal("")
+}
+
+pub fn request_integrity_panics_on_deno_test() {
+  use <- runtime.only_on(runtime.Deno)
+  let assert Ok(req) = request.from_url_string("https://example.org")
+  let assert Error(_) = runtime.catching(fn() { request.integrity(req) })
 }
 
 pub fn request_clone_test() {
