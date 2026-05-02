@@ -6,4 +6,4 @@
 build/
 erl_crash.dump
 
-/src/**/*.ffi.mjs
+*.ffi.mjs

@@ -13,11 +13,11 @@
 
   "tasks": {
     "build": "deno run -A build.ts",
-    "clean": "find src -name '*.ffi.mjs' -delete"
+    "clean": "find src test -name '*.ffi.mjs' -delete"
   },
 
   "fmt": {
-    "exclude": ["./src/**/*.ffi.mjs", "./build/"]
+    "exclude": ["**/*.ffi.mjs", "./build/"]
   },
 
   "lint": {

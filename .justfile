@@ -31,7 +31,7 @@ examples:
   done
 
 check:
-  deno check --all 'src/**/*.ts'
+  deno check --all 'src/**/*.ts' 'test/**/*.ts'
 
 format:
   deno fmt -q
