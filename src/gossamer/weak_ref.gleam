@@ -7,6 +7,9 @@ import gossamer/js_error.{type JsError}
 /// symbols (`gossamer/symbol.new`, not `gossamer/symbol.for`); `new`
 /// returns an error otherwise.
 ///
+/// `deref` may continue to return `Ok` for some time after all other
+/// references to the target are dropped — GC timing is non-deterministic.
+///
 /// See [WeakRef](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef) on MDN.
 ///
 @external(javascript, "./weak_ref.type.ts", "WeakRef$")

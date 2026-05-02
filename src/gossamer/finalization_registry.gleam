@@ -3,12 +3,17 @@ import gossamer/js_error.{type JsError}
 /// A JS `FinalizationRegistry` that fires cleanup callbacks after
 /// registered targets are garbage collected. Callback timing is
 /// non-deterministic — callbacks may fire late, or not at all if the
-/// program exits before GC runs.
+/// program exits before GC runs. Errors thrown from the callback are
+/// reported to the runtime, not to surrounding code.
 ///
 /// Targets and unregister tokens must be objects (records, lists,
 /// tuples) or non-registered symbols (`gossamer/symbol.new`, not
 /// `gossamer/symbol.for`); `register`, `register_with_token`, and
 /// `unregister` return an error otherwise.
+///
+/// Unregister tokens are matched by JS reference identity — pass the
+/// same JS reference to `unregister` that was passed to
+/// `register_with_token`.
 ///
 /// See [FinalizationRegistry](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry) on MDN.
 ///

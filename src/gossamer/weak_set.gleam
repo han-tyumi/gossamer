@@ -8,6 +8,10 @@ import gossamer/js_error.{type JsError}
 /// and `from_list` return an error otherwise. Has no `size`,
 /// iteration, or `clear` (those would expose GC timing).
 ///
+/// Values are matched by JS reference identity, not value equality —
+/// two equal-by-value tuples constructed separately are distinct
+/// values.
+///
 /// See [WeakSet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) on MDN.
 ///
 @external(javascript, "./weak_set.type.ts", "WeakSet$")

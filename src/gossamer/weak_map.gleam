@@ -8,6 +8,9 @@ import gossamer/js_error.{type JsError}
 /// and `from_list` return an error otherwise. Has no `size`, iteration,
 /// or `clear` (those would expose GC timing).
 ///
+/// Keys are matched by JS reference identity, not value equality —
+/// two equal-by-value tuples constructed separately are distinct keys.
+///
 /// See [WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) on MDN.
 ///
 @external(javascript, "./weak_map.type.ts", "WeakMap$")
