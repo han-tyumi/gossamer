@@ -7,8 +7,6 @@ import gossamer/named_curve.{type NamedCurve}
 import gossamer/rsa_algorithm.{type RsaAlgorithm}
 import gossamer/uint8_array.{type Uint8Array}
 
-/// Opaque handle to the underlying JS `CryptoKey`.
-///
 @external(javascript, "./crypto_key_ref.type.ts", "CryptoKeyRef$")
 @internal
 pub type CryptoKeyRef

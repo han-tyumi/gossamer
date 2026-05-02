@@ -2,8 +2,6 @@ import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}
 import gossamer/event.{type Event}
 
-/// Opaque handle to the underlying JS `CustomEvent`.
-///
 @external(javascript, "./custom_event_ref.type.ts", "CustomEventRef$")
 @internal
 pub type CustomEventRef

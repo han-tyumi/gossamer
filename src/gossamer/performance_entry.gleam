@@ -1,7 +1,5 @@
 import gleam/dynamic.{type Dynamic}
 
-/// Opaque handle to the underlying JS `PerformanceEntry`.
-///
 @external(javascript, "./performance_entry_ref.type.ts", "PerformanceEntryRef$")
 @internal
 pub type PerformanceEntryRef

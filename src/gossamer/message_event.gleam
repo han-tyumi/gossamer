@@ -1,7 +1,5 @@
 import gleam/dynamic.{type Dynamic}
 
-/// Opaque handle to the underlying JS `MessageEvent`.
-///
 @external(javascript, "./message_event_ref.type.ts", "MessageEventRef$")
 @internal
 pub type MessageEventRef

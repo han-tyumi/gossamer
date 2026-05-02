@@ -1,8 +1,6 @@
 import gleam/dict.{type Dict}
 import gossamer/js_error.{type JsError}
 
-/// Opaque handle to the underlying JS `URLPattern`.
-///
 @external(javascript, "./url_pattern_ref.type.ts", "URLPatternRef$")
 @internal
 pub type URLPatternRef

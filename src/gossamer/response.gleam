@@ -13,8 +13,6 @@ import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
 
-/// Opaque handle to the underlying JS `Response`.
-///
 @external(javascript, "./response_ref.type.ts", "ResponseRef$")
 @internal
 pub type ResponseRef
