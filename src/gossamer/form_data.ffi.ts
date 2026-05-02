@@ -11,8 +11,6 @@ function toFormDataValue(
   return $formData.FormDataValue$FileValue(value);
 }
 
-export type FormData$ = FormData;
-
 export const new_: typeof $formData.new$ = () => {
   return new FormData();
 };

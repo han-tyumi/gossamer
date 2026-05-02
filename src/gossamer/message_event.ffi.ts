@@ -1,7 +1,5 @@
 import * as $messageEvent from "$/gossamer/gossamer/message_event.mjs";
 
-export type MessageEventRef$ = MessageEvent;
-
 export function toMessageEvent(
   event: MessageEvent,
 ): $messageEvent.MessageEvent$ {

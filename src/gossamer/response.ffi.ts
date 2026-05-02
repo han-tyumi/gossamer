@@ -5,8 +5,6 @@ import { toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type ResponseRef$ = Response;
-
 function toResponseInit(options: $response.ResponseInit$[]): ResponseInit {
   const result: ResponseInit = {};
   for (const option of options) {

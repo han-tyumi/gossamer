@@ -4,8 +4,6 @@ import type * as $array from "$/gossamer/gossamer/array.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
-export type Array$<T> = Array<T>;
-
 function toCompareFn<T>(
   compare: (a: T, b: T) => Order$,
 ): (a: T, b: T) => number {

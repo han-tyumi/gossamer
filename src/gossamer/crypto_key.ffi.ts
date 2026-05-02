@@ -8,8 +8,6 @@ import { fromNamedCurve } from "~/gossamer/named_curve.ffi.ts";
 import { fromRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
 import { fromArrayMapped } from "~/utils/list.ffi.ts";
 
-export type CryptoKey$ = CryptoKey;
-
 interface AesKeyAlgorithmShape extends KeyAlgorithm {
   length: number;
 }

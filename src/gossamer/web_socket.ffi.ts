@@ -5,8 +5,6 @@ import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type WebSocket$ = WebSocket;
-
 function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
   return $webSocket.CloseEvent$CloseEvent(
     event.code,

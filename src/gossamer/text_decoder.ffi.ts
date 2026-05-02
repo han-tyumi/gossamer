@@ -4,8 +4,6 @@ import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type TextDecoder$ = TextDecoder;
-
 export function toTextDecoderOptions(
   options: List<$textDecoder.TextDecoderOption$>,
 ): Partial<TextDecoderOptions> {

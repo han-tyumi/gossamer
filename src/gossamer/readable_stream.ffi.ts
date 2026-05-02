@@ -3,8 +3,6 @@ import type { List } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type ReadableStream$<T> = ReadableStream<T>;
-
 function toUnderlyingSource<T>(
   options: $readableStream.UnderlyingSource$<T>[],
 ): UnderlyingDefaultSource<T> {

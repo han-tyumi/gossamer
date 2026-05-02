@@ -2,8 +2,6 @@ import * as $writableStream from "$/gossamer/gossamer/writable_stream.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type WritableStream$<T> = WritableStream<T>;
-
 function toUnderlyingSink<T>(
   options: $writableStream.UnderlyingSink$<T>[],
 ): UnderlyingSink<T> {

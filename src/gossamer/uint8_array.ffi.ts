@@ -4,8 +4,6 @@ import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
-export type Uint8Array$ = Uint8Array;
-
 export const new_: typeof $uint8Array.new$ = () => {
   return new Uint8Array();
 };

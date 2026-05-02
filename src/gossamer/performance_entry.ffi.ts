@@ -1,8 +1,6 @@
 import * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type PerformanceEntryRef$ = PerformanceEntry;
-
 export function toPerformanceEntry(
   entry: PerformanceEntry,
 ): $performanceEntry.PerformanceEntry$ {

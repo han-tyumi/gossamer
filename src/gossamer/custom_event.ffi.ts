@@ -1,8 +1,6 @@
 import * as $customEvent from "$/gossamer/gossamer/custom_event.mjs";
 import { toOption } from "~/utils/option.ffi.ts";
 
-export type CustomEventRef$ = CustomEvent;
-
 export function toCustomEvent(event: CustomEvent): $customEvent.CustomEvent$ {
   return $customEvent.CustomEvent$CustomEvent(toOption(event.detail), event);
 }

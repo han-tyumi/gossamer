@@ -1,7 +1,5 @@
 import type * as $abortController from "$/gossamer/gossamer/abort_controller.mjs";
 
-export type AbortController$ = AbortController;
-
 export const new_: typeof $abortController.new$ = () => {
   return new AbortController();
 };

@@ -1,8 +1,6 @@
 import type * as $blob from "$/gossamer/gossamer/blob.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Blob$ = Blob;
-
 export const new_: typeof $blob.new$ = () => {
   return new Blob();
 };

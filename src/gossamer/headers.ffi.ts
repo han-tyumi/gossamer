@@ -3,8 +3,6 @@ import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Headers$ = Headers;
-
 export const new_: typeof $headers.new$ = () => {
   return new Headers();
 };

@@ -2,8 +2,6 @@ import type * as $date from "$/gossamer/gossamer/date.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type Date$ = Date;
-
 function isValid(date: Date): boolean {
   return !Number.isNaN(date.getTime());
 }

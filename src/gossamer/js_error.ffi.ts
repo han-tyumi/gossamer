@@ -2,8 +2,6 @@ import type * as $jsError from "$/gossamer/gossamer/js_error.mjs";
 import * as $kind from "$/gossamer/gossamer/js_error/kind.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type JsError$ = Error;
-
 export const new_: typeof $jsError.new$ = (message) => {
   return new Error(message);
 };
