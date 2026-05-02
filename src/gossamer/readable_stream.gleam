@@ -49,14 +49,12 @@ pub fn from_start(
 }
 
 /// Creates a `ReadableStream` from only a `Pull` callback — use when chunks
-/// are produced on demand. Returns an error if `pull` throws synchronously
-/// at construction.
+/// are produced on demand.
 ///
+@external(javascript, "./readable_stream.ffi.mjs", "from_pull")
 pub fn from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
-) -> Result(ReadableStream(a), JsError) {
-  new([Pull(pull)])
-}
+) -> ReadableStream(a)
 
 /// Creates a `ReadableStream` from an `Iterator`.
 ///

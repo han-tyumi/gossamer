@@ -45,6 +45,10 @@ export const new_: typeof $readableStream.new$ = (source) => {
   );
 };
 
+export const from_pull: typeof $readableStream.from_pull = (pull) => {
+  return new ReadableStream({ pull });
+};
+
 export const from_iterator: typeof $readableStream.from_iterator = (
   iterator,
 ) => {

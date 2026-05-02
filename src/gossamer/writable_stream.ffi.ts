@@ -28,6 +28,10 @@ export const new_: typeof $writableStream.new$ = (sink) => {
   );
 };
 
+export const from_write: typeof $writableStream.from_write = (write) => {
+  return new WritableStream({ write });
+};
+
 export const is_locked: typeof $writableStream.is_locked = (
   stream: WritableStream,
 ) => {

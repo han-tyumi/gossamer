@@ -28,6 +28,12 @@ export const new_: typeof $transformStream.new$ = (transformer) => {
   );
 };
 
+export const from_transform: typeof $transformStream.from_transform = (
+  transform,
+) => {
+  return new TransformStream({ transform });
+};
+
 export const readable: typeof $transformStream.readable = (stream) => {
   return stream.readable;
 };

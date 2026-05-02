@@ -26,14 +26,12 @@ pub type UnderlyingSink(a) {
 pub fn new(sink: List(UnderlyingSink(a))) -> Result(WritableStream(a), JsError)
 
 /// Creates a `WritableStream` from only a `Write` callback — use when the
-/// sink just needs to handle incoming chunks. Returns an error if the
-/// `Start` callback throws synchronously (inherited from `new`).
+/// sink just needs to handle incoming chunks.
 ///
+@external(javascript, "./writable_stream.ffi.mjs", "from_write")
 pub fn from_write(
   write: fn(a, DefaultController) -> Promise(Nil),
-) -> Result(WritableStream(a), JsError) {
-  new([Write(write)])
-}
+) -> WritableStream(a)
 
 /// Checks whether the stream is locked to a writer.
 ///

@@ -53,7 +53,7 @@ pub fn readable_stream_new_with_options_test() {
 }
 
 pub fn writable_stream_from_write_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(chunk, _controller) {
       should.equal(chunk, "hello")
       promise.resolve(Nil)
@@ -83,7 +83,7 @@ pub fn writable_stream_new_with_options_test() {
 }
 
 pub fn transform_stream_from_transform_test() {
-  let assert Ok(transform) =
+  let transform =
     transform_stream.from_transform(fn(chunk: Int, controller) {
       let _ = transform_controller.enqueue(controller, int.to_string(chunk))
       promise.resolve(Nil)
@@ -130,7 +130,7 @@ pub fn readable_pipe_to_writable_test() {
 
   let chunks = []
 
-  let assert Ok(writable) =
+  let writable =
     writable_stream.from_write(fn(chunk, _controller) {
       // Can't mutate chunks in Gleam, just verify type works.
       let _ = [chunk, ..chunks]
@@ -193,7 +193,7 @@ pub fn readable_stream_cancel_test() {
 }
 
 pub fn readable_stream_from_pull_test() {
-  let assert Ok(stream) =
+  let stream =
     readable_stream.from_pull(fn(controller) {
       let _ = default_controller.enqueue(controller, 42)
       let _ = default_controller.close(controller)
@@ -208,7 +208,7 @@ pub fn readable_stream_from_pull_test() {
 }
 
 pub fn writable_stream_is_locked_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
   writable_stream.is_locked(stream) |> should.be_false
 
@@ -220,7 +220,7 @@ pub fn writable_stream_is_locked_test() {
 }
 
 pub fn writable_stream_close_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   use _ <- promise.then(writable_stream.close(stream))
@@ -228,7 +228,7 @@ pub fn writable_stream_close_test() {
 }
 
 pub fn writable_stream_abort_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   use _ <- promise.then(writable_stream.abort(stream, "cancelled"))
@@ -250,7 +250,7 @@ pub fn reader_release_lock_test() {
 }
 
 pub fn writer_release_lock_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
@@ -313,7 +313,7 @@ pub fn readable_controller_desired_size_test() {
 // Writer sub-module tests
 
 pub fn writer_closed_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
@@ -324,7 +324,7 @@ pub fn writer_closed_test() {
 }
 
 pub fn writer_desired_size_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
@@ -335,7 +335,7 @@ pub fn writer_desired_size_test() {
 }
 
 pub fn writer_ready_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
@@ -346,7 +346,7 @@ pub fn writer_ready_test() {
 }
 
 pub fn writer_abort_test() {
-  let assert Ok(stream) =
+  let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
