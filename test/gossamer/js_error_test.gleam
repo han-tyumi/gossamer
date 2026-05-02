@@ -1,0 +1,101 @@
+import gleam/dynamic/decode
+import gleeunit/should
+import gossamer/js_error
+
+pub fn new_test() {
+  let err = js_error.new("something went wrong")
+  js_error.name(err) |> should.equal("Error")
+  js_error.message(err) |> should.equal("something went wrong")
+}
+
+pub fn type_error_test() {
+  let err = js_error.type_error("invalid type")
+  js_error.name(err) |> should.equal("TypeError")
+  js_error.message(err) |> should.equal("invalid type")
+}
+
+pub fn range_error_test() {
+  let err = js_error.range_error("out of range")
+  js_error.name(err) |> should.equal("RangeError")
+  js_error.message(err) |> should.equal("out of range")
+}
+
+pub fn reference_error_test() {
+  let err = js_error.reference_error("not defined")
+  js_error.name(err) |> should.equal("ReferenceError")
+  js_error.message(err) |> should.equal("not defined")
+}
+
+pub fn syntax_error_test() {
+  let err = js_error.syntax_error("unexpected token")
+  js_error.name(err) |> should.equal("SyntaxError")
+  js_error.message(err) |> should.equal("unexpected token")
+}
+
+pub fn uri_error_test() {
+  let err = js_error.uri_error("malformed URI")
+  js_error.name(err) |> should.equal("URIError")
+  js_error.message(err) |> should.equal("malformed URI")
+}
+
+pub fn eval_error_test() {
+  let err = js_error.eval_error("eval failed")
+  js_error.name(err) |> should.equal("EvalError")
+  js_error.message(err) |> should.equal("eval failed")
+}
+
+pub fn stack_test() {
+  let err = js_error.new("stack test")
+  js_error.stack(err) |> should.be_ok
+}
+
+pub fn cause_no_cause_test() {
+  let err = js_error.new("no cause")
+  js_error.cause(err) |> should.be_error
+}
+
+pub fn new_with_cause_test() {
+  let err = js_error.new_with_cause("wrapped", cause: "root reason")
+  js_error.message(err) |> should.equal("wrapped")
+  let assert Ok(cause) = js_error.cause(err)
+  let assert Ok(value) = decode.run(cause, decode.string)
+  should.equal(value, "root reason")
+}
+
+pub fn type_error_with_cause_test() {
+  let err = js_error.type_error_with_cause("bad type", cause: 42)
+  js_error.name(err) |> should.equal("TypeError")
+  let assert Ok(cause) = js_error.cause(err)
+  let assert Ok(value) = decode.run(cause, decode.int)
+  should.equal(value, 42)
+}
+
+pub fn range_error_with_cause_test() {
+  let err = js_error.range_error_with_cause("out of range", cause: "too big")
+  js_error.name(err) |> should.equal("RangeError")
+  js_error.cause(err) |> should.be_ok
+}
+
+pub fn reference_error_with_cause_test() {
+  let err = js_error.reference_error_with_cause("not defined", cause: "scope")
+  js_error.name(err) |> should.equal("ReferenceError")
+  js_error.cause(err) |> should.be_ok
+}
+
+pub fn syntax_error_with_cause_test() {
+  let err = js_error.syntax_error_with_cause("unexpected", cause: "at line 5")
+  js_error.name(err) |> should.equal("SyntaxError")
+  js_error.cause(err) |> should.be_ok
+}
+
+pub fn uri_error_with_cause_test() {
+  let err = js_error.uri_error_with_cause("malformed", cause: "missing scheme")
+  js_error.name(err) |> should.equal("URIError")
+  js_error.cause(err) |> should.be_ok
+}
+
+pub fn eval_error_with_cause_test() {
+  let err = js_error.eval_error_with_cause("eval failed", cause: "sandboxed")
+  js_error.name(err) |> should.equal("EvalError")
+  js_error.cause(err) |> should.be_ok
+}
