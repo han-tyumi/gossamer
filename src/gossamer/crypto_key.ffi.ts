@@ -67,18 +67,16 @@ export function toKeyAlgorithm(
   );
 }
 
-export const algorithm: typeof $cryptoKey.algorithm = (key) => {
-  return toKeyAlgorithm(key.algorithm);
-};
+export function toCryptoKey(key: CryptoKey): $cryptoKey.CryptoKey$ {
+  return $cryptoKey.CryptoKey$CryptoKey(
+    toKeyAlgorithm(key.algorithm),
+    key.extractable,
+    toKeyType(key.type),
+    fromArrayMapped(key.usages, fromKeyUsage),
+    key,
+  );
+}
 
-export const is_extractable: typeof $cryptoKey.is_extractable = (key) => {
-  return key.extractable;
-};
-
-export const type_: typeof $cryptoKey.type_ = (key) => {
-  return toKeyType(key.type);
-};
-
-export const usages: typeof $cryptoKey.usages = (key) => {
-  return fromArrayMapped(key.usages, fromKeyUsage);
-};
+export function cryptoKeyRef(key: $cryptoKey.CryptoKey$): CryptoKey {
+  return $cryptoKey.CryptoKey$CryptoKey$ref(key);
+}

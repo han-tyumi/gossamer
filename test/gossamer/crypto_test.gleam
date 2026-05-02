@@ -57,8 +57,8 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   )
   let assert Ok(key) = result
 
-  should.equal(crypto_key.is_extractable(key), True)
-  should.equal(crypto_key.type_(key), key_type.Secret)
+  key.is_extractable |> should.be_true
+  key.type_ |> should.equal(key_type.Secret)
 
   let assert Ok(iv_source) = uint8_array.from_length(12)
   let assert Ok(iv) = crypto.get_random_values(iv_source)
@@ -94,8 +94,8 @@ pub fn generate_key_pair_sign_verify_test() {
   let assert Ok(pair) = result
 
   let subtle_crypto.CryptoKeyPair(public_key:, private_key:) = pair
-  should.equal(crypto_key.type_(public_key), key_type.Public)
-  should.equal(crypto_key.type_(private_key), key_type.Private)
+  public_key.type_ |> should.equal(key_type.Public)
+  private_key.type_ |> should.equal(key_type.Private)
 
   let data = uint8_array.from_list([1, 2, 3])
 
@@ -133,10 +133,9 @@ pub fn generate_rsa_key_pair_test() {
   )
   let assert Ok(pair) = result
   let subtle_crypto.CryptoKeyPair(public_key:, private_key:) = pair
-  should.equal(crypto_key.type_(public_key), key_type.Public)
-  should.equal(crypto_key.type_(private_key), key_type.Private)
-  let algo = crypto_key.algorithm(private_key)
-  let assert crypto_key.Rsa(name:, modulus_length:, ..) = algo
+  public_key.type_ |> should.equal(key_type.Public)
+  private_key.type_ |> should.equal(key_type.Private)
+  let assert crypto_key.Rsa(name:, modulus_length:, ..) = private_key.algorithm
   should.equal(name, rsa_algorithm.RsassaPkcs1V15)
   should.equal(modulus_length, 2048)
   promise.resolve(Nil)
@@ -157,7 +156,7 @@ pub fn import_export_key_test() {
   )
   let assert Ok(key) = result
 
-  should.equal(crypto_key.is_extractable(key), True)
+  key.is_extractable |> should.be_true
 
   use result <- promise.then(subtle_crypto.export_key(key_format.Raw, key))
   let assert Ok(exported) = result
@@ -176,8 +175,7 @@ pub fn crypto_key_algorithm_test() {
     ),
   )
   let assert Ok(key) = result
-  let algo = crypto_key.algorithm(key)
-  should.equal(algo, crypto_key.Aes(aes_algorithm.AesGcm, 256))
+  key.algorithm |> should.equal(crypto_key.Aes(aes_algorithm.AesGcm, 256))
   promise.resolve(Nil)
 }
 
@@ -193,10 +191,9 @@ pub fn crypto_key_usages_test() {
     ),
   )
   let assert Ok(key) = result
-  let usages = crypto_key.usages(key)
-  should.be_true(list.contains(usages, key_usage.Encrypt))
-  should.be_true(list.contains(usages, key_usage.Decrypt))
-  should.equal(list.length(usages), 2)
+  should.be_true(list.contains(key.usages, key_usage.Encrypt))
+  should.be_true(list.contains(key.usages, key_usage.Decrypt))
+  should.equal(list.length(key.usages), 2)
   promise.resolve(Nil)
 }
 
@@ -246,7 +243,7 @@ pub fn import_key_jwk_test() {
     ]),
   )
   let assert Ok(imported) = result
-  crypto_key.type_(imported) |> should.equal(key_type.Secret)
+  imported.type_ |> should.equal(key_type.Secret)
   promise.resolve(Nil)
 }
 
@@ -302,7 +299,7 @@ pub fn derive_key_test() {
     ),
   )
   let assert Ok(derived) = result
-  crypto_key.type_(derived) |> should.equal(key_type.Secret)
+  derived.type_ |> should.equal(key_type.Secret)
   promise.resolve(Nil)
 }
 
@@ -353,7 +350,7 @@ pub fn wrap_unwrap_key_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  crypto_key.type_(unwrapped) |> should.equal(key_type.Secret)
+  unwrapped.type_ |> should.equal(key_type.Secret)
   promise.resolve(Nil)
 }
 
@@ -402,6 +399,6 @@ pub fn wrap_unwrap_key_jwk_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  crypto_key.type_(unwrapped) |> should.equal(key_type.Secret)
+  unwrapped.type_ |> should.equal(key_type.Secret)
   promise.resolve(Nil)
 }
