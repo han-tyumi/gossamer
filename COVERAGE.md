@@ -167,7 +167,7 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | AsyncIterator      | ✅     | `gossamer/async_iterator` |                                                         |
 | JSON               | ✅     | `gossamer/json`           |                                                         |
 | Date               | ✅     | `gossamer/date`           |                                                         |
-| RegExp             | ❌     | —                         | Low priority; `gleam_regexp` covers most use cases      |
+| RegExp             | ✅     | `gossamer/regexp`         |                                                         |
 | Symbol             | ✅     | `gossamer/symbol`         |                                                         |
 | Number             | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants             |
 | Math               | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants               |
