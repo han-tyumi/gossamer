@@ -31,3 +31,28 @@ toResult.fromPromise = function <T>(
       Result$Error(error instanceof Error ? error.message : String(error)),
   );
 };
+
+function toError(value: unknown): Error {
+  return value instanceof Error
+    ? value
+    : new Error(String(value), { cause: value });
+}
+
+toResult.fromThrowsAsError = function <T>(
+  throws: () => T,
+): Result<T, Error> {
+  try {
+    return Result$Ok(throws());
+  } catch (error) {
+    return Result$Error(toError(error));
+  }
+};
+
+toResult.fromPromiseAsError = function <T>(
+  promise: Promise<T>,
+): Promise<Result<T, Error>> {
+  return promise.then(
+    (value) => Result$Ok(value),
+    (error) => Result$Error(toError(error)),
+  );
+};
