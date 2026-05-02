@@ -52,12 +52,22 @@ export const from_pull: typeof $readableStream.from_pull = (pull) => {
 export const from_iterator: typeof $readableStream.from_iterator = (
   iterator,
 ) => {
+  if (typeof ReadableStream.from !== "function") {
+    throw new Error(
+      "readable_stream.from_iterator is unavailable on Bun - see https://github.com/oven-sh/bun/issues/3700",
+    );
+  }
   return ReadableStream.from(iterator);
 };
 
 export const from_async_iterator: typeof $readableStream.from_async_iterator = (
   iterator,
 ) => {
+  if (typeof ReadableStream.from !== "function") {
+    throw new Error(
+      "readable_stream.from_async_iterator is unavailable on Bun - see https://github.com/oven-sh/bun/issues/3700",
+    );
+  }
   return ReadableStream.from(iterator);
 };
 

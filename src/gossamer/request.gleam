@@ -110,7 +110,8 @@ pub fn headers(of request: Request) -> Headers
 
 /// Returns the cache mode associated with the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Deno doesn't expose this getter; on Deno this returns
+/// `request_cache.Default` regardless of the cache mode set on the request.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "cache")
@@ -118,7 +119,9 @@ pub fn cache(of request: Request) -> RequestCache
 
 /// Returns the credentials mode associated with the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Deno doesn't expose this getter; on Deno this returns
+/// `request_credentials.SameOrigin` regardless of the credentials mode
+/// set on the request.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "credentials")
@@ -126,7 +129,8 @@ pub fn credentials(of request: Request) -> RequestCredentials
 
 /// Returns the kind of resource requested by the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Deno doesn't expose this getter; on Deno this returns
+/// `request_destination.Empty`.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "destination")
@@ -140,7 +144,7 @@ pub fn signal(of request: Request) -> AbortSignal
 
 /// Returns the referrer of the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Panics on Deno — the property is not exposed.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer")
@@ -148,7 +152,9 @@ pub fn referrer(of request: Request) -> String
 
 /// Returns the referrer policy associated with the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Deno doesn't expose this getter; on Deno this returns
+/// `referrer_policy.StrictOriginWhenCrossOrigin` regardless of the policy
+/// set on the request.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
@@ -156,7 +162,8 @@ pub fn referrer_policy(of request: Request) -> ReferrerPolicy
 
 /// Returns the mode associated with the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Deno doesn't expose this getter; on Deno this returns
+/// `request_mode.Cors` regardless of the mode set on the request.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
@@ -174,7 +181,7 @@ pub fn priority(of request: Request) -> RequestPriority
 
 /// Returns whether the request can outlive the global in which it was created.
 ///
-/// Note: Not available on Deno.
+/// Note: Panics on Deno and Bun — the property is not exposed.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "is_keepalive")
@@ -182,7 +189,7 @@ pub fn is_keepalive(request: Request) -> Bool
 
 /// Returns the subresource integrity metadata of the request.
 ///
-/// Note: Not available on Deno.
+/// Note: Panics on Deno — the property is not exposed.
 /// See https://github.com/denoland/deno/issues/27763
 ///
 @external(javascript, "./request.ffi.mjs", "integrity")

@@ -147,7 +147,15 @@ export const redirect: typeof $request.redirect = (request) => {
   return fromRequestRedirect(request.redirect);
 };
 export const signal: typeof $request.signal = (request) => request.signal;
-export const referrer: typeof $request.referrer = (request) => request.referrer;
+
+export const referrer: typeof $request.referrer = (request) => {
+  if (request.referrer === undefined) {
+    throw new Error(
+      "request.referrer is unavailable on Deno - see https://github.com/denoland/deno/issues/27763",
+    );
+  }
+  return request.referrer;
+};
 
 export const referrer_policy: typeof $request.referrer_policy = (request) => {
   return fromReferrerPolicy(request.referrerPolicy);
@@ -164,10 +172,20 @@ export const priority: typeof $request.priority = (request) => {
 };
 
 export const is_keepalive: typeof $request.is_keepalive = (request) => {
+  if (request.keepalive === undefined) {
+    throw new Error(
+      "request.is_keepalive is unavailable on Deno and Bun - see https://github.com/denoland/deno/issues/27763",
+    );
+  }
   return request.keepalive;
 };
 
 export const integrity: typeof $request.integrity = (request) => {
+  if (request.integrity === undefined) {
+    throw new Error(
+      "request.integrity is unavailable on Deno - see https://github.com/denoland/deno/issues/27763",
+    );
+  }
   return request.integrity;
 };
 

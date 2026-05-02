@@ -58,7 +58,7 @@ pub fn from_pull(
 
 /// Creates a `ReadableStream` from an `Iterator`.
 ///
-/// Note: Not available on Bun.
+/// Note: Panics on Bun — `ReadableStream.from` is not implemented.
 /// See https://github.com/oven-sh/bun/issues/3700
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_iterator")
@@ -66,7 +66,7 @@ pub fn from_iterator(iterator: Iterator(a, r, n)) -> ReadableStream(a)
 
 /// Creates a `ReadableStream` from an `AsyncIterator`.
 ///
-/// Note: Not available on Bun.
+/// Note: Panics on Bun — `ReadableStream.from` is not implemented.
 /// See https://github.com/oven-sh/bun/issues/3700
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_async_iterator")

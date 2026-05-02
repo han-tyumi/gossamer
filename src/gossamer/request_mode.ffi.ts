@@ -10,16 +10,19 @@ export function toRequestMode(value: $requestMode.RequestMode$): string {
   return "cors";
 }
 
-export function fromRequestMode(value: string): $requestMode.RequestMode$ {
+export function fromRequestMode(
+  value: string | undefined,
+): $requestMode.RequestMode$ {
   switch (value) {
+    case undefined:
+    case "cors":
+      return $requestMode.RequestMode$Cors();
     case "navigate":
       return $requestMode.RequestMode$Navigate();
     case "no-cors":
       return $requestMode.RequestMode$NoCors();
     case "same-origin":
       return $requestMode.RequestMode$SameOrigin();
-    case "cors":
-      return $requestMode.RequestMode$Cors();
     default:
       return $requestMode.RequestMode$Other(value);
   }

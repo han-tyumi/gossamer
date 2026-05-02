@@ -12,15 +12,16 @@ export function toRequestCredentials(
 }
 
 export function fromRequestCredentials(
-  value: string,
+  value: string | undefined,
 ): $rc.RequestCredentials$ {
   switch (value) {
+    case undefined:
+    case "same-origin":
+      return $rc.RequestCredentials$SameOrigin();
     case "include":
       return $rc.RequestCredentials$Include();
     case "omit":
       return $rc.RequestCredentials$Omit();
-    case "same-origin":
-      return $rc.RequestCredentials$SameOrigin();
     default:
       return $rc.RequestCredentials$Other(value);
   }

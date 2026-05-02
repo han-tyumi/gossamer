@@ -18,8 +18,14 @@ export function toReferrerPolicy(value: $rp.ReferrerPolicy$): string {
   return "strict-origin-when-cross-origin";
 }
 
-export function fromReferrerPolicy(value: string): $rp.ReferrerPolicy$ {
+export function fromReferrerPolicy(
+  value: string | undefined,
+): $rp.ReferrerPolicy$ {
   switch (value) {
+    case undefined:
+    case "":
+    case "strict-origin-when-cross-origin":
+      return $rp.ReferrerPolicy$StrictOriginWhenCrossOrigin();
     case "no-referrer":
       return $rp.ReferrerPolicy$NoReferrer();
     case "no-referrer-when-downgrade":
@@ -32,8 +38,6 @@ export function fromReferrerPolicy(value: string): $rp.ReferrerPolicy$ {
       return $rp.ReferrerPolicy$SameOrigin();
     case "strict-origin":
       return $rp.ReferrerPolicy$StrictOrigin();
-    case "strict-origin-when-cross-origin":
-      return $rp.ReferrerPolicy$StrictOriginWhenCrossOrigin();
     case "unsafe-url":
       return $rp.ReferrerPolicy$UnsafeUrl();
     default:

@@ -1,9 +1,12 @@
 import * as $rd from "$/gossamer/gossamer/request_destination.mjs";
 
 export function fromRequestDestination(
-  value: string,
+  value: string | undefined,
 ): $rd.RequestDestination$ {
   switch (value) {
+    case undefined:
+    case "":
+      return $rd.RequestDestination$Empty();
     case "audio":
       return $rd.RequestDestination$Audio();
     case "audioworklet":
@@ -12,8 +15,6 @@ export function fromRequestDestination(
       return $rd.RequestDestination$Document();
     case "embed":
       return $rd.RequestDestination$Embed();
-    case "":
-      return $rd.RequestDestination$Empty();
     case "font":
       return $rd.RequestDestination$Font();
     case "frame":

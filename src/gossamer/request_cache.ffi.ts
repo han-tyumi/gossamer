@@ -12,8 +12,13 @@ export function toRequestCache(value: $requestCache.RequestCache$): string {
   return "default";
 }
 
-export function fromRequestCache(value: string): $requestCache.RequestCache$ {
+export function fromRequestCache(
+  value: string | undefined,
+): $requestCache.RequestCache$ {
   switch (value) {
+    case undefined:
+    case "default":
+      return $requestCache.RequestCache$Default();
     case "force-cache":
       return $requestCache.RequestCache$ForceCache();
     case "no-cache":
@@ -24,8 +29,6 @@ export function fromRequestCache(value: string): $requestCache.RequestCache$ {
       return $requestCache.RequestCache$OnlyIfCached();
     case "reload":
       return $requestCache.RequestCache$Reload();
-    case "default":
-      return $requestCache.RequestCache$Default();
     default:
       return $requestCache.RequestCache$Other(value);
   }
