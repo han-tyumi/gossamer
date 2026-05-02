@@ -1,3 +1,115 @@
+## 8.0.0 (2026-05-02)
+
+### Breaking Changes
+
+- response.new returns Response instead of Result(Response, String).
+- web_socket.close returns Nil instead of Result(Nil, String). close_with stays
+  wrapped because code and reason can still throw.
+- response.new(body: String) is replaced by response.from_string(body), and
+  response.new() now takes zero args for an empty-body response.
+  response.new_with_init is replaced by response.from_string_with_init.
+  response.from_json(data, init) is split into response.from_json(data) and
+  response.from_json_with_init(data, init).
+- web_socket constructors renamed for consistency with the from_<type> pattern.
+  `new(url: String)` → `from_url_string(url: String)`; `new_with_protocols(...)`
+  → `from_url_string_with_protocols(...)`; `new_url(url: URL)` →
+  `from_url(url: URL)`; `new_url_with_protocols(...)` →
+  `from_url_with_protocols(...)`.
+- request constructors renamed for consistency with the from_<type> pattern.
+  `new(input: String)` → `from_url_string(url: String)` and `new_with_init(...)`
+  → `from_url_string_with_init(...)`. Adds `request.from_url(url: URL)` and
+  `request.from_url_with_init(...)`. URL-taking variants still return Result
+  because the Fetch spec's Request constructor rejects URLs with `user:pass@`
+  credentials — the URL type permits credentials, so the check survives the type
+  swap.
+- the `_init` suffix is dropped from response, request, and fetch with-variants.
+  `response.from_string_with_init` → `from_string_with`, and the same rename
+  applies to `from_bytes`, `from_blob`, `from_buffer`, `from_form_data`,
+  `from_params`, `from_stream`, and `from_json`.
+  `request.from_url_string_with_init` → `from_url_string_with`, and the same
+  applies to `from_url` and `from_request`. `gossamer.fetch_with_init` →
+  `fetch_with`, and `gossamer.fetch_url_with_init` → `fetch_url_with`.
+- `url_pattern.new_from_string` is renamed to `url_pattern.from_string`, and
+  `url_pattern.new_from_string_with_base` is renamed to
+  `url_pattern.from_string_with_base`. The init-taking `url_pattern.new(init)`
+  constructor is unchanged; it matches the init-list `new(init)` pattern used by
+  readable_stream, writable_stream, and transform_stream.
+- the `gossamer/error` module is renamed to `gossamer/js_error` and the `Error`
+  type is renamed to `JsError`. All helpers keep their names: `js_error.new`,
+  `js_error.type_error`, `js_error.message`, `js_error.cause`, etc.
+- all `subtle_crypto` operations now return `Promise(Result(_, JsError))`
+  instead of `Promise(Result(_, String))`. Callers that pattern-match the error
+  branch should read the message via `js_error.message(err)`.
+- callers destructuring `Error(msg)` must replace `msg` with
+  `js_error.message(err)`, or handle the `JsError` value directly.
+- removes `gossamer/dom_exception`. Nothing in the library accepted or returned
+  a DOMException — classification is now handled by `js_error.kind(err)`
+  returning `kind.DomException(name:)`. The legacy numeric `code` property is
+  dropped; modern code uses `name`.
+- return / return_with / throw signatures change from Result(IteratorResult,
+  Nil) to Result(IteratorHandlerOutcome, JsError). Callers matching on
+  Error(Nil) for "no handler" match on Ok(NoHandler) instead.
+- all listed functions now return Result(T, JsError) instead of T. Callers
+  destructure with `let assert Ok(x) = ...` or handle the Error branch.
+- writable_stream.from_write, readable_stream.from_pull, and
+  transform_stream.from_transform no longer return Result. Callers doing
+  `let assert Ok(stream) = from_write(...)` should drop the outer assertion.
+- headers.get returns Result(Option(String), JsError) instead of Result(String,
+  JsError). Callers that matched Ok(value) should now match Ok(Some(value));
+  callers that relied on Error to mean "missing" should match Ok(None).
+- `array_buffer.ArrayBufferView` is removed. `byob_reader.read`'s `view`
+  parameter and the inner `ReadResult` value are now `Uint8Array` instead of
+  `ArrayBufferView`.
+- `array.with` and `uint8_array.with` now return `Result(_, JsError)` instead of
+  the unwrapped value. Both throw `RangeError` when the index is out of range;
+  callers must destructure with `let assert Ok(x) = ...` or handle the `Error`
+  branch.
+- `array_buffer.slice` variants are renamed to align with `uint8_array`'s
+  range-parameter naming convention. `slice(buffer, from:)` is renamed to
+  `slice_from(buffer, start)`, and `slice_with_end(buffer, from:, to:)` is
+  renamed to `slice_range(buffer, from:, to:)`. A new zero-arg `slice(buffer)`
+  returns a full copy for parity with `uint8_array.slice`.
+- `request.cache`, `credentials`, `mode`, `referrer_policy`, and `destination`
+  now return their spec defaults when the runtime returns `undefined` (Deno gap,
+  denoland/deno#27763) instead of producing `Other(undefined)`.
+  `request.referrer`, `integrity`, and `is_keepalive` panic at the FFI on
+  `undefined` with a diagnostic naming the runtime and upstream issue.
+  `readable_stream.from_iterator` and `from_async_iterator` panic when
+  `ReadableStream.from` is missing (Bun gap, oven-sh/bun#3700).
+
+### Features
+
+- unwrap response.new
+- unwrap web_socket.close
+- add response body type variants
+- add URL-typed redirect variants
+- add URL-typed fetch variants
+- add URL-typed web_socket constructors
+- add request body type variants
+- rename web_socket constructors to from_<type>
+- rename request constructors to from_<type>
+- add request.from_request constructors
+- add RequestPriority for Fetch priority hints
+- add fetch_request_with for request + init overload
+- add _with_cause constructors to error module
+- add JsErrorKind for classifying JsError
+- add IteratorHandlerOutcome for iterator return/throw
+- headers.get distinguishes missing from invalid
+
+### Fixes
+
+- wrap previously-missed throwing APIs in Result
+- pass reason through to iterator.throw handler
+- pass reason through to async_iterator.throw handler
+- unwrap stream convenience constructors
+- surface undefined priority as Auto instead of Other(Nil)
+- drop ArrayBufferView record; narrow byob_reader.read to Uint8Array
+- surface Node Timeout numeric id from set_timeout/set_interval
+- correct toGleamIteratorResult type parameter order
+- update basic example to v8 headers.get shape
+- wrap array.with and uint8_array.with in Result
+- surface runtime divergence with FFI panics and enum defaults
+
 ## 7.0.0 (2026-04-18)
 
 ### Breaking Changes
