@@ -17,8 +17,7 @@ pub type CustomEvent {
   CustomEvent(
     /// The detail payload, or `None` if none was provided.
     detail: Option(Dynamic),
-    /// Internal handle to the underlying JS `CustomEvent`. Do not
-    /// construct manually.
+    /// Internal handle to the underlying JS `CustomEvent`.
     ref: CustomEventRef,
   )
 }

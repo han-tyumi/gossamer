@@ -15,8 +15,7 @@ pub type MessageEvent {
     data: Dynamic,
     origin: String,
     last_event_id: String,
-    /// Internal handle to the underlying JS `MessageEvent`. Do not
-    /// construct manually.
+    /// Internal handle to the underlying JS `MessageEvent`.
     ref: MessageEventRef,
   )
 }

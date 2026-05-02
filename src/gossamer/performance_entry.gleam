@@ -16,8 +16,7 @@ pub type PerformanceEntry {
     entry_type: String,
     start_time: Float,
     duration: Float,
-    /// Internal handle to the underlying JS `PerformanceEntry`. Do not
-    /// construct manually.
+    /// Internal handle to the underlying JS `PerformanceEntry`.
     ref: PerformanceEntryRef,
   )
 }

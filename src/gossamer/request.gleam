@@ -68,8 +68,7 @@ pub type Request {
     /// The body stream, or `None` if the request has no body. Reading the
     /// stream elsewhere drains it here too.
     body: Option(ReadableStream(Uint8Array)),
-    /// Internal handle to the underlying JS `Request`. Do not construct
-    /// manually.
+    /// Internal handle to the underlying JS `Request`.
     ref: RequestRef,
   )
 }

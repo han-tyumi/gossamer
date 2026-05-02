@@ -40,8 +40,7 @@ pub type Response {
     /// The body stream, or `None` if the response has no body. Reading
     /// the stream elsewhere drains it here too.
     body: Option(ReadableStream(Uint8Array)),
-    /// Internal handle to the underlying JS `Response`. Do not construct
-    /// manually.
+    /// Internal handle to the underlying JS `Response`.
     ref: ResponseRef,
   )
 }
