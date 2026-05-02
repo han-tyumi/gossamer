@@ -1,5 +1,6 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
 import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ffi.ts";
+import { toMessageEvent } from "~/gossamer/message_event.ffi.ts";
 import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -108,7 +109,7 @@ export const on_open: typeof $webSocket.on_open = (socket, handler) => {
 };
 
 export const on_message: typeof $webSocket.on_message = (socket, handler) => {
-  socket.onmessage = (event) => handler(event);
+  socket.onmessage = (event) => handler(toMessageEvent(event));
 };
 
 export const on_error: typeof $webSocket.on_error = (socket, handler) => {

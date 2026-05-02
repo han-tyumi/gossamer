@@ -1,23 +1,26 @@
 import gleam/dynamic.{type Dynamic}
 
+/// Opaque handle to the underlying JS `PerformanceEntry`.
+///
+@external(javascript, "./performance_entry_ref.type.ts", "PerformanceEntryRef$")
+@internal
+pub type PerformanceEntryRef
+
 /// A single performance metric produced by the Performance API.
 ///
 /// See [PerformanceEntry](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEntry) on MDN.
 ///
-@external(javascript, "./performance_entry.type.ts", "PerformanceEntry$")
-pub type PerformanceEntry
-
-@external(javascript, "./performance_entry.ffi.mjs", "name")
-pub fn name(of entry: PerformanceEntry) -> String
-
-@external(javascript, "./performance_entry.ffi.mjs", "entry_type")
-pub fn entry_type(of entry: PerformanceEntry) -> String
-
-@external(javascript, "./performance_entry.ffi.mjs", "start_time")
-pub fn start_time(of entry: PerformanceEntry) -> Float
-
-@external(javascript, "./performance_entry.ffi.mjs", "duration")
-pub fn duration(of entry: PerformanceEntry) -> Float
+pub type PerformanceEntry {
+  PerformanceEntry(
+    name: String,
+    entry_type: String,
+    start_time: Float,
+    duration: Float,
+    /// Internal handle to the underlying JS `PerformanceEntry`. Do not
+    /// construct manually.
+    ref: PerformanceEntryRef,
+  )
+}
 
 /// Extra data associated with the entry, or `Error(Nil)` if none was
 /// provided.

@@ -15,10 +15,10 @@ pub fn time_origin_test() {
 
 pub fn mark_test() {
   let assert Ok(entry) = performance.mark("test-mark")
-  performance_entry.name(entry) |> should.equal("test-mark")
-  performance_entry.entry_type(entry) |> should.equal("mark")
-  should.be_true(performance_entry.start_time(entry) >=. 0.0)
-  performance_entry.duration(entry) |> should.equal(0.0)
+  entry.name |> should.equal("test-mark")
+  entry.entry_type |> should.equal("mark")
+  should.be_true(entry.start_time >=. 0.0)
+  entry.duration |> should.equal(0.0)
   performance.clear_marks()
 }
 
@@ -27,9 +27,9 @@ pub fn measure_test() {
   let assert Ok(_) = performance.mark("measure-end")
   let assert Ok(entry) =
     performance.measure("test-measure", "measure-start", "measure-end")
-  performance_entry.name(entry) |> should.equal("test-measure")
-  performance_entry.entry_type(entry) |> should.equal("measure")
-  should.be_true(performance_entry.duration(entry) >=. 0.0)
+  entry.name |> should.equal("test-measure")
+  entry.entry_type |> should.equal("measure")
+  should.be_true(entry.duration >=. 0.0)
   performance.clear_marks()
   performance.clear_measures()
 }

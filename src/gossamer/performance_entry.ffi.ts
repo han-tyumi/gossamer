@@ -1,28 +1,30 @@
-import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
+import * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export type PerformanceEntry$ = PerformanceEntry;
+export type PerformanceEntryRef$ = PerformanceEntry;
 
-export const name: typeof $performanceEntry.name = (entry) => {
-  return entry.name;
-};
+export function toPerformanceEntry(
+  entry: PerformanceEntry,
+): $performanceEntry.PerformanceEntry$ {
+  return $performanceEntry.PerformanceEntry$PerformanceEntry(
+    entry.name,
+    entry.entryType,
+    entry.startTime,
+    entry.duration,
+    entry,
+  );
+}
 
-export const entry_type: typeof $performanceEntry.entry_type = (entry) => {
-  return entry.entryType;
-};
-
-export const start_time: typeof $performanceEntry.start_time = (entry) => {
-  return entry.startTime;
-};
-
-export const duration: typeof $performanceEntry.duration = (entry) => {
-  return entry.duration;
-};
+function ref(
+  entry: $performanceEntry.PerformanceEntry$,
+): PerformanceEntry {
+  return $performanceEntry.PerformanceEntry$PerformanceEntry$ref(entry);
+}
 
 export const detail: typeof $performanceEntry.detail = (entry) => {
-  return toResult((entry as PerformanceMark).detail);
+  return toResult((ref(entry) as PerformanceMark).detail);
 };
 
 export const to_json: typeof $performanceEntry.to_json = (entry) => {
-  return entry.toJSON();
+  return ref(entry).toJSON();
 };

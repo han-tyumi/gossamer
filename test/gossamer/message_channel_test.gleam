@@ -1,7 +1,6 @@
 import gleam/dynamic/decode
 import gleeunit/should
 import gossamer/message_channel
-import gossamer/message_event
 import gossamer/message_port
 import gossamer/promise
 
@@ -19,7 +18,7 @@ pub fn post_message_test() {
   let resolvers = promise.with_resolvers()
 
   message_port.on_message(port2, fn(event) {
-    let assert Ok(value) = decode.run(message_event.data(event), decode.string)
+    let assert Ok(value) = decode.run(event.data, decode.string)
     resolvers.resolve(value)
     Nil
   })
@@ -54,8 +53,8 @@ pub fn message_event_properties_test() {
   let resolvers = promise.with_resolvers()
 
   message_port.on_message(port2, fn(event) {
-    let _origin = message_event.origin(event)
-    let _last_event_id = message_event.last_event_id(event)
+    event.origin |> should.equal("")
+    event.last_event_id |> should.equal("")
     resolvers.resolve(Nil)
     Nil
   })

@@ -1,4 +1,5 @@
 import gleam/dynamic/decode
+import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer/custom_event
 import gossamer/event
@@ -12,19 +13,19 @@ pub fn new_test() {
 
 pub fn new_with_detail_test() {
   let ev = custom_event.new_with_detail("custom", "hello")
-  let assert Ok(detail) = custom_event.detail(ev)
+  let assert Some(detail) = ev.detail
   let assert Ok(value) = decode.run(detail, decode.string)
   value |> should.equal("hello")
 }
 
 pub fn detail_none_test() {
   let ev = custom_event.new("custom")
-  custom_event.detail(ev) |> should.be_error()
+  ev.detail |> should.equal(None)
 }
 
 pub fn detail_int_test() {
   let ev = custom_event.new_with_detail("custom", 42)
-  let assert Ok(detail) = custom_event.detail(ev)
+  let assert Some(detail) = ev.detail
   let assert Ok(value) = decode.run(detail, decode.int)
   value |> should.equal(42)
 }
