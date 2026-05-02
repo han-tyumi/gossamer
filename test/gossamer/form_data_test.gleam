@@ -1,6 +1,5 @@
 import gleeunit/should
 import gossamer/blob
-import gossamer/file
 import gossamer/form_data
 import gossamer/iterator
 
@@ -46,7 +45,7 @@ pub fn form_data_blob_test() {
     form_data.new()
     |> form_data.append_blob_with_filename("upload", b, "test.txt")
   case form_data.get_file(fd, "upload") {
-    Ok(f) -> should.equal(file.name(f), "test.txt")
+    Ok(f) -> f.name |> should.equal("test.txt")
     Error(Nil) -> should.fail()
   }
 }
@@ -61,8 +60,8 @@ pub fn form_data_get_all_files_test() {
   let files = form_data.get_all_files(fd, "files")
   case files {
     [first, second] -> {
-      should.equal(file.name(first), "a.txt")
-      should.equal(file.name(second), "b.txt")
+      first.name |> should.equal("a.txt")
+      second.name |> should.equal("b.txt")
     }
     _ -> should.fail()
   }
@@ -90,7 +89,7 @@ pub fn form_data_set_blob_with_filename_test() {
     form_data.new()
     |> form_data.set_blob_with_filename("upload", b, "named.txt")
   let assert Ok(f) = form_data.get_file(fd, "upload")
-  file.name(f) |> should.equal("named.txt")
+  f.name |> should.equal("named.txt")
 }
 
 pub fn form_data_get_all_test() {

@@ -16,8 +16,18 @@ function toFileOptions(options: $file.FileOption$[]): FilePropertyBag {
   return result;
 }
 
+export function toFile(file: File): $file.File$ {
+  return $file.File$File(
+    file.name,
+    file.lastModified,
+    file.size,
+    file.type,
+    file,
+  );
+}
+
 export const from_strings: typeof $file.from_strings = (parts, name) => {
-  return new File(toArray(parts), name);
+  return toFile(new File(toArray(parts), name));
 };
 
 export const from_strings_with: typeof $file.from_strings_with = (
@@ -25,11 +35,13 @@ export const from_strings_with: typeof $file.from_strings_with = (
   name,
   options,
 ) => {
-  return new File(toArray(parts), name, toFileOptions(toArray(options)));
+  return toFile(
+    new File(toArray(parts), name, toFileOptions(toArray(options))),
+  );
 };
 
 export const from_blob: typeof $file.from_blob = (blob, name) => {
-  return new File([$blob.Blob$Blob$ref(blob)], name);
+  return toFile(new File([$blob.Blob$Blob$ref(blob)], name));
 };
 
 export const from_blob_with: typeof $file.from_blob_with = (
@@ -37,43 +49,29 @@ export const from_blob_with: typeof $file.from_blob_with = (
   name,
   options,
 ) => {
-  return new File(
-    [$blob.Blob$Blob$ref(blob)],
-    name,
-    toFileOptions(toArray(options)),
+  return toFile(
+    new File(
+      [$blob.Blob$Blob$ref(blob)],
+      name,
+      toFileOptions(toArray(options)),
+    ),
   );
 };
 
-export const name: typeof $file.name = (file) => {
-  return file.name;
-};
-
-export const last_modified: typeof $file.last_modified = (file) => {
-  return file.lastModified;
-};
-
 export const to_blob: typeof $file.to_blob = (file) => {
-  return toBlob(file);
-};
-
-export const size: typeof $file.size = (file) => {
-  return file.size;
-};
-
-export const type_: typeof $file.type_ = (file) => {
-  return file.type;
+  return toBlob($file.File$File$ref(file));
 };
 
 export const array_buffer: typeof $file.array_buffer = (file) => {
-  return toResult.fromPromise(file.arrayBuffer());
+  return toResult.fromPromise($file.File$File$ref(file).arrayBuffer());
 };
 
 export const bytes: typeof $file.bytes = (file) => {
-  return toResult.fromPromise(file.bytes());
+  return toResult.fromPromise($file.File$File$ref(file).bytes());
 };
 
 export const slice: typeof $file.slice = (file, start, end) => {
-  return toBlob(file.slice(start, end));
+  return toBlob($file.File$File$ref(file).slice(start, end));
 };
 
 export const slice_with_type: typeof $file.slice_with_type = (
@@ -82,13 +80,15 @@ export const slice_with_type: typeof $file.slice_with_type = (
   end,
   contentType,
 ) => {
-  return toBlob(file.slice(start, end, contentType));
+  return toBlob($file.File$File$ref(file).slice(start, end, contentType));
 };
 
 export const stream: typeof $file.stream = (file) => {
-  return file.stream() as unknown as ReadableStream<Uint8Array>;
+  return $file.File$File$ref(file).stream() as unknown as ReadableStream<
+    Uint8Array
+  >;
 };
 
 export const text: typeof $file.text = (file) => {
-  return toResult.fromPromise(file.text());
+  return toResult.fromPromise($file.File$File$ref(file).text());
 };

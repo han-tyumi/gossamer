@@ -1,6 +1,7 @@
 import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import * as $formData from "$/gossamer/gossamer/form_data.mjs";
-import { fromArray } from "~/utils/list.ffi.ts";
+import { toFile } from "~/gossamer/file.ffi.ts";
+import { fromArray, fromArrayMapped } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 function toFormDataValue(
@@ -9,7 +10,7 @@ function toFormDataValue(
   if (typeof value === "string") {
     return $formData.FormDataValue$Text(value);
   }
-  return $formData.FormDataValue$FileValue(value);
+  return $formData.FormDataValue$FileValue(toFile(value));
 }
 
 export const new_: typeof $formData.new$ = () => {
@@ -53,7 +54,7 @@ export const get: typeof $formData.get = (formData, name) => {
 
 export const get_file: typeof $formData.get_file = (formData, name) => {
   const value = formData.get(name);
-  return toResult(value instanceof File ? value : null);
+  return toResult(value instanceof File ? toFile(value) : null);
 };
 
 export const get_all: typeof $formData.get_all = (formData, name) => {
@@ -68,8 +69,9 @@ export const get_all_files: typeof $formData.get_all_files = (
   name,
 ) => {
   const values = formData.getAll(name);
-  return fromArray(
+  return fromArrayMapped(
     values.filter((value): value is File => value instanceof File),
+    toFile,
   );
 };
 

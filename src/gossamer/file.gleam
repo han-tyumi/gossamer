@@ -5,13 +5,25 @@ import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/uint8_array.{type Uint8Array}
 
+@external(javascript, "./file_ref.type.ts", "FileRef$")
+@internal
+pub type FileRef
+
 /// A `Blob` with a filename and last-modified timestamp. Commonly obtained
 /// from file inputs or drag-and-drop.
 ///
 /// See [File](https://developer.mozilla.org/en-US/docs/Web/API/File) on MDN.
 ///
-@external(javascript, "./file.type.ts", "File$")
-pub type File
+pub type File {
+  File(
+    name: String,
+    last_modified: Int,
+    size: Int,
+    type_: String,
+    /// Internal handle to the underlying JS `File`.
+    ref: FileRef,
+  )
+}
 
 pub type FileOption {
   Type(String)
@@ -38,20 +50,8 @@ pub fn from_blob_with(
   with options: List(FileOption),
 ) -> File
 
-@external(javascript, "./file.ffi.mjs", "name")
-pub fn name(of file: File) -> String
-
-@external(javascript, "./file.ffi.mjs", "last_modified")
-pub fn last_modified(of file: File) -> Int
-
 @external(javascript, "./file.ffi.mjs", "to_blob")
 pub fn to_blob(file: File) -> Blob
-
-@external(javascript, "./file.ffi.mjs", "size")
-pub fn size(of file: File) -> Int
-
-@external(javascript, "./file.ffi.mjs", "type_")
-pub fn type_(of file: File) -> String
 
 /// Reads the file's contents as an `ArrayBuffer`. Returns an error if
 /// the file cannot be read.

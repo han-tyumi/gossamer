@@ -8,7 +8,7 @@ import gossamer/uint8_array
 
 pub fn file_from_strings_test() {
   let f = file.from_strings(["hello", " ", "world"], "test.txt")
-  should.equal(file.name(f), "test.txt")
+  f.name |> should.equal("test.txt")
 
   let b = file.to_blob(f)
   use text <- promise.then(blob.text(b))
@@ -19,7 +19,7 @@ pub fn file_from_strings_test() {
 pub fn file_from_blob_test() {
   let b = blob.from_string("blob content")
   let f = file.from_blob(b, "from_blob.txt")
-  should.equal(file.name(f), "from_blob.txt")
+  f.name |> should.equal("from_blob.txt")
 
   let converted = file.to_blob(f)
   use text <- promise.then(blob.text(converted))
@@ -29,7 +29,7 @@ pub fn file_from_blob_test() {
 
 pub fn file_last_modified_test() {
   let f = file.from_strings(["data"], "modified.txt")
-  should.be_true(file.last_modified(f) > 0)
+  should.be_true(f.last_modified > 0)
 }
 
 pub fn file_from_strings_with_test() {
@@ -37,25 +37,25 @@ pub fn file_from_strings_with_test() {
     file.from_strings_with(["hello"], "typed.txt", [
       file.Type("text/plain"),
     ])
-  file.name(f) |> should.equal("typed.txt")
-  should.be_true(string.starts_with(file.type_(f), "text/plain"))
+  f.name |> should.equal("typed.txt")
+  should.be_true(string.starts_with(f.type_, "text/plain"))
 }
 
 pub fn file_from_blob_with_test() {
   let b = blob.from_string("blob data")
   let f = file.from_blob_with(b, "blob.txt", [file.Type("text/plain")])
-  file.name(f) |> should.equal("blob.txt")
-  should.be_true(string.starts_with(file.type_(f), "text/plain"))
+  f.name |> should.equal("blob.txt")
+  should.be_true(string.starts_with(f.type_, "text/plain"))
 }
 
 pub fn file_size_test() {
   let f = file.from_strings(["hello"], "size.txt")
-  file.size(f) |> should.equal(5)
+  f.size |> should.equal(5)
 }
 
 pub fn file_type_test() {
   let f = file.from_strings(["data"], "no-type.txt")
-  file.type_(f) |> should.equal("")
+  f.type_ |> should.equal("")
 }
 
 pub fn file_array_buffer_test() {
