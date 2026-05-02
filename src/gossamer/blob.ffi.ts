@@ -5,10 +5,6 @@ export function toBlob(blob: Blob): $blob.Blob$ {
   return $blob.Blob$Blob(blob.size, blob.type, blob);
 }
 
-export function blobRef(blob: $blob.Blob$): Blob {
-  return $blob.Blob$Blob$ref(blob);
-}
-
 export const new_: typeof $blob.new$ = () => {
   return toBlob(new Blob());
 };
@@ -36,15 +32,15 @@ export const from_bytes_with_type: typeof $blob.from_bytes_with_type = (
 };
 
 export const array_buffer: typeof $blob.array_buffer = (blob) => {
-  return toResult.fromPromise(blobRef(blob).arrayBuffer());
+  return toResult.fromPromise($blob.Blob$Blob$ref(blob).arrayBuffer());
 };
 
 export const bytes: typeof $blob.bytes = (blob) => {
-  return toResult.fromPromise(blobRef(blob).bytes());
+  return toResult.fromPromise($blob.Blob$Blob$ref(blob).bytes());
 };
 
 export const slice: typeof $blob.slice = (blob, start, end) => {
-  return toBlob(blobRef(blob).slice(start, end));
+  return toBlob($blob.Blob$Blob$ref(blob).slice(start, end));
 };
 
 export const slice_with_type: typeof $blob.slice_with_type = (
@@ -53,13 +49,15 @@ export const slice_with_type: typeof $blob.slice_with_type = (
   end,
   contentType,
 ) => {
-  return toBlob(blobRef(blob).slice(start, end, contentType));
+  return toBlob($blob.Blob$Blob$ref(blob).slice(start, end, contentType));
 };
 
 export const stream: typeof $blob.stream = (blob) => {
-  return blobRef(blob).stream() as unknown as ReadableStream<Uint8Array>;
+  return $blob.Blob$Blob$ref(blob).stream() as unknown as ReadableStream<
+    Uint8Array
+  >;
 };
 
 export const text: typeof $blob.text = (blob) => {
-  return toResult.fromPromise(blobRef(blob).text());
+  return toResult.fromPromise($blob.Blob$Blob$ref(blob).text());
 };

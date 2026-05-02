@@ -76,7 +76,3 @@ export function toCryptoKey(key: CryptoKey): $cryptoKey.CryptoKey$ {
     key,
   );
 }
-
-export function cryptoKeyRef(key: $cryptoKey.CryptoKey$): CryptoKey {
-  return $cryptoKey.CryptoKey$CryptoKey$ref(key);
-}

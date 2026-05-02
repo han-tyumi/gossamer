@@ -1,5 +1,6 @@
+import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import * as $file from "$/gossamer/gossamer/file.mjs";
-import { blobRef, toBlob } from "~/gossamer/blob.ffi.ts";
+import { toBlob } from "~/gossamer/blob.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -28,7 +29,7 @@ export const from_strings_with: typeof $file.from_strings_with = (
 };
 
 export const from_blob: typeof $file.from_blob = (blob, name) => {
-  return new File([blobRef(blob)], name);
+  return new File([$blob.Blob$Blob$ref(blob)], name);
 };
 
 export const from_blob_with: typeof $file.from_blob_with = (
@@ -36,7 +37,11 @@ export const from_blob_with: typeof $file.from_blob_with = (
   name,
   options,
 ) => {
-  return new File([blobRef(blob)], name, toFileOptions(toArray(options)));
+  return new File(
+    [$blob.Blob$Blob$ref(blob)],
+    name,
+    toFileOptions(toArray(options)),
+  );
 };
 
 export const name: typeof $file.name = (file) => {

@@ -1,5 +1,6 @@
 import type * as $gossamer from "$/gossamer/gossamer.mjs";
-import { requestRef, toRequestInit } from "~/gossamer/request.ffi.ts";
+import * as $request from "$/gossamer/gossamer/request.mjs";
+import { toRequestInit } from "~/gossamer/request.ffi.ts";
 import { toResponse } from "~/gossamer/response.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -76,7 +77,7 @@ export const fetch_url_with: typeof $gossamer.fetch_url_with = (
 
 export const fetch_request: typeof $gossamer.fetch_request = (request) => {
   return toResult.fromPromise(
-    globalThis.fetch(requestRef(request)).then(toResponse),
+    globalThis.fetch($request.Request$Request$ref(request)).then(toResponse),
   );
 };
 
@@ -85,7 +86,10 @@ export const fetch_request_with: typeof $gossamer.fetch_request_with = (
   init,
 ) => {
   return toResult.fromPromise(
-    globalThis.fetch(requestRef(request), toRequestInit(toArray(init)))
+    globalThis.fetch(
+      $request.Request$Request$ref(request),
+      toRequestInit(toArray(init)),
+    )
       .then(toResponse),
   );
 };

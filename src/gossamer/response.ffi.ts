@@ -1,5 +1,6 @@
+import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import * as $response from "$/gossamer/gossamer/response.mjs";
-import { blobRef, toBlob } from "~/gossamer/blob.ffi.ts";
+import { toBlob } from "~/gossamer/blob.ffi.ts";
 import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
@@ -34,10 +35,6 @@ export function toResponse(response: Response): $response.Response$ {
   );
 }
 
-function ref(response: $response.Response$): Response {
-  return $response.Response$Response$ref(response);
-}
-
 export const new_: typeof $response.new$ = () => toResponse(new Response());
 
 export const from_string: typeof $response.from_string = (body) => {
@@ -68,7 +65,7 @@ export const from_bytes_with: typeof $response.from_bytes_with = (
 };
 
 export const from_blob: typeof $response.from_blob = (body) => {
-  return toResponse(new Response(blobRef(body)));
+  return toResponse(new Response($blob.Blob$Blob$ref(body)));
 };
 
 export const from_blob_with: typeof $response.from_blob_with = (
@@ -77,7 +74,9 @@ export const from_blob_with: typeof $response.from_blob_with = (
 ) => {
   return toResult.fromThrows(
     () =>
-      toResponse(new Response(blobRef(body), toResponseInit(toArray(init)))),
+      toResponse(
+        new Response($blob.Blob$Blob$ref(body), toResponseInit(toArray(init))),
+      ),
   );
 };
 
@@ -175,33 +174,43 @@ export const redirect_url_with_status:
   };
 
 export const clone: typeof $response.clone = (response) => {
-  return toResult.fromThrows(() => toResponse(ref(response).clone()));
+  return toResult.fromThrows(() =>
+    toResponse($response.Response$Response$ref(response).clone())
+  );
 };
 
 export const is_body_used: typeof $response.is_body_used = (response) => {
-  return ref(response).bodyUsed;
+  return $response.Response$Response$ref(response).bodyUsed;
 };
 
 export const blob: typeof $response.blob = (response) => {
-  return toResult.fromPromise(ref(response).blob().then(toBlob));
+  return toResult.fromPromise(
+    $response.Response$Response$ref(response).blob().then(toBlob),
+  );
 };
 
 export const array_buffer: typeof $response.array_buffer = (response) => {
-  return toResult.fromPromise(ref(response).arrayBuffer());
+  return toResult.fromPromise(
+    $response.Response$Response$ref(response).arrayBuffer(),
+  );
 };
 
 export const bytes: typeof $response.bytes = (response) => {
-  return toResult.fromPromise(ref(response).bytes());
+  return toResult.fromPromise(
+    $response.Response$Response$ref(response).bytes(),
+  );
 };
 
 export const json: typeof $response.json = (response) => {
-  return toResult.fromPromise(ref(response).json());
+  return toResult.fromPromise($response.Response$Response$ref(response).json());
 };
 
 export const form_data: typeof $response.form_data = (response) => {
-  return toResult.fromPromise(ref(response).formData());
+  return toResult.fromPromise(
+    $response.Response$Response$ref(response).formData(),
+  );
 };
 
 export const text: typeof $response.text = (response) => {
-  return toResult.fromPromise(ref(response).text());
+  return toResult.fromPromise($response.Response$Response$ref(response).text());
 };

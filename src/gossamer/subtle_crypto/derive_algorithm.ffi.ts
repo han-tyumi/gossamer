@@ -1,5 +1,5 @@
+import * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/derive_algorithm.mjs";
-import { cryptoKeyRef } from "~/gossamer/crypto_key.ffi.ts";
 import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 
 export function toDeriveAlgorithm(
@@ -32,6 +32,8 @@ export function toDeriveAlgorithm(
   }
   return {
     name: "ECDH",
-    public: cryptoKeyRef($alg.DeriveAlgorithm$Ecdh$public(algorithm)),
+    public: $cryptoKey.CryptoKey$CryptoKey$ref(
+      $alg.DeriveAlgorithm$Ecdh$public(algorithm),
+    ),
   };
 }

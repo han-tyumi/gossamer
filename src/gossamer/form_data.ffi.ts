@@ -1,5 +1,5 @@
+import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import * as $formData from "$/gossamer/gossamer/form_data.mjs";
-import { blobRef } from "~/gossamer/blob.ffi.ts";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -26,7 +26,7 @@ export const append_blob: typeof $formData.append_blob = (
   name,
   value,
 ) => {
-  formData.append(name, blobRef(value));
+  formData.append(name, $blob.Blob$Blob$ref(value));
   return formData;
 };
 
@@ -37,7 +37,7 @@ export const append_blob_with_filename:
     value,
     filename,
   ) => {
-    formData.append(name, blobRef(value), filename);
+    formData.append(name, $blob.Blob$Blob$ref(value), filename);
     return formData;
   };
 
@@ -83,7 +83,7 @@ export const set: typeof $formData.set = (formData, name, value) => {
 };
 
 export const set_blob: typeof $formData.set_blob = (formData, name, value) => {
-  formData.set(name, blobRef(value));
+  formData.set(name, $blob.Blob$Blob$ref(value));
   return formData;
 };
 
@@ -93,7 +93,7 @@ export const set_blob_with_filename: typeof $formData.set_blob_with_filename = (
   value,
   filename,
 ) => {
-  formData.set(name, blobRef(value), filename);
+  formData.set(name, $blob.Blob$Blob$ref(value), filename);
   return formData;
 };
 

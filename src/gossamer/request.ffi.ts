@@ -1,5 +1,6 @@
+import * as $blob from "$/gossamer/gossamer/blob.mjs";
 import * as $request from "$/gossamer/gossamer/request.mjs";
-import { blobRef, toBlob } from "~/gossamer/blob.ffi.ts";
+import { toBlob } from "~/gossamer/blob.ffi.ts";
 import {
   fromReferrerPolicy,
   toReferrerPolicy,
@@ -39,7 +40,9 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
     } else if ($request.RequestInit$isBodyBytes(option)) {
       result.body = $request.RequestInit$BodyBytes$0(option) as BodyInit;
     } else if ($request.RequestInit$isBodyBlob(option)) {
-      result.body = blobRef($request.RequestInit$BodyBlob$0(option));
+      result.body = $blob.Blob$Blob$ref(
+        $request.RequestInit$BodyBlob$0(option),
+      );
     } else if ($request.RequestInit$isBodyBuffer(option)) {
       result.body = $request.RequestInit$BodyBuffer$0(option);
     } else if ($request.RequestInit$isBodyFormData(option)) {
@@ -109,14 +112,6 @@ export function toRequest(request: Request): $request.Request$ {
   );
 }
 
-export function requestRef(request: $request.Request$): Request {
-  return $request.Request$Request$ref(request);
-}
-
-function ref(request: $request.Request$): Request {
-  return requestRef(request);
-}
-
 export const from_url_string: typeof $request.from_url_string = (url) => {
   return toResult.fromThrows(() => toRequest(new Request(url)));
 };
@@ -144,7 +139,9 @@ export const from_url_with: typeof $request.from_url_with = (
 };
 
 export const from_request: typeof $request.from_request = (existing) => {
-  return toResult.fromThrows(() => toRequest(new Request(ref(existing))));
+  return toResult.fromThrows(() =>
+    toRequest(new Request($request.Request$Request$ref(existing)))
+  );
 };
 
 export const from_request_with: typeof $request.from_request_with = (
@@ -152,38 +149,49 @@ export const from_request_with: typeof $request.from_request_with = (
   init,
 ) => {
   return toResult.fromThrows(() =>
-    toRequest(new Request(ref(existing), toRequestInit(toArray(init))))
+    toRequest(
+      new Request(
+        $request.Request$Request$ref(existing),
+        toRequestInit(toArray(init)),
+      ),
+    )
   );
 };
 
 export const clone: typeof $request.clone = (request) => {
-  return toResult.fromThrows(() => toRequest(ref(request).clone()));
+  return toResult.fromThrows(() =>
+    toRequest($request.Request$Request$ref(request).clone())
+  );
 };
 
 export const is_body_used: typeof $request.is_body_used = (request) => {
-  return ref(request).bodyUsed;
+  return $request.Request$Request$ref(request).bodyUsed;
 };
 
 export const blob: typeof $request.blob = (request) => {
-  return toResult.fromPromise(ref(request).blob().then(toBlob));
+  return toResult.fromPromise(
+    $request.Request$Request$ref(request).blob().then(toBlob),
+  );
 };
 
 export const array_buffer: typeof $request.array_buffer = (request) => {
-  return toResult.fromPromise(ref(request).arrayBuffer());
+  return toResult.fromPromise(
+    $request.Request$Request$ref(request).arrayBuffer(),
+  );
 };
 
 export const bytes: typeof $request.bytes = (request) => {
-  return toResult.fromPromise(ref(request).bytes());
+  return toResult.fromPromise($request.Request$Request$ref(request).bytes());
 };
 
 export const json: typeof $request.json = (request) => {
-  return toResult.fromPromise(ref(request).json());
+  return toResult.fromPromise($request.Request$Request$ref(request).json());
 };
 
 export const form_data: typeof $request.form_data = (request) => {
-  return toResult.fromPromise(ref(request).formData());
+  return toResult.fromPromise($request.Request$Request$ref(request).formData());
 };
 
 export const text: typeof $request.text = (request) => {
-  return toResult.fromPromise(ref(request).text());
+  return toResult.fromPromise($request.Request$Request$ref(request).text());
 };
