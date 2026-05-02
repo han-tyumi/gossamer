@@ -57,9 +57,7 @@ export const url: typeof $webSocket.url = (socket) => {
 };
 
 export const close: typeof $webSocket.close = (socket) => {
-  return toResult.fromThrows(() => {
-    socket.close();
-  });
+  socket.close();
 };
 
 export const close_with: typeof $webSocket.close_with = (

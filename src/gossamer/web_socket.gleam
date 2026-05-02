@@ -77,11 +77,11 @@ pub fn ready_state(of socket: WebSocket) -> ReadyState
 @external(javascript, "./web_socket.ffi.mjs", "url")
 pub fn url(of socket: WebSocket) -> String
 
-/// Closes the WebSocket connection. Returns an error if the connection is
+/// Closes the WebSocket connection. Does nothing if the connection is
 /// already closing or closed.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "close")
-pub fn close(socket: WebSocket) -> Result(Nil, String)
+pub fn close(socket: WebSocket) -> Nil
 
 /// Closes the WebSocket connection with the given code and reason. Returns an
 /// error if the code is invalid (must be 1000 or 3000–4999) or the reason
