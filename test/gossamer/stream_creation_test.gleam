@@ -462,8 +462,30 @@ pub fn transform_controller_error_test() {
       }),
     ])
 
-  let _readable = transform_stream.readable(transform)
-  let _writable = transform_stream.writable(transform)
+  let assert Ok(source) =
+    readable_stream.from_start(fn(controller) {
+      let _ = default_controller.enqueue(controller, "in")
+      let _ = default_controller.close(controller)
+      Nil
+    })
+
+  let assert Ok(transformed) =
+    readable_stream.pipe_through(
+      source,
+      #(
+        transform_stream.readable(transform),
+        transform_stream.writable(transform),
+      ),
+      [],
+    )
+
+  let assert Ok(r) = readable_stream.get_reader(transformed)
+
+  // After Transform calls controller.error, the readable side errors out
+  // and reader.read rejects.
+  use result <- promise.then(reader.read(r))
+  should.be_error(result)
+  promise.resolve(Nil)
 }
 
 pub fn transform_controller_terminate_test() {

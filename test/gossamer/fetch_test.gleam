@@ -418,8 +418,11 @@ pub fn request_mode_test() {
 }
 
 pub fn request_priority_test() {
+  // Default priority is `Auto` per Fetch spec. On Deno the getter is
+  // unimplemented, but the FFI surfaces the undefined as `Auto` so the
+  // value is the same across runtimes.
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _priority = request.priority(req)
+  request.priority(req) |> should.equal(request_priority.Auto)
 }
 
 pub fn request_init_priority_test() {

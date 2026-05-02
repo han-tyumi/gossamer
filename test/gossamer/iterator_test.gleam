@@ -5,23 +5,13 @@ import gossamer/iterator_handler_outcome
 import gossamer/iterator_result
 
 pub fn new_and_next_test() {
-  let values = [1, 2, 3]
-  let index = 0
+  // Cover both `IteratorResult` variants — the callback's return value
+  // round-trips through `next` for each.
+  let yielded = iterator.new(fn(_next) { iterator_result.Yield(42) })
+  iterator.next(yielded) |> should.equal(iterator_result.Yield(42))
 
-  // Create a simple iterator that yields values from a list-like sequence.
-  let iter =
-    iterator.new(fn(_next) {
-      // Since we can't mutate, we rely on the iterator protocol.
-      // Each call returns the next value based on the passed-in next value.
-      iterator_result.Return(Nil)
-    })
-
-  let result = iterator.next(iter)
-  should.equal(result, iterator_result.Return(Nil))
-
-  // Suppress unused variable warnings.
-  let _ = values
-  let _ = index
+  let returned = iterator.new(fn(_next) { iterator_result.Return("done") })
+  iterator.next(returned) |> should.equal(iterator_result.Return("done"))
 }
 
 pub fn stateful_iterator_test() {
@@ -118,11 +108,10 @@ pub fn throw_passes_reason_test() {
 }
 
 pub fn for_test() {
-  // for() calls next() without arguments (next is always None).
-  // Use a finite iterator that returns done immediately after first yield.
-  let iter = iterator.new(fn(_next) { iterator_result.Return(Nil) })
-
+  // `for` consumes the iterator. After it runs, `next` must return Return.
+  let iter = iterator.from_list([1, 2, 3])
   iterator.for(iter, fn(_value) { Nil })
+  iterator.next(iter) |> should.equal(iterator_result.Return(Nil))
 }
 
 pub fn from_list_test() {

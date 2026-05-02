@@ -127,14 +127,16 @@ pub fn throw_passes_reason_test() {
 }
 
 pub fn for_await_test() {
-  // for_await calls next() without arguments (next is always None).
-  // Use a finite iterator that returns done immediately.
-  let iter =
-    async_iterator.new(fn(_next) {
-      promise.resolve(iterator_result.Return(Nil))
-    })
+  // `for_await` consumes the iterator. After it resolves, `next` must
+  // return Return.
+  let iter = async_iterator.from_list([1, 2, 3])
+  use for_result <- promise.then(
+    async_iterator.for_await(iter, fn(_value) { promise.resolve(Nil) }),
+  )
+  should.equal(for_result, Ok(Nil))
 
-  use _ <- promise.then(async_iterator.for_await(iter, fn(_value) { Nil }))
+  use next_result <- promise.then(async_iterator.next(iter))
+  should.equal(next_result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
 
