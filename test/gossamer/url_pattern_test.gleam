@@ -4,20 +4,20 @@ import gossamer/url_pattern
 
 pub fn new_test() {
   let assert Ok(pattern) = url_pattern.new([url_pattern.Pathname("/foo/:id")])
-  url_pattern.pathname(pattern) |> should.equal("/foo/:id")
+  pattern.pathname |> should.equal("/foo/:id")
 }
 
 pub fn from_string_test() {
   let assert Ok(pattern) = url_pattern.from_string("https://example.com/*")
-  url_pattern.protocol(pattern) |> should.equal("https")
-  url_pattern.hostname(pattern) |> should.equal("example.com")
+  pattern.protocol |> should.equal("https")
+  pattern.hostname |> should.equal("example.com")
 }
 
 pub fn from_string_with_base_test() {
   let assert Ok(pattern) =
     url_pattern.from_string_with_base("/foo/*", "https://example.com")
-  url_pattern.hostname(pattern) |> should.equal("example.com")
-  url_pattern.pathname(pattern) |> should.equal("/foo/*")
+  pattern.hostname |> should.equal("example.com")
+  pattern.pathname |> should.equal("/foo/*")
 }
 
 pub fn test_match_test() {
@@ -92,12 +92,12 @@ pub fn properties_test() {
       url_pattern.Search("q=1"),
       url_pattern.Hash("section"),
     ])
-  url_pattern.protocol(pattern) |> should.equal("https")
-  url_pattern.hostname(pattern) |> should.equal("example.com")
-  url_pattern.port(pattern) |> should.equal("8080")
-  url_pattern.pathname(pattern) |> should.equal("/path")
-  url_pattern.search(pattern) |> should.equal("q=1")
-  url_pattern.hash(pattern) |> should.equal("section")
+  pattern.protocol |> should.equal("https")
+  pattern.hostname |> should.equal("example.com")
+  pattern.port |> should.equal("8080")
+  pattern.pathname |> should.equal("/path")
+  pattern.search |> should.equal("q=1")
+  pattern.hash |> should.equal("section")
 }
 
 pub fn username_password_test() {
@@ -106,14 +106,14 @@ pub fn username_password_test() {
       url_pattern.Username("user"),
       url_pattern.Password("pass"),
     ])
-  url_pattern.username(pattern) |> should.equal("user")
-  url_pattern.password(pattern) |> should.equal("pass")
+  pattern.username |> should.equal("user")
+  pattern.password |> should.equal("pass")
 }
 
 pub fn has_reg_exp_groups_test() {
   let assert Ok(simple_pattern) =
     url_pattern.new([url_pattern.Pathname("/foo")])
-  url_pattern.has_reg_exp_groups(simple_pattern) |> should.be_false
+  simple_pattern.has_reg_exp_groups |> should.be_false
 }
 
 pub fn url_pattern_result_fields_test() {

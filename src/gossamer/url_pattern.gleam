@@ -1,13 +1,32 @@
 import gleam/dict.{type Dict}
 import gossamer/js_error.{type JsError}
 
+/// Opaque handle to the underlying JS `URLPattern`.
+///
+@external(javascript, "./url_pattern_ref.type.ts", "URLPatternRef$")
+@internal
+pub type URLPatternRef
+
 /// A pattern for matching URLs, with support for wildcards and named
 /// groups. Useful for routing and URL matching.
 ///
 /// See [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern) on MDN.
 ///
-@external(javascript, "./url_pattern.type.ts", "URLPattern$")
-pub type URLPattern
+pub type URLPattern {
+  URLPattern(
+    protocol: String,
+    username: String,
+    password: String,
+    hostname: String,
+    port: String,
+    pathname: String,
+    search: String,
+    hash: String,
+    has_reg_exp_groups: Bool,
+    /// Internal handle to the underlying JS `URLPattern`.
+    ref: URLPatternRef,
+  )
+}
 
 pub type URLPatternInit {
   Protocol(String)
@@ -93,30 +112,3 @@ pub fn exec_with_base(
   against input: String,
   relative_to base_url: String,
 ) -> Result(URLPatternResult, Nil)
-
-@external(javascript, "./url_pattern.ffi.mjs", "protocol")
-pub fn protocol(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "username")
-pub fn username(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "password")
-pub fn password(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "hostname")
-pub fn hostname(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "port")
-pub fn port(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "pathname")
-pub fn pathname(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "search")
-pub fn search(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "hash")
-pub fn hash(of pattern: URLPattern) -> String
-
-@external(javascript, "./url_pattern.ffi.mjs", "has_reg_exp_groups")
-pub fn has_reg_exp_groups(pattern: URLPattern) -> Bool
