@@ -1,4 +1,5 @@
 import gleam/option.{None, Some}
+import gossamer/abort_signal
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/form_data
@@ -9,7 +10,12 @@ import gossamer/iterator
 import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
+import gossamer/referrer_policy
 import gossamer/request
+import gossamer/request_cache
+import gossamer/request_credentials
+import gossamer/request_destination
+import gossamer/request_mode
 import gossamer/request_priority
 import gossamer/request_redirect
 import gossamer/response
@@ -380,17 +386,21 @@ pub fn headers_get_set_cookie_test() {
 
 pub fn request_cache_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _cache = request.cache(req)
+  request.cache(req) |> should.equal(request_cache.Default)
 }
 
 pub fn request_credentials_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _creds = request.credentials(req)
+  let expected = case runtime.current() {
+    runtime.Bun -> request_credentials.Include
+    runtime.Deno | runtime.Node -> request_credentials.SameOrigin
+  }
+  request.credentials(req) |> should.equal(expected)
 }
 
 pub fn request_destination_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _destination = request.destination(req)
+  request.destination(req) |> should.equal(request_destination.Empty)
 }
 
 pub fn request_redirect_test() {
@@ -400,29 +410,27 @@ pub fn request_redirect_test() {
 
 pub fn request_signal_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _signal = request.signal(req)
+  abort_signal.is_aborted(request.signal(req)) |> should.be_false
 }
 
 pub fn request_referrer_test() {
-  use <- runtime.skip_on(runtime.Deno)
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _ = request.referrer(req)
-}
-
-pub fn request_referrer_panics_on_deno_test() {
-  use <- runtime.only_on(runtime.Deno)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.referrer(req) })
+  let expected = case runtime.current() {
+    runtime.Bun -> ""
+    runtime.Deno | runtime.Node -> "about:client"
+  }
+  request.referrer(req) |> should.equal(expected)
 }
 
 pub fn request_referrer_policy_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _referrer_policy = request.referrer_policy(req)
+  request.referrer_policy(req)
+  |> should.equal(referrer_policy.StrictOriginWhenCrossOrigin)
 }
 
 pub fn request_mode_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  let _mode = request.mode(req)
+  request.mode(req) |> should.equal(request_mode.Cors)
 }
 
 pub fn request_priority_test() {
@@ -448,33 +456,13 @@ pub fn request_init_priority_test() {
 }
 
 pub fn request_is_keepalive_test() {
-  use <- runtime.skip_on_any([runtime.Deno, runtime.Bun])
   let assert Ok(req) = request.from_url_string("https://example.org")
   request.is_keepalive(req) |> should.be_false
 }
 
-pub fn request_is_keepalive_panics_on_deno_test() {
-  use <- runtime.only_on(runtime.Deno)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.is_keepalive(req) })
-}
-
-pub fn request_is_keepalive_panics_on_bun_test() {
-  use <- runtime.only_on(runtime.Bun)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.is_keepalive(req) })
-}
-
 pub fn request_integrity_test() {
-  use <- runtime.skip_on(runtime.Deno)
   let assert Ok(req) = request.from_url_string("https://example.org")
   request.integrity(req) |> should.equal("")
-}
-
-pub fn request_integrity_panics_on_deno_test() {
-  use <- runtime.only_on(runtime.Deno)
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Error(_) = runtime.catching(fn() { request.integrity(req) })
 }
 
 pub fn request_clone_test() {

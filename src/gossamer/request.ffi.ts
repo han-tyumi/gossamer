@@ -23,6 +23,7 @@ import {
   toRequestRedirect,
 } from "~/gossamer/request_redirect.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
@@ -84,6 +85,30 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
   }
   return result;
 }
+
+export const to_fields: typeof $request.to_fields = (request) => {
+  return $request.Fields$Fields(
+    fromHttpMethod(request.method),
+    request.url,
+    request.headers,
+    fromRequestCache(request.cache),
+    fromRequestCredentials(request.credentials),
+    fromRequestDestination(request.destination),
+    fromRequestMode(request.mode),
+    fromRequestPriority(
+      (request as Request & { priority: string | undefined }).priority,
+    ),
+    fromRequestRedirect(request.redirect),
+    fromReferrerPolicy(request.referrerPolicy),
+    request.signal,
+    request.referrer ?? "about:client",
+    request.integrity ?? "",
+    request.keepalive ?? false,
+    toOption(
+      request.body as ReadableStream<Uint8Array> | null,
+    ),
+  );
+};
 
 export const from_url_string: typeof $request.from_url_string = (url) => {
   return toResult.fromThrows(() => new Request(url));
@@ -147,12 +172,7 @@ export const redirect: typeof $request.redirect = (request) => {
 export const signal: typeof $request.signal = (request) => request.signal;
 
 export const referrer: typeof $request.referrer = (request) => {
-  if (request.referrer === undefined) {
-    throw new Error(
-      "request.referrer is unavailable on Deno - see https://github.com/denoland/deno/issues/27763",
-    );
-  }
-  return request.referrer;
+  return request.referrer ?? "about:client";
 };
 
 export const referrer_policy: typeof $request.referrer_policy = (request) => {
@@ -165,26 +185,16 @@ export const mode: typeof $request.mode = (request) => {
 
 export const priority: typeof $request.priority = (request) => {
   return fromRequestPriority(
-    (request as Request & { priority: string }).priority,
+    (request as Request & { priority: string | undefined }).priority,
   );
 };
 
 export const is_keepalive: typeof $request.is_keepalive = (request) => {
-  if (request.keepalive === undefined) {
-    throw new Error(
-      "request.is_keepalive is unavailable on Deno and Bun - see https://github.com/denoland/deno/issues/27763",
-    );
-  }
-  return request.keepalive;
+  return request.keepalive ?? false;
 };
 
 export const integrity: typeof $request.integrity = (request) => {
-  if (request.integrity === undefined) {
-    throw new Error(
-      "request.integrity is unavailable on Deno - see https://github.com/denoland/deno/issues/27763",
-    );
-  }
-  return request.integrity;
+  return request.integrity ?? "";
 };
 
 export const clone: typeof $request.clone = (request) => {

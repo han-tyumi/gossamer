@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/option.{type Option}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
@@ -21,10 +22,67 @@ import gossamer/url_search_params.{type URLSearchParams}
 
 /// An HTTP request.
 ///
+/// Several properties read back differently than what was set in init on
+/// non-compliant runtimes. Tracked upstream as
+/// https://github.com/denoland/deno/issues/27763 (Deno) and
+/// https://github.com/oven-sh/bun/issues/30124 (Bun, plus
+/// https://github.com/oven-sh/bun/issues/17052 for `credentials`). See
+/// per-property doc comments for specifics.
+///
 /// See [Request](https://developer.mozilla.org/en-US/docs/Web/API/Request) on MDN.
 ///
 @external(javascript, "./request.type.ts", "Request$")
 pub type Request
+
+pub type Fields {
+  Fields(
+    method: HttpMethod,
+    url: String,
+    headers: Headers,
+    /// The cache mode. Always `request_cache.Default` on Deno
+    /// (denoland/deno#27763).
+    cache: RequestCache,
+    /// The credentials mode. Always `request_credentials.SameOrigin` on
+    /// Deno (denoland/deno#27763); always `request_credentials.Include`
+    /// on Bun against the spec's `same-origin` default
+    /// (oven-sh/bun#17052).
+    credentials: RequestCredentials,
+    /// The kind of resource requested. Always `request_destination.Empty`
+    /// for user-created requests.
+    destination: RequestDestination,
+    /// The mode. Always `request_mode.Cors` on Deno
+    /// (denoland/deno#27763).
+    mode: RequestMode,
+    /// The priority hint. Always `request_priority.Auto` — no runtime
+    /// currently exposes the getter.
+    priority: RequestPriority,
+    redirect: RequestRedirect,
+    /// The referrer policy. Always
+    /// `referrer_policy.StrictOriginWhenCrossOrigin` on Deno
+    /// (denoland/deno#27763) and Bun (oven-sh/bun#30124).
+    referrer_policy: ReferrerPolicy,
+    signal: AbortSignal,
+    /// The referrer. Always `"about:client"` on Deno
+    /// (denoland/deno#27763); always `""` on Bun (oven-sh/bun#30124).
+    referrer: String,
+    /// The subresource integrity metadata. Always `""` on Deno
+    /// (denoland/deno#27763) and Bun (oven-sh/bun#30124).
+    integrity: String,
+    /// Whether the request can outlive the global in which it was
+    /// created. Always `False` on Deno (denoland/deno#27763) and Bun
+    /// (oven-sh/bun#30124).
+    is_keepalive: Bool,
+    /// The body stream, or `None` if the request has no body. Single-use:
+    /// consuming it (via `blob`, `text`, `json`, etc., or via the stream
+    /// itself) drains all references to it. `Some(stream)` means a stream
+    /// object exists; whether it is still readable is governed by
+    /// `is_body_used` and the stream's own state.
+    body: Option(ReadableStream(Uint8Array)),
+  )
+}
+
+@external(javascript, "./request.ffi.mjs", "to_fields")
+pub fn to_fields(request: Request) -> Fields
 
 pub type RequestInit {
   Method(HttpMethod)
@@ -108,30 +166,21 @@ pub fn url(of request: Request) -> String
 @external(javascript, "./request.ffi.mjs", "headers")
 pub fn headers(of request: Request) -> Headers
 
-/// Returns the cache mode associated with the request.
-///
-/// Note: Deno doesn't expose this getter; on Deno this returns
-/// `request_cache.Default` regardless of the cache mode set on the request.
-/// See https://github.com/denoland/deno/issues/27763
+/// The cache mode. Always `request_cache.Default` on Deno
+/// (denoland/deno#27763).
 ///
 @external(javascript, "./request.ffi.mjs", "cache")
 pub fn cache(of request: Request) -> RequestCache
 
-/// Returns the credentials mode associated with the request.
-///
-/// Note: Deno doesn't expose this getter; on Deno this returns
-/// `request_credentials.SameOrigin` regardless of the credentials mode
-/// set on the request.
-/// See https://github.com/denoland/deno/issues/27763
+/// The credentials mode. Always `request_credentials.SameOrigin` on Deno
+/// (denoland/deno#27763); always `request_credentials.Include` on Bun
+/// against the spec's `same-origin` default (oven-sh/bun#17052).
 ///
 @external(javascript, "./request.ffi.mjs", "credentials")
 pub fn credentials(of request: Request) -> RequestCredentials
 
-/// Returns the kind of resource requested by the request.
-///
-/// Note: Deno doesn't expose this getter; on Deno this returns
-/// `request_destination.Empty`.
-/// See https://github.com/denoland/deno/issues/27763
+/// The kind of resource requested. Always `request_destination.Empty` for
+/// user-created requests.
 ///
 @external(javascript, "./request.ffi.mjs", "destination")
 pub fn destination(of request: Request) -> RequestDestination
@@ -142,55 +191,39 @@ pub fn redirect(of request: Request) -> RequestRedirect
 @external(javascript, "./request.ffi.mjs", "signal")
 pub fn signal(of request: Request) -> AbortSignal
 
-/// Returns the referrer of the request.
-///
-/// Note: Panics on Deno — the property is not exposed.
-/// See https://github.com/denoland/deno/issues/27763
+/// The referrer. Always `"about:client"` on Deno (denoland/deno#27763);
+/// always `""` on Bun (oven-sh/bun#30124).
 ///
 @external(javascript, "./request.ffi.mjs", "referrer")
 pub fn referrer(of request: Request) -> String
 
-/// Returns the referrer policy associated with the request.
-///
-/// Note: Deno doesn't expose this getter; on Deno this returns
-/// `referrer_policy.StrictOriginWhenCrossOrigin` regardless of the policy
-/// set on the request.
-/// See https://github.com/denoland/deno/issues/27763
+/// The referrer policy. Always
+/// `referrer_policy.StrictOriginWhenCrossOrigin` on Deno
+/// (denoland/deno#27763) and Bun (oven-sh/bun#30124).
 ///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
 pub fn referrer_policy(of request: Request) -> ReferrerPolicy
 
-/// Returns the mode associated with the request.
-///
-/// Note: Deno doesn't expose this getter; on Deno this returns
-/// `request_mode.Cors` regardless of the mode set on the request.
-/// See https://github.com/denoland/deno/issues/27763
+/// The mode. Always `request_mode.Cors` on Deno (denoland/deno#27763).
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
 pub fn mode(of request: Request) -> RequestMode
 
-/// Returns the priority hint associated with the request.
-///
-/// Note: Deno doesn't expose this getter; on Deno this returns
-/// `request_priority.Auto` regardless of the priority set on the
-/// request.
-/// See https://github.com/denoland/deno/issues/27763
+/// The priority hint. Always `request_priority.Auto` — no runtime
+/// currently exposes the getter.
 ///
 @external(javascript, "./request.ffi.mjs", "priority")
 pub fn priority(of request: Request) -> RequestPriority
 
-/// Returns whether the request can outlive the global in which it was created.
-///
-/// Note: Panics on Deno and Bun — the property is not exposed.
-/// See https://github.com/denoland/deno/issues/27763
+/// Whether the request can outlive the global in which it was created.
+/// Always `False` on Deno (denoland/deno#27763) and Bun
+/// (oven-sh/bun#30124).
 ///
 @external(javascript, "./request.ffi.mjs", "is_keepalive")
 pub fn is_keepalive(request: Request) -> Bool
 
-/// Returns the subresource integrity metadata of the request.
-///
-/// Note: Panics on Deno — the property is not exposed.
-/// See https://github.com/denoland/deno/issues/27763
+/// The subresource integrity metadata. Always `""` on Deno
+/// (denoland/deno#27763) and Bun (oven-sh/bun#30124).
 ///
 @external(javascript, "./request.ffi.mjs", "integrity")
 pub fn integrity(of request: Request) -> String
@@ -201,8 +234,11 @@ pub fn integrity(of request: Request) -> String
 @external(javascript, "./request.ffi.mjs", "clone")
 pub fn clone(request: Request) -> Result(Request, JsError)
 
-/// The request body as a `ReadableStream`. Returns an error if the request
-/// has no body.
+/// The body stream, or an error if the request has no body. Single-use:
+/// consuming it (via `blob`, `text`, `json`, etc., or via the stream itself)
+/// drains all references to it. `Ok(stream)` means a stream object exists;
+/// whether it is still readable is governed by `is_body_used` and the
+/// stream's own state.
 ///
 @external(javascript, "./request.ffi.mjs", "body")
 pub fn body(of request: Request) -> Result(ReadableStream(Uint8Array), Nil)
