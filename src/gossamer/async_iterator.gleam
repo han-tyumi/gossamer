@@ -71,9 +71,9 @@ pub fn next_with(
 ) -> Promise(Result(IteratorResult(a, return), JsError))
 
 /// Ends iteration early by invoking the iterator's optional `return`
-/// handler. `NoHandler` signals the iterator doesn't define one;
-/// otherwise `Handled` carries the result. Returns an error if the
-/// handler rejects.
+/// handler. `Ok(NoHandler)` if the iterator doesn't define one;
+/// `Ok(Handled)` carries the result the handler produced. Returns an
+/// error if the handler rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "return_")
 pub fn return(
@@ -81,6 +81,7 @@ pub fn return(
 ) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
 
 /// Like `return`, but passes `value` to the iterator's `return` handler.
+/// `value` is discarded if the iterator doesn't define one.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "return_with")
 pub fn return_with(
@@ -89,9 +90,10 @@ pub fn return_with(
 ) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
 
 /// Signals an error to the iterator by invoking its optional `throw`
-/// handler. `NoHandler` signals the iterator doesn't define one;
-/// otherwise `Handled` carries the result. Returns an error if the
-/// handler rejects.
+/// handler. `Ok(NoHandler)` if the iterator doesn't define one — `reason`
+/// is discarded; the caller must decide whether to propagate. `Ok(Handled)`
+/// carries the result the handler produced. Returns an error if the
+/// handler itself rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "throw_")
 pub fn throw(
