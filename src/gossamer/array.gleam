@@ -7,6 +7,13 @@ import gossamer/js_error.{type JsError}
 /// For most Gleam use cases, prefer `List`. This binding exists for JS
 /// interop where a JS `Array` is specifically required.
 ///
+/// Value-based search functions (`includes`, `index_of`,
+/// `last_index_of`) match object values (records, lists, tuples) by
+/// JS reference identity, not value equality — two equal-by-value
+/// tuples constructed separately are distinct. Primitive values use
+/// value equality. Predicate-based search (`find`, `every`, `some`,
+/// etc.) is unaffected.
+///
 /// See [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) on MDN.
 ///
 @external(javascript, "./array.type.ts", "Array$")
