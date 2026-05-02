@@ -1,3 +1,4 @@
+import gleam/option.{None, Some}
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/form_data
@@ -26,7 +27,18 @@ pub fn headers_new_test() {
 
 pub fn headers_from_pairs_test() {
   let assert Ok(hdrs) = headers.from_pairs([#("content-type", "text/plain")])
-  headers.get(hdrs, "content-type") |> should.equal(Ok("text/plain"))
+  headers.get(hdrs, "content-type") |> should.equal(Ok(Some("text/plain")))
+}
+
+pub fn headers_get_none_test() {
+  let hdrs = headers.new()
+  headers.get(hdrs, "x-missing") |> should.equal(Ok(None))
+}
+
+pub fn headers_get_invalid_name_test() {
+  let hdrs = headers.new()
+  // Header names must be valid ByteString tokens; a space is not.
+  headers.get(hdrs, "bad name") |> should.be_error
 }
 
 pub fn headers_append_test() {
@@ -34,14 +46,14 @@ pub fn headers_append_test() {
   let assert Ok(_) = headers.append(hdrs, "x-custom", "value1")
   let assert Ok(_) = headers.append(hdrs, "x-custom", "value2")
   headers.get(hdrs, "x-custom")
-  |> should.equal(Ok("value1, value2"))
+  |> should.equal(Ok(Some("value1, value2")))
 }
 
 pub fn headers_set_test() {
   let hdrs = headers.new()
   let assert Ok(_) = headers.set(hdrs, "x-custom", "value1")
   let assert Ok(_) = headers.set(hdrs, "x-custom", "value2")
-  headers.get(hdrs, "x-custom") |> should.equal(Ok("value2"))
+  headers.get(hdrs, "x-custom") |> should.equal(Ok(Some("value2")))
 }
 
 pub fn headers_delete_test() {
@@ -82,7 +94,7 @@ pub fn request_headers_test() {
       request.Headers(hdrs),
     ])
   headers.get(request.headers(req), "content-type")
-  |> should.equal(Ok("application/json"))
+  |> should.equal(Ok(Some("application/json")))
 }
 
 pub fn request_text_test() {
@@ -266,7 +278,7 @@ pub fn response_redirect_parity_test() {
   let from_url = response.redirect_url(u)
 
   let hdr = fn(r) {
-    let assert Ok(h) = headers.get(response.headers(r), "location")
+    let assert Ok(Some(h)) = headers.get(response.headers(r), "location")
     h
   }
   hdr(from_string) |> should.equal(hdr(from_url))

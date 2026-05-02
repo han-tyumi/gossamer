@@ -1,3 +1,4 @@
+import gleam/option.{type Option}
 import gossamer/iterator.{type Iterator}
 import gossamer/js_error.{type JsError}
 
@@ -40,11 +41,14 @@ pub fn delete(
 ) -> Result(Headers, JsError)
 
 /// Returns the value for `name`, combining multiple values with `, `.
-/// Returns an error if `name` is not a valid ByteString or no such header
-/// exists.
+/// `Ok(None)` if no such header exists. Returns an error if `name` is
+/// not a valid ByteString.
 ///
 @external(javascript, "./headers.ffi.mjs", "get")
-pub fn get(from headers: Headers, name name: String) -> Result(String, JsError)
+pub fn get(
+  from headers: Headers,
+  name name: String,
+) -> Result(Option(String), JsError)
 
 /// Checks whether a header with `name` exists. Returns an error if `name`
 /// is not a valid ByteString.
