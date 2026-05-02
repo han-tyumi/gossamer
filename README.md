@@ -78,3 +78,13 @@ just
 ```sh
 just watch build test
 ```
+
+### Publishing
+
+`gleam publish` packages the contents of `src/` as-is, including the bundled
+`*.ffi.mjs` outputs from esbuild. Run a clean rebuild first so a stale or
+deleted module's bundle can't ship to Hex:
+
+```sh
+just clean build publish
+```
