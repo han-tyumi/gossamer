@@ -210,10 +210,10 @@ Uint16 / Int32 / Uint32 / Float16 / Float32 / Float64 / BigInt64 / BigUint64).
 APIs that the spec restricts to integer types only.
 
 Web APIs that accept any `ArrayBufferView` (`blob.from_typed_array`,
-`response.from_typed_array`, `web_socket.send_typed_array`, `subtle_crypto.*`,
-`byob_reader.read`) take `TypedArray`. `crypto.get_random_values` takes
-`IntTypedArray` to reject float arrays at compile time. `DataView` is not yet
-bound.
+`response.from_typed_array`, `request.RequestInit.BodyTypedArray`,
+`web_socket.send_typed_array`, `subtle_crypto.*`, `byob_reader.read`) take
+`TypedArray`. `crypto.get_random_values` takes `IntTypedArray` to reject float
+arrays at compile time. `DataView` is not yet bound.
 
 ## Out of Scope
 
