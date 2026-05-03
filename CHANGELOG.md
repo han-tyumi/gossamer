@@ -1,3 +1,15 @@
+## 9.1.0 (2026-05-03)
+
+### Features
+
+- bind DataView
+- add from_data_view to Blob and Response
+- add WebSocket send_data_view and Request BodyDataView
+- add BYOBReader read_data_view
+- add SubtleCrypto DataView companions
+- add SubtleCrypto ArrayBuffer companions
+- add Blob from_buffer constructors
+
 ## 9.0.0 (2026-05-03)
 
 ### Breaking Changes
