@@ -1,3 +1,50 @@
+## 9.0.0 (2026-05-03)
+
+### Breaking Changes
+
+- web_socket.send_bytes is renamed to send_typed_array and now takes TypedArray
+  instead of Uint8Array. Wrap existing Uint8Array values at the call site:
+  web_socket.send_typed_array(ws, typed_array.Uint8(bytes)).
+- blob.from_bytes / blob.from_bytes_with_type / response.from_bytes /
+  response.from_bytes_with are renamed to from_typed_array /
+  from_typed_array_with_type / from_typed_array / from_typed_array_with
+  respectively, and now take TypedArray instead of Uint8Array. Wrap existing
+  Uint8Array values at the call site, e.g.
+  blob.from_typed_array(typed_array.Uint8(bytes)).
+- subtle_crypto.digest / encrypt / decrypt / sign / verify / import_key /
+  unwrap_key / unwrap_key_jwk now take TypedArray instead of Uint8Array for
+  their BufferSource-typed parameters. Wrap existing Uint8Array values at the
+  call site, e.g. subtle_crypto.encrypt(algo, key,
+  typed_array.Uint8(plaintext)).
+- byob_reader.read now takes TypedArray instead of Uint8Array and returns
+  ReadResult(TypedArray). Wrap the input view as a TypedArray variant at the
+  call site, and pattern-match the result to recover the concrete type.
+- crypto.get_random_values now takes IntTypedArray instead of Uint8Array and
+  returns IntTypedArray. Wrap the input array as an IntTypedArray variant at the
+  call site, e.g. crypto.get_random_values(int_typed_array.Uint8(buffer)), then
+  pattern-match the result to recover the concrete type.
+- every Uint8Array field on encrypt_algorithm / derive_algorithm /
+  wrap_algorithm / key_pair_gen_algorithm now takes TypedArray. Wrap existing
+  Uint8Array values at the call site, e.g.
+  encrypt_algorithm.AesGcm(typed_array.Uint8(iv)) and
+  key_pair_gen_algorithm.Rsa(name, modulus_length,
+  typed_array.Uint8(public_exponent), hash).
+- request.RequestInit.BodyBytes is renamed to BodyTypedArray and now takes
+  TypedArray instead of Uint8Array. Wrap existing Uint8Array values at the call
+  site, e.g. request.BodyTypedArray(typed_array.Uint8(bytes)).
+
+### Features
+
+- bind BigInt
+- foundation for typed array bindings
+- migrate WebSocket to TypedArray
+- migrate Blob and Response to TypedArray
+- migrate SubtleCrypto to TypedArray
+- migrate BYOBReader to TypedArray
+- migrate Crypto.get_random_values to IntTypedArray
+- migrate SubtleCrypto algorithm types to TypedArray
+- migrate Request body bytes to TypedArray
+
 ## 8.5.0 (2026-05-02)
 
 ### Features
