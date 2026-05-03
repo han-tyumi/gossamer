@@ -374,6 +374,191 @@ pub fn wrap_unwrap_key_test() {
   promise.resolve(Nil)
 }
 
+pub fn digest_buffer_test() {
+  let bytes = uint8_array.from_list([1, 2, 3])
+  let buffer = uint8_array.buffer(bytes)
+  use result <- promise.then(subtle_crypto.digest_buffer(
+    hash_algorithm.Sha256,
+    buffer,
+  ))
+  let assert Ok(buf) = result
+  array_buffer.byte_length(buf) |> should.equal(32)
+  promise.resolve(Nil)
+}
+
+pub fn encrypt_decrypt_buffer_test() {
+  use result <- promise.then(
+    subtle_crypto.generate_key(
+      key_gen_algorithm.Aes(aes_algorithm.AesGcm, 256),
+      True,
+      [key_usage.Encrypt, key_usage.Decrypt],
+    ),
+  )
+  let assert Ok(key) = result
+
+  let assert Ok(iv_source) = uint8_array.from_length(12)
+  let assert Ok(int_typed_array.Uint8(iv)) =
+    crypto.get_random_values(int_typed_array.Uint8(iv_source))
+
+  let plaintext_bytes = uint8_array.from_list([72, 105])
+  let plaintext = uint8_array.buffer(plaintext_bytes)
+
+  use result <- promise.then(subtle_crypto.encrypt_buffer(
+    encrypt_algorithm.AesGcm(typed_array.Uint8(iv)),
+    key,
+    plaintext,
+  ))
+  let assert Ok(ciphertext) = result
+  should.be_true(array_buffer.byte_length(ciphertext) > 0)
+
+  use result <- promise.then(subtle_crypto.decrypt_buffer(
+    encrypt_algorithm.AesGcm(typed_array.Uint8(iv)),
+    key,
+    ciphertext,
+  ))
+  let assert Ok(decrypted) = result
+  let decrypted_bytes = uint8_array.from_buffer(decrypted)
+  uint8_array.byte_length(decrypted_bytes) |> should.equal(2)
+  promise.resolve(Nil)
+}
+
+pub fn sign_verify_buffer_test() {
+  use result <- promise.then(
+    subtle_crypto.generate_key_pair(
+      key_pair_gen_algorithm.Ec(ec_algorithm.Ecdsa, named_curve.P256),
+      True,
+      [key_usage.Sign, key_usage.Verify],
+    ),
+  )
+  let assert Ok(pair) = result
+  let subtle_crypto.CryptoKeyPair(public_key:, private_key:) = pair
+
+  let data_bytes = uint8_array.from_list([1, 2, 3])
+  let data = uint8_array.buffer(data_bytes)
+
+  use result <- promise.then(subtle_crypto.sign_buffer(
+    sign_algorithm.Ecdsa(hash_algorithm.Sha256),
+    private_key,
+    data,
+  ))
+  let assert Ok(signature) = result
+  should.be_true(array_buffer.byte_length(signature) > 0)
+
+  use result <- promise.then(subtle_crypto.verify_buffer(
+    sign_algorithm.Ecdsa(hash_algorithm.Sha256),
+    public_key,
+    signature,
+    data,
+  ))
+  let assert Ok(verified) = result
+  should.be_true(verified)
+  promise.resolve(Nil)
+}
+
+pub fn import_key_buffer_test() {
+  let assert Ok(raw_source) = uint8_array.from_length(16)
+  let assert Ok(int_typed_array.Uint8(raw)) =
+    crypto.get_random_values(int_typed_array.Uint8(raw_source))
+  let raw_buffer = uint8_array.buffer(raw)
+
+  use result <- promise.then(
+    subtle_crypto.import_key_buffer(
+      key_format.Raw,
+      raw_buffer,
+      import_algorithm.Other("AES-GCM"),
+      True,
+      [key_usage.Encrypt, key_usage.Decrypt],
+    ),
+  )
+  let assert Ok(key) = result
+  crypto_key.is_extractable(key) |> should.be_true
+  promise.resolve(Nil)
+}
+
+pub fn unwrap_key_buffer_test() {
+  use result <- promise.then(
+    subtle_crypto.generate_key(
+      key_gen_algorithm.Aes(aes_algorithm.AesKw, 256),
+      True,
+      [key_usage.WrapKey, key_usage.UnwrapKey],
+    ),
+  )
+  let assert Ok(wrapping_key) = result
+
+  use result <- promise.then(
+    subtle_crypto.generate_key(
+      key_gen_algorithm.Aes(aes_algorithm.AesGcm, 256),
+      True,
+      [key_usage.Encrypt],
+    ),
+  )
+  let assert Ok(key_to_wrap) = result
+
+  use result <- promise.then(subtle_crypto.wrap_key(
+    key_format.Raw,
+    key_to_wrap,
+    wrapping_key,
+    wrap_algorithm.Other("AES-KW"),
+  ))
+  let assert Ok(wrapped) = result
+
+  use result <- promise.then(
+    subtle_crypto.unwrap_key_buffer(
+      key_format.Raw,
+      wrapped,
+      wrapping_key,
+      wrap_algorithm.Other("AES-KW"),
+      import_algorithm.Other("AES-GCM"),
+      True,
+      [key_usage.Encrypt],
+    ),
+  )
+  let assert Ok(unwrapped) = result
+  crypto_key.type_(unwrapped) |> should.equal(key_type.Secret)
+  promise.resolve(Nil)
+}
+
+pub fn unwrap_key_jwk_buffer_test() {
+  use result <- promise.then(
+    subtle_crypto.generate_key(
+      key_gen_algorithm.Aes(aes_algorithm.AesKw, 256),
+      True,
+      [key_usage.WrapKey, key_usage.UnwrapKey],
+    ),
+  )
+  let assert Ok(wrapping_key) = result
+
+  use result <- promise.then(
+    subtle_crypto.generate_key(
+      key_gen_algorithm.Aes(aes_algorithm.AesGcm, 256),
+      True,
+      [key_usage.Encrypt],
+    ),
+  )
+  let assert Ok(key_to_wrap) = result
+
+  use result <- promise.then(subtle_crypto.wrap_key_jwk(
+    key_to_wrap,
+    wrapping_key,
+    wrap_algorithm.Other("AES-KW"),
+  ))
+  let assert Ok(wrapped_jwk) = result
+
+  use result <- promise.then(
+    subtle_crypto.unwrap_key_jwk_buffer(
+      wrapped_jwk,
+      wrapping_key,
+      wrap_algorithm.Other("AES-KW"),
+      import_algorithm.Other("AES-GCM"),
+      True,
+      [key_usage.Encrypt],
+    ),
+  )
+  let assert Ok(unwrapped) = result
+  crypto_key.type_(unwrapped) |> should.equal(key_type.Secret)
+  promise.resolve(Nil)
+}
+
 pub fn digest_data_view_test() {
   let bytes = uint8_array.from_list([1, 2, 3])
   let buffer = uint8_array.buffer(bytes)

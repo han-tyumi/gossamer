@@ -30,6 +30,14 @@ pub fn digest(
   data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
+/// Like `digest`, but reads `data` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "digest_buffer")
+pub fn digest_buffer(
+  algorithm algorithm: HashAlgorithm,
+  data data: ArrayBuffer,
+) -> Promise(Result(ArrayBuffer, JsError))
+
 /// Like `digest`, but reads `data` from a `DataView`.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest_data_view")
@@ -47,6 +55,15 @@ pub fn encrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
   data data: TypedArray,
+) -> Promise(Result(ArrayBuffer, JsError))
+
+/// Like `encrypt`, but reads `data` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "encrypt_buffer")
+pub fn encrypt_buffer(
+  algorithm algorithm: EncryptAlgorithm,
+  key key: CryptoKey,
+  data data: ArrayBuffer,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Like `encrypt`, but reads `data` from a `DataView`.
@@ -69,6 +86,15 @@ pub fn decrypt(
   data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
+/// Like `decrypt`, but reads `data` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "decrypt_buffer")
+pub fn decrypt_buffer(
+  algorithm algorithm: EncryptAlgorithm,
+  key key: CryptoKey,
+  data data: ArrayBuffer,
+) -> Promise(Result(ArrayBuffer, JsError))
+
 /// Like `decrypt`, but reads `data` from a `DataView`.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "decrypt_data_view")
@@ -89,6 +115,15 @@ pub fn sign(
   data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
+/// Like `sign`, but reads `data` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "sign_buffer")
+pub fn sign_buffer(
+  algorithm algorithm: SignAlgorithm,
+  key key: CryptoKey,
+  data data: ArrayBuffer,
+) -> Promise(Result(ArrayBuffer, JsError))
+
 /// Like `sign`, but reads `data` from a `DataView`.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "sign_data_view")
@@ -107,6 +142,18 @@ pub fn verify(
   key key: CryptoKey,
   signature signature: TypedArray,
   data data: TypedArray,
+) -> Promise(Result(Bool, JsError))
+
+/// Like `verify`, but reads `signature` and `data` from `ArrayBuffer`s.
+/// Both must be `ArrayBuffer`s; mixed-type calls convert to a single
+/// shape via `uint8_array.from_buffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "verify_buffer")
+pub fn verify_buffer(
+  algorithm algorithm: SignAlgorithm,
+  key key: CryptoKey,
+  signature signature: ArrayBuffer,
+  data data: ArrayBuffer,
 ) -> Promise(Result(Bool, JsError))
 
 /// Like `verify`, but reads `signature` and `data` from `DataView`s. Both
@@ -148,6 +195,17 @@ pub fn generate_key_pair(
 pub fn import_key(
   format format: KeyFormat,
   key_data data: TypedArray,
+  algorithm algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
+) -> Promise(Result(CryptoKey, JsError))
+
+/// Like `import_key`, but reads `key_data` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "import_key_buffer")
+pub fn import_key_buffer(
+  format format: KeyFormat,
+  key_data data: ArrayBuffer,
   algorithm algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
@@ -247,6 +305,19 @@ pub fn unwrap_key(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, JsError))
 
+/// Like `unwrap_key`, but reads `wrapped_key` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_buffer")
+pub fn unwrap_key_buffer(
+  format format: KeyFormat,
+  wrapped_key wrapped_key: ArrayBuffer,
+  unwrapping_key unwrapping_key: CryptoKey,
+  unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
+  unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
+) -> Promise(Result(CryptoKey, JsError))
+
 /// Like `unwrap_key`, but reads `wrapped_key` from a `DataView`.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_data_view")
@@ -265,6 +336,18 @@ pub fn unwrap_key_data_view(
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
   wrapped_key wrapped_key: TypedArray,
+  unwrapping_key unwrapping_key: CryptoKey,
+  unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
+  unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
+  extractable extractable: Bool,
+  usages usages: List(KeyUsage),
+) -> Promise(Result(CryptoKey, JsError))
+
+/// Like `unwrap_key_jwk`, but reads `wrapped_key` from an `ArrayBuffer`.
+///
+@external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk_buffer")
+pub fn unwrap_key_jwk_buffer(
+  wrapped_key wrapped_key: ArrayBuffer,
   unwrapping_key unwrapping_key: CryptoKey,
   unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
