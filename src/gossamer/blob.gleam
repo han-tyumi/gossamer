@@ -24,15 +24,6 @@ pub fn to_fields(blob: Blob) -> Fields
 @external(javascript, "./blob.ffi.mjs", "new_")
 pub fn new() -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_string")
-pub fn from_string(content: String) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_string_with_type")
-pub fn from_string_with_type(
-  content: String,
-  content_type content_type: String,
-) -> Blob
-
 @external(javascript, "./blob.ffi.mjs", "from_buffer")
 pub fn from_buffer(bytes: ArrayBuffer) -> Blob
 
@@ -42,21 +33,30 @@ pub fn from_buffer_with_type(
   content_type content_type: String,
 ) -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_typed_array")
-pub fn from_typed_array(bytes: TypedArray) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_typed_array_with_type")
-pub fn from_typed_array_with_type(
-  bytes: TypedArray,
-  content_type content_type: String,
-) -> Blob
-
 @external(javascript, "./blob.ffi.mjs", "from_data_view")
 pub fn from_data_view(bytes: DataView) -> Blob
 
 @external(javascript, "./blob.ffi.mjs", "from_data_view_with_type")
 pub fn from_data_view_with_type(
   bytes: DataView,
+  content_type content_type: String,
+) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_string")
+pub fn from_string(content: String) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_string_with_type")
+pub fn from_string_with_type(
+  content: String,
+  content_type content_type: String,
+) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_typed_array")
+pub fn from_typed_array(bytes: TypedArray) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_typed_array_with_type")
+pub fn from_typed_array_with_type(
+  bytes: TypedArray,
   content_type content_type: String,
 ) -> Blob
 

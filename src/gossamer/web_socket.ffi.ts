@@ -78,21 +78,6 @@ export const close_with: typeof $webSocket.close_with = (
   });
 };
 
-export const send_string: typeof $webSocket.send_string = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
-};
-
-export const send_typed_array: typeof $webSocket.send_typed_array = (
-  socket,
-  data,
-) => {
-  return toResult.fromThrows(() => {
-    socket.send(unwrapTypedArray(data));
-  });
-};
-
 export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
   return toResult.fromThrows(() => {
     socket.send(data);
@@ -111,6 +96,21 @@ export const send_data_view: typeof $webSocket.send_data_view = (
 ) => {
   return toResult.fromThrows(() => {
     socket.send(data);
+  });
+};
+
+export const send_string: typeof $webSocket.send_string = (socket, data) => {
+  return toResult.fromThrows(() => {
+    socket.send(data);
+  });
+};
+
+export const send_typed_array: typeof $webSocket.send_typed_array = (
+  socket,
+  data,
+) => {
+  return toResult.fromThrows(() => {
+    socket.send(unwrapTypedArray(data));
   });
 };
 

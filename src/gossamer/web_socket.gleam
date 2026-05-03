@@ -115,26 +115,6 @@ pub fn close_with(
   reason reason: String,
 ) -> Result(Nil, JsError)
 
-/// Sends a string through the WebSocket. Returns an error if the
-/// connection is still connecting. Data sent after the connection is
-/// closing or closed is silently discarded.
-///
-@external(javascript, "./web_socket.ffi.mjs", "send_string")
-pub fn send_string(
-  to socket: WebSocket,
-  data data: String,
-) -> Result(Nil, JsError)
-
-/// Sends binary data as a `TypedArray` through the WebSocket. Returns
-/// an error if the connection is still connecting. Data sent after the
-/// connection is closing or closed is silently discarded.
-///
-@external(javascript, "./web_socket.ffi.mjs", "send_typed_array")
-pub fn send_typed_array(
-  to socket: WebSocket,
-  data data: TypedArray,
-) -> Result(Nil, JsError)
-
 /// Sends a `Blob` through the WebSocket. Returns an error if the
 /// connection is still connecting. Data sent after the connection is
 /// closing or closed is silently discarded.
@@ -160,6 +140,26 @@ pub fn send_buffer(
 pub fn send_data_view(
   to socket: WebSocket,
   data data: DataView,
+) -> Result(Nil, JsError)
+
+/// Sends a string through the WebSocket. Returns an error if the
+/// connection is still connecting. Data sent after the connection is
+/// closing or closed is silently discarded.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_string")
+pub fn send_string(
+  to socket: WebSocket,
+  data data: String,
+) -> Result(Nil, JsError)
+
+/// Sends binary data as a `TypedArray` through the WebSocket. Returns
+/// an error if the connection is still connecting. Data sent after the
+/// connection is closing or closed is silently discarded.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_typed_array")
+pub fn send_typed_array(
+  to socket: WebSocket,
+  data data: TypedArray,
 ) -> Result(Nil, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")

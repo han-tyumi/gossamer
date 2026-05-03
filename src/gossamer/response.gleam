@@ -60,36 +60,6 @@ pub type ResponseInit {
 @external(javascript, "./response.ffi.mjs", "new_")
 pub fn new() -> Response
 
-/// Creates a `Response` with a string body.
-///
-@external(javascript, "./response.ffi.mjs", "from_string")
-pub fn from_string(body: String) -> Response
-
-/// Creates a `Response` with a string body and init options. Returns an
-/// error if `init` contains a status outside `200`–`599` or an invalid status
-/// text.
-///
-@external(javascript, "./response.ffi.mjs", "from_string_with")
-pub fn from_string_with(
-  body: String,
-  with init: List(ResponseInit),
-) -> Result(Response, JsError)
-
-/// Creates a `Response` with a `TypedArray` body.
-///
-@external(javascript, "./response.ffi.mjs", "from_typed_array")
-pub fn from_typed_array(body: TypedArray) -> Response
-
-/// Creates a `Response` with a `TypedArray` body and init options.
-/// Returns an error if `init` contains a status outside `200`–`599` or
-/// an invalid status text.
-///
-@external(javascript, "./response.ffi.mjs", "from_typed_array_with")
-pub fn from_typed_array_with(
-  body: TypedArray,
-  with init: List(ResponseInit),
-) -> Result(Response, JsError)
-
 /// Creates a `Response` with a `Blob` body.
 ///
 @external(javascript, "./response.ffi.mjs", "from_blob")
@@ -151,6 +121,22 @@ pub fn from_form_data_with(
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 
+/// Creates a `Response` with `data` serialized as JSON. Returns an error
+/// if `data` contains cycles or non-serializable values.
+///
+@external(javascript, "./response.ffi.mjs", "from_json")
+pub fn from_json(data: a) -> Result(Response, JsError)
+
+/// Creates a `Response` with `data` serialized as JSON and init options.
+/// Returns an error if `data` is not serializable, or `init` contains a
+/// status outside `200`–`599` or an invalid status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_json_with")
+pub fn from_json_with(
+  data: a,
+  with init: List(ResponseInit),
+) -> Result(Response, JsError)
+
 /// Creates a `Response` with a `URLSearchParams` body. The content type
 /// is set to `application/x-www-form-urlencoded` automatically.
 ///
@@ -185,19 +171,33 @@ pub fn from_stream_with(
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 
-/// Creates a `Response` with `data` serialized as JSON. Returns an error
-/// if `data` contains cycles or non-serializable values.
+/// Creates a `Response` with a string body.
 ///
-@external(javascript, "./response.ffi.mjs", "from_json")
-pub fn from_json(data: a) -> Result(Response, JsError)
+@external(javascript, "./response.ffi.mjs", "from_string")
+pub fn from_string(body: String) -> Response
 
-/// Creates a `Response` with `data` serialized as JSON and init options.
-/// Returns an error if `data` is not serializable, or `init` contains a
-/// status outside `200`–`599` or an invalid status text.
+/// Creates a `Response` with a string body and init options. Returns an
+/// error if `init` contains a status outside `200`–`599` or an invalid status
+/// text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_json_with")
-pub fn from_json_with(
-  data: a,
+@external(javascript, "./response.ffi.mjs", "from_string_with")
+pub fn from_string_with(
+  body: String,
+  with init: List(ResponseInit),
+) -> Result(Response, JsError)
+
+/// Creates a `Response` with a `TypedArray` body.
+///
+@external(javascript, "./response.ffi.mjs", "from_typed_array")
+pub fn from_typed_array(body: TypedArray) -> Response
+
+/// Creates a `Response` with a `TypedArray` body and init options.
+/// Returns an error if `init` contains a status outside `200`–`599` or
+/// an invalid status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_typed_array_with")
+pub fn from_typed_array_with(
+  body: TypedArray,
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 

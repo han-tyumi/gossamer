@@ -37,36 +37,6 @@ export const to_fields: typeof $response.to_fields = (response) => {
 
 export const new_: typeof $response.new$ = () => new Response();
 
-export const from_string: typeof $response.from_string = (body) => {
-  return new Response(body);
-};
-
-export const from_string_with: typeof $response.from_string_with = (
-  body,
-  init,
-) => {
-  return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
-  );
-};
-
-export const from_typed_array: typeof $response.from_typed_array = (body) => {
-  return new Response(unwrapTypedArray(body) as BodyInit);
-};
-
-export const from_typed_array_with: typeof $response.from_typed_array_with = (
-  body,
-  init,
-) => {
-  return toResult.fromThrows(
-    () =>
-      new Response(
-        unwrapTypedArray(body) as BodyInit,
-        toResponseInit(toArray(init)),
-      ),
-  );
-};
-
 export const from_blob: typeof $response.from_blob = (body) => {
   return new Response(body);
 };
@@ -123,6 +93,19 @@ export const from_form_data_with: typeof $response.from_form_data_with = (
   );
 };
 
+export const from_json: typeof $response.from_json = (data) => {
+  return toResult.fromThrows(() => Response.json(data));
+};
+
+export const from_json_with: typeof $response.from_json_with = (
+  data,
+  init,
+) => {
+  return toResult.fromThrows(() =>
+    Response.json(data, toResponseInit(toArray(init)))
+  );
+};
+
 export const from_params: typeof $response.from_params = (body) => {
   return new Response(body);
 };
@@ -149,16 +132,33 @@ export const from_stream_with: typeof $response.from_stream_with = (
   );
 };
 
-export const from_json: typeof $response.from_json = (data) => {
-  return toResult.fromThrows(() => Response.json(data));
+export const from_string: typeof $response.from_string = (body) => {
+  return new Response(body);
 };
 
-export const from_json_with: typeof $response.from_json_with = (
-  data,
+export const from_string_with: typeof $response.from_string_with = (
+  body,
   init,
 ) => {
-  return toResult.fromThrows(() =>
-    Response.json(data, toResponseInit(toArray(init)))
+  return toResult.fromThrows(
+    () => new Response(body, toResponseInit(toArray(init))),
+  );
+};
+
+export const from_typed_array: typeof $response.from_typed_array = (body) => {
+  return new Response(unwrapTypedArray(body) as BodyInit);
+};
+
+export const from_typed_array_with: typeof $response.from_typed_array_with = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () =>
+      new Response(
+        unwrapTypedArray(body) as BodyInit,
+        toResponseInit(toArray(init)),
+      ),
   );
 };
 
