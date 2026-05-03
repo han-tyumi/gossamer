@@ -56,6 +56,21 @@ export const read: typeof $byobReader.read = (
   );
 };
 
+export const read_data_view: typeof $byobReader.read_data_view = (
+  reader: ReadableStreamBYOBReader,
+  view,
+  options,
+) => {
+  return toResult.fromPromise(
+    reader.read(view, toByobReaderReadOptions(options)).then((result) => {
+      if (result.done) {
+        return ReadResult$Done(toOption(result.value ?? null));
+      }
+      return ReadResult$Value(result.value);
+    }),
+  );
+};
+
 export const release_lock: typeof $byobReader.release_lock = (
   reader: ReadableStreamBYOBReader,
 ) => {
