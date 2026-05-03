@@ -2,6 +2,7 @@ import gleam/string
 import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
+import gossamer/data_view
 import gossamer/promise
 import gossamer/typed_array
 import gossamer/uint8_array
@@ -87,4 +88,19 @@ pub fn blob_slice_with_type_test() {
 pub fn blob_stream_test() {
   let b = blob.from_string("stream me")
   let _stream = blob.stream(b)
+}
+
+pub fn blob_from_data_view_test() {
+  let assert Ok(buffer) = array_buffer.new(8)
+  let assert Ok(view) = data_view.new(buffer)
+  let b = blob.from_data_view(view)
+  should.equal(blob.size(b), 8)
+}
+
+pub fn blob_from_data_view_with_type_test() {
+  let assert Ok(buffer) = array_buffer.new(4)
+  let assert Ok(view) = data_view.new(buffer)
+  let b = blob.from_data_view_with_type(view, "application/octet-stream")
+  should.equal(blob.size(b), 4)
+  should.equal(blob.type_(b), "application/octet-stream")
 }

@@ -2,6 +2,7 @@ import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/data_view.{type DataView}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_status.{type HttpStatus}
@@ -116,6 +117,21 @@ pub fn from_buffer(body: ArrayBuffer) -> Response
 @external(javascript, "./response.ffi.mjs", "from_buffer_with")
 pub fn from_buffer_with(
   body: ArrayBuffer,
+  with init: List(ResponseInit),
+) -> Result(Response, JsError)
+
+/// Creates a `Response` with a `DataView` body.
+///
+@external(javascript, "./response.ffi.mjs", "from_data_view")
+pub fn from_data_view(body: DataView) -> Response
+
+/// Creates a `Response` with a `DataView` body and init options. Returns
+/// an error if `init` contains a status outside `200`–`599` or an invalid
+/// status text.
+///
+@external(javascript, "./response.ffi.mjs", "from_data_view_with")
+pub fn from_data_view_with(
+  body: DataView,
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 

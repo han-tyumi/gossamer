@@ -93,6 +93,23 @@ export const from_buffer_with: typeof $response.from_buffer_with = (
   );
 };
 
+export const from_data_view: typeof $response.from_data_view = (body) => {
+  return new Response(body as unknown as BodyInit);
+};
+
+export const from_data_view_with: typeof $response.from_data_view_with = (
+  body,
+  init,
+) => {
+  return toResult.fromThrows(
+    () =>
+      new Response(
+        body as unknown as BodyInit,
+        toResponseInit(toArray(init)),
+      ),
+  );
+};
+
 export const from_form_data: typeof $response.from_form_data = (body) => {
   return new Response(body);
 };

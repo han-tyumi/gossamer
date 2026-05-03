@@ -1,4 +1,5 @@
 import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/data_view.{type DataView}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
@@ -38,6 +39,15 @@ pub fn from_typed_array(bytes: TypedArray) -> Blob
 @external(javascript, "./blob.ffi.mjs", "from_typed_array_with_type")
 pub fn from_typed_array_with_type(
   bytes: TypedArray,
+  content_type content_type: String,
+) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_data_view")
+pub fn from_data_view(bytes: DataView) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_data_view_with_type")
+pub fn from_data_view_with_type(
+  bytes: DataView,
   content_type content_type: String,
 ) -> Blob
 

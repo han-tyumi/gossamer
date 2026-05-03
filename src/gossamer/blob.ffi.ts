@@ -32,6 +32,17 @@ export const from_typed_array_with_type:
     });
   };
 
+export const from_data_view: typeof $blob.from_data_view = (bytes) => {
+  return new Blob([bytes as unknown as BlobPart]);
+};
+
+export const from_data_view_with_type: typeof $blob.from_data_view_with_type = (
+  bytes,
+  mimeType,
+) => {
+  return new Blob([bytes as unknown as BlobPart], { type: mimeType });
+};
+
 export const size: typeof $blob.size = (blob) => {
   return blob.size;
 };

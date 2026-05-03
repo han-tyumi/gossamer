@@ -2,6 +2,7 @@ import gleam/option.{None, Some}
 import gossamer/abort_signal
 import gossamer/array_buffer
 import gossamer/blob
+import gossamer/data_view
 import gossamer/form_data
 import gossamer/headers
 import gossamer/http_method
@@ -605,6 +606,27 @@ pub fn response_from_buffer_test() {
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("abc"))
   promise.resolve(Nil)
+}
+
+pub fn response_from_data_view_test() {
+  let bytes = uint8_array.from_list([100, 101, 102])
+  let buffer = uint8_array.buffer(bytes)
+  let assert Ok(view) = data_view.new(buffer)
+  let resp = response.from_data_view(view)
+  use result <- promise.then(response.text(resp))
+  should.equal(result, Ok("def"))
+  promise.resolve(Nil)
+}
+
+pub fn response_from_data_view_with_test() {
+  let bytes = uint8_array.from_list([100])
+  let buffer = uint8_array.buffer(bytes)
+  let assert Ok(view) = data_view.new(buffer)
+  let assert Ok(resp) =
+    response.from_data_view_with(view, [
+      response.Status(http_status.Created),
+    ])
+  response.status(resp) |> should.equal(http_status.Created)
 }
 
 pub fn response_from_form_data_test() {
