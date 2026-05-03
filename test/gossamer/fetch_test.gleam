@@ -20,6 +20,7 @@ import gossamer/request_priority
 import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
+import gossamer/typed_array
 import gossamer/uint8_array
 import gossamer/url
 import gossamer/url_search_params
@@ -572,18 +573,18 @@ pub fn response_new_empty_test() {
   response.is_body_used(resp) |> should.be_false
 }
 
-pub fn response_from_bytes_test() {
-  let bytes = uint8_array.from_list([104, 105])
-  let resp = response.from_bytes(bytes)
+pub fn response_from_typed_array_test() {
+  let bytes = typed_array.Uint8(uint8_array.from_list([104, 105]))
+  let resp = response.from_typed_array(bytes)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("hi"))
   promise.resolve(Nil)
 }
 
-pub fn response_from_bytes_with_test() {
-  let bytes = uint8_array.from_list([104, 105])
+pub fn response_from_typed_array_with_test() {
+  let bytes = typed_array.Uint8(uint8_array.from_list([104, 105]))
   let assert Ok(resp) =
-    response.from_bytes_with(bytes, [
+    response.from_typed_array_with(bytes, [
       response.Status(http_status.Created),
     ])
   response.status(resp) |> should.equal(http_status.Created)

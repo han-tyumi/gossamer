@@ -1,4 +1,5 @@
 import * as $blob from "$/gossamer/gossamer/blob.mjs";
+import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const to_fields: typeof $blob.to_fields = (blob) => {
@@ -20,16 +21,16 @@ export const from_string_with_type: typeof $blob.from_string_with_type = (
   return new Blob([content], { type: mimeType });
 };
 
-export const from_bytes: typeof $blob.from_bytes = (bytes) => {
-  return new Blob([bytes as unknown as BlobPart]);
+export const from_typed_array: typeof $blob.from_typed_array = (bytes) => {
+  return new Blob([unwrapTypedArray(bytes) as unknown as BlobPart]);
 };
 
-export const from_bytes_with_type: typeof $blob.from_bytes_with_type = (
-  bytes,
-  mimeType,
-) => {
-  return new Blob([bytes as unknown as BlobPart], { type: mimeType });
-};
+export const from_typed_array_with_type:
+  typeof $blob.from_typed_array_with_type = (bytes, mimeType) => {
+    return new Blob([unwrapTypedArray(bytes) as unknown as BlobPart], {
+      type: mimeType,
+    });
+  };
 
 export const size: typeof $blob.size = (blob) => {
   return blob.size;

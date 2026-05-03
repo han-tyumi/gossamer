@@ -2,6 +2,7 @@ import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
+import gossamer/typed_array.{type TypedArray}
 import gossamer/uint8_array.{type Uint8Array}
 
 /// A file-like object of immutable, raw data. Can be read as text, bytes,
@@ -31,12 +32,12 @@ pub fn from_string_with_type(
   content_type content_type: String,
 ) -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_bytes")
-pub fn from_bytes(bytes: Uint8Array) -> Blob
+@external(javascript, "./blob.ffi.mjs", "from_typed_array")
+pub fn from_typed_array(bytes: TypedArray) -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_bytes_with_type")
-pub fn from_bytes_with_type(
-  bytes: Uint8Array,
+@external(javascript, "./blob.ffi.mjs", "from_typed_array_with_type")
+pub fn from_typed_array_with_type(
+  bytes: TypedArray,
   content_type content_type: String,
 ) -> Blob
 

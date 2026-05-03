@@ -3,6 +3,7 @@ import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/promise
+import gossamer/typed_array
 import gossamer/uint8_array
 
 pub fn blob_from_string_test() {
@@ -18,8 +19,9 @@ pub fn blob_from_string_with_type_test() {
   should.be_true(string.starts_with(blob.type_(b), "text/plain"))
 }
 
-pub fn blob_from_bytes_test() {
-  let b = blob.from_bytes(uint8_array.from_list([1, 2, 3]))
+pub fn blob_from_typed_array_test() {
+  let b =
+    blob.from_typed_array(typed_array.Uint8(uint8_array.from_list([1, 2, 3])))
   should.equal(blob.size(b), 3)
 }
 
@@ -39,7 +41,10 @@ pub fn blob_array_buffer_test() {
 }
 
 pub fn blob_bytes_test() {
-  let b = blob.from_bytes(uint8_array.from_list([10, 20, 30]))
+  let b =
+    blob.from_typed_array(
+      typed_array.Uint8(uint8_array.from_list([10, 20, 30])),
+    )
   use result <- promise.then(blob.bytes(b))
   let assert Ok(bytes) = result
   should.equal(uint8_array.byte_length(bytes), 3)
@@ -59,10 +64,10 @@ pub fn blob_empty_test() {
   should.equal(blob.size(b), 0)
 }
 
-pub fn blob_from_bytes_with_type_test() {
+pub fn blob_from_typed_array_with_type_test() {
   let b =
-    blob.from_bytes_with_type(
-      uint8_array.from_list([72, 101, 108, 108, 111]),
+    blob.from_typed_array_with_type(
+      typed_array.Uint8(uint8_array.from_list([72, 101, 108, 108, 111])),
       "application/octet-stream",
     )
   should.equal(blob.size(b), 5)
