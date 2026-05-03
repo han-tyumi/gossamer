@@ -170,6 +170,7 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | RegExp             | ✅     | `gossamer/regexp`         |                                                         |
 | Symbol             | ✅     | `gossamer/symbol`         |                                                         |
 | Number             | ✅     | `gossamer/number`         | Type checks, formatting, parsing, constants             |
+| BigInt             | ✅     | `gossamer/big_int`        | Arbitrary-precision integers; basics only (no bitwise)  |
 | Math               | ✅     | `gossamer/math`           | Trig, log, exponential, random, constants               |
 | Error types        | ✅     | `gossamer/js_error`       | Includes `JsErrorKind` classification                   |
 
