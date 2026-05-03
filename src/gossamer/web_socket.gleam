@@ -4,7 +4,7 @@ import gossamer/blob.{type Blob}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
-import gossamer/uint8_array.{type Uint8Array}
+import gossamer/typed_array.{type TypedArray}
 import gossamer/url.{type URL}
 
 // TODO: Happy-path coverage for `send_*` and `on_*` requires a live
@@ -124,14 +124,14 @@ pub fn send_string(
   data data: String,
 ) -> Result(Nil, JsError)
 
-/// Sends binary data as a `Uint8Array` through the WebSocket. Returns
+/// Sends binary data as a `TypedArray` through the WebSocket. Returns
 /// an error if the connection is still connecting. Data sent after the
 /// connection is closing or closed is silently discarded.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "send_bytes")
-pub fn send_bytes(
+@external(javascript, "./web_socket.ffi.mjs", "send_typed_array")
+pub fn send_typed_array(
   to socket: WebSocket,
-  data data: Uint8Array,
+  data data: TypedArray,
 ) -> Result(Nil, JsError)
 
 /// Sends a `Blob` through the WebSocket. Returns an error if the
