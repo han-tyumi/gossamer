@@ -90,6 +90,19 @@ pub fn blob_stream_test() {
   let _stream = blob.stream(b)
 }
 
+pub fn blob_from_buffer_test() {
+  let assert Ok(buffer) = array_buffer.new(8)
+  let b = blob.from_buffer(buffer)
+  should.equal(blob.size(b), 8)
+}
+
+pub fn blob_from_buffer_with_type_test() {
+  let assert Ok(buffer) = array_buffer.new(4)
+  let b = blob.from_buffer_with_type(buffer, "application/octet-stream")
+  should.equal(blob.size(b), 4)
+  should.equal(blob.type_(b), "application/octet-stream")
+}
+
 pub fn blob_from_data_view_test() {
   let assert Ok(buffer) = array_buffer.new(8)
   let assert Ok(view) = data_view.new(buffer)

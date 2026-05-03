@@ -33,6 +33,15 @@ pub fn from_string_with_type(
   content_type content_type: String,
 ) -> Blob
 
+@external(javascript, "./blob.ffi.mjs", "from_buffer")
+pub fn from_buffer(bytes: ArrayBuffer) -> Blob
+
+@external(javascript, "./blob.ffi.mjs", "from_buffer_with_type")
+pub fn from_buffer_with_type(
+  bytes: ArrayBuffer,
+  content_type content_type: String,
+) -> Blob
+
 @external(javascript, "./blob.ffi.mjs", "from_typed_array")
 pub fn from_typed_array(bytes: TypedArray) -> Blob
 
