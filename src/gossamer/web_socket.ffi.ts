@@ -105,6 +105,15 @@ export const send_buffer: typeof $webSocket.send_buffer = (socket, data) => {
   });
 };
 
+export const send_data_view: typeof $webSocket.send_data_view = (
+  socket,
+  data,
+) => {
+  return toResult.fromThrows(() => {
+    socket.send(data);
+  });
+};
+
 export const on_open: typeof $webSocket.on_open = (socket, handler) => {
   socket.onopen = () => handler();
 };

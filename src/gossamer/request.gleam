@@ -3,6 +3,7 @@ import gleam/option.{type Option}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/data_view.{type DataView}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_method.{type HttpMethod}
@@ -92,12 +93,13 @@ pub type RequestInit {
   Method(HttpMethod)
   Headers(Headers)
   Body(String)
-  BodyTypedArray(TypedArray)
   BodyBlob(Blob)
   BodyBuffer(ArrayBuffer)
+  BodyDataView(DataView)
   BodyFormData(FormData)
   BodyParams(URLSearchParams)
   BodyStream(ReadableStream(Uint8Array))
+  BodyTypedArray(TypedArray)
   Cache(RequestCache)
   Credentials(RequestCredentials)
   Integrity(String)

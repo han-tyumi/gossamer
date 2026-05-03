@@ -1,6 +1,7 @@
 import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
+import gossamer/data_view
 import gossamer/ready_state
 import gossamer/typed_array
 import gossamer/uint8_array
@@ -76,6 +77,14 @@ pub fn send_buffer_while_connecting_test() {
   let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
   let assert Ok(buffer) = array_buffer.new(4)
   web_socket.send_buffer(ws, buffer) |> should.be_error
+  web_socket.close(ws)
+}
+
+pub fn send_data_view_while_connecting_test() {
+  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
+  let assert Ok(buffer) = array_buffer.new(4)
+  let assert Ok(view) = data_view.new(buffer)
+  web_socket.send_data_view(ws, view) |> should.be_error
   web_socket.close(ws)
 }
 

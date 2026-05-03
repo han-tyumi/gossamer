@@ -1,6 +1,7 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/binary_type.{type BinaryType}
 import gossamer/blob.{type Blob}
+import gossamer/data_view.{type DataView}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
@@ -149,6 +150,16 @@ pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, JsError)
 pub fn send_buffer(
   to socket: WebSocket,
   data data: ArrayBuffer,
+) -> Result(Nil, JsError)
+
+/// Sends a `DataView` through the WebSocket. Returns an error if the
+/// connection is still connecting. Data sent after the connection is
+/// closing or closed is silently discarded.
+///
+@external(javascript, "./web_socket.ffi.mjs", "send_data_view")
+pub fn send_data_view(
+  to socket: WebSocket,
+  data data: DataView,
 ) -> Result(Nil, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")

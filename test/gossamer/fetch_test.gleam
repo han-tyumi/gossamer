@@ -153,6 +153,20 @@ pub fn request_body_buffer_test() {
   promise.resolve(Nil)
 }
 
+pub fn request_body_data_view_test() {
+  let bytes = uint8_array.from_list([100, 101, 102])
+  let buffer = uint8_array.buffer(bytes)
+  let assert Ok(view) = data_view.new(buffer)
+  let assert Ok(req) =
+    request.from_url_string_with("https://example.org", [
+      request.Method(http_method.Post),
+      request.BodyDataView(view),
+    ])
+  use text <- promise.then(request.text(req))
+  should.equal(text, Ok("def"))
+  promise.resolve(Nil)
+}
+
 pub fn request_body_params_test() {
   let params = url_search_params.from_string("a=1&b=2")
   let assert Ok(req) =
