@@ -34,6 +34,15 @@ export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
   );
 };
 
+export const digest_data_view: typeof $subtleCrypto.digest_data_view = (
+  algorithm,
+  data,
+) => {
+  return toResult.fromPromise(
+    subtle.digest(toHashAlgorithm(algorithm), data as BufferSource),
+  );
+};
+
 export const encrypt: typeof $subtleCrypto.encrypt = (
   algorithm,
   key,
@@ -45,6 +54,16 @@ export const encrypt: typeof $subtleCrypto.encrypt = (
       key,
       unwrapTypedArray(data) as BufferSource,
     ),
+  );
+};
+
+export const encrypt_data_view: typeof $subtleCrypto.encrypt_data_view = (
+  algorithm,
+  key,
+  data,
+) => {
+  return toResult.fromPromise(
+    subtle.encrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource),
   );
 };
 
@@ -62,6 +81,16 @@ export const decrypt: typeof $subtleCrypto.decrypt = (
   );
 };
 
+export const decrypt_data_view: typeof $subtleCrypto.decrypt_data_view = (
+  algorithm,
+  key,
+  data,
+) => {
+  return toResult.fromPromise(
+    subtle.decrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource),
+  );
+};
+
 export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
   return toResult.fromPromise(
     subtle.sign(
@@ -69,6 +98,16 @@ export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
       key,
       unwrapTypedArray(data) as BufferSource,
     ),
+  );
+};
+
+export const sign_data_view: typeof $subtleCrypto.sign_data_view = (
+  algorithm,
+  key,
+  data,
+) => {
+  return toResult.fromPromise(
+    subtle.sign(toSignAlgorithm(algorithm), key, data as BufferSource),
   );
 };
 
@@ -84,6 +123,22 @@ export const verify: typeof $subtleCrypto.verify = (
       key,
       unwrapTypedArray(signature) as BufferSource,
       unwrapTypedArray(data) as BufferSource,
+    ),
+  );
+};
+
+export const verify_data_view: typeof $subtleCrypto.verify_data_view = (
+  algorithm,
+  key,
+  signature,
+  data,
+) => {
+  return toResult.fromPromise(
+    subtle.verify(
+      toSignAlgorithm(algorithm),
+      key,
+      signature as BufferSource,
+      data as BufferSource,
     ),
   );
 };
@@ -129,6 +184,24 @@ export const import_key: typeof $subtleCrypto.import_key = (
     subtle.importKey(
       toKeyFormat(format),
       unwrapTypedArray(keyData) as BufferSource,
+      toImportAlgorithm(algorithm),
+      extractable,
+      toKeyUsageArray(usages),
+    ),
+  );
+};
+
+export const import_key_data_view: typeof $subtleCrypto.import_key_data_view = (
+  format,
+  keyData,
+  algorithm,
+  extractable,
+  usages,
+) => {
+  return toResult.fromPromise(
+    subtle.importKey(
+      toKeyFormat(format),
+      keyData as BufferSource,
       toImportAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
@@ -241,6 +314,28 @@ export const unwrap_key: typeof $subtleCrypto.unwrap_key = (
   );
 };
 
+export const unwrap_key_data_view: typeof $subtleCrypto.unwrap_key_data_view = (
+  format,
+  wrappedKey,
+  unwrappingKey,
+  unwrapAlgorithm,
+  unwrappedKeyAlgorithm,
+  extractable,
+  usages,
+) => {
+  return toResult.fromPromise(
+    subtle.unwrapKey(
+      toKeyFormat(format),
+      wrappedKey as BufferSource,
+      unwrappingKey,
+      toWrapAlgorithm(unwrapAlgorithm),
+      toImportAlgorithm(unwrappedKeyAlgorithm),
+      extractable,
+      toKeyUsageArray(usages),
+    ),
+  );
+};
+
 export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
   wrappedKey,
   unwrappingKey,
@@ -261,3 +356,25 @@ export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
     ),
   );
 };
+
+export const unwrap_key_jwk_data_view:
+  typeof $subtleCrypto.unwrap_key_jwk_data_view = (
+    wrappedKey,
+    unwrappingKey,
+    unwrapAlgorithm,
+    unwrappedKeyAlgorithm,
+    extractable,
+    usages,
+  ) => {
+    return toResult.fromPromise(
+      subtle.unwrapKey(
+        "jwk",
+        wrappedKey as BufferSource,
+        unwrappingKey,
+        toWrapAlgorithm(unwrapAlgorithm),
+        toImportAlgorithm(unwrappedKeyAlgorithm),
+        extractable,
+        toKeyUsageArray(usages),
+      ),
+    );
+  };
