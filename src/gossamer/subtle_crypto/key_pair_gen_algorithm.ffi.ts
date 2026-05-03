@@ -3,6 +3,7 @@ import { toEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
 import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 import { toNamedCurve } from "~/gossamer/named_curve.ffi.ts";
 import { toRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
+import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 
 export function toKeyPairGenAlgorithm(
   algorithm: $alg.KeyPairGenAlgorithm$,
@@ -14,9 +15,9 @@ export function toKeyPairGenAlgorithm(
     return {
       name: toRsaAlgorithm($alg.KeyPairGenAlgorithm$Rsa$name(algorithm)),
       modulusLength: $alg.KeyPairGenAlgorithm$Rsa$modulus_length(algorithm),
-      publicExponent: $alg.KeyPairGenAlgorithm$Rsa$public_exponent(
-        algorithm,
-      ) as unknown as BigInteger,
+      publicExponent: unwrapTypedArray(
+        $alg.KeyPairGenAlgorithm$Rsa$public_exponent(algorithm),
+      ) as BigInteger,
       hash: toHashAlgorithm($alg.KeyPairGenAlgorithm$Rsa$hash(algorithm)),
     };
   }

@@ -70,7 +70,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
     typed_array.Uint8(uint8_array.from_list([72, 101, 108, 108, 111]))
 
   use result <- promise.then(subtle_crypto.encrypt(
-    encrypt_algorithm.AesGcm(iv),
+    encrypt_algorithm.AesGcm(typed_array.Uint8(iv)),
     key,
     plaintext,
   ))
@@ -78,7 +78,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.be_true(array_buffer.byte_length(ciphertext) > 0)
 
   use result <- promise.then(subtle_crypto.decrypt(
-    encrypt_algorithm.AesGcm(iv),
+    encrypt_algorithm.AesGcm(typed_array.Uint8(iv)),
     key,
     typed_array.Uint8(uint8_array.from_buffer(ciphertext)),
   ))
@@ -129,7 +129,7 @@ pub fn generate_rsa_key_pair_test() {
       key_pair_gen_algorithm.Rsa(
         rsa_algorithm.RsassaPkcs1V15,
         2048,
-        uint8_array.from_list([1, 0, 1]),
+        typed_array.Uint8(uint8_array.from_list([1, 0, 1])),
         hash_algorithm.Sha256,
       ),
       True,
@@ -274,7 +274,11 @@ pub fn derive_bits_test() {
   let assert Ok(base_key) = result
 
   use result <- promise.then(subtle_crypto.derive_bits(
-    derive_algorithm.Pbkdf2(hash_algorithm.Sha256, 100_000, salt),
+    derive_algorithm.Pbkdf2(
+      hash_algorithm.Sha256,
+      100_000,
+      typed_array.Uint8(salt),
+    ),
     base_key,
     256,
   ))
@@ -302,7 +306,11 @@ pub fn derive_key_test() {
 
   use result <- promise.then(
     subtle_crypto.derive_key(
-      derive_algorithm.Pbkdf2(hash_algorithm.Sha256, 100_000, salt),
+      derive_algorithm.Pbkdf2(
+        hash_algorithm.Sha256,
+        100_000,
+        typed_array.Uint8(salt),
+      ),
       base_key,
       derived_key_type.AesDerived(aes_algorithm.AesGcm, 256),
       True,
