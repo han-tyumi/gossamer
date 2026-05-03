@@ -115,12 +115,12 @@ pub fn request_text_test() {
   should.equal(text, Ok("hello"))
 }
 
-pub fn request_body_bytes_test() {
-  let bytes = uint8_array.from_list([104, 105])
+pub fn request_body_typed_array_test() {
+  let bytes = typed_array.Uint8(uint8_array.from_list([104, 105]))
   let assert Ok(req) =
     request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
-      request.BodyBytes(bytes),
+      request.BodyTypedArray(bytes),
     ])
   use text <- promise.then(request.text(req))
   should.equal(text, Ok("hi"))

@@ -16,6 +16,7 @@ import gossamer/request_destination.{type RequestDestination}
 import gossamer/request_mode.{type RequestMode}
 import gossamer/request_priority.{type RequestPriority}
 import gossamer/request_redirect.{type RequestRedirect}
+import gossamer/typed_array.{type TypedArray}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
@@ -84,11 +85,14 @@ pub type Fields {
 @external(javascript, "./request.ffi.mjs", "to_fields")
 pub fn to_fields(request: Request) -> Fields
 
+/// If multiple `Body*` variants are present in the same init list, the
+/// last one wins.
+///
 pub type RequestInit {
   Method(HttpMethod)
   Headers(Headers)
   Body(String)
-  BodyBytes(Uint8Array)
+  BodyTypedArray(TypedArray)
   BodyBlob(Blob)
   BodyBuffer(ArrayBuffer)
   BodyFormData(FormData)

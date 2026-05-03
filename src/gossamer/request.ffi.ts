@@ -22,6 +22,7 @@ import {
   fromRequestRedirect,
   toRequestRedirect,
 } from "~/gossamer/request_redirect.ffi.ts";
+import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -35,8 +36,10 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
       result.headers = $request.RequestInit$Headers$0(option);
     } else if ($request.RequestInit$isBody(option)) {
       result.body = $request.RequestInit$Body$0(option);
-    } else if ($request.RequestInit$isBodyBytes(option)) {
-      result.body = $request.RequestInit$BodyBytes$0(option) as BodyInit;
+    } else if ($request.RequestInit$isBodyTypedArray(option)) {
+      result.body = unwrapTypedArray(
+        $request.RequestInit$BodyTypedArray$0(option),
+      ) as BodyInit;
     } else if ($request.RequestInit$isBodyBlob(option)) {
       result.body = $request.RequestInit$BodyBlob$0(option);
     } else if ($request.RequestInit$isBodyBuffer(option)) {
