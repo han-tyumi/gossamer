@@ -4,7 +4,7 @@
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/read_result.{type ReadResult}
-import gossamer/uint8_array.{type Uint8Array}
+import gossamer/typed_array.{type TypedArray}
 
 /// A reader over a byte `ReadableStream` that reads into caller-provided
 /// buffers.
@@ -34,16 +34,16 @@ pub fn cancel(
 ) -> Promise(Result(Nil, JsError))
 
 /// Reads bytes from the stream into `view`. The returned chunk is a new
-/// `Uint8Array` over the same underlying buffer, since the original `view`
-/// is detached during the read. Returns an error if the stream errored or
-/// the reader was released.
+/// `TypedArray` over the same underlying buffer, since the original
+/// `view` is detached during the read. Returns an error if the stream
+/// errored or the reader was released.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "read")
 pub fn read(
   reader: ByobReader(a),
-  into view: Uint8Array,
+  into view: TypedArray,
   with options: List(ByobReaderReadOption),
-) -> Promise(Result(ReadResult(Uint8Array), JsError))
+) -> Promise(Result(ReadResult(TypedArray), JsError))
 
 /// Releases the reader's lock on the stream. Returns an error if the
 /// reader has outstanding read requests.
