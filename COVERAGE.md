@@ -50,11 +50,11 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ### URL
 
-| Interface       | Status | Module                       | Notes |
-| --------------- | ------ | ---------------------------- | ----- |
-| URL             | ✅     | `gossamer/url`               |       |
-| URLSearchParams | ✅     | `gossamer/url_search_params` |       |
-| URLPattern      | ✅     | `gossamer/url_pattern`       |       |
+| Interface       | Status | Module                       |
+| --------------- | ------ | ---------------------------- |
+| URL             | ✅     | `gossamer/url`               |
+| URLSearchParams | ✅     | `gossamer/url_search_params` |
+| URLPattern      | ✅     | `gossamer/url_pattern`       |
 
 ### Streams
 
@@ -157,32 +157,33 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface         | Status | Module                         | Notes                                                  |
-| ----------------- | ------ | ------------------------------ | ------------------------------------------------------ |
-| Promise           | ✅     | `gossamer/promise`             |                                                        |
-| ArrayBuffer       | ✅     | `gossamer/array_buffer`        |                                                        |
-| Int8Array         | ✅     | `gossamer/int8_array`          |                                                        |
-| Uint8Array        | ✅     | `gossamer/uint8_array`         |                                                        |
-| Uint8ClampedArray | ✅     | `gossamer/uint8_clamped_array` |                                                        |
-| Int16Array        | ✅     | `gossamer/int16_array`         |                                                        |
-| Uint16Array       | ✅     | `gossamer/uint16_array`        |                                                        |
-| Int32Array        | ✅     | `gossamer/int32_array`         |                                                        |
-| Uint32Array       | ✅     | `gossamer/uint32_array`        |                                                        |
-| Float16Array      | ✅     | `gossamer/float16_array`       |                                                        |
-| Float32Array      | ✅     | `gossamer/float32_array`       |                                                        |
-| Float64Array      | ✅     | `gossamer/float64_array`       |                                                        |
-| BigInt64Array     | ✅     | `gossamer/bigint64_array`      |                                                        |
-| BigUint64Array    | ✅     | `gossamer/biguint64_array`     |                                                        |
-| Iterator          | ✅     | `gossamer/iterator`            |                                                        |
-| AsyncIterator     | ✅     | `gossamer/async_iterator`      |                                                        |
-| JSON              | ✅     | `gossamer/json`                |                                                        |
-| Date              | ✅     | `gossamer/date`                |                                                        |
-| RegExp            | ✅     | `gossamer/regexp`              |                                                        |
-| Symbol            | ✅     | `gossamer/symbol`              |                                                        |
-| Number            | ✅     | `gossamer/number`              | Type checks, formatting, parsing, constants            |
-| BigInt            | ✅     | `gossamer/big_int`             | Arbitrary-precision integers; basics only (no bitwise) |
-| Math              | ✅     | `gossamer/math`                | Trig, log, exponential, random, constants              |
-| Error types       | ✅     | `gossamer/js_error`            | Includes `JsErrorKind` classification                  |
+| Interface         | Status | Module                         |
+| ----------------- | ------ | ------------------------------ |
+| Promise           | ✅     | `gossamer/promise`             |
+| ArrayBuffer       | ✅     | `gossamer/array_buffer`        |
+| Int8Array         | ✅     | `gossamer/int8_array`          |
+| Uint8Array        | ✅     | `gossamer/uint8_array`         |
+| Uint8ClampedArray | ✅     | `gossamer/uint8_clamped_array` |
+| Int16Array        | ✅     | `gossamer/int16_array`         |
+| Uint16Array       | ✅     | `gossamer/uint16_array`        |
+| Int32Array        | ✅     | `gossamer/int32_array`         |
+| Uint32Array       | ✅     | `gossamer/uint32_array`        |
+| Float16Array      | ✅     | `gossamer/float16_array`       |
+| Float32Array      | ✅     | `gossamer/float32_array`       |
+| Float64Array      | ✅     | `gossamer/float64_array`       |
+| BigInt64Array     | ✅     | `gossamer/bigint64_array`      |
+| BigUint64Array    | ✅     | `gossamer/biguint64_array`     |
+| DataView          | ✅     | `gossamer/data_view`           |
+| Iterator          | ✅     | `gossamer/iterator`            |
+| AsyncIterator     | ✅     | `gossamer/async_iterator`      |
+| JSON              | ✅     | `gossamer/json`                |
+| Date              | ✅     | `gossamer/date`                |
+| RegExp            | ✅     | `gossamer/regexp`              |
+| Symbol            | ✅     | `gossamer/symbol`              |
+| Number            | ✅     | `gossamer/number`              |
+| BigInt            | 🚧     | `gossamer/big_int`             |
+| Math              | ✅     | `gossamer/math`                |
+| Error types       | ✅     | `gossamer/js_error`            |
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 
@@ -190,30 +191,16 @@ Gleam has conceptual equivalents for these, but they are not the native JS
 types. These bindings enable interop with JS APIs that return or accept native
 types, and expose functionality Gleam's stdlib doesn't cover.
 
-| Interface            | Status | Module                           | Notes                                                    |
-| -------------------- | ------ | -------------------------------- | -------------------------------------------------------- |
-| Map                  | ✅     | `gossamer/map`                   | Gleam Dict is not a JS Map; needed for JS interop        |
-| Set                  | ✅     | `gossamer/set`                   | Gleam Set is not a JS Set; needed for JS interop         |
-| WeakMap              | ✅     | `gossamer/weak_map`              | Metadata/caching on JS objects without preventing GC     |
-| WeakSet              | ✅     | `gossamer/weak_set`              | Tracking JS objects without preventing GC                |
-| WeakRef              | ✅     | `gossamer/weak_ref`              | Weak references to objects                               |
-| FinalizationRegistry | ✅     | `gossamer/finalization_registry` | Cleanup callbacks when objects are GC'd                  |
-| Array                | ✅     | `gossamer/array`                 | Gleam List is not a JS Array; needed for JS interop      |
-| String               | ✅     | `gossamer/string`                | `normalize()`, `localeCompare()`, locale case conversion |
-
-## Typed array coverage
-
-All 12 JS typed array types are bound (Int8 / Uint8 / Uint8Clamped / Int16 /
-Uint16 / Int32 / Uint32 / Float16 / Float32 / Float64 / BigInt64 / BigUint64).
-`gossamer/typed_array` is a tagged-variant union over all of them, and
-`gossamer/int_typed_array` is a sub-union over the nine integer variants used by
-APIs that the spec restricts to integer types only.
-
-Web APIs that accept any `ArrayBufferView` (`blob.from_typed_array`,
-`response.from_typed_array`, `request.RequestInit.BodyTypedArray`,
-`web_socket.send_typed_array`, `subtle_crypto.*`, `byob_reader.read`) take
-`TypedArray`. `crypto.get_random_values` takes `IntTypedArray` to reject float
-arrays at compile time. `DataView` is not yet bound.
+| Interface            | Status | Module                           |
+| -------------------- | ------ | -------------------------------- |
+| Map                  | ✅     | `gossamer/map`                   |
+| Set                  | ✅     | `gossamer/set`                   |
+| WeakMap              | ✅     | `gossamer/weak_map`              |
+| WeakSet              | ✅     | `gossamer/weak_set`              |
+| WeakRef              | ✅     | `gossamer/weak_ref`              |
+| FinalizationRegistry | ✅     | `gossamer/finalization_registry` |
+| Array                | ✅     | `gossamer/array`                 |
+| String               | ✅     | `gossamer/string`                |
 
 ## Out of Scope
 
