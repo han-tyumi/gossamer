@@ -14,7 +14,7 @@ import gossamer/subtle_crypto/key_gen_algorithm.{type KeyGenAlgorithm}
 import gossamer/subtle_crypto/key_pair_gen_algorithm.{type KeyPairGenAlgorithm}
 import gossamer/subtle_crypto/sign_algorithm.{type SignAlgorithm}
 import gossamer/subtle_crypto/wrap_algorithm.{type WrapAlgorithm}
-import gossamer/uint8_array.{type Uint8Array}
+import gossamer/typed_array.{type TypedArray}
 
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
@@ -26,7 +26,7 @@ pub type CryptoKeyPair {
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(
   algorithm algorithm: HashAlgorithm,
-  data data: Uint8Array,
+  data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Encrypts `data` with `key` using `algorithm`. Returns an error if the key's
@@ -37,7 +37,7 @@ pub fn digest(
 pub fn encrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
-  data data: Uint8Array,
+  data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Decrypts `data` with `key` using `algorithm`. Returns an error if the key's
@@ -48,7 +48,7 @@ pub fn encrypt(
 pub fn decrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
-  data data: Uint8Array,
+  data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Produces a digital signature of `data` with `key`. Returns an error if the
@@ -59,7 +59,7 @@ pub fn decrypt(
 pub fn sign(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
-  data data: Uint8Array,
+  data data: TypedArray,
 ) -> Promise(Result(ArrayBuffer, JsError))
 
 /// Verifies `signature` against `data` using `key`. Returns an error if the key's
@@ -69,8 +69,8 @@ pub fn sign(
 pub fn verify(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
-  signature signature: Uint8Array,
-  data data: Uint8Array,
+  signature signature: TypedArray,
+  data data: TypedArray,
 ) -> Promise(Result(Bool, JsError))
 
 /// Generates a new symmetric `CryptoKey`. Returns an error if the algorithm is
@@ -99,7 +99,7 @@ pub fn generate_key_pair(
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
 pub fn import_key(
   format format: KeyFormat,
-  key_data data: Uint8Array,
+  key_data data: TypedArray,
   algorithm algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
@@ -180,7 +180,7 @@ pub fn wrap_key_jwk(
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
   format format: KeyFormat,
-  wrapped_key wrapped_key: Uint8Array,
+  wrapped_key wrapped_key: TypedArray,
   unwrapping_key unwrapping_key: CryptoKey,
   unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
@@ -192,7 +192,7 @@ pub fn unwrap_key(
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
-  wrapped_key wrapped_key: Uint8Array,
+  wrapped_key wrapped_key: TypedArray,
   unwrapping_key unwrapping_key: CryptoKey,
   unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,

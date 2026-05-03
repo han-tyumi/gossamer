@@ -11,6 +11,7 @@ import { toWrapAlgorithm } from "~/gossamer/subtle_crypto/wrap_algorithm.ffi.ts"
 import { toKeyGenAlgorithm } from "~/gossamer/subtle_crypto/key_gen_algorithm.ffi.ts";
 import { toKeyPairGenAlgorithm } from "~/gossamer/subtle_crypto/key_pair_gen_algorithm.ffi.ts";
 import { toSignAlgorithm } from "~/gossamer/subtle_crypto/sign_algorithm.ffi.ts";
+import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
@@ -28,7 +29,7 @@ export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
   return toResult.fromPromise(
     subtle.digest(
       toHashAlgorithm(algorithm),
-      data as unknown as BufferSource,
+      unwrapTypedArray(data) as BufferSource,
     ),
   );
 };
@@ -42,7 +43,7 @@ export const encrypt: typeof $subtleCrypto.encrypt = (
     subtle.encrypt(
       toEncryptAlgorithm(algorithm),
       key,
-      data as unknown as BufferSource,
+      unwrapTypedArray(data) as BufferSource,
     ),
   );
 };
@@ -56,7 +57,7 @@ export const decrypt: typeof $subtleCrypto.decrypt = (
     subtle.decrypt(
       toEncryptAlgorithm(algorithm),
       key,
-      data as unknown as BufferSource,
+      unwrapTypedArray(data) as BufferSource,
     ),
   );
 };
@@ -66,7 +67,7 @@ export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
     subtle.sign(
       toSignAlgorithm(algorithm),
       key,
-      data as unknown as BufferSource,
+      unwrapTypedArray(data) as BufferSource,
     ),
   );
 };
@@ -81,8 +82,8 @@ export const verify: typeof $subtleCrypto.verify = (
     subtle.verify(
       toSignAlgorithm(algorithm),
       key,
-      signature as unknown as BufferSource,
-      data as unknown as BufferSource,
+      unwrapTypedArray(signature) as BufferSource,
+      unwrapTypedArray(data) as BufferSource,
     ),
   );
 };
@@ -127,7 +128,7 @@ export const import_key: typeof $subtleCrypto.import_key = (
   return toResult.fromPromise(
     subtle.importKey(
       toKeyFormat(format),
-      keyData as unknown as BufferSource,
+      unwrapTypedArray(keyData) as BufferSource,
       toImportAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
@@ -230,7 +231,7 @@ export const unwrap_key: typeof $subtleCrypto.unwrap_key = (
   return toResult.fromPromise(
     subtle.unwrapKey(
       toKeyFormat(format),
-      wrappedKey as unknown as BufferSource,
+      unwrapTypedArray(wrappedKey) as BufferSource,
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),
@@ -251,7 +252,7 @@ export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
   return toResult.fromPromise(
     subtle.unwrapKey(
       "jwk",
-      wrappedKey as unknown as BufferSource,
+      unwrapTypedArray(wrappedKey) as BufferSource,
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),

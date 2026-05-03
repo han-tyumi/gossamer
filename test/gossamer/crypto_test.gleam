@@ -23,6 +23,7 @@ import gossamer/subtle_crypto/key_gen_algorithm
 import gossamer/subtle_crypto/key_pair_gen_algorithm
 import gossamer/subtle_crypto/sign_algorithm
 import gossamer/subtle_crypto/wrap_algorithm
+import gossamer/typed_array
 import gossamer/uint8_array
 
 pub fn get_random_values_test() {
@@ -37,7 +38,7 @@ pub fn random_uuid_test() {
 }
 
 pub fn digest_test() {
-  let data = uint8_array.from_list([1, 2, 3])
+  let data = typed_array.Uint8(uint8_array.from_list([1, 2, 3]))
   use result <- promise.then(subtle_crypto.digest(hash_algorithm.Sha256, data))
   let assert Ok(buffer) = result
   should.equal(array_buffer.byte_length(buffer), 32)
@@ -62,7 +63,8 @@ pub fn generate_key_and_encrypt_decrypt_test() {
 
   let assert Ok(iv_source) = uint8_array.from_length(12)
   let assert Ok(iv) = crypto.get_random_values(iv_source)
-  let plaintext = uint8_array.from_list([72, 101, 108, 108, 111])
+  let plaintext =
+    typed_array.Uint8(uint8_array.from_list([72, 101, 108, 108, 111]))
 
   use result <- promise.then(subtle_crypto.encrypt(
     encrypt_algorithm.AesGcm(iv),
@@ -75,7 +77,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   use result <- promise.then(subtle_crypto.decrypt(
     encrypt_algorithm.AesGcm(iv),
     key,
-    uint8_array.from_buffer(ciphertext),
+    typed_array.Uint8(uint8_array.from_buffer(ciphertext)),
   ))
   let assert Ok(decrypted) = result
   let decrypted_bytes = uint8_array.from_buffer(decrypted)
@@ -97,7 +99,7 @@ pub fn generate_key_pair_sign_verify_test() {
   should.equal(crypto_key.type_(public_key), key_type.Public)
   should.equal(crypto_key.type_(private_key), key_type.Private)
 
-  let data = uint8_array.from_list([1, 2, 3])
+  let data = typed_array.Uint8(uint8_array.from_list([1, 2, 3]))
 
   use result <- promise.then(subtle_crypto.sign(
     sign_algorithm.Ecdsa(hash_algorithm.Sha256),
@@ -110,7 +112,7 @@ pub fn generate_key_pair_sign_verify_test() {
   use result <- promise.then(subtle_crypto.verify(
     sign_algorithm.Ecdsa(hash_algorithm.Sha256),
     public_key,
-    uint8_array.from_buffer(signature),
+    typed_array.Uint8(uint8_array.from_buffer(signature)),
     data,
   ))
   let assert Ok(verified) = result
@@ -149,7 +151,7 @@ pub fn import_export_key_test() {
   use result <- promise.then(
     subtle_crypto.import_key(
       key_format.Raw,
-      raw_key,
+      typed_array.Uint8(raw_key),
       import_algorithm.Other("AES-GCM"),
       True,
       [key_usage.Encrypt, key_usage.Decrypt],
@@ -251,7 +253,7 @@ pub fn import_key_jwk_test() {
 }
 
 pub fn derive_bits_test() {
-  let password = uint8_array.from_list([112, 97, 115, 115])
+  let password = typed_array.Uint8(uint8_array.from_list([112, 97, 115, 115]))
   let assert Ok(salt_source) = uint8_array.from_length(16)
   let assert Ok(salt) = crypto.get_random_values(salt_source)
 
@@ -277,7 +279,7 @@ pub fn derive_bits_test() {
 }
 
 pub fn derive_key_test() {
-  let password = uint8_array.from_list([112, 97, 115, 115])
+  let password = typed_array.Uint8(uint8_array.from_list([112, 97, 115, 115]))
   let assert Ok(salt_source) = uint8_array.from_length(16)
   let assert Ok(salt) = crypto.get_random_values(salt_source)
 
@@ -344,7 +346,7 @@ pub fn wrap_unwrap_key_test() {
   use result <- promise.then(
     subtle_crypto.unwrap_key(
       key_format.Raw,
-      uint8_array.from_buffer(wrapped),
+      typed_array.Uint8(uint8_array.from_buffer(wrapped)),
       wrapping_key,
       wrap_algorithm.Other("AES-KW"),
       import_algorithm.Other("AES-GCM"),
@@ -393,7 +395,7 @@ pub fn wrap_unwrap_key_jwk_test() {
 
   use result <- promise.then(
     subtle_crypto.unwrap_key_jwk(
-      uint8_array.from_buffer(wrapped_jwk),
+      typed_array.Uint8(uint8_array.from_buffer(wrapped_jwk)),
       wrapping_key,
       wrap_algorithm.Other("AES-KW"),
       import_algorithm.Other("AES-GCM"),
