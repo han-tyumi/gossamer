@@ -11,7 +11,6 @@ import { toWrapAlgorithm } from "~/gossamer/subtle_crypto/wrap_algorithm.ffi.ts"
 import { toKeyGenAlgorithm } from "~/gossamer/subtle_crypto/key_gen_algorithm.ffi.ts";
 import { toKeyPairGenAlgorithm } from "~/gossamer/subtle_crypto/key_pair_gen_algorithm.ffi.ts";
 import { toSignAlgorithm } from "~/gossamer/subtle_crypto/sign_algorithm.ffi.ts";
-import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
@@ -27,56 +26,11 @@ function toCryptoKeyPair(
 
 export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
   return toResult.fromPromise(
-    subtle.digest(
-      toHashAlgorithm(algorithm),
-      unwrapTypedArray(data) as BufferSource,
-    ),
-  );
-};
-
-export const digest_buffer: typeof $subtleCrypto.digest_buffer = (
-  algorithm,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.digest(toHashAlgorithm(algorithm), data),
-  );
-};
-
-export const digest_data_view: typeof $subtleCrypto.digest_data_view = (
-  algorithm,
-  data,
-) => {
-  return toResult.fromPromise(
     subtle.digest(toHashAlgorithm(algorithm), data as BufferSource),
   );
 };
 
 export const encrypt: typeof $subtleCrypto.encrypt = (
-  algorithm,
-  key,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.encrypt(
-      toEncryptAlgorithm(algorithm),
-      key,
-      unwrapTypedArray(data) as BufferSource,
-    ),
-  );
-};
-
-export const encrypt_buffer: typeof $subtleCrypto.encrypt_buffer = (
-  algorithm,
-  key,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.encrypt(toEncryptAlgorithm(algorithm), key, data),
-  );
-};
-
-export const encrypt_data_view: typeof $subtleCrypto.encrypt_data_view = (
   algorithm,
   key,
   data,
@@ -92,92 +46,17 @@ export const decrypt: typeof $subtleCrypto.decrypt = (
   data,
 ) => {
   return toResult.fromPromise(
-    subtle.decrypt(
-      toEncryptAlgorithm(algorithm),
-      key,
-      unwrapTypedArray(data) as BufferSource,
-    ),
-  );
-};
-
-export const decrypt_buffer: typeof $subtleCrypto.decrypt_buffer = (
-  algorithm,
-  key,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.decrypt(toEncryptAlgorithm(algorithm), key, data),
-  );
-};
-
-export const decrypt_data_view: typeof $subtleCrypto.decrypt_data_view = (
-  algorithm,
-  key,
-  data,
-) => {
-  return toResult.fromPromise(
     subtle.decrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource),
   );
 };
 
 export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
   return toResult.fromPromise(
-    subtle.sign(
-      toSignAlgorithm(algorithm),
-      key,
-      unwrapTypedArray(data) as BufferSource,
-    ),
-  );
-};
-
-export const sign_buffer: typeof $subtleCrypto.sign_buffer = (
-  algorithm,
-  key,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.sign(toSignAlgorithm(algorithm), key, data),
-  );
-};
-
-export const sign_data_view: typeof $subtleCrypto.sign_data_view = (
-  algorithm,
-  key,
-  data,
-) => {
-  return toResult.fromPromise(
     subtle.sign(toSignAlgorithm(algorithm), key, data as BufferSource),
   );
 };
 
 export const verify: typeof $subtleCrypto.verify = (
-  algorithm,
-  key,
-  signature,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.verify(
-      toSignAlgorithm(algorithm),
-      key,
-      unwrapTypedArray(signature) as BufferSource,
-      unwrapTypedArray(data) as BufferSource,
-    ),
-  );
-};
-
-export const verify_buffer: typeof $subtleCrypto.verify_buffer = (
-  algorithm,
-  key,
-  signature,
-  data,
-) => {
-  return toResult.fromPromise(
-    subtle.verify(toSignAlgorithm(algorithm), key, signature, data),
-  );
-};
-
-export const verify_data_view: typeof $subtleCrypto.verify_data_view = (
   algorithm,
   key,
   signature,
@@ -224,42 +103,6 @@ export const generate_key_pair: typeof $subtleCrypto.generate_key_pair = (
 };
 
 export const import_key: typeof $subtleCrypto.import_key = (
-  format,
-  keyData,
-  algorithm,
-  extractable,
-  usages,
-) => {
-  return toResult.fromPromise(
-    subtle.importKey(
-      toKeyFormat(format),
-      unwrapTypedArray(keyData) as BufferSource,
-      toImportAlgorithm(algorithm),
-      extractable,
-      toKeyUsageArray(usages),
-    ),
-  );
-};
-
-export const import_key_buffer: typeof $subtleCrypto.import_key_buffer = (
-  format,
-  keyData,
-  algorithm,
-  extractable,
-  usages,
-) => {
-  return toResult.fromPromise(
-    subtle.importKey(
-      toKeyFormat(format),
-      keyData,
-      toImportAlgorithm(algorithm),
-      extractable,
-      toKeyUsageArray(usages),
-    ),
-  );
-};
-
-export const import_key_data_view: typeof $subtleCrypto.import_key_data_view = (
   format,
   keyData,
   algorithm,
@@ -372,50 +215,6 @@ export const unwrap_key: typeof $subtleCrypto.unwrap_key = (
   return toResult.fromPromise(
     subtle.unwrapKey(
       toKeyFormat(format),
-      unwrapTypedArray(wrappedKey) as BufferSource,
-      unwrappingKey,
-      toWrapAlgorithm(unwrapAlgorithm),
-      toImportAlgorithm(unwrappedKeyAlgorithm),
-      extractable,
-      toKeyUsageArray(usages),
-    ),
-  );
-};
-
-export const unwrap_key_buffer: typeof $subtleCrypto.unwrap_key_buffer = (
-  format,
-  wrappedKey,
-  unwrappingKey,
-  unwrapAlgorithm,
-  unwrappedKeyAlgorithm,
-  extractable,
-  usages,
-) => {
-  return toResult.fromPromise(
-    subtle.unwrapKey(
-      toKeyFormat(format),
-      wrappedKey,
-      unwrappingKey,
-      toWrapAlgorithm(unwrapAlgorithm),
-      toImportAlgorithm(unwrappedKeyAlgorithm),
-      extractable,
-      toKeyUsageArray(usages),
-    ),
-  );
-};
-
-export const unwrap_key_data_view: typeof $subtleCrypto.unwrap_key_data_view = (
-  format,
-  wrappedKey,
-  unwrappingKey,
-  unwrapAlgorithm,
-  unwrappedKeyAlgorithm,
-  extractable,
-  usages,
-) => {
-  return toResult.fromPromise(
-    subtle.unwrapKey(
-      toKeyFormat(format),
       wrappedKey as BufferSource,
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
@@ -437,7 +236,7 @@ export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
   return toResult.fromPromise(
     subtle.unwrapKey(
       "jwk",
-      unwrapTypedArray(wrappedKey) as BufferSource,
+      wrappedKey as BufferSource,
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),
@@ -446,47 +245,3 @@ export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
     ),
   );
 };
-
-export const unwrap_key_jwk_buffer: typeof $subtleCrypto.unwrap_key_jwk_buffer =
-  (
-    wrappedKey,
-    unwrappingKey,
-    unwrapAlgorithm,
-    unwrappedKeyAlgorithm,
-    extractable,
-    usages,
-  ) => {
-    return toResult.fromPromise(
-      subtle.unwrapKey(
-        "jwk",
-        wrappedKey,
-        unwrappingKey,
-        toWrapAlgorithm(unwrapAlgorithm),
-        toImportAlgorithm(unwrappedKeyAlgorithm),
-        extractable,
-        toKeyUsageArray(usages),
-      ),
-    );
-  };
-
-export const unwrap_key_jwk_data_view:
-  typeof $subtleCrypto.unwrap_key_jwk_data_view = (
-    wrappedKey,
-    unwrappingKey,
-    unwrapAlgorithm,
-    unwrappedKeyAlgorithm,
-    extractable,
-    usages,
-  ) => {
-    return toResult.fromPromise(
-      subtle.unwrapKey(
-        "jwk",
-        wrappedKey as BufferSource,
-        unwrappingKey,
-        toWrapAlgorithm(unwrapAlgorithm),
-        toImportAlgorithm(unwrappedKeyAlgorithm),
-        extractable,
-        toKeyUsageArray(usages),
-      ),
-    );
-  };
