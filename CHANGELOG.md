@@ -1,3 +1,9 @@
+## 9.2.0 (2026-05-04)
+
+### Features
+
+- add from_buffer_range to all 12 typed arrays
+
 ## 9.1.0 (2026-05-03)
 
 ### Features
