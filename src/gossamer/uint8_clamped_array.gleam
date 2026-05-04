@@ -1,5 +1,6 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/js_error.{type JsError}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// A typed array of 8-bit unsigned integers, clamped to `0`–`255` on
 /// write (rather than wrapped). Useful for image pixel data where
@@ -44,6 +45,13 @@ pub fn from_buffer_range(
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Uint8ClampedArray) -> ArrayBuffer
+
+/// A `Uint8Array` over the same bytes as `array`, sharing memory with
+/// the underlying buffer. Returns an error if the underlying buffer
+/// has been detached or resized below the array's range.
+///
+@external(javascript, "./uint8_clamped_array.ffi.mjs", "bytes")
+pub fn bytes(of array: Uint8ClampedArray) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "byte_length")
 pub fn byte_length(of array: Uint8ClampedArray) -> Int

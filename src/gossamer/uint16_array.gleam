@@ -1,5 +1,6 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/js_error.{type JsError}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// A typed array of 16-bit unsigned integers.
 ///
@@ -46,6 +47,13 @@ pub fn from_buffer_range(
 
 @external(javascript, "./uint16_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Uint16Array) -> ArrayBuffer
+
+/// A `Uint8Array` over the same bytes as `array`, sharing memory with
+/// the underlying buffer. Returns an error if the underlying buffer
+/// has been detached or resized below the array's range.
+///
+@external(javascript, "./uint16_array.ffi.mjs", "bytes")
+pub fn bytes(of array: Uint16Array) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./uint16_array.ffi.mjs", "byte_length")
 pub fn byte_length(of array: Uint16Array) -> Int

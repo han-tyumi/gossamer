@@ -22,6 +22,11 @@ export const from_buffer_range: typeof $bigUint64Array.from_buffer_range = (
 export const buffer: typeof $bigUint64Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
+export const bytes: typeof $bigUint64Array.bytes = (array) =>
+  toResult.fromThrows(() =>
+    new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+  );
+
 export const byte_length: typeof $bigUint64Array.byte_length = (array) =>
   array.byteLength;
 

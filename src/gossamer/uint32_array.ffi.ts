@@ -22,6 +22,11 @@ export const from_buffer_range: typeof $uint32Array.from_buffer_range = (
 export const buffer: typeof $uint32Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
+export const bytes: typeof $uint32Array.bytes = (array) =>
+  toResult.fromThrows(() =>
+    new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+  );
+
 export const byte_length: typeof $uint32Array.byte_length = (array) =>
   array.byteLength;
 

@@ -1,5 +1,6 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/js_error.{type JsError}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// A typed array of 32-bit IEEE 754 single-precision floats. Values
 /// are rounded to the nearest single-precision value on write — Gleam
@@ -44,6 +45,13 @@ pub fn from_buffer_range(
 
 @external(javascript, "./float32_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Float32Array) -> ArrayBuffer
+
+/// A `Uint8Array` over the same bytes as `array`, sharing memory with
+/// the underlying buffer. Returns an error if the underlying buffer
+/// has been detached or resized below the array's range.
+///
+@external(javascript, "./float32_array.ffi.mjs", "bytes")
+pub fn bytes(of array: Float32Array) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./float32_array.ffi.mjs", "byte_length")
 pub fn byte_length(of array: Float32Array) -> Int
