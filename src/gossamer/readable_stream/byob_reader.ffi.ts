@@ -4,10 +4,6 @@ import {
   ReadResult$Value,
 } from "$/gossamer/gossamer/readable_stream/read_result.mjs";
 import type { List } from "$/prelude.mjs";
-import {
-  unwrap as unwrapTypedArray,
-  wrap as wrapTypedArray,
-} from "~/gossamer/typed_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -38,25 +34,6 @@ export const cancel: typeof $byobReader.cancel = (
 };
 
 export const read: typeof $byobReader.read = (
-  reader: ReadableStreamBYOBReader,
-  view,
-  options,
-) => {
-  return toResult.fromPromise(
-    reader
-      .read(unwrapTypedArray(view), toByobReaderReadOptions(options))
-      .then((result) => {
-        if (result.done) {
-          return ReadResult$Done(
-            toOption(result.value ? wrapTypedArray(result.value) : null),
-          );
-        }
-        return ReadResult$Value(wrapTypedArray(result.value));
-      }),
-  );
-};
-
-export const read_data_view: typeof $byobReader.read_data_view = (
   reader: ReadableStreamBYOBReader,
   view,
   options,

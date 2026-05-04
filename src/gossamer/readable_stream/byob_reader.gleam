@@ -1,11 +1,10 @@
 // TODO: Untested — requires a byte stream (UnderlyingSource with type: "bytes")
 // which gossamer doesn't expose yet. Add tests once byte stream support lands.
 
-import gossamer/data_view.{type DataView}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/read_result.{type ReadResult}
-import gossamer/typed_array.{type TypedArray}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// A reader over a byte `ReadableStream` that reads into caller-provided
 /// buffers.
@@ -35,28 +34,16 @@ pub fn cancel(
 ) -> Promise(Result(Nil, JsError))
 
 /// Reads bytes from the stream into `view`. The returned chunk is a new
-/// `TypedArray` over the same underlying buffer, since the original
+/// `Uint8Array` over the same underlying buffer, since the original
 /// `view` is detached during the read. Returns an error if the stream
 /// errored or the reader was released.
 ///
 @external(javascript, "./byob_reader.ffi.mjs", "read")
 pub fn read(
   reader: ByobReader(a),
-  into view: TypedArray,
+  into view: Uint8Array,
   with options: List(ByobReaderReadOption),
-) -> Promise(Result(ReadResult(TypedArray), JsError))
-
-/// Reads bytes from the stream into `view`. The returned chunk is a new
-/// `DataView` over the same underlying buffer, since the original `view`
-/// is detached during the read. Returns an error if the stream errored
-/// or the reader was released.
-///
-@external(javascript, "./byob_reader.ffi.mjs", "read_data_view")
-pub fn read_data_view(
-  reader: ByobReader(a),
-  into view: DataView,
-  with options: List(ByobReaderReadOption),
-) -> Promise(Result(ReadResult(DataView), JsError))
+) -> Promise(Result(ReadResult(Uint8Array), JsError))
 
 /// Releases the reader's lock on the stream. Returns an error if the
 /// reader has outstanding read requests.
