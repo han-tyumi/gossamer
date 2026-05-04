@@ -1,6 +1,7 @@
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/big_int.{type BigInt}
 import gossamer/js_error.{type JsError}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// A low-level view over an `ArrayBuffer` for reading and writing
 /// numeric values at byte offsets in either byte order.
@@ -29,6 +30,13 @@ pub fn new_range(
 
 @external(javascript, "./data_view.ffi.mjs", "buffer")
 pub fn buffer(of view: DataView) -> ArrayBuffer
+
+/// A `Uint8Array` over the same bytes as `view`, sharing memory with
+/// the underlying buffer. Returns an error if the underlying buffer
+/// has been detached or resized below the view's range.
+///
+@external(javascript, "./data_view.ffi.mjs", "bytes")
+pub fn bytes(of view: DataView) -> Result(Uint8Array, JsError)
 
 /// The number of bytes covered by the view. Returns an error if the
 /// underlying buffer has been detached or resized below the view's

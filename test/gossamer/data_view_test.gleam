@@ -3,6 +3,7 @@ import gleeunit/should
 import gossamer/array_buffer
 import gossamer/big_int
 import gossamer/data_view
+import gossamer/uint8_array
 
 fn fresh_view() -> data_view.DataView {
   let assert Ok(buffer) = array_buffer.new(16)
@@ -192,4 +193,27 @@ pub fn detached_buffer_get_test() {
   let assert Ok(view) = data_view.new(buffer)
   let assert Ok(_) = array_buffer.transfer(buffer)
   data_view.get_int8(view, at_offset: 0) |> should.be_error
+}
+
+pub fn bytes_test() {
+  let assert Ok(buffer) = array_buffer.new(16)
+  let assert Ok(view) =
+    data_view.new_range(buffer, byte_offset: 4, byte_length: 8)
+  let assert Ok(bytes) = data_view.bytes(view)
+  uint8_array.length(bytes) |> should.equal(8)
+  uint8_array.byte_offset(bytes) |> should.equal(4)
+
+  // Writes through the DataView are visible in the Uint8Array, proving
+  // they share memory.
+  let assert Ok(_) = data_view.set_uint8(view, at_offset: 0, value: 0xAA)
+  let assert Ok(_) = data_view.set_uint8(view, at_offset: 7, value: 0xBB)
+  uint8_array.at(bytes, index: 0) |> should.equal(Ok(0xAA))
+  uint8_array.at(bytes, index: 7) |> should.equal(Ok(0xBB))
+}
+
+pub fn bytes_detached_test() {
+  let assert Ok(buffer) = array_buffer.new(16)
+  let assert Ok(view) = data_view.new(buffer)
+  let assert Ok(_) = array_buffer.transfer(buffer)
+  data_view.bytes(view) |> should.be_error
 }

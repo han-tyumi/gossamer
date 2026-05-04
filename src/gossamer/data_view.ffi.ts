@@ -13,6 +13,11 @@ export const new_range: typeof $dataView.new_range = (
 export const buffer: typeof $dataView.buffer = (view) =>
   view.buffer as ArrayBuffer;
 
+export const bytes: typeof $dataView.bytes = (view) =>
+  toResult.fromThrows(() =>
+    new Uint8Array(view.buffer, view.byteOffset, view.byteLength)
+  );
+
 export const byte_length: typeof $dataView.byte_length = (view) =>
   toResult.fromThrows(() => view.byteLength);
 
