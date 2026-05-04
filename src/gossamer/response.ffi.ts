@@ -1,7 +1,6 @@
 import * as $response from "$/gossamer/gossamer/response.mjs";
 import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromHttpStatus, toHttpStatus } from "~/gossamer/http_status.ffi.ts";
-import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -50,33 +49,16 @@ export const from_blob_with: typeof $response.from_blob_with = (
   );
 };
 
-export const from_buffer: typeof $response.from_buffer = (body) => {
-  return new Response(body);
+export const from_bytes: typeof $response.from_bytes = (body) => {
+  return new Response(body as BodyInit);
 };
 
-export const from_buffer_with: typeof $response.from_buffer_with = (
+export const from_bytes_with: typeof $response.from_bytes_with = (
   body,
   init,
 ) => {
   return toResult.fromThrows(
-    () => new Response(body, toResponseInit(toArray(init))),
-  );
-};
-
-export const from_data_view: typeof $response.from_data_view = (body) => {
-  return new Response(body as unknown as BodyInit);
-};
-
-export const from_data_view_with: typeof $response.from_data_view_with = (
-  body,
-  init,
-) => {
-  return toResult.fromThrows(
-    () =>
-      new Response(
-        body as unknown as BodyInit,
-        toResponseInit(toArray(init)),
-      ),
+    () => new Response(body as BodyInit, toResponseInit(toArray(init))),
   );
 };
 
@@ -142,23 +124,6 @@ export const from_string_with: typeof $response.from_string_with = (
 ) => {
   return toResult.fromThrows(
     () => new Response(body, toResponseInit(toArray(init))),
-  );
-};
-
-export const from_typed_array: typeof $response.from_typed_array = (body) => {
-  return new Response(unwrapTypedArray(body) as BodyInit);
-};
-
-export const from_typed_array_with: typeof $response.from_typed_array_with = (
-  body,
-  init,
-) => {
-  return toResult.fromThrows(
-    () =>
-      new Response(
-        unwrapTypedArray(body) as BodyInit,
-        toResponseInit(toArray(init)),
-      ),
   );
 };
 

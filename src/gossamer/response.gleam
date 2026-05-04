@@ -2,7 +2,6 @@ import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}
 import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
-import gossamer/data_view.{type DataView}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_status.{type HttpStatus}
@@ -10,7 +9,6 @@ import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
-import gossamer/typed_array.{type TypedArray}
 import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
@@ -75,33 +73,18 @@ pub fn from_blob_with(
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 
-/// Creates a `Response` with an `ArrayBuffer` body.
+/// Creates a `Response` with a `Uint8Array` body.
 ///
-@external(javascript, "./response.ffi.mjs", "from_buffer")
-pub fn from_buffer(body: ArrayBuffer) -> Response
+@external(javascript, "./response.ffi.mjs", "from_bytes")
+pub fn from_bytes(body: Uint8Array) -> Response
 
-/// Creates a `Response` with an `ArrayBuffer` body and init options.
-/// Returns an error if `init` contains a status outside `200`–`599` or an
-/// invalid status text.
+/// Creates a `Response` with a `Uint8Array` body and init options.
+/// Returns an error if `init` contains a status outside `200`–`599` or
+/// an invalid status text.
 ///
-@external(javascript, "./response.ffi.mjs", "from_buffer_with")
-pub fn from_buffer_with(
-  body: ArrayBuffer,
-  with init: List(ResponseInit),
-) -> Result(Response, JsError)
-
-/// Creates a `Response` with a `DataView` body.
-///
-@external(javascript, "./response.ffi.mjs", "from_data_view")
-pub fn from_data_view(body: DataView) -> Response
-
-/// Creates a `Response` with a `DataView` body and init options. Returns
-/// an error if `init` contains a status outside `200`–`599` or an invalid
-/// status text.
-///
-@external(javascript, "./response.ffi.mjs", "from_data_view_with")
-pub fn from_data_view_with(
-  body: DataView,
+@external(javascript, "./response.ffi.mjs", "from_bytes_with")
+pub fn from_bytes_with(
+  body: Uint8Array,
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 
@@ -183,21 +166,6 @@ pub fn from_string(body: String) -> Response
 @external(javascript, "./response.ffi.mjs", "from_string_with")
 pub fn from_string_with(
   body: String,
-  with init: List(ResponseInit),
-) -> Result(Response, JsError)
-
-/// Creates a `Response` with a `TypedArray` body.
-///
-@external(javascript, "./response.ffi.mjs", "from_typed_array")
-pub fn from_typed_array(body: TypedArray) -> Response
-
-/// Creates a `Response` with a `TypedArray` body and init options.
-/// Returns an error if `init` contains a status outside `200`–`599` or
-/// an invalid status text.
-///
-@external(javascript, "./response.ffi.mjs", "from_typed_array_with")
-pub fn from_typed_array_with(
-  body: TypedArray,
   with init: List(ResponseInit),
 ) -> Result(Response, JsError)
 

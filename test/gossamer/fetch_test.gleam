@@ -588,20 +588,18 @@ pub fn response_new_empty_test() {
   response.is_body_used(resp) |> should.be_false
 }
 
-pub fn response_from_typed_array_test() {
-  let bytes = typed_array.Uint8(uint8_array.from_list([104, 105]))
-  let resp = response.from_typed_array(bytes)
+pub fn response_from_bytes_test() {
+  let bytes = uint8_array.from_list([104, 105])
+  let resp = response.from_bytes(bytes)
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("hi"))
   promise.resolve(Nil)
 }
 
-pub fn response_from_typed_array_with_test() {
-  let bytes = typed_array.Uint8(uint8_array.from_list([104, 105]))
+pub fn response_from_bytes_with_test() {
+  let bytes = uint8_array.from_list([104, 105])
   let assert Ok(resp) =
-    response.from_typed_array_with(bytes, [
-      response.Status(http_status.Created),
-    ])
+    response.from_bytes_with(bytes, [response.Status(http_status.Created)])
   response.status(resp) |> should.equal(http_status.Created)
 }
 
@@ -611,36 +609,6 @@ pub fn response_from_blob_test() {
   use result <- promise.then(response.text(resp))
   should.equal(result, Ok("hello"))
   promise.resolve(Nil)
-}
-
-pub fn response_from_buffer_test() {
-  let bytes = uint8_array.from_list([97, 98, 99])
-  let buffer = uint8_array.buffer(bytes)
-  let resp = response.from_buffer(buffer)
-  use result <- promise.then(response.text(resp))
-  should.equal(result, Ok("abc"))
-  promise.resolve(Nil)
-}
-
-pub fn response_from_data_view_test() {
-  let bytes = uint8_array.from_list([100, 101, 102])
-  let buffer = uint8_array.buffer(bytes)
-  let assert Ok(view) = data_view.new(buffer)
-  let resp = response.from_data_view(view)
-  use result <- promise.then(response.text(resp))
-  should.equal(result, Ok("def"))
-  promise.resolve(Nil)
-}
-
-pub fn response_from_data_view_with_test() {
-  let bytes = uint8_array.from_list([100])
-  let buffer = uint8_array.buffer(bytes)
-  let assert Ok(view) = data_view.new(buffer)
-  let assert Ok(resp) =
-    response.from_data_view_with(view, [
-      response.Status(http_status.Created),
-    ])
-  response.status(resp) |> should.equal(http_status.Created)
 }
 
 pub fn response_from_form_data_test() {
