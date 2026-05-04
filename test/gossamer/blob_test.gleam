@@ -2,9 +2,7 @@ import gleam/string
 import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
-import gossamer/data_view
 import gossamer/promise
-import gossamer/typed_array
 import gossamer/uint8_array
 
 pub fn blob_from_string_test() {
@@ -20,9 +18,8 @@ pub fn blob_from_string_with_type_test() {
   should.be_true(string.starts_with(blob.type_(b), "text/plain"))
 }
 
-pub fn blob_from_typed_array_test() {
-  let b =
-    blob.from_typed_array(typed_array.Uint8(uint8_array.from_list([1, 2, 3])))
+pub fn blob_from_bytes_test() {
+  let b = blob.from_bytes(uint8_array.from_list([1, 2, 3]))
   should.equal(blob.size(b), 3)
 }
 
@@ -42,10 +39,7 @@ pub fn blob_array_buffer_test() {
 }
 
 pub fn blob_bytes_test() {
-  let b =
-    blob.from_typed_array(
-      typed_array.Uint8(uint8_array.from_list([10, 20, 30])),
-    )
+  let b = blob.from_bytes(uint8_array.from_list([10, 20, 30]))
   use result <- promise.then(blob.bytes(b))
   let assert Ok(bytes) = result
   should.equal(uint8_array.byte_length(bytes), 3)
@@ -65,10 +59,10 @@ pub fn blob_empty_test() {
   should.equal(blob.size(b), 0)
 }
 
-pub fn blob_from_typed_array_with_type_test() {
+pub fn blob_from_bytes_with_type_test() {
   let b =
-    blob.from_typed_array_with_type(
-      typed_array.Uint8(uint8_array.from_list([72, 101, 108, 108, 111])),
+    blob.from_bytes_with_type(
+      uint8_array.from_list([72, 101, 108, 108, 111]),
       "application/octet-stream",
     )
   should.equal(blob.size(b), 5)
@@ -88,32 +82,4 @@ pub fn blob_slice_with_type_test() {
 pub fn blob_stream_test() {
   let b = blob.from_string("stream me")
   let _stream = blob.stream(b)
-}
-
-pub fn blob_from_buffer_test() {
-  let assert Ok(buffer) = array_buffer.new(8)
-  let b = blob.from_buffer(buffer)
-  should.equal(blob.size(b), 8)
-}
-
-pub fn blob_from_buffer_with_type_test() {
-  let assert Ok(buffer) = array_buffer.new(4)
-  let b = blob.from_buffer_with_type(buffer, "application/octet-stream")
-  should.equal(blob.size(b), 4)
-  should.equal(blob.type_(b), "application/octet-stream")
-}
-
-pub fn blob_from_data_view_test() {
-  let assert Ok(buffer) = array_buffer.new(8)
-  let assert Ok(view) = data_view.new(buffer)
-  let b = blob.from_data_view(view)
-  should.equal(blob.size(b), 8)
-}
-
-pub fn blob_from_data_view_with_type_test() {
-  let assert Ok(buffer) = array_buffer.new(4)
-  let assert Ok(view) = data_view.new(buffer)
-  let b = blob.from_data_view_with_type(view, "application/octet-stream")
-  should.equal(blob.size(b), 4)
-  should.equal(blob.type_(b), "application/octet-stream")
 }

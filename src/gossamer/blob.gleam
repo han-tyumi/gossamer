@@ -1,9 +1,7 @@
 import gossamer/array_buffer.{type ArrayBuffer}
-import gossamer/data_view.{type DataView}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/typed_array.{type TypedArray}
 import gossamer/uint8_array.{type Uint8Array}
 
 /// A file-like object of immutable, raw data. Can be read as text, bytes,
@@ -24,21 +22,12 @@ pub fn to_fields(blob: Blob) -> Fields
 @external(javascript, "./blob.ffi.mjs", "new_")
 pub fn new() -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_buffer")
-pub fn from_buffer(bytes: ArrayBuffer) -> Blob
+@external(javascript, "./blob.ffi.mjs", "from_bytes")
+pub fn from_bytes(bytes: Uint8Array) -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_buffer_with_type")
-pub fn from_buffer_with_type(
-  bytes: ArrayBuffer,
-  content_type content_type: String,
-) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_data_view")
-pub fn from_data_view(bytes: DataView) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_data_view_with_type")
-pub fn from_data_view_with_type(
-  bytes: DataView,
+@external(javascript, "./blob.ffi.mjs", "from_bytes_with_type")
+pub fn from_bytes_with_type(
+  bytes: Uint8Array,
   content_type content_type: String,
 ) -> Blob
 
@@ -48,15 +37,6 @@ pub fn from_string(content: String) -> Blob
 @external(javascript, "./blob.ffi.mjs", "from_string_with_type")
 pub fn from_string_with_type(
   content: String,
-  content_type content_type: String,
-) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_typed_array")
-pub fn from_typed_array(bytes: TypedArray) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_typed_array_with_type")
-pub fn from_typed_array_with_type(
-  bytes: TypedArray,
   content_type content_type: String,
 ) -> Blob
 
