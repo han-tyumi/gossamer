@@ -3,7 +3,6 @@ import gleam/option
 import gleam/string
 import gleeunit/should
 import gossamer/aes_algorithm
-import gossamer/array_buffer
 import gossamer/crypto
 import gossamer/crypto_key
 import gossamer/ec_algorithm
@@ -39,8 +38,8 @@ pub fn random_uuid_test() {
 pub fn digest_test() {
   let data = uint8_array.from_list([1, 2, 3])
   use result <- promise.then(subtle_crypto.digest(hash_algorithm.Sha256, data))
-  let assert Ok(buffer) = result
-  should.equal(array_buffer.byte_length(buffer), 32)
+  let assert Ok(hash) = result
+  should.equal(uint8_array.byte_length(hash), 32)
   promise.resolve(Nil)
 }
 
@@ -70,17 +69,15 @@ pub fn generate_key_and_encrypt_decrypt_test() {
     plaintext,
   ))
   let assert Ok(ciphertext) = result
-  should.be_true(array_buffer.byte_length(ciphertext) > 0)
+  should.be_true(uint8_array.byte_length(ciphertext) > 0)
 
-  let assert Ok(ciphertext_bytes) = uint8_array.from_buffer(ciphertext)
   use result <- promise.then(subtle_crypto.decrypt(
     encrypt_algorithm.AesGcm(iv),
     key,
-    ciphertext_bytes,
+    ciphertext,
   ))
   let assert Ok(decrypted) = result
-  let assert Ok(decrypted_bytes) = uint8_array.from_buffer(decrypted)
-  should.equal(uint8_array.byte_length(decrypted_bytes), 5)
+  should.equal(uint8_array.byte_length(decrypted), 5)
   promise.resolve(Nil)
 }
 
@@ -106,13 +103,12 @@ pub fn generate_key_pair_sign_verify_test() {
     data,
   ))
   let assert Ok(signature) = result
-  should.be_true(array_buffer.byte_length(signature) > 0)
+  should.be_true(uint8_array.byte_length(signature) > 0)
 
-  let assert Ok(signature_bytes) = uint8_array.from_buffer(signature)
   use result <- promise.then(subtle_crypto.verify(
     sign_algorithm.Ecdsa(hash_algorithm.Sha256),
     public_key,
-    signature_bytes,
+    signature,
     data,
   ))
   let assert Ok(verified) = result
@@ -163,7 +159,7 @@ pub fn import_export_key_test() {
 
   use result <- promise.then(subtle_crypto.export_key(key_format.Raw, key))
   let assert Ok(exported) = result
-  should.equal(array_buffer.byte_length(exported), 16)
+  should.equal(uint8_array.byte_length(exported), 16)
   promise.resolve(Nil)
 }
 
@@ -274,7 +270,7 @@ pub fn derive_bits_test() {
     256,
   ))
   let assert Ok(bits) = result
-  array_buffer.byte_length(bits) |> should.equal(32)
+  uint8_array.byte_length(bits) |> should.equal(32)
   promise.resolve(Nil)
 }
 
@@ -341,13 +337,12 @@ pub fn wrap_unwrap_key_test() {
     wrap_algorithm.Other("AES-KW"),
   ))
   let assert Ok(wrapped) = result
-  should.be_true(array_buffer.byte_length(wrapped) > 0)
+  should.be_true(uint8_array.byte_length(wrapped) > 0)
 
-  let assert Ok(wrapped_bytes) = uint8_array.from_buffer(wrapped)
   use result <- promise.then(
     subtle_crypto.unwrap_key(
       key_format.Raw,
-      wrapped_bytes,
+      wrapped,
       wrapping_key,
       wrap_algorithm.Other("AES-KW"),
       import_algorithm.Other("AES-GCM"),
@@ -392,12 +387,11 @@ pub fn wrap_unwrap_key_jwk_test() {
     wrap_algorithm.Other("AES-KW"),
   ))
   let assert Ok(wrapped_jwk) = result
-  should.be_true(array_buffer.byte_length(wrapped_jwk) > 0)
+  should.be_true(uint8_array.byte_length(wrapped_jwk) > 0)
 
-  let assert Ok(wrapped_jwk_bytes) = uint8_array.from_buffer(wrapped_jwk)
   use result <- promise.then(
     subtle_crypto.unwrap_key_jwk(
-      wrapped_jwk_bytes,
+      wrapped_jwk,
       wrapping_key,
       wrap_algorithm.Other("AES-KW"),
       import_algorithm.Other("AES-GCM"),

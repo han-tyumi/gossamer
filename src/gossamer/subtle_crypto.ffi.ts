@@ -26,7 +26,9 @@ function toCryptoKeyPair(
 
 export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
   return toResult.fromPromise(
-    subtle.digest(toHashAlgorithm(algorithm), data as BufferSource),
+    subtle
+      .digest(toHashAlgorithm(algorithm), data as BufferSource)
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 
@@ -36,7 +38,9 @@ export const encrypt: typeof $subtleCrypto.encrypt = (
   data,
 ) => {
   return toResult.fromPromise(
-    subtle.encrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource),
+    subtle
+      .encrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource)
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 
@@ -46,13 +50,17 @@ export const decrypt: typeof $subtleCrypto.decrypt = (
   data,
 ) => {
   return toResult.fromPromise(
-    subtle.decrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource),
+    subtle
+      .decrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource)
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 
 export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
   return toResult.fromPromise(
-    subtle.sign(toSignAlgorithm(algorithm), key, data as BufferSource),
+    subtle
+      .sign(toSignAlgorithm(algorithm), key, data as BufferSource)
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 
@@ -139,7 +147,9 @@ export const import_key_jwk: typeof $subtleCrypto.import_key_jwk = (
 
 export const export_key: typeof $subtleCrypto.export_key = (format, key) => {
   return toResult.fromPromise(
-    subtle.exportKey(toKeyFormat(format), key),
+    (subtle.exportKey(toKeyFormat(format), key) as Promise<ArrayBuffer>).then(
+      (buf) => new Uint8Array(buf),
+    ),
   );
 };
 
@@ -155,7 +165,9 @@ export const derive_bits: typeof $subtleCrypto.derive_bits = (
   length,
 ) => {
   return toResult.fromPromise(
-    subtle.deriveBits(toDeriveAlgorithm(algorithm), baseKey, length),
+    subtle
+      .deriveBits(toDeriveAlgorithm(algorithm), baseKey, length)
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 
@@ -184,12 +196,14 @@ export const wrap_key: typeof $subtleCrypto.wrap_key = (
   algorithm,
 ) => {
   return toResult.fromPromise(
-    subtle.wrapKey(
-      toKeyFormat(format),
-      key,
-      wrappingKey,
-      toWrapAlgorithm(algorithm),
-    ),
+    subtle
+      .wrapKey(
+        toKeyFormat(format),
+        key,
+        wrappingKey,
+        toWrapAlgorithm(algorithm),
+      )
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 
@@ -199,7 +213,9 @@ export const wrap_key_jwk: typeof $subtleCrypto.wrap_key_jwk = (
   algorithm,
 ) => {
   return toResult.fromPromise(
-    subtle.wrapKey("jwk", key, wrappingKey, toWrapAlgorithm(algorithm)),
+    subtle
+      .wrapKey("jwk", key, wrappingKey, toWrapAlgorithm(algorithm))
+      .then((buf) => new Uint8Array(buf)),
   );
 };
 

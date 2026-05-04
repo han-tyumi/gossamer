@@ -1,4 +1,3 @@
-import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/js_error.{type JsError}
@@ -27,7 +26,7 @@ pub type CryptoKeyPair {
 pub fn digest(
   algorithm algorithm: HashAlgorithm,
   data data: Uint8Array,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Encrypts `data` with `key` using `algorithm`. Returns an error if the key's
 /// usage doesn't include `"encrypt"`, the key's algorithm doesn't match,
@@ -38,7 +37,7 @@ pub fn encrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
   data data: Uint8Array,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Decrypts `data` with `key` using `algorithm`. Returns an error if the key's
 /// usage doesn't include `"decrypt"`, the key's algorithm doesn't match,
@@ -49,7 +48,7 @@ pub fn decrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
   data data: Uint8Array,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Produces a digital signature of `data` with `key`. Returns an error if the
 /// key's usage doesn't include `"sign"` or the key's algorithm doesn't
@@ -60,7 +59,7 @@ pub fn sign(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
   data data: Uint8Array,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Verifies `signature` against `data` using `key`. Returns an error if the key's
 /// usage doesn't include `"verify"` or the key's algorithm doesn't match.
@@ -123,7 +122,7 @@ pub fn import_key_jwk(
 pub fn export_key(
   format format: KeyFormat,
   key key: CryptoKey,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Exports `key` as a JSON Web Key. Returns an error if the key is not extractable.
 ///
@@ -138,7 +137,7 @@ pub fn derive_bits(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
   length length: Int,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Derives a new `CryptoKey` from a base key. Returns an error if the key's usage
 /// doesn't include `"deriveKey"` or the algorithm is unsupported.
@@ -162,7 +161,7 @@ pub fn wrap_key(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
   algorithm algorithm: WrapAlgorithm,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Like `wrap_key`, but exports `key` as a JSON Web Key before wrapping.
 ///
@@ -171,7 +170,7 @@ pub fn wrap_key_jwk(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
   algorithm algorithm: WrapAlgorithm,
-) -> Promise(Result(ArrayBuffer, JsError))
+) -> Promise(Result(Uint8Array, JsError))
 
 /// Decrypts `wrapped_key` with `unwrapping_key` and imports the result.
 /// Returns an error if the unwrapping fails or the imported key is invalid for the
