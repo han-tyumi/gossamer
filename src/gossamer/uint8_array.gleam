@@ -30,8 +30,11 @@ pub fn from_list(list: List(Int)) -> Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "from_list_mapped")
 pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> Int) -> Uint8Array
 
+/// Creates a `Uint8Array` view over the entirety of `buffer`. Returns
+/// an error if `buffer` is detached.
+///
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Uint8Array, JsError)
 
 /// Creates a `Uint8Array` view over a slice of `buffer` starting at
 /// `byte_offset` and spanning `length` elements. Returns an error if

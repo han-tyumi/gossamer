@@ -72,13 +72,14 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   let assert Ok(ciphertext) = result
   should.be_true(array_buffer.byte_length(ciphertext) > 0)
 
+  let assert Ok(ciphertext_bytes) = uint8_array.from_buffer(ciphertext)
   use result <- promise.then(subtle_crypto.decrypt(
     encrypt_algorithm.AesGcm(iv),
     key,
-    uint8_array.from_buffer(ciphertext),
+    ciphertext_bytes,
   ))
   let assert Ok(decrypted) = result
-  let decrypted_bytes = uint8_array.from_buffer(decrypted)
+  let assert Ok(decrypted_bytes) = uint8_array.from_buffer(decrypted)
   should.equal(uint8_array.byte_length(decrypted_bytes), 5)
   promise.resolve(Nil)
 }
@@ -107,10 +108,11 @@ pub fn generate_key_pair_sign_verify_test() {
   let assert Ok(signature) = result
   should.be_true(array_buffer.byte_length(signature) > 0)
 
+  let assert Ok(signature_bytes) = uint8_array.from_buffer(signature)
   use result <- promise.then(subtle_crypto.verify(
     sign_algorithm.Ecdsa(hash_algorithm.Sha256),
     public_key,
-    uint8_array.from_buffer(signature),
+    signature_bytes,
     data,
   ))
   let assert Ok(verified) = result
@@ -341,10 +343,11 @@ pub fn wrap_unwrap_key_test() {
   let assert Ok(wrapped) = result
   should.be_true(array_buffer.byte_length(wrapped) > 0)
 
+  let assert Ok(wrapped_bytes) = uint8_array.from_buffer(wrapped)
   use result <- promise.then(
     subtle_crypto.unwrap_key(
       key_format.Raw,
-      uint8_array.from_buffer(wrapped),
+      wrapped_bytes,
       wrapping_key,
       wrap_algorithm.Other("AES-KW"),
       import_algorithm.Other("AES-GCM"),
@@ -391,9 +394,10 @@ pub fn wrap_unwrap_key_jwk_test() {
   let assert Ok(wrapped_jwk) = result
   should.be_true(array_buffer.byte_length(wrapped_jwk) > 0)
 
+  let assert Ok(wrapped_jwk_bytes) = uint8_array.from_buffer(wrapped_jwk)
   use result <- promise.then(
     subtle_crypto.unwrap_key_jwk(
-      uint8_array.from_buffer(wrapped_jwk),
+      wrapped_jwk_bytes,
       wrapping_key,
       wrap_algorithm.Other("AES-KW"),
       import_algorithm.Other("AES-GCM"),

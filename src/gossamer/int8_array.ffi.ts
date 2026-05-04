@@ -11,7 +11,7 @@ export const from_list: typeof $int8Array.from_list = (list) =>
   new Int8Array(toArray(list));
 
 export const from_buffer: typeof $int8Array.from_buffer = (buffer) =>
-  new Int8Array(buffer);
+  toResult.fromThrows(() => new Int8Array(buffer));
 
 export const from_buffer_range: typeof $int8Array.from_buffer_range = (
   buffer,

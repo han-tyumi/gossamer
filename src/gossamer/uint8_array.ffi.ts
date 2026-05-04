@@ -23,9 +23,8 @@ export const from_list_mapped: typeof $uint8Array.from_list_mapped = (
   return Uint8Array.from(toArray(list), mapper);
 };
 
-export const from_buffer: typeof $uint8Array.from_buffer = (buffer) => {
-  return new Uint8Array(buffer);
-};
+export const from_buffer: typeof $uint8Array.from_buffer = (buffer) =>
+  toResult.fromThrows(() => new Uint8Array(buffer));
 
 export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
   buffer,

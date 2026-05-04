@@ -29,8 +29,11 @@ pub fn from_length(length: Int) -> Result(Uint8ClampedArray, JsError)
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Uint8ClampedArray
 
+/// Creates a `Uint8ClampedArray` view over the entirety of `buffer`.
+/// Returns an error if `buffer` is detached.
+///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Uint8ClampedArray
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Uint8ClampedArray, JsError)
 
 /// Creates a `Uint8ClampedArray` view over a slice of `buffer` starting
 /// at `byte_offset` and spanning `length` elements. Returns an error if

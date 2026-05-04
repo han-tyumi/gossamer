@@ -12,7 +12,7 @@ export const from_list: typeof $uint8ClampedArray.from_list = (list) =>
   new Uint8ClampedArray(toArray(list));
 
 export const from_buffer: typeof $uint8ClampedArray.from_buffer = (buffer) =>
-  new Uint8ClampedArray(buffer);
+  toResult.fromThrows(() => new Uint8ClampedArray(buffer));
 
 export const from_buffer_range: typeof $uint8ClampedArray.from_buffer_range = (
   buffer,

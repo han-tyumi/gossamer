@@ -363,7 +363,7 @@ pub fn from_list_mapped_test() {
 
 pub fn from_buffer_test() {
   let buffer = uint8_array.from_list([10, 20, 30]) |> uint8_array.buffer
-  let array = uint8_array.from_buffer(buffer)
+  let assert Ok(array) = uint8_array.from_buffer(buffer)
   uint8_array.to_list(array) |> should.equal([10, 20, 30])
 }
 
@@ -388,6 +388,12 @@ pub fn from_buffer_range_detached_test() {
   let assert Ok(_) = array_buffer.transfer(buffer)
   uint8_array.from_buffer_range(buffer, byte_offset: 0, length: 4)
   |> should.be_error
+}
+
+pub fn from_buffer_detached_test() {
+  let assert Ok(buffer) = array_buffer.new(8)
+  let assert Ok(_) = array_buffer.transfer(buffer)
+  uint8_array.from_buffer(buffer) |> should.be_error
 }
 
 pub fn copy_within_range_test() {

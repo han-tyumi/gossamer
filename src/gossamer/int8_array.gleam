@@ -26,8 +26,11 @@ pub fn from_length(length: Int) -> Result(Int8Array, JsError)
 @external(javascript, "./int8_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Int8Array
 
+/// Creates an `Int8Array` view over the entirety of `buffer`. Returns
+/// an error if `buffer` is detached.
+///
 @external(javascript, "./int8_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Int8Array
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int8Array, JsError)
 
 /// Creates an `Int8Array` view over a slice of `buffer` starting at
 /// `byte_offset` and spanning `length` elements. Returns an error if

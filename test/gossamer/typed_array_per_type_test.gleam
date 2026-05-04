@@ -178,10 +178,22 @@ pub fn from_buffer_aligned_test() {
 }
 
 pub fn from_buffer_int8_any_size_test() {
-  // 1-byte alignment; from_buffer doesn't return Result for Int8Array.
+  // 1-byte alignment; any buffer size works for Int8Array.
   let assert Ok(buf) = array_buffer.new(7)
-  let arr = int8_array.from_buffer(buf)
+  let assert Ok(arr) = int8_array.from_buffer(buf)
   int8_array.length(arr) |> should.equal(7)
+}
+
+pub fn int8_from_buffer_detached_test() {
+  let assert Ok(buf) = array_buffer.new(8)
+  let assert Ok(_) = array_buffer.transfer(buf)
+  int8_array.from_buffer(buf) |> should.be_error
+}
+
+pub fn uint8_clamped_from_buffer_detached_test() {
+  let assert Ok(buf) = array_buffer.new(8)
+  let assert Ok(_) = array_buffer.transfer(buf)
+  uint8_clamped_array.from_buffer(buf) |> should.be_error
 }
 
 // from_buffer_range smoke tests — one happy path per typed array (excl.
