@@ -8,7 +8,6 @@ import gossamer/crypto
 import gossamer/crypto_key
 import gossamer/ec_algorithm
 import gossamer/hash_algorithm
-import gossamer/int_typed_array
 import gossamer/key_format
 import gossamer/key_type
 import gossamer/key_usage
@@ -28,8 +27,7 @@ import gossamer/uint8_array
 
 pub fn get_random_values_test() {
   let assert Ok(array) = uint8_array.from_length(16)
-  let assert Ok(int_typed_array.Uint8(result)) =
-    crypto.get_random_values(int_typed_array.Uint8(array))
+  let assert Ok(result) = crypto.get_random_values(array)
   should.equal(uint8_array.byte_length(result), 16)
 }
 
@@ -63,8 +61,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.equal(crypto_key.type_(key), key_type.Secret)
 
   let assert Ok(iv_source) = uint8_array.from_length(12)
-  let assert Ok(int_typed_array.Uint8(iv)) =
-    crypto.get_random_values(int_typed_array.Uint8(iv_source))
+  let assert Ok(iv) = crypto.get_random_values(iv_source)
   let plaintext = uint8_array.from_list([72, 101, 108, 108, 111])
 
   use result <- promise.then(subtle_crypto.encrypt(
@@ -147,8 +144,7 @@ pub fn generate_rsa_key_pair_test() {
 
 pub fn import_export_key_test() {
   let assert Ok(raw_key_source) = uint8_array.from_length(16)
-  let assert Ok(int_typed_array.Uint8(raw_key)) =
-    crypto.get_random_values(int_typed_array.Uint8(raw_key_source))
+  let assert Ok(raw_key) = crypto.get_random_values(raw_key_source)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -257,8 +253,7 @@ pub fn import_key_jwk_test() {
 pub fn derive_bits_test() {
   let password = uint8_array.from_list([112, 97, 115, 115])
   let assert Ok(salt_source) = uint8_array.from_length(16)
-  let assert Ok(int_typed_array.Uint8(salt)) =
-    crypto.get_random_values(int_typed_array.Uint8(salt_source))
+  let assert Ok(salt) = crypto.get_random_values(salt_source)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -284,8 +279,7 @@ pub fn derive_bits_test() {
 pub fn derive_key_test() {
   let password = uint8_array.from_list([112, 97, 115, 115])
   let assert Ok(salt_source) = uint8_array.from_length(16)
-  let assert Ok(int_typed_array.Uint8(salt)) =
-    crypto.get_random_values(int_typed_array.Uint8(salt_source))
+  let assert Ok(salt) = crypto.get_random_values(salt_source)
 
   use result <- promise.then(
     subtle_crypto.import_key(
