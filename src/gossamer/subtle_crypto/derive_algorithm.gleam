@@ -1,14 +1,14 @@
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
-import gossamer/typed_array.{type TypedArray}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// Algorithm parameters for `subtle_crypto.derive_bits` and `derive_key`.
 ///
 /// Non-standard or unnamed algorithms use `Other(String)`.
 ///
 pub type DeriveAlgorithm {
-  Hkdf(hash: HashAlgorithm, info: TypedArray, salt: TypedArray)
-  Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: TypedArray)
+  Hkdf(hash: HashAlgorithm, info: Uint8Array, salt: Uint8Array)
+  Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: Uint8Array)
   Ecdh(public: CryptoKey)
   Other(String)
 }
