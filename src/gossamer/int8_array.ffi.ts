@@ -13,6 +13,12 @@ export const from_list: typeof $int8Array.from_list = (list) =>
 export const from_buffer: typeof $int8Array.from_buffer = (buffer) =>
   new Int8Array(buffer);
 
+export const from_buffer_range: typeof $int8Array.from_buffer_range = (
+  buffer,
+  byteOffset,
+  length,
+) => toResult.fromThrows(() => new Int8Array(buffer, byteOffset, length));
+
 export const buffer: typeof $int8Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 

@@ -27,6 +27,12 @@ export const from_buffer: typeof $uint8Array.from_buffer = (buffer) => {
   return new Uint8Array(buffer);
 };
 
+export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
+  buffer,
+  byteOffset,
+  length,
+) => toResult.fromThrows(() => new Uint8Array(buffer, byteOffset, length));
+
 export const buffer: typeof $uint8Array.buffer = (array) => {
   return array.buffer as ArrayBuffer;
 };

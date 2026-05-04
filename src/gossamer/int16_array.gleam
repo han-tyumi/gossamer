@@ -32,6 +32,18 @@ pub fn from_list(list: List(Int)) -> Int16Array
 @external(javascript, "./int16_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int16Array, JsError)
 
+/// Creates an `Int16Array` view over a slice of `buffer` starting at
+/// `byte_offset` and spanning `length` elements. Returns an error if
+/// the range is out of bounds, `buffer` is detached, or `byte_offset`
+/// is not a multiple of `2`.
+///
+@external(javascript, "./int16_array.ffi.mjs", "from_buffer_range")
+pub fn from_buffer_range(
+  buffer: ArrayBuffer,
+  byte_offset byte_offset: Int,
+  length length: Int,
+) -> Result(Int16Array, JsError)
+
 @external(javascript, "./int16_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Int16Array) -> ArrayBuffer
 

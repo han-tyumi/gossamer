@@ -28,6 +28,17 @@ pub fn from_list(list: List(Int)) -> Int8Array
 @external(javascript, "./int8_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Int8Array
 
+/// Creates an `Int8Array` view over a slice of `buffer` starting at
+/// `byte_offset` and spanning `length` elements. Returns an error if
+/// the range is out of bounds or `buffer` is detached.
+///
+@external(javascript, "./int8_array.ffi.mjs", "from_buffer_range")
+pub fn from_buffer_range(
+  buffer: ArrayBuffer,
+  byte_offset byte_offset: Int,
+  length length: Int,
+) -> Result(Int8Array, JsError)
+
 @external(javascript, "./int8_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Int8Array) -> ArrayBuffer
 

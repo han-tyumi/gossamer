@@ -32,6 +32,18 @@ pub fn from_list(list: List(BigInt)) -> BigUint64Array
 @external(javascript, "./biguint64_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Result(BigUint64Array, JsError)
 
+/// Creates a `BigUint64Array` view over a slice of `buffer` starting at
+/// `byte_offset` and spanning `length` elements. Returns an error if
+/// the range is out of bounds, `buffer` is detached, or `byte_offset`
+/// is not a multiple of `8`.
+///
+@external(javascript, "./biguint64_array.ffi.mjs", "from_buffer_range")
+pub fn from_buffer_range(
+  buffer: ArrayBuffer,
+  byte_offset byte_offset: Int,
+  length length: Int,
+) -> Result(BigUint64Array, JsError)
+
 @external(javascript, "./biguint64_array.ffi.mjs", "buffer")
 pub fn buffer(of array: BigUint64Array) -> ArrayBuffer
 

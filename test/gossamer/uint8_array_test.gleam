@@ -1,5 +1,6 @@
 import gleam/order
 import gleeunit/should
+import gossamer/array_buffer
 import gossamer/iterator
 import gossamer/uint8_array
 
@@ -364,6 +365,29 @@ pub fn from_buffer_test() {
   let buffer = uint8_array.from_list([10, 20, 30]) |> uint8_array.buffer
   let array = uint8_array.from_buffer(buffer)
   uint8_array.to_list(array) |> should.equal([10, 20, 30])
+}
+
+pub fn from_buffer_range_test() {
+  let buffer =
+    uint8_array.from_list([1, 2, 3, 4, 5, 6, 7, 8]) |> uint8_array.buffer
+  let assert Ok(array) =
+    uint8_array.from_buffer_range(buffer, byte_offset: 2, length: 4)
+  uint8_array.to_list(array) |> should.equal([3, 4, 5, 6])
+  uint8_array.byte_offset(array) |> should.equal(2)
+  uint8_array.length(array) |> should.equal(4)
+}
+
+pub fn from_buffer_range_out_of_bounds_test() {
+  let assert Ok(buffer) = array_buffer.new(8)
+  uint8_array.from_buffer_range(buffer, byte_offset: 0, length: 100)
+  |> should.be_error
+}
+
+pub fn from_buffer_range_detached_test() {
+  let assert Ok(buffer) = array_buffer.new(8)
+  let assert Ok(_) = array_buffer.transfer(buffer)
+  uint8_array.from_buffer_range(buffer, byte_offset: 0, length: 4)
+  |> should.be_error
 }
 
 pub fn copy_within_range_test() {

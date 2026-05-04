@@ -33,6 +33,17 @@ pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> Int) -> Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
 
+/// Creates a `Uint8Array` view over a slice of `buffer` starting at
+/// `byte_offset` and spanning `length` elements. Returns an error if
+/// the range is out of bounds or `buffer` is detached.
+///
+@external(javascript, "./uint8_array.ffi.mjs", "from_buffer_range")
+pub fn from_buffer_range(
+  buffer: ArrayBuffer,
+  byte_offset byte_offset: Int,
+  length length: Int,
+) -> Result(Uint8Array, JsError)
+
 /// Decodes a base64 string into a `Uint8Array`. Returns an error if
 /// `string` is not valid base64.
 ///

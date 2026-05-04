@@ -14,6 +14,13 @@ export const from_list: typeof $uint8ClampedArray.from_list = (list) =>
 export const from_buffer: typeof $uint8ClampedArray.from_buffer = (buffer) =>
   new Uint8ClampedArray(buffer);
 
+export const from_buffer_range: typeof $uint8ClampedArray.from_buffer_range = (
+  buffer,
+  byteOffset,
+  length,
+) =>
+  toResult.fromThrows(() => new Uint8ClampedArray(buffer, byteOffset, length));
+
 export const buffer: typeof $uint8ClampedArray.buffer = (array) =>
   array.buffer as ArrayBuffer;
 

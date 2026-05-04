@@ -13,6 +13,12 @@ export const from_list: typeof $int32Array.from_list = (list) =>
 export const from_buffer: typeof $int32Array.from_buffer = (buffer) =>
   toResult.fromThrows(() => new Int32Array(buffer));
 
+export const from_buffer_range: typeof $int32Array.from_buffer_range = (
+  buffer,
+  byteOffset,
+  length,
+) => toResult.fromThrows(() => new Int32Array(buffer, byteOffset, length));
+
 export const buffer: typeof $int32Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 

@@ -13,6 +13,12 @@ export const from_list: typeof $bigUint64Array.from_list = (list) =>
 export const from_buffer: typeof $bigUint64Array.from_buffer = (buffer) =>
   toResult.fromThrows(() => new BigUint64Array(buffer));
 
+export const from_buffer_range: typeof $bigUint64Array.from_buffer_range = (
+  buffer,
+  byteOffset,
+  length,
+) => toResult.fromThrows(() => new BigUint64Array(buffer, byteOffset, length));
+
 export const buffer: typeof $bigUint64Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 

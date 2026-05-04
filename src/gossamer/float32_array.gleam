@@ -30,6 +30,18 @@ pub fn from_list(list: List(Float)) -> Float32Array
 @external(javascript, "./float32_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Result(Float32Array, JsError)
 
+/// Creates a `Float32Array` view over a slice of `buffer` starting at
+/// `byte_offset` and spanning `length` elements. Returns an error if
+/// the range is out of bounds, `buffer` is detached, or `byte_offset`
+/// is not a multiple of `4`.
+///
+@external(javascript, "./float32_array.ffi.mjs", "from_buffer_range")
+pub fn from_buffer_range(
+  buffer: ArrayBuffer,
+  byte_offset byte_offset: Int,
+  length length: Int,
+) -> Result(Float32Array, JsError)
+
 @external(javascript, "./float32_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Float32Array) -> ArrayBuffer
 

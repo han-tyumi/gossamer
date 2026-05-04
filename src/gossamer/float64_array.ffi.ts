@@ -13,6 +13,12 @@ export const from_list: typeof $float64Array.from_list = (list) =>
 export const from_buffer: typeof $float64Array.from_buffer = (buffer) =>
   toResult.fromThrows(() => new Float64Array(buffer));
 
+export const from_buffer_range: typeof $float64Array.from_buffer_range = (
+  buffer,
+  byteOffset,
+  length,
+) => toResult.fromThrows(() => new Float64Array(buffer, byteOffset, length));
+
 export const buffer: typeof $float64Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
