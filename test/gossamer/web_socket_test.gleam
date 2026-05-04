@@ -1,9 +1,6 @@
 import gleeunit/should
-import gossamer/array_buffer
 import gossamer/blob
-import gossamer/data_view
 import gossamer/ready_state
-import gossamer/typed_array
 import gossamer/uint8_array
 import gossamer/url
 import gossamer/web_socket
@@ -59,10 +56,10 @@ pub fn send_string_while_connecting_test() {
   web_socket.close(ws)
 }
 
-pub fn send_typed_array_while_connecting_test() {
+pub fn send_bytes_while_connecting_test() {
   let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
-  let bytes = typed_array.Uint8(uint8_array.from_list([1, 2, 3]))
-  web_socket.send_typed_array(ws, bytes) |> should.be_error
+  let bytes = uint8_array.from_list([1, 2, 3])
+  web_socket.send_bytes(ws, bytes) |> should.be_error
   web_socket.close(ws)
 }
 
@@ -70,21 +67,6 @@ pub fn send_blob_while_connecting_test() {
   let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
   let b = blob.from_string("hello")
   web_socket.send_blob(ws, b) |> should.be_error
-  web_socket.close(ws)
-}
-
-pub fn send_buffer_while_connecting_test() {
-  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
-  let assert Ok(buffer) = array_buffer.new(4)
-  web_socket.send_buffer(ws, buffer) |> should.be_error
-  web_socket.close(ws)
-}
-
-pub fn send_data_view_while_connecting_test() {
-  let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
-  let assert Ok(buffer) = array_buffer.new(4)
-  let assert Ok(view) = data_view.new(buffer)
-  web_socket.send_data_view(ws, view) |> should.be_error
   web_socket.close(ws)
 }
 

@@ -1,11 +1,9 @@
-import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/binary_type.{type BinaryType}
 import gossamer/blob.{type Blob}
-import gossamer/data_view.{type DataView}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
-import gossamer/typed_array.{type TypedArray}
+import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 
 // TODO: Happy-path coverage for `send_*` and `on_*` requires a live
@@ -122,24 +120,14 @@ pub fn close_with(
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
 pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, JsError)
 
-/// Sends an `ArrayBuffer` through the WebSocket. Returns an error if
-/// the connection is still connecting. Data sent after the connection
-/// is closing or closed is silently discarded.
+/// Sends binary data as a `Uint8Array` through the WebSocket. Returns
+/// an error if the connection is still connecting. Data sent after the
+/// connection is closing or closed is silently discarded.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "send_buffer")
-pub fn send_buffer(
+@external(javascript, "./web_socket.ffi.mjs", "send_bytes")
+pub fn send_bytes(
   to socket: WebSocket,
-  data data: ArrayBuffer,
-) -> Result(Nil, JsError)
-
-/// Sends a `DataView` through the WebSocket. Returns an error if the
-/// connection is still connecting. Data sent after the connection is
-/// closing or closed is silently discarded.
-///
-@external(javascript, "./web_socket.ffi.mjs", "send_data_view")
-pub fn send_data_view(
-  to socket: WebSocket,
-  data data: DataView,
+  data data: Uint8Array,
 ) -> Result(Nil, JsError)
 
 /// Sends a string through the WebSocket. Returns an error if the
@@ -150,16 +138,6 @@ pub fn send_data_view(
 pub fn send_string(
   to socket: WebSocket,
   data data: String,
-) -> Result(Nil, JsError)
-
-/// Sends binary data as a `TypedArray` through the WebSocket. Returns
-/// an error if the connection is still connecting. Data sent after the
-/// connection is closing or closed is silently discarded.
-///
-@external(javascript, "./web_socket.ffi.mjs", "send_typed_array")
-pub fn send_typed_array(
-  to socket: WebSocket,
-  data data: TypedArray,
 ) -> Result(Nil, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "on_open")

@@ -1,7 +1,6 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
 import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ffi.ts";
 import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
-import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -84,16 +83,7 @@ export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
   });
 };
 
-export const send_buffer: typeof $webSocket.send_buffer = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
-};
-
-export const send_data_view: typeof $webSocket.send_data_view = (
-  socket,
-  data,
-) => {
+export const send_bytes: typeof $webSocket.send_bytes = (socket, data) => {
   return toResult.fromThrows(() => {
     socket.send(data);
   });
@@ -102,15 +92,6 @@ export const send_data_view: typeof $webSocket.send_data_view = (
 export const send_string: typeof $webSocket.send_string = (socket, data) => {
   return toResult.fromThrows(() => {
     socket.send(data);
-  });
-};
-
-export const send_typed_array: typeof $webSocket.send_typed_array = (
-  socket,
-  data,
-) => {
-  return toResult.fromThrows(() => {
-    socket.send(unwrapTypedArray(data));
   });
 };
 
