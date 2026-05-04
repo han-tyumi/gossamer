@@ -2,7 +2,6 @@ import gleam/option.{None, Some}
 import gossamer/abort_signal
 import gossamer/array_buffer
 import gossamer/blob
-import gossamer/data_view
 import gossamer/form_data
 import gossamer/headers
 import gossamer/http_method
@@ -21,7 +20,6 @@ import gossamer/request_priority
 import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
-import gossamer/typed_array
 import gossamer/uint8_array
 import gossamer/url
 import gossamer/url_search_params
@@ -116,12 +114,12 @@ pub fn request_text_test() {
   should.equal(text, Ok("hello"))
 }
 
-pub fn request_body_typed_array_test() {
-  let bytes = typed_array.Uint8(uint8_array.from_list([104, 105]))
+pub fn request_body_bytes_test() {
+  let bytes = uint8_array.from_list([104, 105])
   let assert Ok(req) =
     request.from_url_string_with("https://example.org", [
       request.Method(http_method.Post),
-      request.BodyTypedArray(bytes),
+      request.BodyBytes(bytes),
     ])
   use text <- promise.then(request.text(req))
   should.equal(text, Ok("hi"))
@@ -137,33 +135,6 @@ pub fn request_body_blob_test() {
     ])
   use text <- promise.then(request.text(req))
   should.equal(text, Ok("blob body"))
-  promise.resolve(Nil)
-}
-
-pub fn request_body_buffer_test() {
-  let bytes = uint8_array.from_list([97, 98, 99])
-  let buffer = uint8_array.buffer(bytes)
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyBuffer(buffer),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("abc"))
-  promise.resolve(Nil)
-}
-
-pub fn request_body_data_view_test() {
-  let bytes = uint8_array.from_list([100, 101, 102])
-  let buffer = uint8_array.buffer(bytes)
-  let assert Ok(view) = data_view.new(buffer)
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyDataView(view),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("def"))
   promise.resolve(Nil)
 }
 

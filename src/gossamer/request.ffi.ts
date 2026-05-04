@@ -22,7 +22,6 @@ import {
   fromRequestRedirect,
   toRequestRedirect,
 } from "~/gossamer/request_redirect.ffi.ts";
-import { unwrap as unwrapTypedArray } from "~/gossamer/typed_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -38,12 +37,8 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
       result.body = $request.RequestInit$Body$0(option);
     } else if ($request.RequestInit$isBodyBlob(option)) {
       result.body = $request.RequestInit$BodyBlob$0(option);
-    } else if ($request.RequestInit$isBodyBuffer(option)) {
-      result.body = $request.RequestInit$BodyBuffer$0(option);
-    } else if ($request.RequestInit$isBodyDataView(option)) {
-      result.body = $request.RequestInit$BodyDataView$0(
-        option,
-      ) as unknown as BodyInit;
+    } else if ($request.RequestInit$isBodyBytes(option)) {
+      result.body = $request.RequestInit$BodyBytes$0(option) as BodyInit;
     } else if ($request.RequestInit$isBodyFormData(option)) {
       result.body = $request.RequestInit$BodyFormData$0(option);
     } else if ($request.RequestInit$isBodyParams(option)) {
@@ -53,10 +48,6 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
       // `duplex: "half"` is required by the Fetch spec when body is a
       // `ReadableStream`; currently the only accepted value.
       (result as RequestInit & { duplex: string }).duplex = "half";
-    } else if ($request.RequestInit$isBodyTypedArray(option)) {
-      result.body = unwrapTypedArray(
-        $request.RequestInit$BodyTypedArray$0(option),
-      ) as BodyInit;
     } else if ($request.RequestInit$isCache(option)) {
       result.cache = toRequestCache(
         $request.RequestInit$Cache$0(option),
