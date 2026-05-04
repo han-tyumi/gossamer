@@ -1,6 +1,6 @@
-import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/encoding.{type Encoding}
 import gossamer/js_error.{type JsError}
+import gossamer/uint8_array.{type Uint8Array}
 
 /// Decodes a stream of bytes into text using a specified character
 /// encoding.
@@ -45,14 +45,14 @@ pub fn is_fatal(decoder: TextDecoder) -> Bool
 @external(javascript, "./text_decoder.ffi.mjs", "is_ignore_bom")
 pub fn is_ignore_bom(decoder: TextDecoder) -> Bool
 
-/// Decodes a chunk of bytes, keeping state for multi-byte sequences that
-/// span chunks. Returns an error if the decoder was created with `Fatal`
-/// and the input contains malformed data.
+/// Decodes `input`, keeping state for multi-byte sequences that span
+/// chunks. Returns an error if the decoder was created with `Fatal` and
+/// `input` contains malformed data.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "decode_chunk")
 pub fn decode_chunk(
   decoder: TextDecoder,
-  input: ArrayBuffer,
+  input: Uint8Array,
 ) -> Result(String, JsError)
 
 /// Emits any remaining bytes buffered from prior `decode_chunk` calls.
@@ -62,19 +62,18 @@ pub fn decode_chunk(
 @external(javascript, "./text_decoder.ffi.mjs", "flush")
 pub fn flush(decoder: TextDecoder) -> Result(String, JsError)
 
-/// Turns binary data, often in the form of a Uint8Array, into a string given
-/// the encoding.
+/// Decodes `input` as UTF-8 text.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "decode")
-pub fn decode(input: ArrayBuffer) -> String
+pub fn decode(input: Uint8Array) -> String
 
-/// Turns binary data into a string using the given encoding and options.
-/// Returns an error if `label` isn't a recognized encoding, or if the
-/// options include `Fatal` and decoding encounters malformed data.
+/// Decodes `input` with the given encoding label and options. Returns an
+/// error if `label` isn't a recognized encoding, or if the options
+/// include `Fatal` and decoding encounters malformed data.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "decode_with")
 pub fn decode_with(
-  input: ArrayBuffer,
+  input: Uint8Array,
   label: String,
   with options: List(TextDecoderOption),
 ) -> Result(String, JsError)

@@ -50,7 +50,7 @@ export const is_ignore_bom: typeof $textDecoder.is_ignore_bom = (
 
 export const decode_chunk: typeof $textDecoder.decode_chunk = (
   decoder: TextDecoder,
-  input: ArrayBuffer,
+  input,
 ) => {
   return toResult.fromThrows(() => decoder.decode(input, { stream: true }));
 };
@@ -59,14 +59,12 @@ export const flush: typeof $textDecoder.flush = (decoder: TextDecoder) => {
   return toResult.fromThrows(() => decoder.decode());
 };
 
-export const decode: typeof $textDecoder.decode = (
-  input: ArrayBuffer,
-) => {
+export const decode: typeof $textDecoder.decode = (input) => {
   return sharedDecoder.decode(input);
 };
 
 export const decode_with: typeof $textDecoder.decode_with = (
-  input: ArrayBuffer,
+  input,
   label,
   options,
 ) => {

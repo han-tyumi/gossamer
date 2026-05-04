@@ -9,7 +9,6 @@ import gossamer/readable_stream/read_result
 import gossamer/readable_stream/reader
 import gossamer/text_decoder
 import gossamer/text_encoder
-import gossamer/uint8_array
 
 pub fn gzip_round_trip_test() {
   let data = text_encoder.encode("Hello, compression!")
@@ -50,7 +49,7 @@ pub fn gzip_round_trip_test() {
   let assert Ok(read) = result
   case read {
     read_result.Value(chunk) -> {
-      let text = text_decoder.decode(uint8_array.buffer(chunk))
+      let text = text_decoder.decode(chunk)
       should.equal(text, "Hello, compression!")
     }
     read_result.Done(_) -> {
