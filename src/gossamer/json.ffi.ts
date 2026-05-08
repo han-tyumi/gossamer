@@ -2,6 +2,7 @@ import * as $json from "$/gossamer/gossamer/json.mjs";
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
 import { toObjectWithMap } from "~/utils/dict.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { isIndexable } from "~/utils/object.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
@@ -22,8 +23,8 @@ function gleamJsonReviver(_key: string, value: unknown) {
   if (Array.isArray(value)) {
     return $json.Json$Array(fromArray(value));
   }
-  if (typeof value === "object") {
-    const entries = Object.entries(value as Record<string, unknown>);
+  if (isIndexable(value)) {
+    const entries = Object.entries(value);
     return $json.Json$Object($dict.from_list(fromArray(entries)));
   }
 }
