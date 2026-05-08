@@ -88,3 +88,16 @@ pub fn blob_from_unaligned_bytes_test() {
   let b = blob.from_bytes(<<1:1>>)
   should.equal(blob.size(b), 1)
 }
+
+pub fn blob_to_object_url_test() {
+  blob.from_string("hello")
+  |> blob.to_object_url
+  |> string.starts_with("blob:")
+  |> should.be_true
+}
+
+pub fn blob_revoke_object_url_test() {
+  blob.from_string("hello")
+  |> blob.to_object_url
+  |> blob.revoke_object_url
+}

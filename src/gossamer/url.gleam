@@ -1,4 +1,3 @@
-import gossamer/blob.{type Blob}
 import gossamer/js_error.{type JsError}
 import gossamer/url_search_params.{type URLSearchParams}
 
@@ -120,15 +119,3 @@ pub fn to_string(url: URL) -> String
 
 @external(javascript, "./url.ffi.mjs", "to_json")
 pub fn to_json(url: URL) -> String
-
-/// Creates a string containing a URL representing the given blob. The URL
-/// lifetime is tied to the document or worker that created it.
-///
-@external(javascript, "./url.ffi.mjs", "create_object_url")
-pub fn create_object_url(blob: Blob) -> String
-
-/// Revokes an object URL previously created with `create_object_url`. Call
-/// this to release the reference once the URL is no longer needed.
-///
-@external(javascript, "./url.ffi.mjs", "revoke_object_url")
-pub fn revoke_object_url(url: String) -> Nil

@@ -76,3 +76,16 @@ pub fn stream(blob: Blob) -> ReadableStream(BitArray)
 ///
 @external(javascript, "./blob.ffi.mjs", "text")
 pub fn text(blob: Blob) -> Promise(Result(String, JsError))
+
+/// Creates a string containing a URL representing the blob. The URL
+/// lifetime is tied to the document or worker that created it; release
+/// it with `revoke_object_url`.
+///
+@external(javascript, "./blob.ffi.mjs", "to_object_url")
+pub fn to_object_url(blob: Blob) -> String
+
+/// Revokes an object URL previously created with `to_object_url`. Call
+/// this to release the reference once the URL is no longer needed.
+///
+@external(javascript, "./blob.ffi.mjs", "revoke_object_url")
+pub fn revoke_object_url(url: String) -> Nil

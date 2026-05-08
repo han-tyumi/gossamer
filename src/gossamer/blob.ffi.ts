@@ -72,3 +72,11 @@ export const stream: typeof $blob.stream = (blob) => {
 export const text: typeof $blob.text = (blob) => {
   return toResult.fromPromise(blob.text());
 };
+
+export const to_object_url: typeof $blob.to_object_url = (blob) => {
+  return URL.createObjectURL(blob);
+};
+
+export const revoke_object_url: typeof $blob.revoke_object_url = (url) => {
+  URL.revokeObjectURL(url);
+};
