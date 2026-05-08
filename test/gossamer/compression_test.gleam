@@ -1,4 +1,6 @@
+import gleam/bit_array
 import gleeunit/should
+import gossamer/buffer/uint8_array
 import gossamer/compression_format
 import gossamer/compression_stream
 import gossamer/decompression_stream
@@ -7,11 +9,10 @@ import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/readable_stream/read_result
 import gossamer/readable_stream/reader
-import gossamer/text_decoder
-import gossamer/text_encoder
 
 pub fn gzip_round_trip_test() {
-  let data = text_encoder.encode("Hello, compression!")
+  let assert Ok(data) =
+    uint8_array.from_bit_array(<<"Hello, compression!":utf8>>)
 
   let assert Ok(input) =
     readable_stream.from_start(fn(controller) {
@@ -49,7 +50,7 @@ pub fn gzip_round_trip_test() {
   let assert Ok(read) = result
   case read {
     read_result.Value(chunk) -> {
-      let text = text_decoder.decode(chunk)
+      let assert Ok(text) = bit_array.to_string(uint8_array.to_bit_array(chunk))
       should.equal(text, "Hello, compression!")
     }
     read_result.Done(_) -> {

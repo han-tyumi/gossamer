@@ -83,10 +83,13 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 | Interface         | Status | Module                         |
 | ----------------- | ------ | ------------------------------ |
-| TextEncoder       | ✅     | `gossamer/text_encoder`        |
 | TextDecoder       | ✅     | `gossamer/text_decoder`        |
 | TextEncoderStream | ✅     | `gossamer/text_encoder_stream` |
 | TextDecoderStream | ✅     | `gossamer/text_decoder_stream` |
+
+`TextEncoder` is omitted in favor of `gleam/bit_array.from_string` /
+`<<s:utf8>>`. For default UTF-8 decoding, use `gleam/bit_array.to_string`;
+`text_decoder.decode` requires an explicit encoding label.
 
 ### Crypto
 

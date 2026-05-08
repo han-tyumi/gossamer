@@ -1,8 +1,6 @@
 import gleeunit/should
-import gossamer/buffer/uint8_array
 import gossamer/encoding
 import gossamer/text_decoder
-import gossamer/text_encoder
 
 pub fn new_test() {
   let decoder = text_decoder.new()
@@ -41,20 +39,15 @@ pub fn is_ignore_bom_default_test() {
 }
 
 pub fn decode_test() {
-  let encoded = text_encoder.encode("hello world")
-  text_decoder.decode(encoded) |> should.equal("hello world")
-}
-
-pub fn decode_with_test() {
-  let encoded = text_encoder.encode("utf-8 text")
-  let assert Ok(decoded) = text_decoder.decode_with(encoded, "utf-8", [])
+  let assert Ok(decoded) =
+    text_decoder.decode(<<"utf-8 text":utf8>>, "utf-8", [])
   should.equal(decoded, "utf-8 text")
 }
 
 pub fn decode_chunk_test() {
   let decoder = text_decoder.new()
-  let encoded = text_encoder.encode("chunk data")
-  let assert Ok(decoded) = text_decoder.decode_chunk(decoder, encoded)
+  let assert Ok(decoded) =
+    text_decoder.decode_chunk(decoder, <<"chunk data":utf8>>)
   should.equal(decoded, "chunk data")
 }
 
@@ -62,9 +55,4 @@ pub fn flush_test() {
   let decoder = text_decoder.new()
   let assert Ok(flushed) = text_decoder.flush(decoder)
   should.equal(flushed, "")
-}
-
-pub fn decode_empty_test() {
-  let empty = uint8_array.new()
-  text_decoder.decode(empty) |> should.equal("")
 }

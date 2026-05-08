@@ -1,6 +1,7 @@
 import * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
 import type { List } from "$/prelude.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
+import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -17,8 +18,6 @@ export function toTextDecoderOptions(
   }
   return result;
 }
-
-const sharedDecoder = new TextDecoder();
 
 export const new_: typeof $textDecoder.new$ = () => {
   return new TextDecoder();
@@ -52,23 +51,22 @@ export const decode_chunk: typeof $textDecoder.decode_chunk = (
   decoder: TextDecoder,
   input,
 ) => {
-  return toResult.fromThrows(() => decoder.decode(input, { stream: true }));
+  return toResult.fromThrows(() =>
+    decoder.decode(toBufferSource(input), { stream: true })
+  );
 };
 
 export const flush: typeof $textDecoder.flush = (decoder: TextDecoder) => {
   return toResult.fromThrows(() => decoder.decode());
 };
 
-export const decode: typeof $textDecoder.decode = (input) => {
-  return sharedDecoder.decode(input);
-};
-
-export const decode_with: typeof $textDecoder.decode_with = (
+export const decode: typeof $textDecoder.decode = (
   input,
   label,
   options,
 ) => {
-  return toResult.fromThrows(
-    () => new TextDecoder(label, toTextDecoderOptions(options)).decode(input),
+  return toResult.fromThrows(() =>
+    new TextDecoder(label, toTextDecoderOptions(options))
+      .decode(toBufferSource(input))
   );
 };

@@ -1,4 +1,3 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/encoding.{type Encoding}
 import gossamer/js_error.{type JsError}
 
@@ -52,7 +51,7 @@ pub fn is_ignore_bom(decoder: TextDecoder) -> Bool
 @external(javascript, "./text_decoder.ffi.mjs", "decode_chunk")
 pub fn decode_chunk(
   decoder: TextDecoder,
-  input: Uint8Array,
+  input: BitArray,
 ) -> Result(String, JsError)
 
 /// Emits any remaining bytes buffered from prior `decode_chunk` calls.
@@ -62,18 +61,14 @@ pub fn decode_chunk(
 @external(javascript, "./text_decoder.ffi.mjs", "flush")
 pub fn flush(decoder: TextDecoder) -> Result(String, JsError)
 
-/// Decodes `input` as UTF-8 text.
-///
-@external(javascript, "./text_decoder.ffi.mjs", "decode")
-pub fn decode(input: Uint8Array) -> String
-
 /// Decodes `input` with the given encoding label and options. Returns an
 /// error if `label` isn't a recognized encoding, or if the options
-/// include `Fatal` and decoding encounters malformed data.
+/// include `Fatal` and decoding encounters malformed data. For default
+/// UTF-8 decoding, use `gleam/bit_array.to_string`.
 ///
-@external(javascript, "./text_decoder.ffi.mjs", "decode_with")
-pub fn decode_with(
-  input: Uint8Array,
+@external(javascript, "./text_decoder.ffi.mjs", "decode")
+pub fn decode(
+  input: BitArray,
   label: String,
   with options: List(TextDecoderOption),
 ) -> Result(String, JsError)
