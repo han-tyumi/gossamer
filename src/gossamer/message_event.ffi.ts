@@ -1,15 +1,23 @@
+import { BitArray$BitArray } from "$/prelude.mjs";
 import * as $messageEvent from "$/gossamer/gossamer/message_event.mjs";
+
+function wrapBinary(value: unknown): unknown {
+  if (value instanceof ArrayBuffer) {
+    return BitArray$BitArray(new Uint8Array(value));
+  }
+  return value;
+}
 
 export const to_fields: typeof $messageEvent.to_fields = (event) => {
   return $messageEvent.Fields$Fields(
-    event.data,
+    wrapBinary(event.data),
     event.origin,
     event.lastEventId,
   );
 };
 
 export const data: typeof $messageEvent.data = (event) => {
-  return event.data;
+  return wrapBinary(event.data);
 };
 
 export const origin: typeof $messageEvent.origin = (event) => {

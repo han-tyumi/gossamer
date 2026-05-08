@@ -1,6 +1,5 @@
 import gleeunit/should
 import gossamer/blob
-import gossamer/buffer/uint8_array
 import gossamer/ready_state
 import gossamer/url
 import gossamer/web_socket
@@ -58,8 +57,7 @@ pub fn send_string_while_connecting_test() {
 
 pub fn send_bytes_while_connecting_test() {
   let assert Ok(ws) = web_socket.from_url_string("ws://localhost:1")
-  let bytes = uint8_array.from_list([1, 2, 3])
-  web_socket.send_bytes(ws, bytes) |> should.be_error
+  web_socket.send_bytes(ws, <<1, 2, 3>>) |> should.be_error
   web_socket.close(ws)
 }
 

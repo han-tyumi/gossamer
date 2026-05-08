@@ -14,6 +14,10 @@ pub type Fields {
 @external(javascript, "./message_event.ffi.mjs", "to_fields")
 pub fn to_fields(event: MessageEvent) -> Fields
 
+/// The event's data payload. `ArrayBuffer` values are exposed as
+/// `BitArray`; decode with `gleam/dynamic/decode.bit_array`. Other
+/// values pass through unchanged.
+///
 @external(javascript, "./message_event.ffi.mjs", "data")
 pub fn data(event: MessageEvent) -> Dynamic
 

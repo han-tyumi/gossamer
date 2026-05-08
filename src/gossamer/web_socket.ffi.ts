@@ -1,6 +1,7 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
 import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ffi.ts";
 import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
+import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -85,7 +86,7 @@ export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
 
 export const send_bytes: typeof $webSocket.send_bytes = (socket, data) => {
   return toResult.fromThrows(() => {
-    socket.send(data);
+    socket.send(toBufferSource(data));
   });
 };
 

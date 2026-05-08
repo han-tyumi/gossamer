@@ -1,6 +1,5 @@
 import gossamer/binary_type.{type BinaryType}
 import gossamer/blob.{type Blob}
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
@@ -68,10 +67,10 @@ pub fn from_url_with_protocols(
 ) -> Result(WebSocket, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "binary_type")
-pub fn binary_type(of socket: WebSocket) -> BinaryType
+pub fn binary_type(socket: WebSocket) -> BinaryType
 
 @external(javascript, "./web_socket.ffi.mjs", "set_binary_type")
-pub fn set_binary_type(of socket: WebSocket, to value: BinaryType) -> Nil
+pub fn set_binary_type(socket: WebSocket, value: BinaryType) -> Nil
 
 /// Returns the number of bytes of application data (UTF-8 text and binary
 /// data) that have been queued using `send` but not yet been transmitted to
@@ -82,19 +81,19 @@ pub fn set_binary_type(of socket: WebSocket, to value: BinaryType) -> Nil
 /// to zero once the connection closes.)
 ///
 @external(javascript, "./web_socket.ffi.mjs", "buffered_amount")
-pub fn buffered_amount(of socket: WebSocket) -> Int
+pub fn buffered_amount(socket: WebSocket) -> Int
 
 @external(javascript, "./web_socket.ffi.mjs", "extensions")
-pub fn extensions(of socket: WebSocket) -> String
+pub fn extensions(socket: WebSocket) -> String
 
 @external(javascript, "./web_socket.ffi.mjs", "protocol")
-pub fn protocol(of socket: WebSocket) -> String
+pub fn protocol(socket: WebSocket) -> String
 
 @external(javascript, "./web_socket.ffi.mjs", "ready_state")
-pub fn ready_state(of socket: WebSocket) -> ReadyState
+pub fn ready_state(socket: WebSocket) -> ReadyState
 
 @external(javascript, "./web_socket.ffi.mjs", "url")
-pub fn url(of socket: WebSocket) -> String
+pub fn url(socket: WebSocket) -> String
 
 /// Closes the WebSocket connection. Does nothing if the connection is
 /// already closing or closed.
@@ -120,14 +119,14 @@ pub fn close_with(
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
 pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, JsError)
 
-/// Sends binary data as a `Uint8Array` through the WebSocket. Returns
-/// an error if the connection is still connecting. Data sent after the
-/// connection is closing or closed is silently discarded.
+/// Sends binary data through the WebSocket. Returns an error if the
+/// connection is still connecting. Data sent after the connection is
+/// closing or closed is silently discarded.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_bytes")
 pub fn send_bytes(
   to socket: WebSocket,
-  data data: Uint8Array,
+  data data: BitArray,
 ) -> Result(Nil, JsError)
 
 /// Sends a string through the WebSocket. Returns an error if the
