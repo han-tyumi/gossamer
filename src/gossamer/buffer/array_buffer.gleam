@@ -7,28 +7,24 @@ import gossamer/js_error.{type JsError}
 @external(javascript, "./array_buffer.type.ts", "ArrayBuffer$")
 pub type ArrayBuffer
 
-/// Creates a fixed-size `ArrayBuffer` of `byte_length` bytes. Returns an
-/// error if `byte_length` is negative or exceeds the maximum allocatable
-/// size.
+/// Creates a fixed-size `ArrayBuffer` of `byte_length` bytes. A
+/// non-positive `byte_length` returns an empty buffer.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
-pub fn new(byte_length: Int) -> Result(ArrayBuffer, JsError)
+pub fn new(byte_length: Int) -> ArrayBuffer
 
 @external(javascript, "./array_buffer.ffi.mjs", "byte_length")
-pub fn byte_length(of array_buffer: ArrayBuffer) -> Int
+pub fn byte_length(array_buffer: ArrayBuffer) -> Int
 
-/// Creates a resizable `ArrayBuffer` with the given initial byte length
-/// and maximum byte length. Returns an error if either is negative or
-/// `max` exceeds the maximum allocatable size.
+/// Creates a resizable `ArrayBuffer` with the given initial and maximum
+/// byte lengths. A non-positive `byte_length` returns an empty buffer;
+/// `max` is clamped up to `byte_length` if smaller.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "new_resizable")
-pub fn new_resizable(
-  byte_length: Int,
-  max_byte_length max: Int,
-) -> Result(ArrayBuffer, JsError)
+pub fn new_resizable(byte_length: Int, max_byte_length max: Int) -> ArrayBuffer
 
 @external(javascript, "./array_buffer.ffi.mjs", "max_byte_length")
-pub fn max_byte_length(of array_buffer: ArrayBuffer) -> Int
+pub fn max_byte_length(array_buffer: ArrayBuffer) -> Int
 
 @external(javascript, "./array_buffer.ffi.mjs", "is_resizable")
 pub fn is_resizable(array_buffer: ArrayBuffer) -> Bool

@@ -5,7 +5,7 @@ import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 export const new_: typeof $int8Array.new$ = () => new Int8Array();
 
 export const from_length: typeof $int8Array.from_length = (length) =>
-  toResult.fromThrows(() => new Int8Array(length));
+  new Int8Array(Math.max(0, length));
 
 export const from_list: typeof $int8Array.from_list = (list) =>
   new Int8Array(toArray(list));

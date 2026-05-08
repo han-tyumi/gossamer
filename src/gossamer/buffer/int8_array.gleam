@@ -12,12 +12,11 @@ pub type Int8Array
 @external(javascript, "./int8_array.ffi.mjs", "new_")
 pub fn new() -> Int8Array
 
-/// Creates a zero-filled `Int8Array` of the given length. Returns an
-/// error if `length` is negative or exceeds the maximum allocatable
-/// size.
+/// Creates a zero-filled `Int8Array` of the given length. A
+/// non-positive `length` returns an empty array.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(Int8Array, JsError)
+pub fn from_length(length: Int) -> Int8Array
 
 /// Creates an `Int8Array` from a list of 8-bit signed integers.
 /// Values outside `-128`–`127` are wrapped modulo `256`, matching the
@@ -44,23 +43,23 @@ pub fn from_buffer_range(
 ) -> Result(Int8Array, JsError)
 
 @external(javascript, "./int8_array.ffi.mjs", "buffer")
-pub fn buffer(of array: Int8Array) -> ArrayBuffer
+pub fn buffer(array: Int8Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
 /// the underlying buffer. Returns an error if the underlying buffer
 /// has been detached or resized below the array's range.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "bytes")
-pub fn bytes(of array: Int8Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Int8Array) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./int8_array.ffi.mjs", "byte_length")
-pub fn byte_length(of array: Int8Array) -> Int
+pub fn byte_length(array: Int8Array) -> Int
 
 @external(javascript, "./int8_array.ffi.mjs", "byte_offset")
-pub fn byte_offset(of array: Int8Array) -> Int
+pub fn byte_offset(array: Int8Array) -> Int
 
 @external(javascript, "./int8_array.ffi.mjs", "length")
-pub fn length(of array: Int8Array) -> Int
+pub fn length(array: Int8Array) -> Int
 
 /// Returns the element at `index`, or `Error(Nil)` if the index is
 /// out of range. Negative indices count from the end.

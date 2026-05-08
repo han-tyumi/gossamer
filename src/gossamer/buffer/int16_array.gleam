@@ -12,12 +12,11 @@ pub type Int16Array
 @external(javascript, "./int16_array.ffi.mjs", "new_")
 pub fn new() -> Int16Array
 
-/// Creates a zero-filled `Int16Array` of the given length. Returns
-/// an error if `length` is negative or exceeds the maximum
-/// allocatable size.
+/// Creates a zero-filled `Int16Array` of the given length. A
+/// non-positive `length` returns an empty array.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(Int16Array, JsError)
+pub fn from_length(length: Int) -> Int16Array
 
 /// Creates an `Int16Array` from a list of 16-bit signed integers.
 /// Values outside `-32_768`–`32_767` are wrapped modulo `65_536`,
@@ -46,23 +45,23 @@ pub fn from_buffer_range(
 ) -> Result(Int16Array, JsError)
 
 @external(javascript, "./int16_array.ffi.mjs", "buffer")
-pub fn buffer(of array: Int16Array) -> ArrayBuffer
+pub fn buffer(array: Int16Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
 /// the underlying buffer. Returns an error if the underlying buffer
 /// has been detached or resized below the array's range.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "bytes")
-pub fn bytes(of array: Int16Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Int16Array) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./int16_array.ffi.mjs", "byte_length")
-pub fn byte_length(of array: Int16Array) -> Int
+pub fn byte_length(array: Int16Array) -> Int
 
 @external(javascript, "./int16_array.ffi.mjs", "byte_offset")
-pub fn byte_offset(of array: Int16Array) -> Int
+pub fn byte_offset(array: Int16Array) -> Int
 
 @external(javascript, "./int16_array.ffi.mjs", "length")
-pub fn length(of array: Int16Array) -> Int
+pub fn length(array: Int16Array) -> Int
 
 /// Returns the element at `index`, or `Error(Nil)` if the index is
 /// out of range. Negative indices count from the end.

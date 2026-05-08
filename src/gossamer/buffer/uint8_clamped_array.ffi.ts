@@ -6,7 +6,7 @@ export const new_: typeof $uint8ClampedArray.new$ = () =>
   new Uint8ClampedArray();
 
 export const from_length: typeof $uint8ClampedArray.from_length = (length) =>
-  toResult.fromThrows(() => new Uint8ClampedArray(length));
+  new Uint8ClampedArray(Math.max(0, length));
 
 export const from_list: typeof $uint8ClampedArray.from_list = (list) =>
   new Uint8ClampedArray(toArray(list));

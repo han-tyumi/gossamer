@@ -5,7 +5,7 @@ import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 export const new_: typeof $uint16Array.new$ = () => new Uint16Array();
 
 export const from_length: typeof $uint16Array.from_length = (length) =>
-  toResult.fromThrows(() => new Uint16Array(length));
+  new Uint16Array(Math.max(0, length));
 
 export const from_list: typeof $uint16Array.from_list = (list) =>
   new Uint16Array(toArray(list));

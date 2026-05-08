@@ -12,12 +12,11 @@ pub type Int32Array
 @external(javascript, "./int32_array.ffi.mjs", "new_")
 pub fn new() -> Int32Array
 
-/// Creates a zero-filled `Int32Array` of the given length. Returns
-/// an error if `length` is negative or exceeds the maximum
-/// allocatable size.
+/// Creates a zero-filled `Int32Array` of the given length. A
+/// non-positive `length` returns an empty array.
 ///
 @external(javascript, "./int32_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(Int32Array, JsError)
+pub fn from_length(length: Int) -> Int32Array
 
 /// Creates an `Int32Array` from a list of 32-bit signed integers.
 /// Values outside `-2_147_483_648`–`2_147_483_647` are wrapped modulo
@@ -46,23 +45,23 @@ pub fn from_buffer_range(
 ) -> Result(Int32Array, JsError)
 
 @external(javascript, "./int32_array.ffi.mjs", "buffer")
-pub fn buffer(of array: Int32Array) -> ArrayBuffer
+pub fn buffer(array: Int32Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
 /// the underlying buffer. Returns an error if the underlying buffer
 /// has been detached or resized below the array's range.
 ///
 @external(javascript, "./int32_array.ffi.mjs", "bytes")
-pub fn bytes(of array: Int32Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Int32Array) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./int32_array.ffi.mjs", "byte_length")
-pub fn byte_length(of array: Int32Array) -> Int
+pub fn byte_length(array: Int32Array) -> Int
 
 @external(javascript, "./int32_array.ffi.mjs", "byte_offset")
-pub fn byte_offset(of array: Int32Array) -> Int
+pub fn byte_offset(array: Int32Array) -> Int
 
 @external(javascript, "./int32_array.ffi.mjs", "length")
-pub fn length(of array: Int32Array) -> Int
+pub fn length(array: Int32Array) -> Int
 
 /// Returns the element at `index`, or `Error(Nil)` if the index is
 /// out of range. Negative indices count from the end.

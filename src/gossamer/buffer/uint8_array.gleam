@@ -13,11 +13,11 @@ pub type Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "new_")
 pub fn new() -> Uint8Array
 
-/// Creates a zero-filled `Uint8Array` of the given length. Returns an error
-/// if `length` is negative or exceeds the maximum allocatable size.
+/// Creates a zero-filled `Uint8Array` of the given length. A
+/// non-positive `length` returns an empty array.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(Uint8Array, JsError)
+pub fn from_length(length: Int) -> Uint8Array
 
 /// Creates a `Uint8Array` from a list of byte values. Values outside
 /// `0`–`255` are wrapped modulo `256`, matching the JS `Uint8Array`

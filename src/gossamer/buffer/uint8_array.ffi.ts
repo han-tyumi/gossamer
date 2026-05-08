@@ -11,7 +11,7 @@ export const new_: typeof $uint8Array.new$ = () => {
 };
 
 export const from_length: typeof $uint8Array.from_length = (length) => {
-  return toResult.fromThrows(() => new Uint8Array(length));
+  return new Uint8Array(Math.max(0, length));
 };
 
 export const from_list: typeof $uint8Array.from_list = (list) => {

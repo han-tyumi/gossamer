@@ -115,18 +115,18 @@ pub fn biguint64_round_trip_test() {
 
 pub fn bigint64_from_buffer_misaligned_errors_test() {
   // BigInt64Array requires 8-byte alignment; a 7-byte buffer can't host one.
-  let assert Ok(buf) = array_buffer.new(7)
+  let buf = array_buffer.new(7)
   let assert Error(_) = bigint64_array.from_buffer(buf)
 }
 
 pub fn bigint64_from_buffer_aligned_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) = bigint64_array.from_buffer(buf)
   bigint64_array.length(arr) |> should.equal(2)
 }
 
 pub fn biguint64_from_buffer_misaligned_errors_test() {
-  let assert Ok(buf) = array_buffer.new(7)
+  let buf = array_buffer.new(7)
   let assert Error(_) = biguint64_array.from_buffer(buf)
 }
 
@@ -149,8 +149,8 @@ pub fn to_list_test() {
   int32_array.to_list(arr) |> should.equal([5, 10, 15])
 }
 
-pub fn from_length_negative_errors_test() {
-  let assert Error(_) = int32_array.from_length(-1)
+pub fn from_length_negative_clamps_test() {
+  int32_array.from_length(-1) |> int32_array.length |> should.equal(0)
 }
 
 pub fn with_out_of_range_errors_test() {
@@ -166,32 +166,32 @@ pub fn set_with_offset_overflow_errors_test() {
 
 pub fn from_buffer_misaligned_errors_test() {
   // Int32Array requires 4-byte alignment; a 7-byte buffer can't host one.
-  let assert Ok(buf) = array_buffer.new(7)
+  let buf = array_buffer.new(7)
   let assert Error(_) = int32_array.from_buffer(buf)
 }
 
 pub fn from_buffer_aligned_test() {
   // 8 bytes is divisible by 4; works.
-  let assert Ok(buf) = array_buffer.new(8)
+  let buf = array_buffer.new(8)
   let assert Ok(arr) = int32_array.from_buffer(buf)
   int32_array.length(arr) |> should.equal(2)
 }
 
 pub fn from_buffer_int8_any_size_test() {
   // 1-byte alignment; any buffer size works for Int8Array.
-  let assert Ok(buf) = array_buffer.new(7)
+  let buf = array_buffer.new(7)
   let assert Ok(arr) = int8_array.from_buffer(buf)
   int8_array.length(arr) |> should.equal(7)
 }
 
 pub fn int8_from_buffer_detached_test() {
-  let assert Ok(buf) = array_buffer.new(8)
+  let buf = array_buffer.new(8)
   let assert Ok(_) = array_buffer.transfer(buf)
   int8_array.from_buffer(buf) |> should.be_error
 }
 
 pub fn uint8_clamped_from_buffer_detached_test() {
-  let assert Ok(buf) = array_buffer.new(8)
+  let buf = array_buffer.new(8)
   let assert Ok(_) = array_buffer.transfer(buf)
   uint8_clamped_array.from_buffer(buf) |> should.be_error
 }
@@ -200,7 +200,7 @@ pub fn uint8_clamped_from_buffer_detached_test() {
 // Uint8Array which has its own thorough coverage in uint8_array_test).
 
 pub fn int8_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(8)
+  let buf = array_buffer.new(8)
   let assert Ok(arr) =
     int8_array.from_buffer_range(buf, byte_offset: 2, length: 4)
   int8_array.length(arr) |> should.equal(4)
@@ -208,14 +208,14 @@ pub fn int8_from_buffer_range_test() {
 }
 
 pub fn uint8_clamped_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(8)
+  let buf = array_buffer.new(8)
   let assert Ok(arr) =
     uint8_clamped_array.from_buffer_range(buf, byte_offset: 0, length: 4)
   uint8_clamped_array.length(arr) |> should.equal(4)
 }
 
 pub fn int16_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) =
     int16_array.from_buffer_range(buf, byte_offset: 4, length: 4)
   int16_array.length(arr) |> should.equal(4)
@@ -223,14 +223,14 @@ pub fn int16_from_buffer_range_test() {
 }
 
 pub fn uint16_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) =
     uint16_array.from_buffer_range(buf, byte_offset: 0, length: 8)
   uint16_array.length(arr) |> should.equal(8)
 }
 
 pub fn int32_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) =
     int32_array.from_buffer_range(buf, byte_offset: 4, length: 2)
   int32_array.length(arr) |> should.equal(2)
@@ -238,42 +238,42 @@ pub fn int32_from_buffer_range_test() {
 }
 
 pub fn uint32_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) =
     uint32_array.from_buffer_range(buf, byte_offset: 0, length: 4)
   uint32_array.length(arr) |> should.equal(4)
 }
 
 pub fn float16_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) =
     float16_array.from_buffer_range(buf, byte_offset: 2, length: 4)
   float16_array.length(arr) |> should.equal(4)
 }
 
 pub fn float32_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) =
     float32_array.from_buffer_range(buf, byte_offset: 0, length: 4)
   float32_array.length(arr) |> should.equal(4)
 }
 
 pub fn float64_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(32)
+  let buf = array_buffer.new(32)
   let assert Ok(arr) =
     float64_array.from_buffer_range(buf, byte_offset: 8, length: 2)
   float64_array.length(arr) |> should.equal(2)
 }
 
 pub fn bigint64_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(32)
+  let buf = array_buffer.new(32)
   let assert Ok(arr) =
     bigint64_array.from_buffer_range(buf, byte_offset: 0, length: 4)
   bigint64_array.length(arr) |> should.equal(4)
 }
 
 pub fn biguint64_from_buffer_range_test() {
-  let assert Ok(buf) = array_buffer.new(32)
+  let buf = array_buffer.new(32)
   let assert Ok(arr) =
     biguint64_array.from_buffer_range(buf, byte_offset: 8, length: 2)
   biguint64_array.length(arr) |> should.equal(2)
@@ -281,13 +281,13 @@ pub fn biguint64_from_buffer_range_test() {
 
 pub fn int32_from_buffer_range_misaligned_errors_test() {
   // Int32Array requires 4-byte alignment; offset 1 is not aligned.
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   int32_array.from_buffer_range(buf, byte_offset: 1, length: 1)
   |> should.be_error
 }
 
 pub fn int32_from_buffer_range_out_of_bounds_test() {
-  let assert Ok(buf) = array_buffer.new(8)
+  let buf = array_buffer.new(8)
   int32_array.from_buffer_range(buf, byte_offset: 0, length: 100)
   |> should.be_error
 }
@@ -360,7 +360,7 @@ pub fn biguint64_bytes_test() {
 }
 
 pub fn int32_bytes_detached_test() {
-  let assert Ok(buf) = array_buffer.new(16)
+  let buf = array_buffer.new(16)
   let assert Ok(arr) = int32_array.from_buffer(buf)
   let assert Ok(_) = array_buffer.transfer(buf)
   int32_array.bytes(arr) |> should.be_error

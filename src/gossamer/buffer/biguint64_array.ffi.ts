@@ -5,7 +5,7 @@ import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 export const new_: typeof $bigUint64Array.new$ = () => new BigUint64Array();
 
 export const from_length: typeof $bigUint64Array.from_length = (length) =>
-  toResult.fromThrows(() => new BigUint64Array(length));
+  new BigUint64Array(Math.max(0, length));
 
 export const from_list: typeof $bigUint64Array.from_list = (list) =>
   new BigUint64Array(toArray(list));

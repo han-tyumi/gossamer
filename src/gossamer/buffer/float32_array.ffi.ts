@@ -5,7 +5,7 @@ import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 export const new_: typeof $float32Array.new$ = () => new Float32Array();
 
 export const from_length: typeof $float32Array.from_length = (length) =>
-  toResult.fromThrows(() => new Float32Array(length));
+  new Float32Array(Math.max(0, length));
 
 export const from_list: typeof $float32Array.from_list = (list) =>
   new Float32Array(toArray(list));

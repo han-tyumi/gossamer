@@ -13,12 +13,11 @@ pub type BigUint64Array
 @external(javascript, "./biguint64_array.ffi.mjs", "new_")
 pub fn new() -> BigUint64Array
 
-/// Creates a zero-filled `BigUint64Array` of the given length. Returns
-/// an error if `length` is negative or exceeds the maximum allocatable
-/// size.
+/// Creates a zero-filled `BigUint64Array` of the given length. A
+/// non-positive `length` returns an empty array.
 ///
 @external(javascript, "./biguint64_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(BigUint64Array, JsError)
+pub fn from_length(length: Int) -> BigUint64Array
 
 /// Creates a `BigUint64Array` from a list of `BigInt` values. Values
 /// outside `0` to 2^64 − 1 are wrapped modulo 2^64, matching the JS
@@ -46,23 +45,23 @@ pub fn from_buffer_range(
 ) -> Result(BigUint64Array, JsError)
 
 @external(javascript, "./biguint64_array.ffi.mjs", "buffer")
-pub fn buffer(of array: BigUint64Array) -> ArrayBuffer
+pub fn buffer(array: BigUint64Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
 /// the underlying buffer. Returns an error if the underlying buffer
 /// has been detached or resized below the array's range.
 ///
 @external(javascript, "./biguint64_array.ffi.mjs", "bytes")
-pub fn bytes(of array: BigUint64Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: BigUint64Array) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./biguint64_array.ffi.mjs", "byte_length")
-pub fn byte_length(of array: BigUint64Array) -> Int
+pub fn byte_length(array: BigUint64Array) -> Int
 
 @external(javascript, "./biguint64_array.ffi.mjs", "byte_offset")
-pub fn byte_offset(of array: BigUint64Array) -> Int
+pub fn byte_offset(array: BigUint64Array) -> Int
 
 @external(javascript, "./biguint64_array.ffi.mjs", "length")
-pub fn length(of array: BigUint64Array) -> Int
+pub fn length(array: BigUint64Array) -> Int
 
 /// Returns the element at `index`, or `Error(Nil)` if the index is
 /// out of range. Negative indices count from the end.

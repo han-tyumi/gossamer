@@ -2,16 +2,16 @@ import type * as $arrayBuffer from "$/gossamer/gossamer/buffer/array_buffer.mjs"
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $arrayBuffer.new$ = (byteLength) => {
-  return toResult.fromThrows(() => new ArrayBuffer(byteLength));
+  return new ArrayBuffer(Math.max(0, byteLength));
 };
 
 export const new_resizable: typeof $arrayBuffer.new_resizable = (
   byteLength,
   maxByteLength,
 ) => {
-  return toResult.fromThrows(() =>
-    new ArrayBuffer(byteLength, { maxByteLength })
-  );
+  const clampedByteLength = Math.max(0, byteLength);
+  const clampedMax = Math.max(clampedByteLength, maxByteLength);
+  return new ArrayBuffer(clampedByteLength, { maxByteLength: clampedMax });
 };
 
 export const byte_length: typeof $arrayBuffer.byte_length = (

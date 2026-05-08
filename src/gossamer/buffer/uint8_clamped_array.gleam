@@ -14,12 +14,11 @@ pub type Uint8ClampedArray
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "new_")
 pub fn new() -> Uint8ClampedArray
 
-/// Creates a zero-filled `Uint8ClampedArray` of the given length.
-/// Returns an error if `length` is negative or exceeds the maximum
-/// allocatable size.
+/// Creates a zero-filled `Uint8ClampedArray` of the given length. A
+/// non-positive `length` returns an empty array.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "from_length")
-pub fn from_length(length: Int) -> Result(Uint8ClampedArray, JsError)
+pub fn from_length(length: Int) -> Uint8ClampedArray
 
 /// Creates a `Uint8ClampedArray` from a list of byte values. Values
 /// outside `0`–`255` are *clamped* to that range (negative values
@@ -47,23 +46,23 @@ pub fn from_buffer_range(
 ) -> Result(Uint8ClampedArray, JsError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "buffer")
-pub fn buffer(of array: Uint8ClampedArray) -> ArrayBuffer
+pub fn buffer(array: Uint8ClampedArray) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
 /// the underlying buffer. Returns an error if the underlying buffer
 /// has been detached or resized below the array's range.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "bytes")
-pub fn bytes(of array: Uint8ClampedArray) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Uint8ClampedArray) -> Result(Uint8Array, JsError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "byte_length")
-pub fn byte_length(of array: Uint8ClampedArray) -> Int
+pub fn byte_length(array: Uint8ClampedArray) -> Int
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "byte_offset")
-pub fn byte_offset(of array: Uint8ClampedArray) -> Int
+pub fn byte_offset(array: Uint8ClampedArray) -> Int
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "length")
-pub fn length(of array: Uint8ClampedArray) -> Int
+pub fn length(array: Uint8ClampedArray) -> Int
 
 /// Returns the element at `index`, or `Error(Nil)` if the index is
 /// out of range. Negative indices count from the end.
