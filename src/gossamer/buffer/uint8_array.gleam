@@ -59,6 +59,13 @@ pub fn from_base64(string: String) -> Result(Uint8Array, JsError)
 @external(javascript, "./uint8_array.ffi.mjs", "from_hex")
 pub fn from_hex(string: String) -> Result(Uint8Array, JsError)
 
+/// Creates a `Uint8Array` from a `BitArray`. Returns an error if
+/// `bit_array` is not byte-aligned (its bit size is not a multiple of
+/// `8`).
+///
+@external(javascript, "./uint8_array.ffi.mjs", "from_bit_array")
+pub fn from_bit_array(bit_array: BitArray) -> Result(Uint8Array, JsError)
+
 @external(javascript, "./uint8_array.ffi.mjs", "buffer")
 pub fn buffer(of array: Uint8Array) -> ArrayBuffer
 
@@ -372,6 +379,11 @@ pub fn to_base64(array: Uint8Array) -> String
 
 @external(javascript, "./uint8_array.ffi.mjs", "to_hex")
 pub fn to_hex(array: Uint8Array) -> String
+
+/// Wraps a `Uint8Array` as a `BitArray`.
+///
+@external(javascript, "./uint8_array.ffi.mjs", "to_bit_array")
+pub fn to_bit_array(array: Uint8Array) -> BitArray
 
 /// Decodes `string` as base64 into `array` in place. Returns the number
 /// of characters read and bytes written. Returns an error if `string` is

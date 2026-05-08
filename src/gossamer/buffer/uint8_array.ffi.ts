@@ -1,6 +1,7 @@
 import type * as $uint8Array from "$/gossamer/gossamer/buffer/uint8_array.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
+import { BitArray$BitArray, BitArray$BitArray$data } from "$/prelude.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
@@ -361,6 +362,17 @@ export const from_base64: typeof $uint8Array.from_base64 = (string) => {
 
 export const from_hex: typeof $uint8Array.from_hex = (string) => {
   return toResult.fromThrows(() => Uint8Array.fromHex(string));
+};
+
+export const from_bit_array: typeof $uint8Array.from_bit_array = (bitArray) => {
+  return toResult.fromThrows(() => {
+    const view = BitArray$BitArray$data(bitArray);
+    return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+  });
+};
+
+export const to_bit_array: typeof $uint8Array.to_bit_array = (array) => {
+  return BitArray$BitArray(array);
 };
 
 export const set_from_base64: typeof $uint8Array.set_from_base64 = (

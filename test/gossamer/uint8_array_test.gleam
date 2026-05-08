@@ -283,6 +283,21 @@ pub fn from_hex_test() {
   array |> uint8_array.to_list() |> should.equal([72, 101, 108, 108, 111])
 }
 
+pub fn to_bit_array_test() {
+  uint8_array.from_list([72, 101, 108, 108, 111])
+  |> uint8_array.to_bit_array()
+  |> should.equal(<<"Hello":utf8>>)
+}
+
+pub fn from_bit_array_test() {
+  let assert Ok(array) = uint8_array.from_bit_array(<<72, 101, 108, 108, 111>>)
+  array |> uint8_array.to_list() |> should.equal([72, 101, 108, 108, 111])
+}
+
+pub fn from_bit_array_unaligned_test() {
+  uint8_array.from_bit_array(<<1:size(7)>>) |> should.be_error
+}
+
 pub fn slice_from_test() {
   let array = uint8_array.from_list([1, 2, 3, 4, 5])
   let sliced = uint8_array.slice_from(array, 3)
