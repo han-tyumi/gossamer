@@ -4,7 +4,6 @@ import gleam/option
 import gleam/string
 import gleeunit/should
 import gossamer/aes_algorithm
-import gossamer/buffer/uint8_array
 import gossamer/crypto
 import gossamer/crypto_key
 import gossamer/ec_algorithm
@@ -25,10 +24,18 @@ import gossamer/subtle_crypto/key_pair_gen_algorithm
 import gossamer/subtle_crypto/sign_algorithm
 import gossamer/subtle_crypto/wrap_algorithm
 
-pub fn get_random_values_test() {
-  let assert Ok(array) = uint8_array.from_length(16)
-  let assert Ok(result) = crypto.get_random_values(array)
-  should.equal(uint8_array.byte_length(result), 16)
+pub fn random_bytes_test() {
+  crypto.random_bytes(16) |> bit_array.byte_size |> should.equal(16)
+}
+
+pub fn random_bytes_negative_test() {
+  crypto.random_bytes(-5) |> should.equal(<<>>)
+}
+
+pub fn random_bytes_quota_test() {
+  // The Web Crypto getRandomValues quota is 65_536 bytes per call;
+  // the binding chunks transparently for larger requests.
+  crypto.random_bytes(100_000) |> bit_array.byte_size |> should.equal(100_000)
 }
 
 pub fn random_uuid_test() {
@@ -71,9 +78,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.equal(crypto_key.is_extractable(key), True)
   should.equal(crypto_key.type_(key), key_type.Secret)
 
-  let assert Ok(iv_source) = uint8_array.from_length(12)
-  let assert Ok(iv_raw) = crypto.get_random_values(iv_source)
-  let iv = uint8_array.to_bit_array(iv_raw)
+  let iv = crypto.random_bytes(12)
   let plaintext = <<"Hello":utf8>>
 
   use result <- promise.then(subtle_crypto.encrypt(
@@ -154,9 +159,7 @@ pub fn generate_rsa_key_pair_test() {
 }
 
 pub fn import_export_key_test() {
-  let assert Ok(raw_key_source) = uint8_array.from_length(16)
-  let assert Ok(raw_key_uint8) = crypto.get_random_values(raw_key_source)
-  let raw_key = uint8_array.to_bit_array(raw_key_uint8)
+  let raw_key = crypto.random_bytes(16)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -264,9 +267,7 @@ pub fn import_key_jwk_test() {
 
 pub fn derive_bits_test() {
   let password = <<"pass":utf8>>
-  let assert Ok(salt_source) = uint8_array.from_length(16)
-  let assert Ok(salt_uint8) = crypto.get_random_values(salt_source)
-  let salt = uint8_array.to_bit_array(salt_uint8)
+  let salt = crypto.random_bytes(16)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -291,9 +292,7 @@ pub fn derive_bits_test() {
 
 pub fn derive_key_test() {
   let password = <<"pass":utf8>>
-  let assert Ok(salt_source) = uint8_array.from_length(16)
-  let assert Ok(salt_uint8) = crypto.get_random_values(salt_source)
-  let salt = uint8_array.to_bit_array(salt_uint8)
+  let salt = crypto.random_bytes(16)
 
   use result <- promise.then(
     subtle_crypto.import_key(
