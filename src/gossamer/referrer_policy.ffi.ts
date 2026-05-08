@@ -1,6 +1,6 @@
 import * as $rp from "$/gossamer/gossamer/referrer_policy.mjs";
 
-export function toReferrerPolicy(value: $rp.ReferrerPolicy$): string {
+export function toReferrerPolicy(value: $rp.ReferrerPolicy$): ReferrerPolicy {
   if ($rp.ReferrerPolicy$isNoReferrer(value)) return "no-referrer";
   if ($rp.ReferrerPolicy$isNoReferrerWhenDowngrade(value)) {
     return "no-referrer-when-downgrade";
@@ -12,9 +12,6 @@ export function toReferrerPolicy(value: $rp.ReferrerPolicy$): string {
   if ($rp.ReferrerPolicy$isSameOrigin(value)) return "same-origin";
   if ($rp.ReferrerPolicy$isStrictOrigin(value)) return "strict-origin";
   if ($rp.ReferrerPolicy$isUnsafeUrl(value)) return "unsafe-url";
-  if ($rp.ReferrerPolicy$isOther(value)) {
-    return $rp.ReferrerPolicy$Other$0(value);
-  }
   return "strict-origin-when-cross-origin";
 }
 
@@ -22,10 +19,6 @@ export function fromReferrerPolicy(
   value: string | undefined,
 ): $rp.ReferrerPolicy$ {
   switch (value) {
-    case undefined:
-    case "":
-    case "strict-origin-when-cross-origin":
-      return $rp.ReferrerPolicy$StrictOriginWhenCrossOrigin();
     case "no-referrer":
       return $rp.ReferrerPolicy$NoReferrer();
     case "no-referrer-when-downgrade":
@@ -41,6 +34,6 @@ export function fromReferrerPolicy(
     case "unsafe-url":
       return $rp.ReferrerPolicy$UnsafeUrl();
     default:
-      return $rp.ReferrerPolicy$Other(value);
+      return $rp.ReferrerPolicy$StrictOriginWhenCrossOrigin();
   }
 }

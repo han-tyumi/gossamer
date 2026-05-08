@@ -1,4 +1,5 @@
 import * as $request from "$/gossamer/gossamer/request.mjs";
+import { fromHttpMethod, toHttpMethod } from "~/gossamer/http_method.ffi.ts";
 import {
   fromReferrerPolicy,
   toReferrerPolicy,
@@ -7,7 +8,6 @@ import {
   fromRequestCache,
   toRequestCache,
 } from "~/gossamer/request_cache.ffi.ts";
-import { fromHttpMethod, toHttpMethod } from "~/gossamer/http_method.ffi.ts";
 import {
   fromRequestCredentials,
   toRequestCredentials,
@@ -38,7 +38,8 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
     } else if ($request.RequestInit$isBodyBlob(option)) {
       result.body = $request.RequestInit$BodyBlob$0(option);
     } else if ($request.RequestInit$isBodyBytes(option)) {
-      result.body = $request.RequestInit$BodyBytes$0(option) as BodyInit;
+      // @ts-expect-error: Deno's `BufferSource` requires `Uint8Array<ArrayBuffer>` but `Uint8Array` defaults to `Uint8Array<ArrayBufferLike>`; the runtime accepts either. See https://github.com/denoland/deno/issues/32063.
+      result.body = $request.RequestInit$BodyBytes$0(option);
     } else if ($request.RequestInit$isBodyFormData(option)) {
       result.body = $request.RequestInit$BodyFormData$0(option);
     } else if ($request.RequestInit$isBodyParams(option)) {
@@ -47,26 +48,23 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
       result.body = $request.RequestInit$BodyStream$0(option);
       // `duplex: "half"` is required by the Fetch spec when body is a
       // `ReadableStream`; currently the only accepted value.
-      (result as RequestInit & { duplex: string }).duplex = "half";
+      result.duplex = "half";
     } else if ($request.RequestInit$isCache(option)) {
-      result.cache = toRequestCache(
-        $request.RequestInit$Cache$0(option),
-      ) as RequestCache;
+      result.cache = toRequestCache($request.RequestInit$Cache$0(option));
     } else if ($request.RequestInit$isCredentials(option)) {
       result.credentials = toRequestCredentials(
         $request.RequestInit$Credentials$0(option),
-      ) as RequestCredentials;
+      );
     } else if ($request.RequestInit$isIntegrity(option)) {
       result.integrity = $request.RequestInit$Integrity$0(option);
     } else if ($request.RequestInit$isKeepalive(option)) {
       result.keepalive = $request.RequestInit$Keepalive$0(option);
     } else if ($request.RequestInit$isMode(option)) {
-      result.mode = toRequestMode(
-        $request.RequestInit$Mode$0(option),
-      ) as RequestMode;
+      result.mode = toRequestMode($request.RequestInit$Mode$0(option));
     } else if ($request.RequestInit$isPriority(option)) {
-      (result as RequestInit & { priority: string }).priority =
-        toRequestPriority($request.RequestInit$Priority$0(option));
+      result.priority = toRequestPriority(
+        $request.RequestInit$Priority$0(option),
+      );
     } else if ($request.RequestInit$isRedirect(option)) {
       result.redirect = toRequestRedirect(
         $request.RequestInit$Redirect$0(option),
@@ -76,7 +74,7 @@ export function toRequestInit(options: $request.RequestInit$[]): RequestInit {
     } else if ($request.RequestInit$isReferrerPolicy(option)) {
       result.referrerPolicy = toReferrerPolicy(
         $request.RequestInit$ReferrerPolicy$0(option),
-      ) as ReferrerPolicy;
+      );
     } else if ($request.RequestInit$isSignal(option)) {
       result.signal = $request.RequestInit$Signal$0(option);
     }
@@ -93,18 +91,14 @@ export const to_fields: typeof $request.to_fields = (request) => {
     fromRequestCredentials(request.credentials),
     fromRequestDestination(request.destination),
     fromRequestMode(request.mode),
-    fromRequestPriority(
-      (request as Request & { priority: string | undefined }).priority,
-    ),
+    fromRequestPriority(request.priority),
     fromRequestRedirect(request.redirect),
     fromReferrerPolicy(request.referrerPolicy),
     request.signal,
     request.referrer ?? "about:client",
     request.integrity ?? "",
     request.keepalive ?? false,
-    toOption(
-      request.body as ReadableStream<Uint8Array> | null,
-    ),
+    toOption(request.body),
   );
 };
 
@@ -182,9 +176,7 @@ export const mode: typeof $request.mode = (request) => {
 };
 
 export const priority: typeof $request.priority = (request) => {
-  return fromRequestPriority(
-    (request as Request & { priority: string | undefined }).priority,
-  );
+  return fromRequestPriority(request.priority);
 };
 
 export const is_keepalive: typeof $request.is_keepalive = (request) => {

@@ -28,9 +28,7 @@ export const to_fields: typeof $response.to_fields = (response) => {
     response.ok,
     response.redirected,
     response.headers,
-    toOption(
-      response.body as ReadableStream<Uint8Array> | null,
-    ),
+    toOption(response.body),
   );
 };
 
@@ -50,15 +48,17 @@ export const from_blob_with: typeof $response.from_blob_with = (
 };
 
 export const from_bytes: typeof $response.from_bytes = (body) => {
-  return new Response(body as BodyInit);
+  // @ts-expect-error: Deno's `BufferSource` requires `Uint8Array<ArrayBuffer>` but `Uint8Array` defaults to `Uint8Array<ArrayBufferLike>`; the runtime accepts either. See https://github.com/denoland/deno/issues/32063.
+  return new Response(body);
 };
 
 export const from_bytes_with: typeof $response.from_bytes_with = (
   body,
   init,
 ) => {
-  return toResult.fromThrows(
-    () => new Response(body as BodyInit, toResponseInit(toArray(init))),
+  return toResult.fromThrows(() =>
+    // @ts-expect-error: Deno's `BufferSource` requires `Uint8Array<ArrayBuffer>` but `Uint8Array` defaults to `Uint8Array<ArrayBufferLike>`; the runtime accepts either. See https://github.com/denoland/deno/issues/32063.
+    new Response(body, toResponseInit(toArray(init)))
   );
 };
 
