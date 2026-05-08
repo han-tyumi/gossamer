@@ -1,6 +1,17 @@
+import type { BitArray } from "$/prelude.mjs";
 import type * as $decompressionStream from "$/gossamer/gossamer/decompression_stream.mjs";
 import { toCompressionFormat } from "~/gossamer/compression_format.ffi.ts";
+import { fromBitArrayStream, toBitArrayStream } from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+const wrappedReadables = new WeakMap<
+  DecompressionStream,
+  ReadableStream<BitArray>
+>();
+const wrappedWritables = new WeakMap<
+  DecompressionStream,
+  WritableStream<BitArray>
+>();
 
 export const new_: typeof $decompressionStream.new$ = (format) => {
   return toResult.fromThrows(() =>
@@ -9,9 +20,19 @@ export const new_: typeof $decompressionStream.new$ = (format) => {
 };
 
 export const readable: typeof $decompressionStream.readable = (stream) => {
-  return stream.readable;
+  let wrapped = wrappedReadables.get(stream);
+  if (wrapped === undefined) {
+    wrapped = toBitArrayStream(stream.readable);
+    wrappedReadables.set(stream, wrapped);
+  }
+  return wrapped;
 };
 
 export const writable: typeof $decompressionStream.writable = (stream) => {
-  return stream.writable as unknown as WritableStream<Uint8Array>;
+  let wrapped = wrappedWritables.get(stream);
+  if (wrapped === undefined) {
+    wrapped = fromBitArrayStream(stream.writable);
+    wrappedWritables.set(stream, wrapped);
+  }
+  return wrapped;
 };

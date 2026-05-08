@@ -25,13 +25,13 @@ pub fn new_with(
 ) -> Result(TextDecoderStream, JsError)
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "readable")
-pub fn readable(of decoder: TextDecoderStream) -> ReadableStream(String)
+pub fn readable(decoder: TextDecoderStream) -> ReadableStream(String)
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "writable")
-pub fn writable(of decoder: TextDecoderStream) -> WritableStream(w)
+pub fn writable(decoder: TextDecoderStream) -> WritableStream(BitArray)
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "encoding")
-pub fn encoding(of decoder: TextDecoderStream) -> Encoding
+pub fn encoding(decoder: TextDecoderStream) -> Encoding
 
 @external(javascript, "./text_decoder_stream.ffi.mjs", "is_fatal")
 pub fn is_fatal(decoder: TextDecoderStream) -> Bool
@@ -40,7 +40,7 @@ pub fn is_fatal(decoder: TextDecoderStream) -> Bool
 pub fn is_ignore_bom(decoder: TextDecoderStream) -> Bool
 
 pub fn read_write_pair(
-  of decoder: TextDecoderStream,
-) -> #(ReadableStream(String), WritableStream(w)) {
+  decoder: TextDecoderStream,
+) -> #(ReadableStream(String), WritableStream(BitArray)) {
   #(decoder |> readable, decoder |> writable)
 }

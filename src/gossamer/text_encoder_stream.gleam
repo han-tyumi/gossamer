@@ -1,4 +1,3 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/encoding.{type Encoding}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/writable_stream.{type WritableStream}
@@ -15,10 +14,10 @@ pub type TextEncoderStream
 pub fn new() -> TextEncoderStream
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "readable")
-pub fn readable(of encoder: TextEncoderStream) -> ReadableStream(Uint8Array)
+pub fn readable(encoder: TextEncoderStream) -> ReadableStream(BitArray)
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "writable")
-pub fn writable(of encoder: TextEncoderStream) -> WritableStream(String)
+pub fn writable(encoder: TextEncoderStream) -> WritableStream(String)
 
 @external(javascript, "./text_encoder_stream.ffi.mjs", "encoding")
-pub fn encoding(of encoder: TextEncoderStream) -> Encoding
+pub fn encoding(encoder: TextEncoderStream) -> Encoding

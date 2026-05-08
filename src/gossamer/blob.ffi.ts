@@ -1,4 +1,9 @@
 import * as $blob from "$/gossamer/gossamer/blob.mjs";
+import {
+  toBitArrayBytesResult,
+  toBitArrayStream,
+  toBufferSource,
+} from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const to_fields: typeof $blob.to_fields = (blob) => {
@@ -10,14 +15,14 @@ export const new_: typeof $blob.new$ = () => {
 };
 
 export const from_bytes: typeof $blob.from_bytes = (bytes) => {
-  return new Blob([bytes as BlobPart]);
+  return new Blob([toBufferSource(bytes)]);
 };
 
 export const from_bytes_with_type: typeof $blob.from_bytes_with_type = (
   bytes,
   mimeType,
 ) => {
-  return new Blob([bytes as BlobPart], { type: mimeType });
+  return new Blob([toBufferSource(bytes)], { type: mimeType });
 };
 
 export const from_string: typeof $blob.from_string = (content) => {
@@ -44,7 +49,7 @@ export const array_buffer: typeof $blob.array_buffer = (blob) => {
 };
 
 export const bytes: typeof $blob.bytes = (blob) => {
-  return toResult.fromPromise(blob.bytes());
+  return toBitArrayBytesResult(() => blob.bytes());
 };
 
 export const slice: typeof $blob.slice = (blob, start, end) => {
@@ -61,7 +66,7 @@ export const slice_with_type: typeof $blob.slice_with_type = (
 };
 
 export const stream: typeof $blob.stream = (blob) => {
-  return blob.stream() as unknown as ReadableStream<Uint8Array>;
+  return toBitArrayStream(blob.stream());
 };
 
 export const text: typeof $blob.text = (blob) => {

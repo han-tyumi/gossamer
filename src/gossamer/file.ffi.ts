@@ -1,4 +1,8 @@
 import * as $file from "$/gossamer/gossamer/file.mjs";
+import {
+  toBitArrayBytesResult,
+  toBitArrayStream,
+} from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -72,7 +76,7 @@ export const array_buffer: typeof $file.array_buffer = (file) => {
 };
 
 export const bytes: typeof $file.bytes = (file) => {
-  return toResult.fromPromise(file.bytes());
+  return toBitArrayBytesResult(() => file.bytes());
 };
 
 export const slice: typeof $file.slice = (file, start, end) => {
@@ -89,7 +93,7 @@ export const slice_with_type: typeof $file.slice_with_type = (
 };
 
 export const stream: typeof $file.stream = (file) => {
-  return file.stream() as unknown as ReadableStream<Uint8Array>;
+  return toBitArrayStream(file.stream());
 };
 
 export const text: typeof $file.text = (file) => {

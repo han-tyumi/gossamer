@@ -59,24 +59,23 @@ pub fn from_base64(string: String) -> Result(Uint8Array, JsError)
 @external(javascript, "./uint8_array.ffi.mjs", "from_hex")
 pub fn from_hex(string: String) -> Result(Uint8Array, JsError)
 
-/// Creates a `Uint8Array` from a `BitArray`. Returns an error if
-/// `bit_array` is not byte-aligned (its bit size is not a multiple of
-/// `8`).
+/// Creates a `Uint8Array` from a `BitArray`. Un-aligned bit arrays are
+/// zero-padded to the next byte.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_bit_array")
-pub fn from_bit_array(bit_array: BitArray) -> Result(Uint8Array, JsError)
+pub fn from_bit_array(bit_array: BitArray) -> Uint8Array
 
 @external(javascript, "./uint8_array.ffi.mjs", "buffer")
-pub fn buffer(of array: Uint8Array) -> ArrayBuffer
+pub fn buffer(array: Uint8Array) -> ArrayBuffer
 
 @external(javascript, "./uint8_array.ffi.mjs", "byte_length")
-pub fn byte_length(of array: Uint8Array) -> Int
+pub fn byte_length(array: Uint8Array) -> Int
 
 @external(javascript, "./uint8_array.ffi.mjs", "byte_offset")
-pub fn byte_offset(of array: Uint8Array) -> Int
+pub fn byte_offset(array: Uint8Array) -> Int
 
 @external(javascript, "./uint8_array.ffi.mjs", "length")
-pub fn length(of array: Uint8Array) -> Int
+pub fn length(array: Uint8Array) -> Int
 
 /// Returns the byte at `index`, or `Error(Nil)` if the index is out of
 /// bounds. Negative indices count from the end.
@@ -363,13 +362,13 @@ pub fn index_reduce_right(
 ) -> a
 
 @external(javascript, "./uint8_array.ffi.mjs", "keys")
-pub fn keys(of array: Uint8Array) -> Iterator(Int, Nil, Nil)
+pub fn keys(array: Uint8Array) -> Iterator(Int, Nil, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "values")
-pub fn values(of array: Uint8Array) -> Iterator(Int, Nil, Nil)
+pub fn values(array: Uint8Array) -> Iterator(Int, Nil, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "entries")
-pub fn entries(of array: Uint8Array) -> Iterator(#(Int, Int), Nil, Nil)
+pub fn entries(array: Uint8Array) -> Iterator(#(Int, Int), Nil, Nil)
 
 @external(javascript, "./uint8_array.ffi.mjs", "to_list")
 pub fn to_list(array: Uint8Array) -> List(Int)

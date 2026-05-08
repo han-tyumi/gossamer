@@ -1,5 +1,4 @@
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
@@ -23,11 +22,11 @@ pub fn to_fields(blob: Blob) -> Fields
 pub fn new() -> Blob
 
 @external(javascript, "./blob.ffi.mjs", "from_bytes")
-pub fn from_bytes(bytes: Uint8Array) -> Blob
+pub fn from_bytes(bytes: BitArray) -> Blob
 
 @external(javascript, "./blob.ffi.mjs", "from_bytes_with_type")
 pub fn from_bytes_with_type(
-  bytes: Uint8Array,
+  bytes: BitArray,
   content_type content_type: String,
 ) -> Blob
 
@@ -41,22 +40,22 @@ pub fn from_string_with_type(
 ) -> Blob
 
 @external(javascript, "./blob.ffi.mjs", "size")
-pub fn size(of blob: Blob) -> Int
+pub fn size(blob: Blob) -> Int
 
 @external(javascript, "./blob.ffi.mjs", "type_")
-pub fn type_(of blob: Blob) -> String
+pub fn type_(blob: Blob) -> String
 
 /// Reads the blob's contents as an `ArrayBuffer`. Returns an error if
 /// the blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "array_buffer")
-pub fn array_buffer(of blob: Blob) -> Promise(Result(ArrayBuffer, JsError))
+pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, JsError))
 
-/// Reads the blob's contents as a `Uint8Array`. Returns an error if the
+/// Reads the blob's contents as a `BitArray`. Returns an error if the
 /// blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "bytes")
-pub fn bytes(of blob: Blob) -> Promise(Result(Uint8Array, JsError))
+pub fn bytes(blob: Blob) -> Promise(Result(BitArray, JsError))
 
 @external(javascript, "./blob.ffi.mjs", "slice")
 pub fn slice(blob: Blob, from start: Int, to end: Int) -> Blob
@@ -70,10 +69,10 @@ pub fn slice_with_type(
 ) -> Blob
 
 @external(javascript, "./blob.ffi.mjs", "stream")
-pub fn stream(of blob: Blob) -> ReadableStream(Uint8Array)
+pub fn stream(blob: Blob) -> ReadableStream(BitArray)
 
 /// Reads the blob's contents as a UTF-8 string. Returns an error if the
 /// blob cannot be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "text")
-pub fn text(of blob: Blob) -> Promise(Result(String, JsError))
+pub fn text(blob: Blob) -> Promise(Result(String, JsError))

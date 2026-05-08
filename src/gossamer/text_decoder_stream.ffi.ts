@@ -1,7 +1,14 @@
+import type { BitArray } from "$/prelude.mjs";
 import type * as $textDecoderStream from "$/gossamer/gossamer/text_decoder_stream.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toTextDecoderOptions } from "~/gossamer/text_decoder.ffi.ts";
+import { fromBitArrayStream } from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+const wrappedWritables = new WeakMap<
+  TextDecoderStream,
+  WritableStream<BitArray>
+>();
 
 export const new_: typeof $textDecoderStream.new$ = () => {
   return new TextDecoderStream();
@@ -16,32 +23,29 @@ export const new_with: typeof $textDecoderStream.new_with = (
   );
 };
 
-export const readable: typeof $textDecoderStream.readable = (
-  decoder: TextDecoderStream,
-) => {
+export const readable: typeof $textDecoderStream.readable = (decoder) => {
   return decoder.readable;
 };
 
-export const writable: typeof $textDecoderStream.writable = (
-  decoder: TextDecoderStream,
-) => {
-  return decoder.writable;
+export const writable: typeof $textDecoderStream.writable = (decoder) => {
+  let wrapped = wrappedWritables.get(decoder);
+  if (wrapped === undefined) {
+    wrapped = fromBitArrayStream(decoder.writable);
+    wrappedWritables.set(decoder, wrapped);
+  }
+  return wrapped;
 };
 
-export const encoding: typeof $textDecoderStream.encoding = (
-  decoder: TextDecoderStream,
-) => {
+export const encoding: typeof $textDecoderStream.encoding = (decoder) => {
   return fromEncoding(decoder.encoding);
 };
 
-export const is_fatal: typeof $textDecoderStream.is_fatal = (
-  decoder: TextDecoderStream,
-) => {
+export const is_fatal: typeof $textDecoderStream.is_fatal = (decoder) => {
   return decoder.fatal;
 };
 
 export const is_ignore_bom: typeof $textDecoderStream.is_ignore_bom = (
-  decoder: TextDecoderStream,
+  decoder,
 ) => {
   return decoder.ignoreBOM;
 };

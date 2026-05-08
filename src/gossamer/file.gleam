@@ -1,6 +1,5 @@
 import gossamer/blob.{type Blob}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
@@ -46,31 +45,31 @@ pub fn from_blob_with(
 ) -> File
 
 @external(javascript, "./file.ffi.mjs", "name")
-pub fn name(of file: File) -> String
+pub fn name(file: File) -> String
 
 @external(javascript, "./file.ffi.mjs", "last_modified")
-pub fn last_modified(of file: File) -> Int
+pub fn last_modified(file: File) -> Int
 
 @external(javascript, "./file.ffi.mjs", "to_blob")
 pub fn to_blob(file: File) -> Blob
 
 @external(javascript, "./file.ffi.mjs", "size")
-pub fn size(of file: File) -> Int
+pub fn size(file: File) -> Int
 
 @external(javascript, "./file.ffi.mjs", "type_")
-pub fn type_(of file: File) -> String
+pub fn type_(file: File) -> String
 
 /// Reads the file's contents as an `ArrayBuffer`. Returns an error if
 /// the file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "array_buffer")
-pub fn array_buffer(of file: File) -> Promise(Result(ArrayBuffer, JsError))
+pub fn array_buffer(file: File) -> Promise(Result(ArrayBuffer, JsError))
 
-/// Reads the file's contents as a `Uint8Array`. Returns an error if the
+/// Reads the file's contents as a `BitArray`. Returns an error if the
 /// file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "bytes")
-pub fn bytes(of file: File) -> Promise(Result(Uint8Array, JsError))
+pub fn bytes(file: File) -> Promise(Result(BitArray, JsError))
 
 @external(javascript, "./file.ffi.mjs", "slice")
 pub fn slice(file: File, from start: Int, to end: Int) -> Blob
@@ -84,10 +83,10 @@ pub fn slice_with_type(
 ) -> Blob
 
 @external(javascript, "./file.ffi.mjs", "stream")
-pub fn stream(of file: File) -> ReadableStream(Uint8Array)
+pub fn stream(file: File) -> ReadableStream(BitArray)
 
 /// Reads the file's contents as a UTF-8 string. Returns an error if the
 /// file cannot be read.
 ///
 @external(javascript, "./file.ffi.mjs", "text")
-pub fn text(of file: File) -> Promise(Result(String, JsError))
+pub fn text(file: File) -> Promise(Result(String, JsError))

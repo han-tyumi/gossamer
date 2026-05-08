@@ -1,8 +1,8 @@
+import gleam/bit_array
 import gleam/string
 import gleeunit/should
 import gossamer/blob
 import gossamer/buffer/array_buffer
-import gossamer/buffer/uint8_array
 import gossamer/promise
 
 pub fn blob_from_string_test() {
@@ -19,7 +19,7 @@ pub fn blob_from_string_with_type_test() {
 }
 
 pub fn blob_from_bytes_test() {
-  let b = blob.from_bytes(uint8_array.from_list([1, 2, 3]))
+  let b = blob.from_bytes(<<1, 2, 3>>)
   should.equal(blob.size(b), 3)
 }
 
@@ -39,10 +39,10 @@ pub fn blob_array_buffer_test() {
 }
 
 pub fn blob_bytes_test() {
-  let b = blob.from_bytes(uint8_array.from_list([10, 20, 30]))
+  let b = blob.from_bytes(<<10, 20, 30>>)
   use result <- promise.then(blob.bytes(b))
   let assert Ok(bytes) = result
-  should.equal(uint8_array.byte_length(bytes), 3)
+  should.equal(bit_array.byte_size(bytes), 3)
   promise.resolve(Nil)
 }
 
@@ -62,7 +62,7 @@ pub fn blob_empty_test() {
 pub fn blob_from_bytes_with_type_test() {
   let b =
     blob.from_bytes_with_type(
-      uint8_array.from_list([72, 101, 108, 108, 111]),
+      <<72, 101, 108, 108, 111>>,
       "application/octet-stream",
     )
   should.equal(blob.size(b), 5)
@@ -82,4 +82,9 @@ pub fn blob_slice_with_type_test() {
 pub fn blob_stream_test() {
   let b = blob.from_string("stream me")
   let _stream = blob.stream(b)
+}
+
+pub fn blob_from_unaligned_bytes_test() {
+  let b = blob.from_bytes(<<1:1>>)
+  should.equal(blob.size(b), 1)
 }

@@ -50,7 +50,8 @@ pub fn digest_unaligned_test() {
     hash_algorithm.Sha256,
     unaligned,
   ))
-  should.be_error(result)
+  let assert Ok(hash) = result
+  should.equal(bit_array.byte_size(hash), 32)
   promise.resolve(Nil)
 }
 

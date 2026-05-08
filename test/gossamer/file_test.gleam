@@ -1,8 +1,8 @@
+import gleam/bit_array
 import gleam/string
 import gleeunit/should
 import gossamer/blob
 import gossamer/buffer/array_buffer
-import gossamer/buffer/uint8_array
 import gossamer/file
 import gossamer/promise
 
@@ -70,7 +70,7 @@ pub fn file_bytes_test() {
   let f = file.from_strings(["abc"], "bytes.txt")
   use result <- promise.then(file.bytes(f))
   let assert Ok(bytes) = result
-  uint8_array.byte_length(bytes) |> should.equal(3)
+  bit_array.byte_size(bytes) |> should.equal(3)
   promise.resolve(Nil)
 }
 

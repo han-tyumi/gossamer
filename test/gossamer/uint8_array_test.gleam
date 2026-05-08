@@ -290,12 +290,15 @@ pub fn to_bit_array_test() {
 }
 
 pub fn from_bit_array_test() {
-  let assert Ok(array) = uint8_array.from_bit_array(<<72, 101, 108, 108, 111>>)
-  array |> uint8_array.to_list() |> should.equal([72, 101, 108, 108, 111])
+  uint8_array.from_bit_array(<<72, 101, 108, 108, 111>>)
+  |> uint8_array.to_list()
+  |> should.equal([72, 101, 108, 108, 111])
 }
 
 pub fn from_bit_array_unaligned_test() {
-  uint8_array.from_bit_array(<<1:size(7)>>) |> should.be_error
+  uint8_array.from_bit_array(<<1:size(7)>>)
+  |> uint8_array.to_list()
+  |> should.equal([2])
 }
 
 pub fn slice_from_test() {
