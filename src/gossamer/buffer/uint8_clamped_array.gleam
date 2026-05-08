@@ -1,6 +1,6 @@
-import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// A typed array of 8-bit unsigned integers, clamped to `0`–`255` on
 /// write (rather than wrapped). Useful for image pixel data where

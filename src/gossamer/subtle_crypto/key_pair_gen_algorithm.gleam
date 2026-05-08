@@ -1,8 +1,8 @@
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/ec_algorithm.{type EcAlgorithm}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/named_curve.{type NamedCurve}
 import gossamer/rsa_algorithm.{type RsaAlgorithm}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// Algorithm parameters for `subtle_crypto.generate_key_pair`
 /// (asymmetric keys).

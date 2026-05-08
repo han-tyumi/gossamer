@@ -1,5 +1,5 @@
 import gleam/order.{type Order}
-import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/iterator.{type Iterator}
 import gossamer/js_error.{type JsError}
 

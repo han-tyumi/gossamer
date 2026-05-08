@@ -1,4 +1,4 @@
-import gossamer/uint8_array.{type Uint8Array}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 
 /// Algorithm parameters for `subtle_crypto.wrap_key` and `unwrap_key`.
 ///

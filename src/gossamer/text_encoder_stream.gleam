@@ -1,6 +1,6 @@
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/encoding.{type Encoding}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
 
 /// A stream-based encoder: writes text to the writable side, reads UTF-8

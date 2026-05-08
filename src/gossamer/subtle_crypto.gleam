@@ -1,3 +1,4 @@
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/js_error.{type JsError}
@@ -13,7 +14,6 @@ import gossamer/subtle_crypto/key_gen_algorithm.{type KeyGenAlgorithm}
 import gossamer/subtle_crypto/key_pair_gen_algorithm.{type KeyPairGenAlgorithm}
 import gossamer/subtle_crypto/sign_algorithm.{type SignAlgorithm}
 import gossamer/subtle_crypto/wrap_algorithm.{type WrapAlgorithm}
-import gossamer/uint8_array.{type Uint8Array}
 
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)

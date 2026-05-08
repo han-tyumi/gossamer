@@ -1,5 +1,5 @@
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// Fills `array` with cryptographically strong random values. Returns an
 /// error if `array`'s byte length exceeds the implementation's quota

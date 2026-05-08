@@ -2,8 +2,8 @@
 ////
 //// See [TextEncoder](https://developer.mozilla.org/en-US/docs/Web/API/TextEncoder) on MDN.
 
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/encoding.{type Encoding}
-import gossamer/uint8_array.{type Uint8Array}
 
 pub type EncodeIntoResult {
   EncodeIntoResult(read: Int, written: Int)

@@ -1,4 +1,4 @@
-import type * as $uint8Array from "$/gossamer/gossamer/uint8_array.mjs";
+import type * as $uint8Array from "$/gossamer/gossamer/buffer/uint8_array.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";

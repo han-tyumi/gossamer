@@ -1,7 +1,7 @@
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/compression_format.{type CompressionFormat}
 import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/uint8_array.{type Uint8Array}
 import gossamer/writable_stream.{type WritableStream}
 
 /// A transform stream that decompresses its input.

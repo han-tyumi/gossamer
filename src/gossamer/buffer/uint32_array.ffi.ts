@@ -1,4 +1,4 @@
-import type * as $uint32Array from "$/gossamer/gossamer/uint32_array.mjs";
+import type * as $uint32Array from "$/gossamer/gossamer/buffer/uint32_array.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 

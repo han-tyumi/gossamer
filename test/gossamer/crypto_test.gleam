@@ -3,6 +3,7 @@ import gleam/option
 import gleam/string
 import gleeunit/should
 import gossamer/aes_algorithm
+import gossamer/buffer/uint8_array
 import gossamer/crypto
 import gossamer/crypto_key
 import gossamer/ec_algorithm
@@ -22,7 +23,6 @@ import gossamer/subtle_crypto/key_gen_algorithm
 import gossamer/subtle_crypto/key_pair_gen_algorithm
 import gossamer/subtle_crypto/sign_algorithm
 import gossamer/subtle_crypto/wrap_algorithm
-import gossamer/uint8_array
 
 pub fn get_random_values_test() {
   let assert Ok(array) = uint8_array.from_length(16)

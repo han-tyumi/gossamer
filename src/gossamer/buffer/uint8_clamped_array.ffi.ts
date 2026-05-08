@@ -1,4 +1,4 @@
-import type * as $uint8ClampedArray from "$/gossamer/gossamer/uint8_clamped_array.mjs";
+import type * as $uint8ClampedArray from "$/gossamer/gossamer/buffer/uint8_clamped_array.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 

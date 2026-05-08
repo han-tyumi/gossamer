@@ -1,4 +1,4 @@
-import type * as $arrayBuffer from "$/gossamer/gossamer/array_buffer.mjs";
+import type * as $arrayBuffer from "$/gossamer/gossamer/buffer/array_buffer.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $arrayBuffer.new$ = (byteLength) => {

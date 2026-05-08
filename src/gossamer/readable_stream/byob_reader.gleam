@@ -1,10 +1,10 @@
 // TODO: Untested — requires a byte stream (UnderlyingSource with type: "bytes")
 // which gossamer doesn't expose yet. Add tests once byte stream support lands.
 
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream/read_result.{type ReadResult}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// A reader over a byte `ReadableStream` that reads into caller-provided
 /// buffers.

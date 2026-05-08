@@ -1,9 +1,9 @@
 import gleam/order
 import gleeunit/should
-import gossamer/array_buffer
 import gossamer/big_int
-import gossamer/data_view
-import gossamer/uint8_array
+import gossamer/buffer/array_buffer
+import gossamer/buffer/data_view
+import gossamer/buffer/uint8_array
 
 fn fresh_view() -> data_view.DataView {
   let assert Ok(buffer) = array_buffer.new(16)

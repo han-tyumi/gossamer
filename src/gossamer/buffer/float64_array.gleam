@@ -1,6 +1,6 @@
-import gossamer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// A typed array of 64-bit IEEE 754 floats. Maps directly to Gleam
 /// `Float`; no precision loss on read or write.

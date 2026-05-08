@@ -1,4 +1,4 @@
-import type * as $uint16Array from "$/gossamer/gossamer/uint16_array.mjs";
+import type * as $uint16Array from "$/gossamer/gossamer/buffer/uint16_array.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 

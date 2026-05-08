@@ -1,4 +1,4 @@
-import type * as $dataView from "$/gossamer/gossamer/data_view.mjs";
+import type * as $dataView from "$/gossamer/gossamer/buffer/data_view.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $dataView.new$ = (buffer) =>

@@ -157,33 +157,33 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface         | Status | Module                         |
-| ----------------- | ------ | ------------------------------ |
-| Promise           | ✅     | `gossamer/promise`             |
-| ArrayBuffer       | ✅     | `gossamer/array_buffer`        |
-| Int8Array         | ✅     | `gossamer/int8_array`          |
-| Uint8Array        | ✅     | `gossamer/uint8_array`         |
-| Uint8ClampedArray | ✅     | `gossamer/uint8_clamped_array` |
-| Int16Array        | ✅     | `gossamer/int16_array`         |
-| Uint16Array       | ✅     | `gossamer/uint16_array`        |
-| Int32Array        | ✅     | `gossamer/int32_array`         |
-| Uint32Array       | ✅     | `gossamer/uint32_array`        |
-| Float16Array      | ✅     | `gossamer/float16_array`       |
-| Float32Array      | ✅     | `gossamer/float32_array`       |
-| Float64Array      | ✅     | `gossamer/float64_array`       |
-| BigInt64Array     | ✅     | `gossamer/bigint64_array`      |
-| BigUint64Array    | ✅     | `gossamer/biguint64_array`     |
-| DataView          | ✅     | `gossamer/data_view`           |
-| Iterator          | ✅     | `gossamer/iterator`            |
-| AsyncIterator     | ✅     | `gossamer/async_iterator`      |
-| JSON              | ✅     | `gossamer/json`                |
-| Date              | ✅     | `gossamer/date`                |
-| RegExp            | ✅     | `gossamer/regexp`              |
-| Symbol            | ✅     | `gossamer/symbol`              |
-| Number            | ✅     | `gossamer/number`              |
-| BigInt            | 🚧     | `gossamer/big_int`             |
-| Math              | ✅     | `gossamer/math`                |
-| Error types       | ✅     | `gossamer/js_error`            |
+| Interface         | Status | Module                                |
+| ----------------- | ------ | ------------------------------------- |
+| Promise           | ✅     | `gossamer/promise`                    |
+| ArrayBuffer       | ✅     | `gossamer/buffer/array_buffer`        |
+| Int8Array         | ✅     | `gossamer/buffer/int8_array`          |
+| Uint8Array        | ✅     | `gossamer/buffer/uint8_array`         |
+| Uint8ClampedArray | ✅     | `gossamer/buffer/uint8_clamped_array` |
+| Int16Array        | ✅     | `gossamer/buffer/int16_array`         |
+| Uint16Array       | ✅     | `gossamer/buffer/uint16_array`        |
+| Int32Array        | ✅     | `gossamer/buffer/int32_array`         |
+| Uint32Array       | ✅     | `gossamer/buffer/uint32_array`        |
+| Float16Array      | ✅     | `gossamer/buffer/float16_array`       |
+| Float32Array      | ✅     | `gossamer/buffer/float32_array`       |
+| Float64Array      | ✅     | `gossamer/buffer/float64_array`       |
+| BigInt64Array     | ✅     | `gossamer/buffer/bigint64_array`      |
+| BigUint64Array    | ✅     | `gossamer/buffer/biguint64_array`     |
+| DataView          | ✅     | `gossamer/buffer/data_view`           |
+| Iterator          | ✅     | `gossamer/iterator`                   |
+| AsyncIterator     | ✅     | `gossamer/async_iterator`             |
+| JSON              | ✅     | `gossamer/json`                       |
+| Date              | ✅     | `gossamer/date`                       |
+| RegExp            | ✅     | `gossamer/regexp`                     |
+| Symbol            | ✅     | `gossamer/symbol`                     |
+| Number            | ✅     | `gossamer/number`                     |
+| BigInt            | 🚧     | `gossamer/big_int`                    |
+| Math              | ✅     | `gossamer/math`                       |
+| Error types       | ✅     | `gossamer/js_error`                   |
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 

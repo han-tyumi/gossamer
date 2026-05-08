@@ -4,20 +4,20 @@
 // templated.
 
 import gleeunit/should
-import gossamer/array_buffer
 import gossamer/big_int
-import gossamer/bigint64_array
-import gossamer/biguint64_array
-import gossamer/float16_array
-import gossamer/float32_array
-import gossamer/float64_array
-import gossamer/int16_array
-import gossamer/int32_array
-import gossamer/int8_array
-import gossamer/uint16_array
-import gossamer/uint32_array
-import gossamer/uint8_array
-import gossamer/uint8_clamped_array
+import gossamer/buffer/array_buffer
+import gossamer/buffer/bigint64_array
+import gossamer/buffer/biguint64_array
+import gossamer/buffer/float16_array
+import gossamer/buffer/float32_array
+import gossamer/buffer/float64_array
+import gossamer/buffer/int16_array
+import gossamer/buffer/int32_array
+import gossamer/buffer/int8_array
+import gossamer/buffer/uint16_array
+import gossamer/buffer/uint32_array
+import gossamer/buffer/uint8_array
+import gossamer/buffer/uint8_clamped_array
 
 pub fn int8_round_trip_test() {
   let arr = int8_array.from_list([1, 2, -128, 127])

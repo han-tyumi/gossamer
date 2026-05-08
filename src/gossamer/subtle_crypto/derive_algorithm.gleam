@@ -1,6 +1,6 @@
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// Algorithm parameters for `subtle_crypto.derive_bits` and `derive_key`.
 ///

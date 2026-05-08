@@ -1,9 +1,9 @@
-import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/uint8_array.{type Uint8Array}
 
 /// A `Blob` with a filename and last-modified timestamp. Commonly obtained
 /// from file inputs or drag-and-drop.

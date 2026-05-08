@@ -1,7 +1,7 @@
 import gleeunit/should
 import gossamer/blob
+import gossamer/buffer/uint8_array
 import gossamer/ready_state
-import gossamer/uint8_array
 import gossamer/url
 import gossamer/web_socket
 

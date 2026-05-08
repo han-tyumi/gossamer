@@ -1,9 +1,9 @@
 import gossamer/binary_type.{type BinaryType}
 import gossamer/blob.{type Blob}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 import gossamer/ready_state.{type ReadyState}
-import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 
 // TODO: Happy-path coverage for `send_*` and `on_*` requires a live

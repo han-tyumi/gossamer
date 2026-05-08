@@ -1,4 +1,4 @@
-import type * as $int16Array from "$/gossamer/gossamer/int16_array.mjs";
+import type * as $int16Array from "$/gossamer/gossamer/buffer/int16_array.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 

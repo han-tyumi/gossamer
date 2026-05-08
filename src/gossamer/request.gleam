@@ -1,8 +1,9 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_method.{type HttpMethod}
@@ -16,7 +17,6 @@ import gossamer/request_destination.{type RequestDestination}
 import gossamer/request_mode.{type RequestMode}
 import gossamer/request_priority.{type RequestPriority}
 import gossamer/request_redirect.{type RequestRedirect}
-import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
 

@@ -1,7 +1,8 @@
 import gleam/option.{None, Some}
 import gossamer/abort_signal
-import gossamer/array_buffer
 import gossamer/blob
+import gossamer/buffer/array_buffer
+import gossamer/buffer/uint8_array
 import gossamer/form_data
 import gossamer/headers
 import gossamer/http_method
@@ -20,7 +21,6 @@ import gossamer/request_priority
 import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
-import gossamer/uint8_array
 import gossamer/url
 import gossamer/url_search_params
 

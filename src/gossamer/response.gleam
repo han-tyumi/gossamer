@@ -1,7 +1,8 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}
-import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
+import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_status.{type HttpStatus}
@@ -9,7 +10,6 @@ import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
-import gossamer/uint8_array.{type Uint8Array}
 import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
 

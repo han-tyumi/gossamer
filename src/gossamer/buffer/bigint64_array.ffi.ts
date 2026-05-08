@@ -1,4 +1,4 @@
-import type * as $bigInt64Array from "$/gossamer/gossamer/bigint64_array.mjs";
+import type * as $bigInt64Array from "$/gossamer/gossamer/buffer/bigint64_array.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 

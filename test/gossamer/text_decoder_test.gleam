@@ -1,8 +1,8 @@
 import gleeunit/should
+import gossamer/buffer/uint8_array
 import gossamer/encoding
 import gossamer/text_decoder
 import gossamer/text_encoder
-import gossamer/uint8_array
 
 pub fn new_test() {
   let decoder = text_decoder.new()
