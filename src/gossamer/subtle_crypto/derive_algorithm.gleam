@@ -1,4 +1,3 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 
@@ -7,8 +6,8 @@ import gossamer/hash_algorithm.{type HashAlgorithm}
 /// Non-standard or unnamed algorithms use `Other(String)`.
 ///
 pub type DeriveAlgorithm {
-  Hkdf(hash: HashAlgorithm, info: Uint8Array, salt: Uint8Array)
-  Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: Uint8Array)
+  Hkdf(hash: HashAlgorithm, info: BitArray, salt: BitArray)
+  Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: BitArray)
   Ecdh(public: CryptoKey)
   Other(String)
 }

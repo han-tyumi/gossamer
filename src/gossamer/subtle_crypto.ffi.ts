@@ -1,4 +1,5 @@
 import * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
+import { toBitArrayResult, toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ffi.ts";
 import { toKeyFormat } from "~/gossamer/key_format.ffi.ts";
 import { toKeyUsageArray } from "~/gossamer/key_usage.ffi.ts";
@@ -25,10 +26,8 @@ function toCryptoKeyPair(
 }
 
 export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
-  return toResult.fromPromise(
-    subtle
-      .digest(toHashAlgorithm(algorithm), data as BufferSource)
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.digest(toHashAlgorithm(algorithm), toBufferSource(data))
   );
 };
 
@@ -37,10 +36,8 @@ export const encrypt: typeof $subtleCrypto.encrypt = (
   key,
   data,
 ) => {
-  return toResult.fromPromise(
-    subtle
-      .encrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource)
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.encrypt(toEncryptAlgorithm(algorithm), key, toBufferSource(data))
   );
 };
 
@@ -49,18 +46,14 @@ export const decrypt: typeof $subtleCrypto.decrypt = (
   key,
   data,
 ) => {
-  return toResult.fromPromise(
-    subtle
-      .decrypt(toEncryptAlgorithm(algorithm), key, data as BufferSource)
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.decrypt(toEncryptAlgorithm(algorithm), key, toBufferSource(data))
   );
 };
 
 export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
-  return toResult.fromPromise(
-    subtle
-      .sign(toSignAlgorithm(algorithm), key, data as BufferSource)
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.sign(toSignAlgorithm(algorithm), key, toBufferSource(data))
   );
 };
 
@@ -70,13 +63,13 @@ export const verify: typeof $subtleCrypto.verify = (
   signature,
   data,
 ) => {
-  return toResult.fromPromise(
+  return toResult.fromAsync(() =>
     subtle.verify(
       toSignAlgorithm(algorithm),
       key,
-      signature as BufferSource,
-      data as BufferSource,
-    ),
+      toBufferSource(signature),
+      toBufferSource(data),
+    )
   );
 };
 
@@ -99,14 +92,14 @@ export const generate_key_pair: typeof $subtleCrypto.generate_key_pair = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
-    (
-      subtle.generateKey(
+  return toResult.fromAsync(async () =>
+    toCryptoKeyPair(
+      await (subtle.generateKey(
         toKeyPairGenAlgorithm(algorithm),
         extractable,
         toKeyUsageArray(usages),
-      ) as Promise<CryptoKeyPair>
-    ).then(toCryptoKeyPair),
+      ) as Promise<CryptoKeyPair>),
+    )
   );
 };
 
@@ -117,14 +110,14 @@ export const import_key: typeof $subtleCrypto.import_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
+  return toResult.fromAsync(() =>
     subtle.importKey(
       toKeyFormat(format),
-      keyData as BufferSource,
+      toBufferSource(keyData),
       toImportAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
-    ),
+    )
   );
 };
 
@@ -146,10 +139,8 @@ export const import_key_jwk: typeof $subtleCrypto.import_key_jwk = (
 };
 
 export const export_key: typeof $subtleCrypto.export_key = (format, key) => {
-  return toResult.fromPromise(
-    (subtle.exportKey(toKeyFormat(format), key) as Promise<ArrayBuffer>).then(
-      (buf) => new Uint8Array(buf),
-    ),
+  return toBitArrayResult(() =>
+    subtle.exportKey(toKeyFormat(format), key) as Promise<ArrayBuffer>
   );
 };
 
@@ -164,10 +155,8 @@ export const derive_bits: typeof $subtleCrypto.derive_bits = (
   baseKey,
   length,
 ) => {
-  return toResult.fromPromise(
-    subtle
-      .deriveBits(toDeriveAlgorithm(algorithm), baseKey, length)
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.deriveBits(toDeriveAlgorithm(algorithm), baseKey, length)
   );
 };
 
@@ -178,14 +167,14 @@ export const derive_key: typeof $subtleCrypto.derive_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
+  return toResult.fromAsync(() =>
     subtle.deriveKey(
       toDeriveAlgorithm(algorithm),
       baseKey,
       toDerivedKeyType(derivedKeyType),
       extractable,
       toKeyUsageArray(usages),
-    ),
+    )
   );
 };
 
@@ -195,15 +184,13 @@ export const wrap_key: typeof $subtleCrypto.wrap_key = (
   wrappingKey,
   algorithm,
 ) => {
-  return toResult.fromPromise(
-    subtle
-      .wrapKey(
-        toKeyFormat(format),
-        key,
-        wrappingKey,
-        toWrapAlgorithm(algorithm),
-      )
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.wrapKey(
+      toKeyFormat(format),
+      key,
+      wrappingKey,
+      toWrapAlgorithm(algorithm),
+    )
   );
 };
 
@@ -212,10 +199,8 @@ export const wrap_key_jwk: typeof $subtleCrypto.wrap_key_jwk = (
   wrappingKey,
   algorithm,
 ) => {
-  return toResult.fromPromise(
-    subtle
-      .wrapKey("jwk", key, wrappingKey, toWrapAlgorithm(algorithm))
-      .then((buf) => new Uint8Array(buf)),
+  return toBitArrayResult(() =>
+    subtle.wrapKey("jwk", key, wrappingKey, toWrapAlgorithm(algorithm))
   );
 };
 
@@ -228,16 +213,16 @@ export const unwrap_key: typeof $subtleCrypto.unwrap_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
+  return toResult.fromAsync(() =>
     subtle.unwrapKey(
       toKeyFormat(format),
-      wrappedKey as BufferSource,
+      toBufferSource(wrappedKey),
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),
       extractable,
       toKeyUsageArray(usages),
-    ),
+    )
   );
 };
 
@@ -249,15 +234,15 @@ export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
+  return toResult.fromAsync(() =>
     subtle.unwrapKey(
       "jwk",
-      wrappedKey as BufferSource,
+      toBufferSource(wrappedKey),
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),
       extractable,
       toKeyUsageArray(usages),
-    ),
+    )
   );
 };

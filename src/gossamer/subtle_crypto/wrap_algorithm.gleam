@@ -1,13 +1,11 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
-
 /// Algorithm parameters for `subtle_crypto.wrap_key` and `unwrap_key`.
 ///
 /// Non-standard or unnamed algorithms use `Other(String)`.
 ///
 pub type WrapAlgorithm {
-  AesCbc(iv: Uint8Array)
-  AesCtr(counter: Uint8Array, length: Int)
+  AesCbc(iv: BitArray)
+  AesCtr(counter: BitArray, length: Int)
   RsaOaep
-  RsaOaepWith(label: Uint8Array)
+  RsaOaepWith(label: BitArray)
   Other(String)
 }

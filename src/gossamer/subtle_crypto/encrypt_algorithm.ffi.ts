@@ -1,4 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/encrypt_algorithm.mjs";
+import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 
 export function toEncryptAlgorithm(
   algorithm: $alg.EncryptAlgorithm$,
@@ -14,36 +15,42 @@ export function toEncryptAlgorithm(
   if ($alg.EncryptAlgorithm$isAesCbc(algorithm)) {
     return {
       name: "AES-CBC",
-      iv: $alg.EncryptAlgorithm$AesCbc$iv(algorithm) as BufferSource,
+      iv: toBufferSource($alg.EncryptAlgorithm$AesCbc$iv(algorithm)),
     };
   }
   if ($alg.EncryptAlgorithm$isAesGcm(algorithm)) {
     return {
       name: "AES-GCM",
-      iv: $alg.EncryptAlgorithm$AesGcm$iv(algorithm) as BufferSource,
+      iv: toBufferSource($alg.EncryptAlgorithm$AesGcm$iv(algorithm)),
     };
   }
   if ($alg.EncryptAlgorithm$isAesGcmWith(algorithm)) {
     return {
       name: "AES-GCM",
-      iv: $alg.EncryptAlgorithm$AesGcmWith$iv(algorithm) as BufferSource,
-      additionalData: $alg.EncryptAlgorithm$AesGcmWith$additional_data(
-        algorithm,
-      ) as BufferSource,
+      iv: toBufferSource(
+        $alg.EncryptAlgorithm$AesGcmWith$iv(algorithm),
+      ),
+      additionalData: toBufferSource(
+        $alg.EncryptAlgorithm$AesGcmWith$additional_data(algorithm),
+      ),
       tagLength: $alg.EncryptAlgorithm$AesGcmWith$tag_length(algorithm),
     };
   }
   if ($alg.EncryptAlgorithm$isAesCtr(algorithm)) {
     return {
       name: "AES-CTR",
-      counter: $alg.EncryptAlgorithm$AesCtr$counter(algorithm) as BufferSource,
+      counter: toBufferSource(
+        $alg.EncryptAlgorithm$AesCtr$counter(algorithm),
+      ),
       length: $alg.EncryptAlgorithm$AesCtr$length(algorithm),
     };
   }
   if ($alg.EncryptAlgorithm$isRsaOaepWith(algorithm)) {
     return {
       name: "RSA-OAEP",
-      label: $alg.EncryptAlgorithm$RsaOaepWith$label(algorithm) as BufferSource,
+      label: toBufferSource(
+        $alg.EncryptAlgorithm$RsaOaepWith$label(algorithm),
+      ),
     };
   }
   return { name: "RSA-OAEP" };

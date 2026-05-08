@@ -1,4 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/derive_algorithm.mjs";
+import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 
 export function toDeriveAlgorithm(
@@ -11,8 +12,8 @@ export function toDeriveAlgorithm(
     return {
       name: "HKDF",
       hash: toHashAlgorithm($alg.DeriveAlgorithm$Hkdf$hash(algorithm)),
-      info: $alg.DeriveAlgorithm$Hkdf$info(algorithm) as BufferSource,
-      salt: $alg.DeriveAlgorithm$Hkdf$salt(algorithm) as BufferSource,
+      info: toBufferSource($alg.DeriveAlgorithm$Hkdf$info(algorithm)),
+      salt: toBufferSource($alg.DeriveAlgorithm$Hkdf$salt(algorithm)),
     };
   }
   if ($alg.DeriveAlgorithm$isPbkdf2(algorithm)) {
@@ -20,7 +21,9 @@ export function toDeriveAlgorithm(
       name: "PBKDF2",
       hash: toHashAlgorithm($alg.DeriveAlgorithm$Pbkdf2$hash(algorithm)),
       iterations: $alg.DeriveAlgorithm$Pbkdf2$iterations(algorithm),
-      salt: $alg.DeriveAlgorithm$Pbkdf2$salt(algorithm) as BufferSource,
+      salt: toBufferSource(
+        $alg.DeriveAlgorithm$Pbkdf2$salt(algorithm),
+      ),
     };
   }
   return {

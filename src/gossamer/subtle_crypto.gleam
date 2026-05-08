@@ -1,4 +1,3 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/js_error.{type JsError}
@@ -25,8 +24,8 @@ pub type CryptoKeyPair {
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(
   algorithm algorithm: HashAlgorithm,
-  data data: Uint8Array,
-) -> Promise(Result(Uint8Array, JsError))
+  data data: BitArray,
+) -> Promise(Result(BitArray, JsError))
 
 /// Encrypts `data` with `key` using `algorithm`. Returns an error if the key's
 /// usage doesn't include `"encrypt"`, the key's algorithm doesn't match,
@@ -36,8 +35,8 @@ pub fn digest(
 pub fn encrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
-  data data: Uint8Array,
-) -> Promise(Result(Uint8Array, JsError))
+  data data: BitArray,
+) -> Promise(Result(BitArray, JsError))
 
 /// Decrypts `data` with `key` using `algorithm`. Returns an error if the key's
 /// usage doesn't include `"decrypt"`, the key's algorithm doesn't match,
@@ -47,8 +46,8 @@ pub fn encrypt(
 pub fn decrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
-  data data: Uint8Array,
-) -> Promise(Result(Uint8Array, JsError))
+  data data: BitArray,
+) -> Promise(Result(BitArray, JsError))
 
 /// Produces a digital signature of `data` with `key`. Returns an error if the
 /// key's usage doesn't include `"sign"` or the key's algorithm doesn't
@@ -58,8 +57,8 @@ pub fn decrypt(
 pub fn sign(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
-  data data: Uint8Array,
-) -> Promise(Result(Uint8Array, JsError))
+  data data: BitArray,
+) -> Promise(Result(BitArray, JsError))
 
 /// Verifies `signature` against `data` using `key`. Returns an error if the key's
 /// usage doesn't include `"verify"` or the key's algorithm doesn't match.
@@ -68,8 +67,8 @@ pub fn sign(
 pub fn verify(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
-  signature signature: Uint8Array,
-  data data: Uint8Array,
+  signature signature: BitArray,
+  data data: BitArray,
 ) -> Promise(Result(Bool, JsError))
 
 /// Generates a new symmetric `CryptoKey`. Returns an error if the algorithm is
@@ -98,7 +97,7 @@ pub fn generate_key_pair(
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
 pub fn import_key(
   format format: KeyFormat,
-  key_data data: Uint8Array,
+  key_data data: BitArray,
   algorithm algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
@@ -122,7 +121,7 @@ pub fn import_key_jwk(
 pub fn export_key(
   format format: KeyFormat,
   key key: CryptoKey,
-) -> Promise(Result(Uint8Array, JsError))
+) -> Promise(Result(BitArray, JsError))
 
 /// Exports `key` as a JSON Web Key. Returns an error if the key is not extractable.
 ///
@@ -137,7 +136,7 @@ pub fn derive_bits(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
   length length: Int,
-) -> Promise(Result(Uint8Array, JsError))
+) -> Promise(Result(BitArray, JsError))
 
 /// Derives a new `CryptoKey` from a base key. Returns an error if the key's usage
 /// doesn't include `"deriveKey"` or the algorithm is unsupported.
@@ -161,7 +160,7 @@ pub fn wrap_key(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
   algorithm algorithm: WrapAlgorithm,
-) -> Promise(Result(Uint8Array, JsError))
+) -> Promise(Result(BitArray, JsError))
 
 /// Like `wrap_key`, but exports `key` as a JSON Web Key before wrapping.
 ///
@@ -170,7 +169,7 @@ pub fn wrap_key_jwk(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
   algorithm algorithm: WrapAlgorithm,
-) -> Promise(Result(Uint8Array, JsError))
+) -> Promise(Result(BitArray, JsError))
 
 /// Decrypts `wrapped_key` with `unwrapping_key` and imports the result.
 /// Returns an error if the unwrapping fails or the imported key is invalid for the
@@ -179,7 +178,7 @@ pub fn wrap_key_jwk(
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
   format format: KeyFormat,
-  wrapped_key wrapped_key: Uint8Array,
+  wrapped_key wrapped_key: BitArray,
   unwrapping_key unwrapping_key: CryptoKey,
   unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
@@ -191,7 +190,7 @@ pub fn unwrap_key(
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
-  wrapped_key wrapped_key: Uint8Array,
+  wrapped_key wrapped_key: BitArray,
   unwrapping_key unwrapping_key: CryptoKey,
   unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,

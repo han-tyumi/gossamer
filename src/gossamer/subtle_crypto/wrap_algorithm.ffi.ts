@@ -1,4 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/wrap_algorithm.mjs";
+import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 
 export function toWrapAlgorithm(
   algorithm: $alg.WrapAlgorithm$,
@@ -9,20 +10,24 @@ export function toWrapAlgorithm(
   if ($alg.WrapAlgorithm$isAesCbc(algorithm)) {
     return {
       name: "AES-CBC",
-      iv: $alg.WrapAlgorithm$AesCbc$iv(algorithm) as BufferSource,
+      iv: toBufferSource($alg.WrapAlgorithm$AesCbc$iv(algorithm)),
     };
   }
   if ($alg.WrapAlgorithm$isAesCtr(algorithm)) {
     return {
       name: "AES-CTR",
-      counter: $alg.WrapAlgorithm$AesCtr$counter(algorithm) as BufferSource,
+      counter: toBufferSource(
+        $alg.WrapAlgorithm$AesCtr$counter(algorithm),
+      ),
       length: $alg.WrapAlgorithm$AesCtr$length(algorithm),
     };
   }
   if ($alg.WrapAlgorithm$isRsaOaepWith(algorithm)) {
     return {
       name: "RSA-OAEP",
-      label: $alg.WrapAlgorithm$RsaOaepWith$label(algorithm) as BufferSource,
+      label: toBufferSource(
+        $alg.WrapAlgorithm$RsaOaepWith$label(algorithm),
+      ),
     };
   }
   return { name: "RSA-OAEP" };

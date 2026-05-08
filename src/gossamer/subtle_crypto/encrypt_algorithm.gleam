@@ -1,15 +1,13 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
-
 /// Algorithm parameters for `subtle_crypto.encrypt` and `decrypt`.
 ///
 /// Non-standard or unnamed algorithms use `Other(String)`.
 ///
 pub type EncryptAlgorithm {
-  AesCbc(iv: Uint8Array)
-  AesGcm(iv: Uint8Array)
-  AesGcmWith(iv: Uint8Array, additional_data: Uint8Array, tag_length: Int)
-  AesCtr(counter: Uint8Array, length: Int)
+  AesCbc(iv: BitArray)
+  AesGcm(iv: BitArray)
+  AesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+  AesCtr(counter: BitArray, length: Int)
   RsaOaep
-  RsaOaepWith(label: Uint8Array)
+  RsaOaepWith(label: BitArray)
   Other(String)
 }

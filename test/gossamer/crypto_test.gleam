@@ -1,3 +1,4 @@
+import gleam/bit_array
 import gleam/list
 import gleam/option
 import gleam/string
@@ -36,10 +37,20 @@ pub fn random_uuid_test() {
 }
 
 pub fn digest_test() {
-  let data = uint8_array.from_list([1, 2, 3])
+  let data = <<1, 2, 3>>
   use result <- promise.then(subtle_crypto.digest(hash_algorithm.Sha256, data))
   let assert Ok(hash) = result
-  should.equal(uint8_array.byte_length(hash), 32)
+  should.equal(bit_array.byte_size(hash), 32)
+  promise.resolve(Nil)
+}
+
+pub fn digest_unaligned_test() {
+  let unaligned = <<1:size(7)>>
+  use result <- promise.then(subtle_crypto.digest(
+    hash_algorithm.Sha256,
+    unaligned,
+  ))
+  should.be_error(result)
   promise.resolve(Nil)
 }
 
@@ -60,8 +71,9 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.equal(crypto_key.type_(key), key_type.Secret)
 
   let assert Ok(iv_source) = uint8_array.from_length(12)
-  let assert Ok(iv) = crypto.get_random_values(iv_source)
-  let plaintext = uint8_array.from_list([72, 101, 108, 108, 111])
+  let assert Ok(iv_raw) = crypto.get_random_values(iv_source)
+  let iv = uint8_array.to_bit_array(iv_raw)
+  let plaintext = <<"Hello":utf8>>
 
   use result <- promise.then(subtle_crypto.encrypt(
     encrypt_algorithm.AesGcm(iv),
@@ -69,7 +81,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
     plaintext,
   ))
   let assert Ok(ciphertext) = result
-  should.be_true(uint8_array.byte_length(ciphertext) > 0)
+  should.be_true(bit_array.byte_size(ciphertext) > 0)
 
   use result <- promise.then(subtle_crypto.decrypt(
     encrypt_algorithm.AesGcm(iv),
@@ -77,7 +89,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
     ciphertext,
   ))
   let assert Ok(decrypted) = result
-  should.equal(uint8_array.byte_length(decrypted), 5)
+  should.equal(bit_array.byte_size(decrypted), 5)
   promise.resolve(Nil)
 }
 
@@ -95,7 +107,7 @@ pub fn generate_key_pair_sign_verify_test() {
   should.equal(crypto_key.type_(public_key), key_type.Public)
   should.equal(crypto_key.type_(private_key), key_type.Private)
 
-  let data = uint8_array.from_list([1, 2, 3])
+  let data = <<1, 2, 3>>
 
   use result <- promise.then(subtle_crypto.sign(
     sign_algorithm.Ecdsa(hash_algorithm.Sha256),
@@ -103,7 +115,7 @@ pub fn generate_key_pair_sign_verify_test() {
     data,
   ))
   let assert Ok(signature) = result
-  should.be_true(uint8_array.byte_length(signature) > 0)
+  should.be_true(bit_array.byte_size(signature) > 0)
 
   use result <- promise.then(subtle_crypto.verify(
     sign_algorithm.Ecdsa(hash_algorithm.Sha256),
@@ -122,7 +134,7 @@ pub fn generate_rsa_key_pair_test() {
       key_pair_gen_algorithm.Rsa(
         rsa_algorithm.RsassaPkcs1V15,
         2048,
-        uint8_array.from_list([1, 0, 1]),
+        <<1, 0, 1>>,
         hash_algorithm.Sha256,
       ),
       True,
@@ -142,7 +154,8 @@ pub fn generate_rsa_key_pair_test() {
 
 pub fn import_export_key_test() {
   let assert Ok(raw_key_source) = uint8_array.from_length(16)
-  let assert Ok(raw_key) = crypto.get_random_values(raw_key_source)
+  let assert Ok(raw_key_uint8) = crypto.get_random_values(raw_key_source)
+  let raw_key = uint8_array.to_bit_array(raw_key_uint8)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -159,7 +172,7 @@ pub fn import_export_key_test() {
 
   use result <- promise.then(subtle_crypto.export_key(key_format.Raw, key))
   let assert Ok(exported) = result
-  should.equal(uint8_array.byte_length(exported), 16)
+  should.equal(bit_array.byte_size(exported), 16)
   promise.resolve(Nil)
 }
 
@@ -249,9 +262,10 @@ pub fn import_key_jwk_test() {
 }
 
 pub fn derive_bits_test() {
-  let password = uint8_array.from_list([112, 97, 115, 115])
+  let password = <<"pass":utf8>>
   let assert Ok(salt_source) = uint8_array.from_length(16)
-  let assert Ok(salt) = crypto.get_random_values(salt_source)
+  let assert Ok(salt_uint8) = crypto.get_random_values(salt_source)
+  let salt = uint8_array.to_bit_array(salt_uint8)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -270,14 +284,15 @@ pub fn derive_bits_test() {
     256,
   ))
   let assert Ok(bits) = result
-  uint8_array.byte_length(bits) |> should.equal(32)
+  bit_array.byte_size(bits) |> should.equal(32)
   promise.resolve(Nil)
 }
 
 pub fn derive_key_test() {
-  let password = uint8_array.from_list([112, 97, 115, 115])
+  let password = <<"pass":utf8>>
   let assert Ok(salt_source) = uint8_array.from_length(16)
-  let assert Ok(salt) = crypto.get_random_values(salt_source)
+  let assert Ok(salt_uint8) = crypto.get_random_values(salt_source)
+  let salt = uint8_array.to_bit_array(salt_uint8)
 
   use result <- promise.then(
     subtle_crypto.import_key(
@@ -337,7 +352,7 @@ pub fn wrap_unwrap_key_test() {
     wrap_algorithm.Other("AES-KW"),
   ))
   let assert Ok(wrapped) = result
-  should.be_true(uint8_array.byte_length(wrapped) > 0)
+  should.be_true(bit_array.byte_size(wrapped) > 0)
 
   use result <- promise.then(
     subtle_crypto.unwrap_key(
@@ -387,7 +402,7 @@ pub fn wrap_unwrap_key_jwk_test() {
     wrap_algorithm.Other("AES-KW"),
   ))
   let assert Ok(wrapped_jwk) = result
-  should.be_true(uint8_array.byte_length(wrapped_jwk) > 0)
+  should.be_true(bit_array.byte_size(wrapped_jwk) > 0)
 
   use result <- promise.then(
     subtle_crypto.unwrap_key_jwk(

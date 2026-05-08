@@ -34,3 +34,13 @@ toResult.fromPromise = function <T>(
     (error) => Result$Error(toError(error)),
   );
 };
+
+toResult.fromAsync = async function <T>(
+  fn: () => T | Promise<T>,
+): Promise<Result<T, Error>> {
+  try {
+    return Result$Ok(await fn());
+  } catch (error) {
+    return Result$Error(toError(error));
+  }
+};

@@ -1,4 +1,5 @@
 import * as $alg from "$/gossamer/gossamer/subtle_crypto/key_pair_gen_algorithm.mjs";
+import { BitArray$BitArray$data } from "$/prelude.mjs";
 import { toEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
 import { toHashAlgorithm } from "~/gossamer/hash_algorithm.ffi.ts";
 import { toNamedCurve } from "~/gossamer/named_curve.ffi.ts";
@@ -11,12 +12,18 @@ export function toKeyPairGenAlgorithm(
     return $alg.KeyPairGenAlgorithm$Other$0(algorithm);
   }
   if ($alg.KeyPairGenAlgorithm$isRsa(algorithm)) {
+    const view = BitArray$BitArray$data(
+      $alg.KeyPairGenAlgorithm$Rsa$public_exponent(algorithm),
+    );
     return {
       name: toRsaAlgorithm($alg.KeyPairGenAlgorithm$Rsa$name(algorithm)),
       modulusLength: $alg.KeyPairGenAlgorithm$Rsa$modulus_length(algorithm),
-      publicExponent: $alg.KeyPairGenAlgorithm$Rsa$public_exponent(
-        algorithm,
-      ) as BigInteger,
+      // @ts-expect-error denoland/deno#32063 (applies to BigInteger too)
+      publicExponent: new Uint8Array(
+        view.buffer,
+        view.byteOffset,
+        view.byteLength,
+      ),
       hash: toHashAlgorithm($alg.KeyPairGenAlgorithm$Rsa$hash(algorithm)),
     };
   }

@@ -1,4 +1,3 @@
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/ec_algorithm.{type EcAlgorithm}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/named_curve.{type NamedCurve}
@@ -13,7 +12,7 @@ pub type KeyPairGenAlgorithm {
   Rsa(
     name: RsaAlgorithm,
     modulus_length: Int,
-    public_exponent: Uint8Array,
+    public_exponent: BitArray,
     hash: HashAlgorithm,
   )
   Ec(name: EcAlgorithm, named_curve: NamedCurve)
