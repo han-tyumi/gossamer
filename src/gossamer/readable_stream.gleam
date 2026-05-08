@@ -4,7 +4,6 @@ import gossamer/async_iterator.{type AsyncIterator}
 import gossamer/iterator.{type Iterator}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
-import gossamer/readable_stream/byob_reader.{type ByobReader}
 import gossamer/readable_stream/default_controller.{type DefaultController}
 import gossamer/readable_stream/reader.{type Reader}
 import gossamer/writable_stream.{type WritableStream}
@@ -95,14 +94,6 @@ pub fn cancel(
 @external(javascript, "./readable_stream.ffi.mjs", "get_reader")
 pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), JsError)
 
-/// Acquires a `ByobReader` for bring-your-own-buffer reads. Returns an
-/// error if the stream is already locked or is not a byte stream.
-///
-@external(javascript, "./readable_stream.ffi.mjs", "get_byob_reader")
-pub fn get_byob_reader(
-  stream: ReadableStream(a),
-) -> Result(ByobReader(a), JsError)
-
 /// Pipes the stream through a transform (a writable+readable pair),
 /// returning the readable side. Returns an error if this stream or the
 /// writable side is already locked.
@@ -137,6 +128,4 @@ pub fn tee(
 /// locks the stream until reading completes.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "async_iterator")
-pub fn async_iterator(
-  of stream: ReadableStream(a),
-) -> AsyncIterator(a, Nil, Nil)
+pub fn async_iterator(stream: ReadableStream(a)) -> AsyncIterator(a, Nil, Nil)

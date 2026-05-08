@@ -88,12 +88,6 @@ export const get_reader: typeof $readableStream.get_reader = (
   return toResult.fromThrows(() => stream.getReader());
 };
 
-export const get_byob_reader: typeof $readableStream.get_byob_reader = (
-  stream: ReadableStream,
-) => {
-  return toResult.fromThrows(() => stream.getReader({ mode: "byob" }));
-};
-
 export const pipe_through: typeof $readableStream.pipe_through = (
   stream: ReadableStream,
   [readable, writable]: [ReadableStream, WritableStream],

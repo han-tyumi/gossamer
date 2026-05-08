@@ -62,7 +62,6 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | -------------------------------- | ------ | ---------------------------------------------- |
 | ReadableStream                   | ✅     | `gossamer/readable_stream`                     |
 | ReadableStreamDefaultReader      | ✅     | `gossamer/readable_stream/reader`              |
-| ReadableStreamBYOBReader         | ✅     | `gossamer/readable_stream/byob_reader`         |
 | ReadableStreamDefaultController  | ✅     | `gossamer/readable_stream/default_controller`  |
 | WritableStream                   | ✅     | `gossamer/writable_stream`                     |
 | WritableStreamDefaultWriter      | ✅     | `gossamer/writable_stream/writer`              |
