@@ -1,8 +1,6 @@
-import gossamer/binary_type.{type BinaryType}
 import gossamer/blob.{type Blob}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
-import gossamer/ready_state.{type ReadyState}
 import gossamer/url.{type URL}
 
 // TODO: Happy-path coverage for `send_*` and `on_*` requires a live
@@ -12,6 +10,25 @@ import gossamer/url.{type URL}
 
 pub type CloseEvent {
   CloseEvent(code: Int, reason: String, was_clean: Bool)
+}
+
+/// The format binary messages arrive as on a `WebSocket`.
+///
+/// Unrecognized values use `Other(String)`.
+///
+pub type BinaryType {
+  ArrayBuffer
+  Blob
+  Other(String)
+}
+
+/// The state of a `WebSocket` connection.
+///
+pub type ReadyState {
+  Connecting
+  Open
+  Closing
+  Closed
 }
 
 /// A bidirectional, message-oriented network connection to a server.

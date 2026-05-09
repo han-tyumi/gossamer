@@ -1,6 +1,4 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
-import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ffi.ts";
-import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -11,6 +9,40 @@ function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
     event.reason,
     event.wasClean,
   );
+}
+
+function toBinaryType(value: BinaryType | string): $webSocket.BinaryType$ {
+  switch (value) {
+    case "arraybuffer":
+      return $webSocket.BinaryType$ArrayBuffer();
+    case "blob":
+      return $webSocket.BinaryType$Blob();
+    default:
+      return $webSocket.BinaryType$Other(value);
+  }
+}
+
+function fromBinaryType(value: $webSocket.BinaryType$): BinaryType {
+  if ($webSocket.BinaryType$isArrayBuffer(value)) return "arraybuffer";
+  if ($webSocket.BinaryType$isOther(value)) {
+    return $webSocket.BinaryType$Other$0(value) as BinaryType;
+  }
+  return "blob";
+}
+
+function toReadyState(value: number): $webSocket.ReadyState$ {
+  switch (value) {
+    case 0:
+      return $webSocket.ReadyState$Connecting();
+    case 1:
+      return $webSocket.ReadyState$Open();
+    case 2:
+      return $webSocket.ReadyState$Closing();
+    case 3:
+      return $webSocket.ReadyState$Closed();
+    default:
+      return $webSocket.ReadyState$Closed();
+  }
 }
 
 export const from_url_string: typeof $webSocket.from_url_string = (url) => {
