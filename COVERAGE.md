@@ -161,7 +161,6 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 | Interface         | Status | Module                                |
 | ----------------- | ------ | ------------------------------------- |
-| Promise           | ✅     | `gossamer/promise`                    |
 | ArrayBuffer       | ✅     | `gossamer/buffer/array_buffer`        |
 | Int8Array         | ✅     | `gossamer/buffer/int8_array`          |
 | Uint8Array        | ✅     | `gossamer/buffer/uint8_array`         |
@@ -185,6 +184,12 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | BigInt            | 🚧     | `gossamer/big_int`                    |
 | Math              | ✅     | `gossamer/math`                       |
 | Error types       | ✅     | `gossamer/js_error`                   |
+
+`Promise` is delegated to `gleam/javascript/promise`. Gossamer's
+auto-Result-wrap discipline at the FFI boundary means user-facing promises don't
+reject in normal Gleam-controlled flow, so the rejection-aware extras
+(`Promise.allSettled`, `Promise.any`, `Promise.withResolvers`) reduce to
+upstream's `await_list` / `race_list` / `start`.
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 

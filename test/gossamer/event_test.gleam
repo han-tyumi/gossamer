@@ -1,7 +1,7 @@
+import gleam/javascript/promise
 import gleeunit/should
 import gossamer/event
 import gossamer/event_target
-import gossamer/promise
 
 pub fn new_test() {
   let ev = event.new("click")
@@ -83,52 +83,50 @@ pub fn event_target_new_test() {
 }
 
 pub fn add_event_listener_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
   let target = event_target.new()
 
   event_target.add_event_listener(to: target, on: "ping", run: fn(ev) {
-    resolvers.resolve(event.type_(ev))
+    resolve(event.type_(ev))
     Nil
   })
 
   let _ = event_target.dispatch_event(on: target, event: event.new("ping"))
 
-  use value <- promise.then(resolvers.promise)
-  value |> should.equal(Ok("ping"))
-  promise.resolve(Nil)
+  use value <- promise.map(p)
+  value |> should.equal("ping")
 }
 
 pub fn multiple_listeners_test() {
-  let first = promise.with_resolvers()
-  let second = promise.with_resolvers()
+  let #(p1, resolve1) = promise.start()
+  let #(p2, resolve2) = promise.start()
   let target = event_target.new()
 
   event_target.add_event_listener(to: target, on: "test", run: fn(_) {
-    first.resolve("first")
+    resolve1("first")
     Nil
   })
 
   event_target.add_event_listener(to: target, on: "test", run: fn(_) {
-    second.resolve("second")
+    resolve2("second")
     Nil
   })
 
   let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
-  use value1 <- promise.then(first.promise)
-  value1 |> should.equal(Ok("first"))
+  use value1 <- promise.await(p1)
+  value1 |> should.equal("first")
 
-  use value2 <- promise.then(second.promise)
-  value2 |> should.equal(Ok("second"))
-  promise.resolve(Nil)
+  use value2 <- promise.map(p2)
+  value2 |> should.equal("second")
 }
 
 pub fn remove_event_listener_test() {
   let target = event_target.new()
-  let resolvers = promise.with_resolvers()
+  let #(_p, resolve) = promise.start()
 
   let handler = fn(_ev) {
-    resolvers.resolve("called")
+    resolve("called")
     Nil
   }
 
@@ -160,14 +158,14 @@ pub fn dispatch_event_cancelable_test() {
 }
 
 pub fn once_option_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
   let target = event_target.new()
 
   event_target.add_event_listener_with(
     to: target,
     on: "once",
     run: fn(_) {
-      resolvers.resolve(1)
+      resolve(1)
       Nil
     },
     with: [event_target.Once(True)],
@@ -179,13 +177,12 @@ pub fn once_option_test() {
   // Second dispatch should not trigger (listener was auto-removed)
   let _ = event_target.dispatch_event(on: target, event: event.new("once"))
 
-  use count <- promise.then(resolvers.promise)
-  count |> should.equal(Ok(1))
-  promise.resolve(Nil)
+  use count <- promise.map(p)
+  count |> should.equal(1)
 }
 
 pub fn target_in_listener_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
   let target = event_target.new()
 
   event_target.add_event_listener(to: target, on: "test", run: fn(ev) {
@@ -193,29 +190,27 @@ pub fn target_in_listener_test() {
       Ok(_) -> True
       Error(_) -> False
     }
-    resolvers.resolve(has_target)
+    resolve(has_target)
     Nil
   })
 
   let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
-  use has_target <- promise.then(resolvers.promise)
-  has_target |> should.equal(Ok(True))
-  promise.resolve(Nil)
+  use has_target <- promise.map(p)
+  has_target |> should.equal(True)
 }
 
 pub fn event_phase_in_listener_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
   let target = event_target.new()
 
   event_target.add_event_listener(to: target, on: "test", run: fn(ev) {
-    resolvers.resolve(event.event_phase(ev))
+    resolve(event.event_phase(ev))
     Nil
   })
 
   let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
-  use phase <- promise.then(resolvers.promise)
-  phase |> should.equal(Ok(event.AtTarget))
-  promise.resolve(Nil)
+  use phase <- promise.map(p)
+  phase |> should.equal(event.AtTarget)
 }

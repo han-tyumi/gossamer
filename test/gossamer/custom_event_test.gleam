@@ -1,9 +1,9 @@
 import gleam/dynamic/decode
+import gleam/javascript/promise
 import gleeunit/should
 import gossamer/custom_event
 import gossamer/event
 import gossamer/event_target
-import gossamer/promise
 
 pub fn new_test() {
   let ev = custom_event.new("custom")
@@ -38,11 +38,11 @@ pub fn to_event_properties_test() {
 }
 
 pub fn dispatch_custom_event_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
   let target = event_target.new()
 
   event_target.add_event_listener(to: target, on: "greet", run: fn(_) {
-    resolvers.resolve("received")
+    resolve("received")
     Nil
   })
 
@@ -50,7 +50,6 @@ pub fn dispatch_custom_event_test() {
   let _ =
     event_target.dispatch_event(on: target, event: custom_event.to_event(ev))
 
-  use value <- promise.then(resolvers.promise)
-  value |> should.equal(Ok("received"))
-  promise.resolve(Nil)
+  use value <- promise.map(p)
+  value |> should.equal("received")
 }

@@ -1,17 +1,17 @@
 import gleam/bit_array
+import gleam/javascript/promise
 import gleam/string
 import gleeunit/should
 import gossamer/blob
 import gossamer/buffer/array_buffer
 import gossamer/file
-import gossamer/promise
 
 pub fn file_from_strings_test() {
   let f = file.from_strings(["hello", " ", "world"], "test.txt")
   should.equal(file.name(f), "test.txt")
 
   let b = file.to_blob(f)
-  use text <- promise.then(blob.text(b))
+  use text <- promise.await(blob.text(b))
   should.equal(text, Ok("hello world"))
   promise.resolve(Nil)
 }
@@ -22,7 +22,7 @@ pub fn file_from_blob_test() {
   should.equal(file.name(f), "from_blob.txt")
 
   let converted = file.to_blob(f)
-  use text <- promise.then(blob.text(converted))
+  use text <- promise.await(blob.text(converted))
   should.equal(text, Ok("blob content"))
   promise.resolve(Nil)
 }
@@ -60,7 +60,7 @@ pub fn file_type_test() {
 
 pub fn file_array_buffer_test() {
   let f = file.from_strings(["hi"], "buf.txt")
-  use result <- promise.then(file.array_buffer(f))
+  use result <- promise.await(file.array_buffer(f))
   let assert Ok(buffer) = result
   array_buffer.byte_length(buffer) |> should.equal(2)
   promise.resolve(Nil)
@@ -68,7 +68,7 @@ pub fn file_array_buffer_test() {
 
 pub fn file_bytes_test() {
   let f = file.from_strings(["abc"], "bytes.txt")
-  use result <- promise.then(file.bytes(f))
+  use result <- promise.await(file.bytes(f))
   let assert Ok(bytes) = result
   bit_array.byte_size(bytes) |> should.equal(3)
   promise.resolve(Nil)
@@ -77,7 +77,7 @@ pub fn file_bytes_test() {
 pub fn file_slice_test() {
   let f = file.from_strings(["hello world"], "slice.txt")
   let sliced = file.slice(f, 0, 5)
-  use text <- promise.then(blob.text(sliced))
+  use text <- promise.await(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)
 }
@@ -95,7 +95,7 @@ pub fn file_stream_test() {
 
 pub fn file_text_test() {
   let f = file.from_strings(["file text content"], "text.txt")
-  use result <- promise.then(file.text(f))
+  use result <- promise.await(file.text(f))
   should.equal(result, Ok("file text content"))
   promise.resolve(Nil)
 }

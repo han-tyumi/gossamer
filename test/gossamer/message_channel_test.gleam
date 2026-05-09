@@ -1,9 +1,9 @@
 import gleam/dynamic/decode
+import gleam/javascript/promise
 import gleeunit/should
 import gossamer/message_channel
 import gossamer/message_event
 import gossamer/message_port
-import gossamer/promise
 
 pub fn new_test() {
   let channel = message_channel.new()
@@ -16,21 +16,20 @@ pub fn post_message_test() {
   let port1 = message_channel.port1(channel)
   let port2 = message_channel.port2(channel)
 
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
   message_port.on_message(port2, fn(event) {
     let assert Ok(value) = decode.run(message_event.data(event), decode.string)
-    resolvers.resolve(value)
+    resolve(value)
     Nil
   })
 
   let assert Ok(_) = message_port.post_message(port1, "hello from port1")
 
-  use value <- promise.then(resolvers.promise)
-  should.equal(value, Ok("hello from port1"))
+  use value <- promise.map(p)
+  should.equal(value, "hello from port1")
   message_port.close(port1)
   message_port.close(port2)
-  promise.resolve(Nil)
 }
 
 pub fn start_test() {
@@ -51,23 +50,22 @@ pub fn message_event_properties_test() {
   let port1 = message_channel.port1(channel)
   let port2 = message_channel.port2(channel)
 
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
   message_port.on_message(port2, fn(event) {
     let message_event.Fields(origin:, last_event_id:, ..) =
       message_event.to_fields(event)
     origin |> should.equal("")
     last_event_id |> should.equal("")
-    resolvers.resolve(Nil)
+    resolve(Nil)
     Nil
   })
 
   let assert Ok(_) = message_port.post_message(port1, "test")
 
-  use _ <- promise.then(resolvers.promise)
+  use _ <- promise.map(p)
   message_port.close(port1)
   message_port.close(port2)
-  promise.resolve(Nil)
 }
 
 pub fn on_message_error_test() {

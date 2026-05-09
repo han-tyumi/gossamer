@@ -1,5 +1,5 @@
+import gleam/javascript/promise.{type Promise}
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
 
 /// A locked writer over a `WritableStream`.
 ///

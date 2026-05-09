@@ -1,9 +1,9 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/javascript/promise.{type Promise}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/async_iterator.{type AsyncIterator}
 import gossamer/iterator.{type Iterator}
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
 import gossamer/readable_stream/default_controller.{type DefaultController}
 import gossamer/readable_stream/reader.{type Reader}
 import gossamer/writable_stream.{type WritableStream}

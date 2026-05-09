@@ -1,7 +1,7 @@
+import gleam/javascript/promise.{type Promise}
 import gossamer/blob.{type Blob}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
 
 /// A `Blob` with a filename and last-modified timestamp. Commonly obtained

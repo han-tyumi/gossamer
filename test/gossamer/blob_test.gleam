@@ -1,9 +1,9 @@
 import gleam/bit_array
+import gleam/javascript/promise
 import gleam/string
 import gleeunit/should
 import gossamer/blob
 import gossamer/buffer/array_buffer
-import gossamer/promise
 
 pub fn blob_from_string_test() {
   let b = blob.from_string("hello")
@@ -25,14 +25,14 @@ pub fn blob_from_bytes_test() {
 
 pub fn blob_text_test() {
   let b = blob.from_string("hello world")
-  use text <- promise.then(blob.text(b))
+  use text <- promise.await(blob.text(b))
   should.equal(text, Ok("hello world"))
   promise.resolve(Nil)
 }
 
 pub fn blob_array_buffer_test() {
   let b = blob.from_string("hi")
-  use result <- promise.then(blob.array_buffer(b))
+  use result <- promise.await(blob.array_buffer(b))
   let assert Ok(buffer) = result
   should.equal(array_buffer.byte_length(buffer), 2)
   promise.resolve(Nil)
@@ -40,7 +40,7 @@ pub fn blob_array_buffer_test() {
 
 pub fn blob_bytes_test() {
   let b = blob.from_bytes(<<10, 20, 30>>)
-  use result <- promise.then(blob.bytes(b))
+  use result <- promise.await(blob.bytes(b))
   let assert Ok(bytes) = result
   should.equal(bit_array.byte_size(bytes), 3)
   promise.resolve(Nil)
@@ -49,7 +49,7 @@ pub fn blob_bytes_test() {
 pub fn blob_slice_test() {
   let b = blob.from_string("hello world")
   let sliced = blob.slice(b, 0, 5)
-  use text <- promise.then(blob.text(sliced))
+  use text <- promise.await(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)
 }
@@ -74,7 +74,7 @@ pub fn blob_slice_with_type_test() {
   let sliced = blob.slice_with_type(b, 0, 5, "text/plain")
   should.equal(blob.size(sliced), 5)
   should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
-  use text <- promise.then(blob.text(sliced))
+  use text <- promise.await(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)
 }

@@ -1,5 +1,5 @@
+import gleam/javascript/promise.{type Promise}
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
 import gossamer/readable_stream/read_result.{type ReadResult}
 
 /// A locked reader over a `ReadableStream`.

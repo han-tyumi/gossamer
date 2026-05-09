@@ -1,6 +1,6 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/javascript/promise.{type Promise}
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
 import gossamer/writable_stream/default_controller.{type DefaultController}
 import gossamer/writable_stream/writer.{type Writer}
 

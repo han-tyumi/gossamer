@@ -1,8 +1,8 @@
+import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option}
 import gossamer/iterator_handler_outcome.{type IteratorHandlerOutcome}
 import gossamer/iterator_result.{type IteratorResult}
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
 
 /// A pull-based iterator that yields values asynchronously. Each call to
 /// `next` returns a promise. `a` is the yielded value type, `return` is

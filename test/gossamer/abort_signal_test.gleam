@@ -1,8 +1,8 @@
 import gleam/dynamic/decode
+import gleam/javascript/promise
 import gleeunit/should
 import gossamer/abort_controller
 import gossamer/abort_signal
-import gossamer/promise
 
 pub fn abort_creates_aborted_signal_test() {
   let signal = abort_signal.abort("cancelled")
@@ -44,18 +44,17 @@ pub fn on_abort_test() {
   let controller = abort_controller.new()
   let signal = abort_controller.signal(controller)
 
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
   abort_signal.on_abort(signal, fn() {
-    resolvers.resolve("aborted")
+    resolve("aborted")
     Nil
   })
 
   abort_controller.abort(controller)
 
-  use value <- promise.then(resolvers.promise)
-  should.equal(value, Ok("aborted"))
-  promise.resolve(Nil)
+  use value <- promise.map(p)
+  should.equal(value, "aborted")
 }
 
 pub fn any_test() {

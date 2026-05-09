@@ -1,10 +1,10 @@
 import gleam/dynamic
 import gleam/int
+import gleam/javascript/promise
 import gleam/option.{None}
 import gleeunit/should
 import gossamer/async_iterator
 import gossamer/iterator_result
-import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/readable_stream/read_result
@@ -52,13 +52,13 @@ pub fn readable_stream_from_start_test() {
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.equal(result, Ok(read_result.Value("hello")))
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.equal(result, Ok(read_result.Value("world")))
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.map(reader.read(r))
   should.equal(result, Ok(read_result.Done(None)))
 }
 
@@ -74,7 +74,7 @@ pub fn readable_stream_new_with_options_test() {
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.map(reader.read(r))
   should.equal(result, Ok(read_result.Value(42)))
 }
 
@@ -87,8 +87,8 @@ pub fn writable_stream_from_write_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.write(w, "hello"))
-  use _ <- promise.then(writer.close(w))
+  use _ <- promise.await(writer.write(w, "hello"))
+  use _ <- promise.await(writer.close(w))
   promise.resolve(Nil)
 }
 
@@ -103,8 +103,8 @@ pub fn writable_stream_new_with_options_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.write(w, "test"))
-  use _ <- promise.then(writer.close(w))
+  use _ <- promise.await(writer.write(w, "test"))
+  use _ <- promise.await(writer.close(w))
   promise.resolve(Nil)
 }
 
@@ -135,13 +135,13 @@ pub fn transform_stream_from_transform_test() {
 
   let assert Ok(r) = readable_stream.get_reader(transformed)
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.equal(result, Ok(read_result.Value("1")))
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.equal(result, Ok(read_result.Value("2")))
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.map(reader.read(r))
   should.equal(result, Ok(read_result.Done(None)))
 }
 
@@ -163,7 +163,7 @@ pub fn readable_pipe_to_writable_test() {
       promise.resolve(Nil)
     })
 
-  use _ <- promise.then(readable_stream.pipe_to(readable, writable, []))
+  use _ <- promise.await(readable_stream.pipe_to(readable, writable, []))
   promise.resolve(Nil)
 }
 
@@ -180,8 +180,8 @@ pub fn readable_stream_is_locked_test() {
   readable_stream.is_locked(stream) |> should.be_true
 
   // Drain so the stream closes cleanly.
-  use _ <- promise.then(reader.read(r))
-  use _ <- promise.then(reader.read(r))
+  use _ <- promise.await(reader.read(r))
+  use _ <- promise.await(reader.read(r))
   promise.resolve(Nil)
 }
 
@@ -198,10 +198,10 @@ pub fn readable_stream_tee_test() {
   let assert Ok(reader1) = readable_stream.get_reader(branch1)
   let assert Ok(reader2) = readable_stream.get_reader(branch2)
 
-  use result1 <- promise.then(reader.read(reader1))
+  use result1 <- promise.await(reader.read(reader1))
   should.equal(result1, Ok(read_result.Value("hello")))
 
-  use result2 <- promise.then(reader.read(reader2))
+  use result2 <- promise.await(reader.read(reader2))
   should.equal(result2, Ok(read_result.Value("hello")))
   promise.resolve(Nil)
 }
@@ -214,7 +214,7 @@ pub fn readable_stream_cancel_test() {
       Nil
     })
 
-  use _ <- promise.then(readable_stream.cancel(stream, "done"))
+  use _ <- promise.await(readable_stream.cancel(stream, "done"))
   promise.resolve(Nil)
 }
 
@@ -228,7 +228,7 @@ pub fn readable_stream_from_pull_test() {
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.equal(result, Ok(read_result.Value(42)))
   promise.resolve(Nil)
 }
@@ -249,7 +249,7 @@ pub fn writable_stream_close_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  use _ <- promise.then(writable_stream.close(stream))
+  use _ <- promise.await(writable_stream.close(stream))
   promise.resolve(Nil)
 }
 
@@ -257,7 +257,7 @@ pub fn writable_stream_abort_test() {
   let stream =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  use _ <- promise.then(writable_stream.abort(stream, "cancelled"))
+  use _ <- promise.await(writable_stream.abort(stream, "cancelled"))
   promise.resolve(Nil)
 }
 
@@ -298,8 +298,8 @@ pub fn reader_closed_test() {
   let assert Ok(r) = readable_stream.get_reader(stream)
 
   // Reading past the end triggers closed.
-  use _ <- promise.then(reader.read(r))
-  use _ <- promise.then(reader.closed(r))
+  use _ <- promise.await(reader.read(r))
+  use _ <- promise.await(reader.closed(r))
   promise.resolve(Nil)
 }
 
@@ -313,7 +313,7 @@ pub fn reader_cancel_test() {
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use _ <- promise.then(reader.cancel(r, "no longer needed"))
+  use _ <- promise.await(reader.cancel(r, "no longer needed"))
   promise.resolve(Nil)
 }
 
@@ -332,7 +332,7 @@ pub fn readable_controller_desired_size_test() {
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 
-  use _ <- promise.then(reader.read(r))
+  use _ <- promise.await(reader.read(r))
   promise.resolve(Nil)
 }
 
@@ -344,8 +344,8 @@ pub fn writer_closed_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.close(w))
-  use _ <- promise.then(writer.closed(w))
+  use _ <- promise.await(writer.close(w))
+  use _ <- promise.await(writer.closed(w))
   promise.resolve(Nil)
 }
 
@@ -366,7 +366,7 @@ pub fn writer_ready_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.ready(w))
+  use _ <- promise.await(writer.ready(w))
   let assert Ok(_) = writer.release_lock(w)
   promise.resolve(Nil)
 }
@@ -377,7 +377,7 @@ pub fn writer_abort_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.abort(w, "aborted"))
+  use _ <- promise.await(writer.abort(w, "aborted"))
   promise.resolve(Nil)
 }
 
@@ -394,8 +394,8 @@ pub fn writable_controller_signal_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.write(w, "x"))
-  use _ <- promise.then(writer.close(w))
+  use _ <- promise.await(writer.write(w, "x"))
+  use _ <- promise.await(writer.close(w))
   promise.resolve(Nil)
 }
 
@@ -410,7 +410,7 @@ pub fn writable_controller_error_test() {
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
-  use _ <- promise.then(writer.write(w, "trigger"))
+  use _ <- promise.await(writer.write(w, "trigger"))
   promise.resolve(Nil)
 }
 
@@ -445,7 +445,7 @@ pub fn transform_controller_desired_size_test() {
 
   let assert Ok(r) = readable_stream.get_reader(transformed)
 
-  use _ <- promise.then(reader.read(r))
+  use _ <- promise.await(reader.read(r))
   promise.resolve(Nil)
 }
 
@@ -483,7 +483,7 @@ pub fn transform_controller_error_test() {
 
   // After Transform calls controller.error, the readable side errors out
   // and reader.read rejects.
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.be_error(result)
   promise.resolve(Nil)
 }
@@ -516,7 +516,7 @@ pub fn transform_controller_terminate_test() {
 
   let assert Ok(r) = readable_stream.get_reader(transformed)
 
-  use result <- promise.then(reader.read(r))
+  use result <- promise.await(reader.read(r))
   should.equal(result, Ok(read_result.Done(None)))
   promise.resolve(Nil)
 }
@@ -534,13 +534,13 @@ pub fn readable_stream_async_iterator_test() {
 
   let iter = readable_stream.async_iterator(stream)
 
-  use result <- promise.then(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter))
   should.equal(result, Ok(iterator_result.Yield(1)))
 
-  use result <- promise.then(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter))
   should.equal(result, Ok(iterator_result.Yield(2)))
 
-  use result <- promise.then(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter))
   should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
@@ -553,7 +553,7 @@ pub fn read_text_test() {
       let assert Ok(_) = default_controller.close(controller)
       Nil
     })
-  use result <- promise.then(readable_stream.read_text(stream))
+  use result <- promise.await(readable_stream.read_text(stream))
   should.equal(result, Ok("hello world"))
   promise.resolve(Nil)
 }
@@ -567,7 +567,7 @@ pub fn read_text_locked_test() {
     })
   let assert Ok(_) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(readable_stream.read_text(stream))
+  use result <- promise.await(readable_stream.read_text(stream))
   result |> should.be_error
   promise.resolve(Nil)
 }
@@ -580,7 +580,7 @@ pub fn read_bytes_test() {
       let assert Ok(_) = default_controller.close(controller)
       Nil
     })
-  use result <- promise.then(readable_stream.read_bytes(stream))
+  use result <- promise.await(readable_stream.read_bytes(stream))
   should.equal(result, Ok(<<104, 105, 33>>))
   promise.resolve(Nil)
 }
@@ -594,7 +594,7 @@ pub fn read_bytes_locked_test() {
     })
   let assert Ok(_) = readable_stream.get_reader(stream)
 
-  use result <- promise.then(readable_stream.read_bytes(stream))
+  use result <- promise.await(readable_stream.read_bytes(stream))
   result |> should.be_error
   promise.resolve(Nil)
 }

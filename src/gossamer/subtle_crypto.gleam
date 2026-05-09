@@ -1,10 +1,10 @@
+import gleam/javascript/promise.{type Promise}
 import gossamer/crypto_key.{type CryptoKey}
 import gossamer/hash_algorithm.{type HashAlgorithm}
 import gossamer/js_error.{type JsError}
 import gossamer/json_web_key.{type JsonWebKey}
 import gossamer/key_format.{type KeyFormat}
 import gossamer/key_usage.{type KeyUsage}
-import gossamer/promise.{type Promise}
 import gossamer/subtle_crypto/derive_algorithm.{type DeriveAlgorithm}
 import gossamer/subtle_crypto/derived_key_type.{type DerivedKeyType}
 import gossamer/subtle_crypto/encrypt_algorithm.{type EncryptAlgorithm}

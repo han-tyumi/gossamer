@@ -1,8 +1,8 @@
 import gleam/bit_array
+import gleam/javascript/promise
 import gleeunit/should
 import gossamer/compression_stream
 import gossamer/decompression_stream
-import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/readable_stream/read_result
@@ -43,7 +43,7 @@ pub fn gzip_round_trip_test() {
 
   let assert Ok(reader) = readable_stream.get_reader(output)
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.map(reader.read(reader))
   let assert Ok(read) = result
   case read {
     read_result.Value(chunk) -> {

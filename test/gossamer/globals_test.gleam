@@ -1,6 +1,6 @@
+import gleam/javascript/promise
 import gleeunit/should
 import gossamer
-import gossamer/promise
 
 pub fn structured_clone_int_test() {
   gossamer.structured_clone(42) |> should.equal(Ok(42))
@@ -38,20 +38,19 @@ pub fn user_agent_test() {
 }
 
 pub fn set_timeout_and_clear_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
   let id =
     gossamer.set_timeout(10, fn() {
-      resolvers.resolve("fired")
+      resolve("fired")
       Nil
     })
 
   // Verify we get a valid timer id.
   should.be_true(id >= 0)
 
-  use value <- promise.then(resolvers.promise)
-  should.equal(value, Ok("fired"))
-  promise.resolve(Nil)
+  use value <- promise.map(p)
+  should.equal(value, "fired")
 }
 
 pub fn clear_timeout_test() {
@@ -66,14 +65,13 @@ pub fn set_interval_and_clear_test() {
 }
 
 pub fn queue_microtask_test() {
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
   gossamer.queue_microtask(fn() {
-    resolvers.resolve("microtask ran")
+    resolve("microtask ran")
     Nil
   })
 
-  use value <- promise.then(resolvers.promise)
-  should.equal(value, Ok("microtask ran"))
-  promise.resolve(Nil)
+  use value <- promise.map(p)
+  should.equal(value, "microtask ran")
 }
