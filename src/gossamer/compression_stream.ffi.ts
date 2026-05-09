@@ -1,8 +1,23 @@
 import type { BitArray } from "$/prelude.mjs";
-import type * as $compressionStream from "$/gossamer/gossamer/compression_stream.mjs";
-import { toCompressionFormat } from "~/gossamer/compression_format.ffi.ts";
+import * as $compressionStream from "$/gossamer/gossamer/compression_stream.mjs";
 import { fromBitArrayStream, toBitArrayStream } from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+export function toCompressionFormat(
+  format: $compressionStream.CompressionFormat$,
+): CompressionFormat {
+  if ($compressionStream.CompressionFormat$isDeflate(format)) return "deflate";
+  if ($compressionStream.CompressionFormat$isDeflateRaw(format)) {
+    return "deflate-raw";
+  }
+  if ($compressionStream.CompressionFormat$isGzip(format)) return "gzip";
+  if ($compressionStream.CompressionFormat$isOther(format)) {
+    return $compressionStream.CompressionFormat$Other$0(
+      format,
+    ) as CompressionFormat;
+  }
+  return "brotli";
+}
 
 const wrappedReadables = new WeakMap<
   CompressionStream,

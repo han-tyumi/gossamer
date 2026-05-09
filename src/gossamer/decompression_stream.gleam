@@ -1,4 +1,4 @@
-import gossamer/compression_format.{type CompressionFormat}
+import gossamer/compression_stream.{type CompressionFormat}
 import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/writable_stream.{type WritableStream}
@@ -12,7 +12,7 @@ import gossamer/writable_stream.{type WritableStream}
 /// ```gleam
 /// let assert Ok(input) = deno.open_sync("./file.txt.gz", [open.Read])
 /// let assert Ok(output) = deno.create_sync("./file.txt")
-/// let assert Ok(decompressor) = decompression_stream.new(compression_format.Gzip)
+/// let assert Ok(decompressor) = decompression_stream.new(compression_stream.Gzip)
 ///
 /// fs_file.readable(input)
 /// |> readable_stream.pipe_through(

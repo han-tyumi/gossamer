@@ -1,6 +1,6 @@
 import type { BitArray } from "$/prelude.mjs";
 import type * as $decompressionStream from "$/gossamer/gossamer/decompression_stream.mjs";
-import { toCompressionFormat } from "~/gossamer/compression_format.ffi.ts";
+import { toCompressionFormat } from "~/gossamer/compression_stream.ffi.ts";
 import { fromBitArrayStream, toBitArrayStream } from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
