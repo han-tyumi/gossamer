@@ -1,6 +1,4 @@
 import type * as $gossamer from "$/gossamer/gossamer.mjs";
-import { toRequestInit } from "~/gossamer/request.ffi.ts";
-import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const structured_clone: typeof $gossamer.structured_clone = (value) => {
@@ -45,43 +43,4 @@ export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
 
 export const user_agent: typeof $gossamer.user_agent = () => {
   return globalThis.navigator.userAgent;
-};
-
-export const fetch_: typeof $gossamer.fetch = (url) => {
-  return toResult.fromPromise(globalThis.fetch(url));
-};
-
-export const fetch_url: typeof $gossamer.fetch_url = (url) => {
-  return toResult.fromPromise(globalThis.fetch(url));
-};
-
-export const fetch_with: typeof $gossamer.fetch_with = (
-  url,
-  init,
-) => {
-  return toResult.fromPromise(
-    globalThis.fetch(url, toRequestInit(toArray(init))),
-  );
-};
-
-export const fetch_url_with: typeof $gossamer.fetch_url_with = (
-  url,
-  init,
-) => {
-  return toResult.fromPromise(
-    globalThis.fetch(url, toRequestInit(toArray(init))),
-  );
-};
-
-export const fetch_request: typeof $gossamer.fetch_request = (request) => {
-  return toResult.fromPromise(globalThis.fetch(request));
-};
-
-export const fetch_request_with: typeof $gossamer.fetch_request_with = (
-  request,
-  init,
-) => {
-  return toResult.fromPromise(
-    globalThis.fetch(request, toRequestInit(toArray(init))),
-  );
 };

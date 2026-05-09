@@ -1,26 +1,20 @@
 import gleam/option.{None, Some}
-import gossamer/abort_signal
 import gossamer/blob
 import gossamer/buffer/array_buffer
 import gossamer/buffer/uint8_array
-import gossamer/fetch_options
 import gossamer/form_data
 import gossamer/headers
-import gossamer/http_method
 import gossamer/http_status
 import gossamer/iterator
 import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
-import gossamer/request
-import gossamer/request_destination
 import gossamer/response
 import gossamer/response_type
 import gossamer/url
 import gossamer/url_search_params
 
 import gleeunit/should
-import runtime
 
 pub fn headers_new_test() {
   let hdrs = headers.new()
@@ -72,139 +66,6 @@ pub fn headers_keys_test() {
 pub fn headers_entries_test() {
   let assert Ok(hdrs) = headers.from_pairs([#("a", "1")])
   headers.entries(hdrs) |> iterator.to_list |> should.equal([#("a", "1")])
-}
-
-pub fn request_from_url_string_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org/foo")
-  request.method(req) |> should.equal(http_method.Get)
-  request.url(req) |> should.equal("https://example.org/foo")
-}
-
-pub fn request_from_url_string_with_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-    ])
-  request.method(req) |> should.equal(http_method.Post)
-}
-
-pub fn request_headers_test() {
-  let assert Ok(hdrs) =
-    headers.from_pairs([#("content-type", "application/json")])
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Headers(hdrs),
-    ])
-  headers.get(request.headers(req), "content-type")
-  |> should.equal(Ok(Some("application/json")))
-}
-
-pub fn request_text_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.Body("hello"),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("hello"))
-}
-
-pub fn request_body_bytes_test() {
-  let bytes = uint8_array.from_list([104, 105])
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyBytes(bytes),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("hi"))
-  promise.resolve(Nil)
-}
-
-pub fn request_body_blob_test() {
-  let b = blob.from_string("blob body")
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyBlob(b),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("blob body"))
-  promise.resolve(Nil)
-}
-
-pub fn request_body_params_test() {
-  let params = url_search_params.from_string("a=1&b=2")
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyParams(params),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("a=1&b=2"))
-  promise.resolve(Nil)
-}
-
-pub fn request_body_form_data_test() {
-  let fd = form_data.new() |> form_data.append("key", "value")
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyFormData(fd),
-    ])
-  use result <- promise.then(request.form_data(req))
-  should.be_ok(result)
-  promise.resolve(Nil)
-}
-
-pub fn request_from_url_test() {
-  let assert Ok(u) = url.new("https://example.org")
-  let assert Ok(req) = request.from_url(u)
-  request.url(req) |> should.equal("https://example.org/")
-}
-
-pub fn request_from_url_with_test() {
-  let assert Ok(u) = url.new("https://example.org")
-  let assert Ok(req) =
-    request.from_url_with(u, [request.Method(http_method.Post)])
-  request.method(req) |> should.equal(http_method.Post)
-}
-
-pub fn request_from_request_test() {
-  let assert Ok(original) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-    ])
-  let assert Ok(copy) = request.from_request(original)
-  request.method(copy) |> should.equal(http_method.Post)
-  request.url(copy) |> should.equal("https://example.org/")
-}
-
-pub fn request_from_request_with_test() {
-  let assert Ok(original) = request.from_url_string("https://example.org")
-  let assert Ok(overridden) =
-    request.from_request_with(original, [
-      request.Method(http_method.Put),
-    ])
-  request.method(overridden) |> should.equal(http_method.Put)
-}
-
-pub fn request_body_stream_test() {
-  let bytes = uint8_array.from_list([104, 105])
-  let assert Ok(stream) =
-    readable_stream.from_start(fn(controller) {
-      let assert Ok(_) = default_controller.enqueue(controller, bytes)
-      let assert Ok(_) = default_controller.close(controller)
-      Nil
-    })
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.BodyStream(stream),
-    ])
-  use text <- promise.then(request.text(req))
-  should.equal(text, Ok("hi"))
-  promise.resolve(Nil)
 }
 
 pub fn response_from_string_test() {
@@ -274,17 +135,6 @@ pub fn response_redirect_parity_test() {
   response.status(from_string) |> should.equal(response.status(from_url))
 }
 
-pub fn request_from_url_parity_test() {
-  // String and URL input produce Requests with the same observable url.
-  let href = "https://example.org/foo"
-  let assert Ok(u) = url.new(href)
-
-  let assert Ok(from_string) = request.from_url_string(href)
-  let assert Ok(from_url) = request.from_url(u)
-
-  request.url(from_string) |> should.equal(request.url(from_url))
-}
-
 pub fn response_clone_test() {
   let resp = response.from_string("hello")
   let assert Ok(cloned) = response.clone(resp)
@@ -299,39 +149,11 @@ pub fn response_get_not_found_test() {
   response.status(resp) |> should.equal(http_status.NotFound)
 }
 
-pub fn request_blob_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.Body("blob content"),
-    ])
-  use result <- promise.then(request.blob(req))
-  let assert Ok(b) = result
-  should.equal(blob.size(b), 12)
-  promise.resolve(Nil)
-}
-
 pub fn response_blob_test() {
   let resp = response.from_string("blob response")
   use result <- promise.then(response.blob(resp))
   let assert Ok(b) = result
   should.equal(blob.size(b), 13)
-  promise.resolve(Nil)
-}
-
-pub fn request_form_data_test() {
-  let assert Ok(hdrs) =
-    headers.from_pairs([
-      #("content-type", "application/x-www-form-urlencoded"),
-    ])
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.Headers(hdrs),
-      request.Body("key=value&foo=bar"),
-    ])
-  use result <- promise.then(request.form_data(req))
-  let assert Ok(_fd) = result
   promise.resolve(Nil)
 }
 
@@ -347,8 +169,6 @@ pub fn response_form_data_test() {
   promise.resolve(Nil)
 }
 
-// Headers additional tests
-
 pub fn headers_values_test() {
   let assert Ok(hdrs) = headers.from_pairs([#("a", "1"), #("b", "2")])
   headers.values(hdrs) |> iterator.to_list |> should.equal(["1", "2"])
@@ -363,137 +183,6 @@ pub fn headers_get_set_cookie_test() {
   let hdrs = headers.new()
   headers.get_set_cookie(hdrs) |> should.equal([])
 }
-
-// Request property tests
-
-pub fn request_cache_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.cache(req) |> should.equal(fetch_options.Default)
-}
-
-pub fn request_credentials_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let expected = case runtime.current() {
-    runtime.Bun -> fetch_options.Include
-    runtime.Deno | runtime.Node -> fetch_options.CredentialsSameOrigin
-  }
-  request.credentials(req) |> should.equal(expected)
-}
-
-pub fn request_destination_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.destination(req) |> should.equal(request_destination.Empty)
-}
-
-pub fn request_redirect_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.redirect(req) |> should.equal(fetch_options.Follow)
-}
-
-pub fn request_signal_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  abort_signal.is_aborted(request.signal(req)) |> should.be_false
-}
-
-pub fn request_referrer_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let expected = case runtime.current() {
-    runtime.Bun -> ""
-    runtime.Deno | runtime.Node -> "about:client"
-  }
-  request.referrer(req) |> should.equal(expected)
-}
-
-pub fn request_referrer_policy_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.referrer_policy(req)
-  |> should.equal(fetch_options.StrictOriginWhenCrossOrigin)
-}
-
-pub fn request_mode_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.mode(req) |> should.equal(fetch_options.Cors)
-}
-
-pub fn request_priority_test() {
-  // Default priority is `Auto` per Fetch spec. On Deno the getter is
-  // unimplemented, but the FFI surfaces the undefined as `Auto` so the
-  // value is the same across runtimes.
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.priority(req) |> should.equal(fetch_options.Auto)
-}
-
-pub fn request_init_priority_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Priority(fetch_options.High),
-    ])
-
-  // Round-trip the priority: High on Node/Bun, Auto on Deno (Deno
-  // doesn't expose the priority getter; the FFI surfaces the missing
-  // property as Auto rather than a type-violating Other(Nil)).
-  let p = request.priority(req)
-  let ok = p == fetch_options.High || p == fetch_options.Auto
-  should.be_true(ok)
-}
-
-pub fn request_is_keepalive_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.is_keepalive(req) |> should.be_false
-}
-
-pub fn request_integrity_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.integrity(req) |> should.equal("")
-}
-
-pub fn request_clone_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  let assert Ok(cloned) = request.clone(req)
-  request.url(cloned) |> should.equal("https://example.org/")
-}
-
-pub fn request_is_body_used_test() {
-  let assert Ok(req) = request.from_url_string("https://example.org")
-  request.is_body_used(req) |> should.be_false
-}
-
-pub fn request_array_buffer_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.Body("hi"),
-    ])
-  use result <- promise.then(request.array_buffer(req))
-  let assert Ok(buffer) = result
-  array_buffer.byte_length(buffer) |> should.equal(2)
-  promise.resolve(Nil)
-}
-
-pub fn request_bytes_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.Body("abc"),
-    ])
-  use result <- promise.then(request.bytes(req))
-  let assert Ok(bytes) = result
-  uint8_array.byte_length(bytes) |> should.equal(3)
-  promise.resolve(Nil)
-}
-
-pub fn request_json_test() {
-  let assert Ok(req) =
-    request.from_url_string_with("https://example.org", [
-      request.Method(http_method.Post),
-      request.Body("{\"a\":1}"),
-    ])
-  use result <- promise.then(request.json(req))
-  should.be_ok(result)
-  promise.resolve(Nil)
-}
-
-// Response additional body tests
 
 pub fn response_from_json_test() {
   let assert Ok(resp) = response.from_json(42)

@@ -1,61 +1,9 @@
-//// Top-level cross-runtime Web Platform APIs: `fetch`, timers, base64,
-//// structured cloning, and more. Domain-specific APIs live in submodules
-//// (see `gossamer/url`, `gossamer/headers`, `gossamer/readable_stream`,
+//// Top-level cross-runtime APIs: timers, base64, structured cloning,
+//// and more. Domain-specific APIs live in submodules (see
+//// `gossamer/url`, `gossamer/readable_stream`, `gossamer/fetch_extra`,
 //// etc.).
 
 import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
-import gossamer/request.{type Request, type RequestInit}
-import gossamer/response.{type Response}
-import gossamer/url.{type URL}
-
-/// Fetches a resource from `url`. Returns an error on network error,
-/// CORS failure, or if the URL is invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_")
-pub fn fetch(url: String) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource from `url` with the given request init options.
-/// Returns an error on network error, CORS failure, or if the URL or
-/// `init` is invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_with")
-pub fn fetch_with(
-  url: String,
-  with init: List(RequestInit),
-) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource from `url`. Returns an error on network error or
-/// CORS failure.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_url")
-pub fn fetch_url(url: URL) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource from `url` with the given request init options.
-/// Returns an error on network error, CORS failure, or if `init` is
-/// invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_url_with")
-pub fn fetch_url_with(
-  url: URL,
-  with init: List(RequestInit),
-) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource using a pre-built `Request`. Returns an error on
-/// network error or CORS failure.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_request")
-pub fn fetch_request(request: Request) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource using a pre-built `Request`, with `init` options
-/// that override fields on `request`. Returns an error on network error,
-/// CORS failure, or if `init` is invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_request_with")
-pub fn fetch_request_with(
-  request: Request,
-  with init: List(RequestInit),
-) -> Promise(Result(Response, JsError))
 
 /// Creates a deep clone of `value` using the structured clone algorithm.
 /// Returns an error if `value` contains a function, symbol, or other

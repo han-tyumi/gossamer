@@ -129,3 +129,21 @@ pub fn tee(
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "async_iterator")
 pub fn async_iterator(stream: ReadableStream(a)) -> AsyncIterator(a, Nil, Nil)
+
+/// Consumes a byte stream and decodes the assembled bytes as UTF-8.
+/// Invalid bytes are replaced with U+FFFD. Returns an error if the
+/// stream is already locked or errors during read.
+///
+@external(javascript, "./readable_stream.ffi.mjs", "read_text")
+pub fn read_text(
+  stream: ReadableStream(BitArray),
+) -> Promise(Result(String, JsError))
+
+/// Consumes a byte stream and returns the assembled bytes as a single
+/// `BitArray`. Returns an error if the stream is already locked or
+/// errors during read.
+///
+@external(javascript, "./readable_stream.ffi.mjs", "read_bytes")
+pub fn read_bytes(
+  stream: ReadableStream(BitArray),
+) -> Promise(Result(BitArray, JsError))

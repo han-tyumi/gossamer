@@ -1,5 +1,9 @@
 import * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
 import type { List } from "$/prelude.mjs";
+import {
+  fromBitArrayReadable,
+  toBitArrayResult,
+} from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -124,4 +128,16 @@ export const async_iterator: typeof $readableStream.async_iterator = <T>(
   stream: ReadableStream<T>,
 ) => {
   return stream.values();
+};
+
+export const read_text: typeof $readableStream.read_text = (stream) => {
+  return toResult.fromAsync(() =>
+    new Response(fromBitArrayReadable(stream)).text()
+  );
+};
+
+export const read_bytes: typeof $readableStream.read_bytes = (stream) => {
+  return toBitArrayResult(() =>
+    new Response(fromBitArrayReadable(stream)).arrayBuffer()
+  );
 };

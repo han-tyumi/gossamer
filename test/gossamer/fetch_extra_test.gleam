@@ -8,6 +8,8 @@ import gleeunit/should
 import gossamer/abort_signal
 import gossamer/fetch_extra
 import gossamer/fetch_options
+import gossamer/readable_stream
+import gossamer/readable_stream/default_controller
 import gossamer/response_type
 import runtime
 
@@ -88,6 +90,28 @@ pub fn send_form_data_aborted_signal_yields_network_error_test() {
   let opts = fetch_options.new() |> fetch_options.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_form_data(req, with: opts))
+  let assert Error(fetch.NetworkError(_)) = result
+  promise.resolve(Nil)
+}
+
+pub fn send_stream_aborted_signal_yields_network_error_test() {
+  let assert Ok(stream) =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, <<"payload">>)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  let req =
+    request.new()
+    |> request.set_method(http.Post)
+    |> request.set_host("example.com")
+    |> request.set_path("/")
+    |> request.set_body(stream)
+
+  let signal = abort_signal.abort("pre-aborted")
+  let opts = fetch_options.new() |> fetch_options.set_signal(signal)
+
+  use result <- promise.await(fetch_extra.send_stream(req, with: opts))
   let assert Error(fetch.NetworkError(_)) = result
   promise.resolve(Nil)
 }

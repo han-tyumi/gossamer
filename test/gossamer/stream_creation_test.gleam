@@ -544,3 +544,57 @@ pub fn readable_stream_async_iterator_test() {
   should.equal(result, Ok(iterator_result.Return(Nil)))
   promise.resolve(Nil)
 }
+
+pub fn read_text_test() {
+  let assert Ok(stream) =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, <<"hello ">>)
+      let assert Ok(_) = default_controller.enqueue(controller, <<"world">>)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  use result <- promise.then(readable_stream.read_text(stream))
+  should.equal(result, Ok("hello world"))
+  promise.resolve(Nil)
+}
+
+pub fn read_text_locked_test() {
+  let assert Ok(stream) =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, <<"x">>)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  let assert Ok(_) = readable_stream.get_reader(stream)
+
+  use result <- promise.then(readable_stream.read_text(stream))
+  result |> should.be_error
+  promise.resolve(Nil)
+}
+
+pub fn read_bytes_test() {
+  let assert Ok(stream) =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, <<104, 105>>)
+      let assert Ok(_) = default_controller.enqueue(controller, <<33>>)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  use result <- promise.then(readable_stream.read_bytes(stream))
+  should.equal(result, Ok(<<104, 105, 33>>))
+  promise.resolve(Nil)
+}
+
+pub fn read_bytes_locked_test() {
+  let assert Ok(stream) =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, <<0>>)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  let assert Ok(_) = readable_stream.get_reader(stream)
+
+  use result <- promise.then(readable_stream.read_bytes(stream))
+  result |> should.be_error
+  promise.resolve(Nil)
+}

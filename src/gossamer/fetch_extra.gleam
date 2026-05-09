@@ -21,6 +21,7 @@ import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gossamer/fetch_options.{type FetchOptions}
+import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
 
 /// `True` when the status code is in the 200-299 range. Derived from
@@ -80,5 +81,17 @@ pub fn send_bits(
 @external(javascript, "./fetch_extra.ffi.mjs", "send_form_data")
 pub fn send_form_data(
   request: Request(FormData),
+  with options: FetchOptions,
+) -> Promise(Result(Response(FetchBody), FetchError))
+
+/// Sends a `Request(ReadableStream(BitArray))` with the given options.
+/// The body is streamed as the request is sent (the Fetch spec requires
+/// `duplex: "half"`, which gossamer sets automatically). Returns an
+/// error if the network request fails (`NetworkError`); a non-`2xx`
+/// status is still a successful send.
+///
+@external(javascript, "./fetch_extra.ffi.mjs", "send_stream")
+pub fn send_stream(
+  request: Request(ReadableStream(BitArray)),
   with options: FetchOptions,
 ) -> Promise(Result(Response(FetchBody), FetchError))

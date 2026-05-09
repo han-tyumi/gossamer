@@ -81,3 +81,20 @@ export function fromBitArrayStream(
   transform.readable.pipeTo(target).catch(() => {});
   return transform.writable;
 }
+
+/**
+ * Unwraps a `ReadableStream<BitArray>` to a `ReadableStream<Uint8Array>`
+ * so chunks can be passed to Web APIs that expect byte streams.
+ * Un-aligned chunks are zero-padded to the next byte.
+ */
+export function fromBitArrayReadable(
+  source: ReadableStream<BitArray>,
+): ReadableStream<Uint8Array> {
+  return source.pipeThrough(
+    new TransformStream<BitArray, Uint8Array>({
+      transform(chunk, controller) {
+        controller.enqueue(toUint8Array(chunk));
+      },
+    }),
+  );
+}
