@@ -179,7 +179,7 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | Iterator          | ✅     | `gossamer/iterator`                   |
 | AsyncIterator     | ✅     | `gossamer/async_iterator`             |
 | JSON              | ✅     | `gossamer/json`                       |
-| RegExp            | ✅     | `gossamer/regexp`                     |
+| RegExp            | ✅     | `gossamer/regexp_extra`               |
 | Symbol            | ✅     | `gossamer/symbol`                     |
 | Number            | ✅     | `gossamer/number`                     |
 | BigInt            | 🚧     | `gossamer/big_int`                    |
