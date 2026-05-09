@@ -1,5 +1,4 @@
 import gleam/dynamic.{type Dynamic}
-import gossamer/event_phase.{type EventPhase}
 
 /// An event dispatched on an `EventTarget`.
 ///
@@ -12,6 +11,16 @@ pub type EventInit {
   Bubbles(Bool)
   Cancelable(Bool)
   Composed(Bool)
+}
+
+/// The phase of event propagation — whether an event is currently being
+/// captured, dispatched at the target, or bubbling.
+///
+pub type EventPhase {
+  None
+  Capturing
+  AtTarget
+  Bubbling
 }
 
 /// Creates a new `Event` with the given type.

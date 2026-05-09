@@ -1,6 +1,5 @@
 import gleeunit/should
 import gossamer/event
-import gossamer/event_phase
 import gossamer/event_target
 import gossamer/promise
 
@@ -41,7 +40,7 @@ pub fn current_target_undispatched_test() {
 
 pub fn event_phase_test() {
   let ev = event.new("test")
-  event.event_phase(ev) |> should.equal(event_phase.None)
+  event.event_phase(ev) |> should.equal(event.None)
 }
 
 pub fn time_stamp_test() {
@@ -217,6 +216,6 @@ pub fn event_phase_in_listener_test() {
   let _ = event_target.dispatch_event(on: target, event: event.new("test"))
 
   use phase <- promise.then(resolvers.promise)
-  phase |> should.equal(Ok(event_phase.AtTarget))
+  phase |> should.equal(Ok(event.AtTarget))
   promise.resolve(Nil)
 }

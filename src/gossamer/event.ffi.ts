@@ -1,7 +1,19 @@
 import * as $event from "$/gossamer/gossamer/event.mjs";
-import { fromEventPhase } from "~/gossamer/event_phase.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+function fromEventPhase(phase: number): $event.EventPhase$ {
+  switch (phase) {
+    case Event.CAPTURING_PHASE:
+      return $event.EventPhase$Capturing();
+    case Event.AT_TARGET:
+      return $event.EventPhase$AtTarget();
+    case Event.BUBBLING_PHASE:
+      return $event.EventPhase$Bubbling();
+    default:
+      return $event.EventPhase$None();
+  }
+}
 
 function toEventInit(options: $event.EventInit$[]): EventInit {
   const result: EventInit = {};
