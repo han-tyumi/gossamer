@@ -1,4 +1,5 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
+import { to_string as uriToString } from "$/gleam_stdlib/gleam/uri.mjs";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -54,14 +55,14 @@ export const from_url_string_with_protocols:
     return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
   };
 
-export const from_url: typeof $webSocket.from_url = (url) => {
-  return toResult.fromThrows(() => new WebSocket(url.toString()));
+export const from_uri: typeof $webSocket.from_uri = (uri) => {
+  return toResult.fromThrows(() => new WebSocket(uriToString(uri)));
 };
 
-export const from_url_with_protocols:
-  typeof $webSocket.from_url_with_protocols = (url, protocols) => {
+export const from_uri_with_protocols:
+  typeof $webSocket.from_uri_with_protocols = (uri, protocols) => {
     return toResult.fromThrows(
-      () => new WebSocket(url.toString(), toArray(protocols)),
+      () => new WebSocket(uriToString(uri), toArray(protocols)),
     );
   };
 

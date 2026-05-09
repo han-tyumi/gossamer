@@ -1,7 +1,7 @@
+import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
-import gossamer/url.{type URL}
 
 // TODO: Happy-path coverage for `send_*` and `on_*` requires a live
 // WebSocket server, which can't be created cross-runtime from pure
@@ -67,19 +67,19 @@ pub fn from_url_string_with_protocols(
   with protocols: List(String),
 ) -> Result(WebSocket, JsError)
 
-/// Creates a new `WebSocket` connection to `url`. Returns an error if
-/// `url`'s scheme is not `ws:` or `wss:`.
+/// Creates a new `WebSocket` connection to `uri`. Returns an error if
+/// `uri`'s scheme is not `ws:` or `wss:`.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "from_url")
-pub fn from_url(url: URL) -> Result(WebSocket, JsError)
+@external(javascript, "./web_socket.ffi.mjs", "from_uri")
+pub fn from_uri(uri: Uri) -> Result(WebSocket, JsError)
 
-/// Creates a new `WebSocket` connection to `url` with the specified
-/// sub-protocols. Returns an error if `url`'s scheme is not `ws:` or
+/// Creates a new `WebSocket` connection to `uri` with the specified
+/// sub-protocols. Returns an error if `uri`'s scheme is not `ws:` or
 /// `wss:`, or if `protocols` contains duplicates or invalid entries.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "from_url_with_protocols")
-pub fn from_url_with_protocols(
-  url: URL,
+@external(javascript, "./web_socket.ffi.mjs", "from_uri_with_protocols")
+pub fn from_uri_with_protocols(
+  uri: Uri,
   with protocols: List(String),
 ) -> Result(WebSocket, JsError)
 

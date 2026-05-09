@@ -1,6 +1,6 @@
+import gleam/uri
 import gleeunit/should
 import gossamer/blob
-import gossamer/url
 import gossamer/web_socket
 
 pub fn ready_state_connecting_test() {
@@ -16,32 +16,32 @@ pub fn from_url_string_with_protocols_test() {
   web_socket.close(ws)
 }
 
-pub fn from_url_test() {
-  let assert Ok(u) = url.new("ws://localhost:1")
-  let assert Ok(ws) = web_socket.from_url(u)
+pub fn from_uri_test() {
+  let assert Ok(u) = uri.parse("ws://localhost:1")
+  let assert Ok(ws) = web_socket.from_uri(u)
   web_socket.ready_state(ws) |> should.equal(web_socket.Connecting)
   web_socket.close(ws)
 }
 
-pub fn from_url_with_protocols_test() {
-  let assert Ok(u) = url.new("ws://localhost:1")
-  let assert Ok(ws) = web_socket.from_url_with_protocols(u, ["json"])
+pub fn from_uri_with_protocols_test() {
+  let assert Ok(u) = uri.parse("ws://localhost:1")
+  let assert Ok(ws) = web_socket.from_uri_with_protocols(u, ["json"])
   web_socket.ready_state(ws) |> should.equal(web_socket.Connecting)
   web_socket.close(ws)
 }
 
-pub fn from_url_parity_test() {
-  // String-input and URL-input constructors produce sockets with the same
+pub fn from_uri_parity_test() {
+  // String-input and Uri-input constructors produce sockets with the same
   // observable url.
   let href = "ws://localhost:1/"
-  let assert Ok(u) = url.new(href)
+  let assert Ok(u) = uri.parse(href)
 
   let assert Ok(from_string) = web_socket.from_url_string(href)
-  let assert Ok(from_url) = web_socket.from_url(u)
+  let assert Ok(from_uri) = web_socket.from_uri(u)
 
-  web_socket.url(from_string) |> should.equal(web_socket.url(from_url))
+  web_socket.url(from_string) |> should.equal(web_socket.url(from_uri))
   web_socket.close(from_string)
-  web_socket.close(from_url)
+  web_socket.close(from_uri)
 }
 
 // `send` on a Connecting socket throws `InvalidStateError` per spec — we
