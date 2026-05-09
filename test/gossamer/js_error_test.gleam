@@ -2,7 +2,6 @@ import gleam/dynamic/decode
 import gleeunit/should
 import gossamer
 import gossamer/js_error
-import gossamer/js_error/kind
 import gossamer/promise
 
 pub fn new_test() {
@@ -106,49 +105,49 @@ pub fn eval_error_with_cause_test() {
 pub fn kind_type_error_test() {
   js_error.type_error("bad")
   |> js_error.kind
-  |> should.equal(kind.TypeError)
+  |> should.equal(js_error.TypeError)
 }
 
 pub fn kind_range_error_test() {
   js_error.range_error("oob")
   |> js_error.kind
-  |> should.equal(kind.RangeError)
+  |> should.equal(js_error.RangeError)
 }
 
 pub fn kind_reference_error_test() {
   js_error.reference_error("undef")
   |> js_error.kind
-  |> should.equal(kind.ReferenceError)
+  |> should.equal(js_error.ReferenceError)
 }
 
 pub fn kind_syntax_error_test() {
   js_error.syntax_error("oops")
   |> js_error.kind
-  |> should.equal(kind.SyntaxError)
+  |> should.equal(js_error.SyntaxError)
 }
 
 pub fn kind_uri_error_test() {
   js_error.uri_error("bad uri")
   |> js_error.kind
-  |> should.equal(kind.UriError)
+  |> should.equal(js_error.UriError)
 }
 
 pub fn kind_eval_error_test() {
   js_error.eval_error("nope")
   |> js_error.kind
-  |> should.equal(kind.EvalError)
+  |> should.equal(js_error.EvalError)
 }
 
 pub fn kind_other_for_plain_error_test() {
   js_error.new("generic")
   |> js_error.kind
-  |> should.equal(kind.Other(name: "Error"))
+  |> should.equal(js_error.Other(name: "Error"))
 }
 
 pub fn kind_dom_exception_test() {
   let assert Error(err) = gossamer.atob("not valid base64!")
   js_error.kind(err)
-  |> should.equal(kind.DomException(name: "InvalidCharacterError"))
+  |> should.equal(js_error.DomException(name: "InvalidCharacterError"))
 }
 
 pub fn kind_aggregate_error_test() {
@@ -157,7 +156,7 @@ pub fn kind_aggregate_error_test() {
     promise.any([promise.reject("err1"), promise.reject("err2")]),
   )
   let assert Error(err) = result
-  js_error.kind(err) |> should.equal(kind.AggregateError)
+  js_error.kind(err) |> should.equal(js_error.AggregateError)
   promise.resolve(Nil)
 }
 

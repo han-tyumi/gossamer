@@ -1,5 +1,4 @@
-import type * as $jsError from "$/gossamer/gossamer/js_error.mjs";
-import * as $kind from "$/gossamer/gossamer/js_error/kind.mjs";
+import * as $jsError from "$/gossamer/gossamer/js_error.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $jsError.new$ = (message) => {
@@ -96,24 +95,24 @@ export const cause: typeof $jsError.cause = (error) => {
 
 export const kind: typeof $jsError.kind = (error) => {
   if (error instanceof DOMException) {
-    return $kind.JsErrorKind$DomException(error.name);
+    return $jsError.JsErrorKind$DomException(error.name);
   }
   switch (error.name) {
     case "TypeError":
-      return $kind.JsErrorKind$TypeError();
+      return $jsError.JsErrorKind$TypeError();
     case "RangeError":
-      return $kind.JsErrorKind$RangeError();
+      return $jsError.JsErrorKind$RangeError();
     case "ReferenceError":
-      return $kind.JsErrorKind$ReferenceError();
+      return $jsError.JsErrorKind$ReferenceError();
     case "SyntaxError":
-      return $kind.JsErrorKind$SyntaxError();
+      return $jsError.JsErrorKind$SyntaxError();
     case "URIError":
-      return $kind.JsErrorKind$UriError();
+      return $jsError.JsErrorKind$UriError();
     case "EvalError":
-      return $kind.JsErrorKind$EvalError();
+      return $jsError.JsErrorKind$EvalError();
     case "AggregateError":
-      return $kind.JsErrorKind$AggregateError();
+      return $jsError.JsErrorKind$AggregateError();
     default:
-      return $kind.JsErrorKind$Other(error.name);
+      return $jsError.JsErrorKind$Other(error.name);
   }
 };

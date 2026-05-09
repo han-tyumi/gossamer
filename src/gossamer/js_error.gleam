@@ -1,5 +1,4 @@
 import gleam/dynamic.{type Dynamic}
-import gossamer/js_error/kind.{type JsErrorKind}
 
 /// A standard JS `Error` object with a name, message, and optional stack
 /// trace. Useful when constructing errors to pass to JS APIs and for
@@ -9,6 +8,22 @@ import gossamer/js_error/kind.{type JsErrorKind}
 ///
 @external(javascript, "./js_error.type.ts", "JsError$")
 pub type JsError
+
+/// The classification of a `JsError` — one of the standard ECMAScript
+/// error types, a `DOMException` (with its `name`), or any other error
+/// (with its `name`).
+///
+pub type JsErrorKind {
+  TypeError
+  RangeError
+  ReferenceError
+  SyntaxError
+  UriError
+  EvalError
+  AggregateError
+  DomException(name: String)
+  Other(name: String)
+}
 
 @external(javascript, "./js_error.ffi.mjs", "new_")
 pub fn new(message: String) -> JsError
