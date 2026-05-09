@@ -179,7 +179,6 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 | Iterator          | ✅     | `gossamer/iterator`                   |
 | AsyncIterator     | ✅     | `gossamer/async_iterator`             |
 | JSON              | ✅     | `gossamer/json`                       |
-| Date              | ✅     | `gossamer/date`                       |
 | RegExp            | ✅     | `gossamer/regexp`                     |
 | Symbol            | ✅     | `gossamer/symbol`                     |
 | Number            | ✅     | `gossamer/number`                     |
@@ -203,6 +202,7 @@ types, and expose functionality Gleam's stdlib doesn't cover.
 | FinalizationRegistry | ✅     | `gossamer/finalization_registry` |
 | Array                | ✅     | `gossamer/array`                 |
 | String               | ✅     | `gossamer/string`                |
+| Date                 | ✅     | `gossamer/time_extra`            |
 
 ## Out of Scope
 
