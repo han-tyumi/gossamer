@@ -137,9 +137,7 @@ pub fn response_type_test() {
 }
 
 /// Bun reports `type: "default"` for synthetic data-URL responses where
-/// the Fetch spec (and Deno and Node) say `"basic"`. Asserting the wrong
-/// value here means this test starts failing the moment Bun aligns,
-/// surfacing the fix so the divergence handling can be removed.
+/// the Fetch spec (and Deno and Node) say `"basic"`.
 pub fn response_type_bun_divergence_test() {
   use <- runtime.only_on(runtime.Bun)
   use response <- promise.await(make_test_response())
@@ -153,4 +151,48 @@ pub fn is_response_body_used_flips_after_consumption_test() {
   use _ <- promise.await(fetch.read_text_body(response))
   fetch_extra.is_response_body_used(response) |> should.be_true
   promise.resolve(Nil)
+}
+
+pub fn response_clone_independent_bodies_test() {
+  use original <- promise.await(make_test_response())
+  let assert Ok(cloned) = fetch_extra.response_clone(original)
+
+  use original_text <- promise.await(fetch.read_text_body(original))
+  use cloned_text <- promise.await(fetch.read_text_body(cloned))
+
+  let assert Ok(original_response) = original_text
+  let assert Ok(cloned_response) = cloned_text
+  should.equal(original_response.body, "hello")
+  should.equal(cloned_response.body, "hello")
+  promise.resolve(Nil)
+}
+
+pub fn response_clone_after_consumed_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  use original <- promise.await(make_test_response())
+  use _ <- promise.await(fetch.read_text_body(original))
+  fetch_extra.response_clone(original) |> should.be_error
+  promise.resolve(Nil)
+}
+
+/// Bun's `Response.clone()` succeeds on a consumed body where the Fetch
+/// spec (and Deno and Node) say it should throw, and the cloned body
+/// reads as empty rather than carrying the original content.
+pub fn response_clone_after_consumed_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  use original <- promise.await(make_test_response())
+  use _ <- promise.await(fetch.read_text_body(original))
+  let assert Ok(cloned) = fetch_extra.response_clone(original)
+  use cloned_text <- promise.await(fetch.read_text_body(cloned))
+  let assert Ok(cloned_response) = cloned_text
+  should.equal(cloned_response.body, "")
+  promise.resolve(Nil)
+}
+
+pub fn response_json_test() {
+  let resp = fetch_extra.response_json("{\"ok\":true}")
+  resp.status |> should.equal(200)
+  response.get_header(resp, "content-type")
+  |> should.equal(Ok("application/json"))
+  resp.body |> should.equal("{\"ok\":true}")
 }

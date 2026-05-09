@@ -21,6 +21,7 @@ import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gossamer/fetch_options.{type FetchOptions}
+import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
 
@@ -95,3 +96,33 @@ pub fn send_stream(
   request: Request(ReadableStream(BitArray)),
   with options: FetchOptions,
 ) -> Promise(Result(Response(FetchBody), FetchError))
+
+/// Clones a `Response`. The cloned response has its own independent body
+/// stream, so the original and clone can each be consumed once. Returns
+/// an error if the body has already been read or is locked to a reader.
+///
+/// **Note**: on Bun, this returns `Ok` when the body has already been
+/// read; the Fetch spec (and Deno and Node) say it should throw. The
+/// cloned body reads as empty rather than carrying the original
+/// content.
+///
+@external(javascript, "./fetch_extra.ffi.mjs", "response_clone")
+pub fn response_clone(
+  response: Response(FetchBody),
+) -> Result(Response(FetchBody), JsError)
+
+/// Builds a `Response(String)` carrying a JSON body. Sets status `200`
+/// and the `content-type: application/json` header. The caller is
+/// responsible for serializing their data to JSON (see `gleam/json`).
+///
+/// ## Examples
+///
+/// ```gleam
+/// fetch_extra.response_json("{\"ok\":true}")
+/// ```
+///
+pub fn response_json(json_string: String) -> Response(String) {
+  response.new(200)
+  |> response.set_body(json_string)
+  |> response.set_header("content-type", "application/json")
+}

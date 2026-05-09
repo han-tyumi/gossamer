@@ -16,6 +16,7 @@ import { buildInit } from "~/gossamer/fetch_options.ffi.ts";
 import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { toResult } from "~/utils/result.ffi.ts";
 
 function jsResponseOf(
   response: $response.Response$<$fetch.FetchBody$>,
@@ -82,4 +83,10 @@ export const send_stream: typeof $fetchExtra.send_stream = (
     init.duplex = "half";
   }
   return send_internal(new Request(url, init), buildInit(options));
+};
+
+export const response_clone: typeof $fetchExtra.response_clone = (response) => {
+  return toResult.fromThrows(() =>
+    from_fetch_response(jsResponseOf(response).clone())
+  );
 };
