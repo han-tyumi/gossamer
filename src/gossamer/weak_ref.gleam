@@ -4,8 +4,8 @@ import gossamer/js_error.{type JsError}
 /// for GC once it has no other references.
 ///
 /// Targets must be objects (records, lists, tuples) or non-registered
-/// symbols (`gossamer/symbol.new`, not `gossamer/symbol.for`); `new`
-/// returns an error otherwise.
+/// symbols (those not in the global registry); `new` returns an error
+/// otherwise.
 ///
 /// `deref` may continue to return `Ok` for some time after all other
 /// references to the target are dropped — GC timing is non-deterministic.

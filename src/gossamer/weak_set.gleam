@@ -4,9 +4,9 @@ import gossamer/js_error.{type JsError}
 /// for GC once the value has no other references. Mutable.
 ///
 /// Values must be objects (records, lists, tuples) or non-registered
-/// symbols (`gossamer/symbol.new`, not `gossamer/symbol.for`); `add`
-/// and `from_list` return an error otherwise. Has no `size`,
-/// iteration, or `clear` (those would expose GC timing).
+/// symbols (those not in the global registry); `add` and `from_list`
+/// return an error otherwise. Has no `size`, iteration, or `clear`
+/// (those would expose GC timing).
 ///
 /// Values are matched by JS reference identity, not value equality —
 /// two equal-by-value tuples constructed separately are distinct

@@ -7,9 +7,9 @@ import gossamer/js_error.{type JsError}
 /// reported to the runtime, not to surrounding code.
 ///
 /// Targets and unregister tokens must be objects (records, lists,
-/// tuples) or non-registered symbols (`gossamer/symbol.new`, not
-/// `gossamer/symbol.for`); `register`, `register_with_token`, and
-/// `unregister` return an error otherwise.
+/// tuples) or non-registered symbols (those not in the global
+/// registry); `register`, `register_with_token`, and `unregister`
+/// return an error otherwise.
 ///
 /// Unregister tokens are matched by JS reference identity — pass the
 /// same JS reference to `unregister` that was passed to
