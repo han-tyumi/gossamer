@@ -4,19 +4,17 @@ import gossamer/abort_signal.{type AbortSignal}
 import gossamer/blob.{type Blob}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/buffer/uint8_array.{type Uint8Array}
+import gossamer/fetch_options.{
+  type ReferrerPolicy, type RequestCache, type RequestCredentials,
+  type RequestMode, type RequestPriority, type RequestRedirect,
+}
 import gossamer/form_data.{type FormData}
 import gossamer/headers.{type Headers}
 import gossamer/http_method.{type HttpMethod}
 import gossamer/js_error.{type JsError}
 import gossamer/promise.{type Promise}
 import gossamer/readable_stream.{type ReadableStream}
-import gossamer/referrer_policy.{type ReferrerPolicy}
-import gossamer/request_cache.{type RequestCache}
-import gossamer/request_credentials.{type RequestCredentials}
 import gossamer/request_destination.{type RequestDestination}
-import gossamer/request_mode.{type RequestMode}
-import gossamer/request_priority.{type RequestPriority}
-import gossamer/request_redirect.{type RequestRedirect}
 import gossamer/url.{type URL}
 import gossamer/url_search_params.{type URLSearchParams}
 
@@ -39,26 +37,26 @@ pub type Fields {
     method: HttpMethod,
     url: String,
     headers: Headers,
-    /// The cache mode. Always `request_cache.Default` on Deno
+    /// The cache mode. Always `fetch_options.Default` on Deno
     /// (denoland/deno#27763).
     cache: RequestCache,
-    /// The credentials mode. Always `request_credentials.SameOrigin` on
-    /// Deno (denoland/deno#27763); always `request_credentials.Include`
-    /// on Bun against the spec's `same-origin` default
+    /// The credentials mode. Always `fetch_options.CredentialsSameOrigin`
+    /// on Deno (denoland/deno#27763); always `fetch_options.Include` on
+    /// Bun against the spec's `same-origin` default
     /// (oven-sh/bun#17052).
     credentials: RequestCredentials,
     /// The kind of resource requested. Always `request_destination.Empty`
     /// for user-created requests.
     destination: RequestDestination,
-    /// The mode. Always `request_mode.Cors` on Deno
+    /// The mode. Always `fetch_options.Cors` on Deno
     /// (denoland/deno#27763).
     mode: RequestMode,
-    /// The priority hint. Always `request_priority.Auto` — no runtime
+    /// The priority hint. Always `fetch_options.Auto` — no runtime
     /// currently exposes the getter.
     priority: RequestPriority,
     redirect: RequestRedirect,
     /// The referrer policy. Always
-    /// `referrer_policy.StrictOriginWhenCrossOrigin` on Deno
+    /// `fetch_options.StrictOriginWhenCrossOrigin` on Deno
     /// (denoland/deno#27763) and Bun (oven-sh/bun#30124).
     referrer_policy: ReferrerPolicy,
     signal: AbortSignal,
@@ -168,14 +166,14 @@ pub fn url(of request: Request) -> String
 @external(javascript, "./request.ffi.mjs", "headers")
 pub fn headers(of request: Request) -> Headers
 
-/// The cache mode. Always `request_cache.Default` on Deno
+/// The cache mode. Always `fetch_options.Default` on Deno
 /// (denoland/deno#27763).
 ///
 @external(javascript, "./request.ffi.mjs", "cache")
 pub fn cache(of request: Request) -> RequestCache
 
-/// The credentials mode. Always `request_credentials.SameOrigin` on Deno
-/// (denoland/deno#27763); always `request_credentials.Include` on Bun
+/// The credentials mode. Always `fetch_options.CredentialsSameOrigin` on
+/// Deno (denoland/deno#27763); always `fetch_options.Include` on Bun
 /// against the spec's `same-origin` default (oven-sh/bun#17052).
 ///
 @external(javascript, "./request.ffi.mjs", "credentials")
@@ -200,18 +198,18 @@ pub fn signal(of request: Request) -> AbortSignal
 pub fn referrer(of request: Request) -> String
 
 /// The referrer policy. Always
-/// `referrer_policy.StrictOriginWhenCrossOrigin` on Deno
+/// `fetch_options.StrictOriginWhenCrossOrigin` on Deno
 /// (denoland/deno#27763) and Bun (oven-sh/bun#30124).
 ///
 @external(javascript, "./request.ffi.mjs", "referrer_policy")
 pub fn referrer_policy(of request: Request) -> ReferrerPolicy
 
-/// The mode. Always `request_mode.Cors` on Deno (denoland/deno#27763).
+/// The mode. Always `fetch_options.Cors` on Deno (denoland/deno#27763).
 ///
 @external(javascript, "./request.ffi.mjs", "mode")
 pub fn mode(of request: Request) -> RequestMode
 
-/// The priority hint. Always `request_priority.Auto` — no runtime
+/// The priority hint. Always `fetch_options.Auto` — no runtime
 /// currently exposes the getter.
 ///
 @external(javascript, "./request.ffi.mjs", "priority")

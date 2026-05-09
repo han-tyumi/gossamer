@@ -1,27 +1,20 @@
 import * as $request from "$/gossamer/gossamer/request.mjs";
-import { fromHttpMethod, toHttpMethod } from "~/gossamer/http_method.ffi.ts";
 import {
   fromReferrerPolicy,
-  toReferrerPolicy,
-} from "~/gossamer/referrer_policy.ffi.ts";
-import {
   fromRequestCache,
-  toRequestCache,
-} from "~/gossamer/request_cache.ffi.ts";
-import {
   fromRequestCredentials,
-  toRequestCredentials,
-} from "~/gossamer/request_credentials.ffi.ts";
-import { fromRequestDestination } from "~/gossamer/request_destination.ffi.ts";
-import { fromRequestMode, toRequestMode } from "~/gossamer/request_mode.ffi.ts";
-import {
+  fromRequestMode,
   fromRequestPriority,
-  toRequestPriority,
-} from "~/gossamer/request_priority.ffi.ts";
-import {
   fromRequestRedirect,
+  toReferrerPolicy,
+  toRequestCache,
+  toRequestCredentials,
+  toRequestMode,
+  toRequestPriority,
   toRequestRedirect,
-} from "~/gossamer/request_redirect.ffi.ts";
+} from "~/gossamer/fetch_options.ffi.ts";
+import { fromHttpMethod, toHttpMethod } from "~/gossamer/http_method.ffi.ts";
+import { fromRequestDestination } from "~/gossamer/request_destination.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";

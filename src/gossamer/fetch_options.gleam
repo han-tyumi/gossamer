@@ -11,11 +11,10 @@
 //// ```gleam
 //// import gossamer/fetch_extra
 //// import gossamer/fetch_options
-//// import gossamer/request_cache
 ////
 //// let options =
 ////   fetch_options.new()
-////   |> fetch_options.set_cache(request_cache.NoCache)
+////   |> fetch_options.set_cache(fetch_options.NoCache)
 ////   |> fetch_options.set_keepalive(True)
 ////
 //// fetch_extra.send(request, with: options)
@@ -23,12 +22,6 @@
 
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/referrer_policy.{type ReferrerPolicy}
-import gossamer/request_cache.{type RequestCache}
-import gossamer/request_credentials.{type RequestCredentials}
-import gossamer/request_mode.{type RequestMode}
-import gossamer/request_priority.{type RequestPriority}
-import gossamer/request_redirect.{type RequestRedirect}
 
 /// A builder for fetch options. Construct with `new` and chain setters;
 /// pass to `fetch_extra.send` (or its variants) via the `with` label.
@@ -46,6 +39,68 @@ pub type FetchOptions {
     referrer_policy: Option(ReferrerPolicy),
     signal: Option(AbortSignal),
   )
+}
+
+/// The cache mode for a `Request`, controlling how it interacts with the
+/// browser's HTTP cache.
+///
+pub type RequestCache {
+  Default
+  ForceCache
+  NoCache
+  NoStore
+  OnlyIfCached
+  Reload
+}
+
+/// Whether a `Request` includes credentials (cookies, HTTP auth) for
+/// cross-origin requests.
+///
+pub type RequestCredentials {
+  Include
+  Omit
+  CredentialsSameOrigin
+}
+
+/// The CORS mode for a `Request`, controlling how cross-origin requests
+/// are handled.
+///
+pub type RequestMode {
+  Cors
+  Navigate
+  NoCors
+  ModeSameOrigin
+}
+
+/// The priority hint for a `Request`, indicating relative importance
+/// compared to other requests.
+///
+pub type RequestPriority {
+  High
+  Low
+  Auto
+}
+
+/// How a `Request` handles redirect responses.
+///
+pub type RequestRedirect {
+  Error
+  Follow
+  Manual
+}
+
+/// The referrer policy for a `Request`, controlling what URL is sent in
+/// the `Referer` header.
+///
+pub type ReferrerPolicy {
+  NoReferrer
+  NoReferrerWhenDowngrade
+  Origin
+  OriginWhenCrossOrigin
+  ReferrerSameOrigin
+  StrictOrigin
+  StrictOriginWhenCrossOrigin
+  UnsafeUrl
 }
 
 /// A `FetchOptions` with no fields set. Pass directly to `fetch_extra.send`

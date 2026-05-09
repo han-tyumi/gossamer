@@ -3,6 +3,7 @@ import gossamer/abort_signal
 import gossamer/blob
 import gossamer/buffer/array_buffer
 import gossamer/buffer/uint8_array
+import gossamer/fetch_options
 import gossamer/form_data
 import gossamer/headers
 import gossamer/http_method
@@ -11,14 +12,8 @@ import gossamer/iterator
 import gossamer/promise
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
-import gossamer/referrer_policy
 import gossamer/request
-import gossamer/request_cache
-import gossamer/request_credentials
 import gossamer/request_destination
-import gossamer/request_mode
-import gossamer/request_priority
-import gossamer/request_redirect
 import gossamer/response
 import gossamer/response_type
 import gossamer/url
@@ -373,14 +368,14 @@ pub fn headers_get_set_cookie_test() {
 
 pub fn request_cache_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.cache(req) |> should.equal(request_cache.Default)
+  request.cache(req) |> should.equal(fetch_options.Default)
 }
 
 pub fn request_credentials_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
   let expected = case runtime.current() {
-    runtime.Bun -> request_credentials.Include
-    runtime.Deno | runtime.Node -> request_credentials.SameOrigin
+    runtime.Bun -> fetch_options.Include
+    runtime.Deno | runtime.Node -> fetch_options.CredentialsSameOrigin
   }
   request.credentials(req) |> should.equal(expected)
 }
@@ -392,7 +387,7 @@ pub fn request_destination_test() {
 
 pub fn request_redirect_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.redirect(req) |> should.equal(request_redirect.Follow)
+  request.redirect(req) |> should.equal(fetch_options.Follow)
 }
 
 pub fn request_signal_test() {
@@ -412,12 +407,12 @@ pub fn request_referrer_test() {
 pub fn request_referrer_policy_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
   request.referrer_policy(req)
-  |> should.equal(referrer_policy.StrictOriginWhenCrossOrigin)
+  |> should.equal(fetch_options.StrictOriginWhenCrossOrigin)
 }
 
 pub fn request_mode_test() {
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.mode(req) |> should.equal(request_mode.Cors)
+  request.mode(req) |> should.equal(fetch_options.Cors)
 }
 
 pub fn request_priority_test() {
@@ -425,20 +420,20 @@ pub fn request_priority_test() {
   // unimplemented, but the FFI surfaces the undefined as `Auto` so the
   // value is the same across runtimes.
   let assert Ok(req) = request.from_url_string("https://example.org")
-  request.priority(req) |> should.equal(request_priority.Auto)
+  request.priority(req) |> should.equal(fetch_options.Auto)
 }
 
 pub fn request_init_priority_test() {
   let assert Ok(req) =
     request.from_url_string_with("https://example.org", [
-      request.Priority(request_priority.High),
+      request.Priority(fetch_options.High),
     ])
 
   // Round-trip the priority: High on Node/Bun, Auto on Deno (Deno
   // doesn't expose the priority getter; the FFI surfaces the missing
   // property as Auto rather than a type-violating Other(Nil)).
   let p = request.priority(req)
-  let ok = p == request_priority.High || p == request_priority.Auto
+  let ok = p == fetch_options.High || p == fetch_options.Auto
   should.be_true(ok)
 }
 
