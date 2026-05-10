@@ -4,83 +4,86 @@ import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 
-/// A `Blob` with a filename and last-modified timestamp. Commonly obtained
-/// from file inputs or drag-and-drop.
+/// A `Blob` with a filename and last-modified timestamp.
 ///
 /// See [File](https://developer.mozilla.org/en-US/docs/Web/API/File) on MDN.
 ///
-@external(javascript, "./file.type.ts", "File$")
-pub type File
-
-pub type Fields {
-  Fields(name: String, last_modified: Int, size: Int, type_: String)
+pub type File {
+  File(blob: Blob, name: String, type_: String, last_modified: Int)
 }
 
-@external(javascript, "./file.ffi.mjs", "to_fields")
-pub fn to_fields(file: File) -> Fields
-
+/// Creates a `File` whose contents are the concatenation of `parts`.
+/// `last_modified` is set to the current time.
+///
 @external(javascript, "./file.ffi.mjs", "from_strings")
 pub fn from_strings(parts: List(String), named name: String) -> File
 
+/// Creates a `File` wrapping `blob`. The file's `type_` is taken from
+/// `blob.type_`; `last_modified` is set to the current time.
+///
 @external(javascript, "./file.ffi.mjs", "from_blob")
 pub fn from_blob(blob: Blob, named name: String) -> File
 
-/// Sets the MIME type. Returns a new `File` with the given type; the
-/// original is unchanged.
+/// Sets the MIME type. Returns a new `File` with the given type.
 ///
-@external(javascript, "./file.ffi.mjs", "set_type")
-pub fn set_type(file: File, value: String) -> File
+pub fn set_type(file: File, value: String) -> File {
+  File(..file, type_: value)
+}
 
 /// Sets the last-modified timestamp in milliseconds since the Unix
-/// epoch. Returns a new `File` with the given timestamp; the original is
-/// unchanged.
+/// epoch. Returns a new `File` with the given timestamp.
 ///
-@external(javascript, "./file.ffi.mjs", "set_last_modified")
-pub fn set_last_modified(file: File, value: Int) -> File
+pub fn set_last_modified(file: File, value: Int) -> File {
+  File(..file, last_modified: value)
+}
 
-@external(javascript, "./file.ffi.mjs", "name")
-pub fn name(file: File) -> String
-
-@external(javascript, "./file.ffi.mjs", "last_modified")
-pub fn last_modified(file: File) -> Int
-
-@external(javascript, "./file.ffi.mjs", "to_blob")
-pub fn to_blob(file: File) -> Blob
-
-@external(javascript, "./file.ffi.mjs", "size")
-pub fn size(file: File) -> Int
-
-@external(javascript, "./file.ffi.mjs", "type_")
-pub fn type_(file: File) -> String
+/// The size of the file's contents in bytes.
+///
+pub fn size(file: File) -> Int {
+  blob.size(file.blob)
+}
 
 /// Reads the file's contents as an `ArrayBuffer`. Returns an error if
 /// the file cannot be read.
 ///
-@external(javascript, "./file.ffi.mjs", "array_buffer")
-pub fn array_buffer(file: File) -> Promise(Result(ArrayBuffer, JsError))
+pub fn array_buffer(file: File) -> Promise(Result(ArrayBuffer, JsError)) {
+  blob.array_buffer(file.blob)
+}
 
 /// Reads the file's contents as a `BitArray`. Returns an error if the
 /// file cannot be read.
 ///
-@external(javascript, "./file.ffi.mjs", "bytes")
-pub fn bytes(file: File) -> Promise(Result(BitArray, JsError))
+pub fn bytes(file: File) -> Promise(Result(BitArray, JsError)) {
+  blob.bytes(file.blob)
+}
 
-@external(javascript, "./file.ffi.mjs", "slice")
-pub fn slice(file: File, from start: Int, to end: Int) -> Blob
+/// Returns a `Blob` containing the bytes between `start` (inclusive)
+/// and `end` (exclusive). Negative offsets count from the end.
+///
+pub fn slice(file: File, from start: Int, to end: Int) -> Blob {
+  blob.slice(file.blob, from: start, to: end)
+}
 
-@external(javascript, "./file.ffi.mjs", "slice_with_type")
+/// Like `slice`, but the returned `Blob` carries the given MIME type.
+///
 pub fn slice_with_type(
   file: File,
   from start: Int,
   to end: Int,
   content_type content_type: String,
-) -> Blob
+) -> Blob {
+  blob.slice_with_type(file.blob, from: start, to: end, content_type:)
+}
 
-@external(javascript, "./file.ffi.mjs", "stream")
-pub fn stream(file: File) -> ReadableStream(BitArray)
+/// Returns a `ReadableStream` that produces the file's bytes.
+///
+pub fn stream(file: File) -> ReadableStream(BitArray) {
+  blob.stream(file.blob)
+}
 
 /// Reads the file's contents as a UTF-8 string. Returns an error if the
 /// file cannot be read.
 ///
-@external(javascript, "./file.ffi.mjs", "text")
-pub fn text(file: File) -> Promise(Result(String, JsError))
+pub fn text(file: File) -> Promise(Result(String, JsError)) {
+  blob.text(file.blob)
+}

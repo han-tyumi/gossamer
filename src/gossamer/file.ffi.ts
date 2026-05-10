@@ -1,90 +1,21 @@
 import * as $file from "$/gossamer/gossamer/file.mjs";
-import {
-  toBitArrayBytesResult,
-  toBitArrayStream,
-} from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
-
-export const to_fields: typeof $file.to_fields = (file) => {
-  return $file.Fields$Fields(
-    file.name,
-    file.lastModified,
-    file.size,
-    file.type,
-  );
-};
 
 export const from_strings: typeof $file.from_strings = (parts, name) => {
-  return new File(toArray(parts), name);
+  return $file.File$File(new Blob(toArray(parts)), name, "", Date.now());
 };
 
 export const from_blob: typeof $file.from_blob = (blob, name) => {
-  return new File([blob], name);
+  return $file.File$File(blob, name, blob.type, Date.now());
 };
 
-export const set_type: typeof $file.set_type = (file, value) => {
-  return new File([file], file.name, {
-    type: value,
-    lastModified: file.lastModified,
-  });
-};
-
-export const set_last_modified: typeof $file.set_last_modified = (
-  file,
-  value,
-) => {
-  return new File([file], file.name, {
-    type: file.type,
-    lastModified: value,
-  });
-};
-
-export const name: typeof $file.name = (file) => {
-  return file.name;
-};
-
-export const last_modified: typeof $file.last_modified = (file) => {
-  return file.lastModified;
-};
-
-export const to_blob: typeof $file.to_blob = (file) => {
-  return file;
-};
-
-export const size: typeof $file.size = (file) => {
-  return file.size;
-};
-
-export const type_: typeof $file.type_ = (file) => {
-  return file.type;
-};
-
-export const array_buffer: typeof $file.array_buffer = (file) => {
-  return toResult.fromPromise(file.arrayBuffer());
-};
-
-export const bytes: typeof $file.bytes = (file) => {
-  return toBitArrayBytesResult(() => file.bytes());
-};
-
-export const slice: typeof $file.slice = (file, start, end) => {
-  return file.slice(start, end);
-};
-
-export const slice_with_type: typeof $file.slice_with_type = (
-  file,
-  start,
-  end,
-  contentType,
-) => {
-  return file.slice(start, end, contentType);
-};
-
-export const stream: typeof $file.stream = (file) => {
-  return toBitArrayStream(file.stream());
-};
-
-export const text: typeof $file.text = (file) => {
-  return toResult.fromPromise(file.text());
-};
+export function toJsFile(file: $file.File$): File {
+  return new File(
+    [$file.File$File$blob(file)],
+    $file.File$File$name(file),
+    {
+      type: $file.File$File$type_(file),
+      lastModified: $file.File$File$last_modified(file),
+    },
+  );
+}

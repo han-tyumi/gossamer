@@ -8,9 +8,9 @@ import gossamer/file
 
 pub fn file_from_strings_test() {
   let f = file.from_strings(["hello", " ", "world"], "test.txt")
-  should.equal(file.name(f), "test.txt")
+  should.equal(f.name, "test.txt")
 
-  let b = file.to_blob(f)
+  let b = f.blob
   use text <- promise.await(blob.text(b))
   should.equal(text, Ok("hello world"))
   promise.resolve(Nil)
@@ -19,9 +19,9 @@ pub fn file_from_strings_test() {
 pub fn file_from_blob_test() {
   let b = blob.from_string("blob content")
   let f = file.from_blob(b, "from_blob.txt")
-  should.equal(file.name(f), "from_blob.txt")
+  should.equal(f.name, "from_blob.txt")
 
-  let converted = file.to_blob(f)
+  let converted = f.blob
   use text <- promise.await(blob.text(converted))
   should.equal(text, Ok("blob content"))
   promise.resolve(Nil)
@@ -29,27 +29,27 @@ pub fn file_from_blob_test() {
 
 pub fn file_last_modified_test() {
   let f = file.from_strings(["data"], "modified.txt")
-  should.be_true(file.last_modified(f) > 0)
+  should.be_true(f.last_modified > 0)
 }
 
 pub fn file_set_type_from_strings_test() {
   let f =
     file.from_strings(["hello"], "typed.txt") |> file.set_type("text/plain")
-  file.name(f) |> should.equal("typed.txt")
-  should.be_true(string.starts_with(file.type_(f), "text/plain"))
+  f.name |> should.equal("typed.txt")
+  should.be_true(string.starts_with(f.type_, "text/plain"))
 }
 
 pub fn file_set_type_from_blob_test() {
   let b = blob.from_string("blob data")
   let f = file.from_blob(b, "blob.txt") |> file.set_type("text/plain")
-  file.name(f) |> should.equal("blob.txt")
-  should.be_true(string.starts_with(file.type_(f), "text/plain"))
+  f.name |> should.equal("blob.txt")
+  should.be_true(string.starts_with(f.type_, "text/plain"))
 }
 
 pub fn file_set_last_modified_test() {
   let f =
     file.from_strings(["data"], "modified.txt") |> file.set_last_modified(0)
-  file.last_modified(f) |> should.equal(0)
+  f.last_modified |> should.equal(0)
 }
 
 pub fn file_size_test() {
@@ -59,7 +59,7 @@ pub fn file_size_test() {
 
 pub fn file_type_test() {
   let f = file.from_strings(["data"], "no-type.txt")
-  file.type_(f) |> should.equal("")
+  f.type_ |> should.equal("")
 }
 
 pub fn file_array_buffer_test() {
