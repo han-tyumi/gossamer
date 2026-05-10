@@ -38,50 +38,35 @@ pub type ReadyState {
 @external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket
 
-/// Creates a new `WebSocket` connection to the URL given as a string.
-/// Returns an error if `url` is not a valid `ws:` or `wss:` URL.
-///
-/// ## Examples
-///
-/// ```gleam
-/// let assert Ok(ws) = web_socket.from_url_string("ws://localhost:8080")
-/// ```
-///
-@external(javascript, "./web_socket.ffi.mjs", "from_url_string")
-pub fn from_url_string(url: String) -> Result(WebSocket, JsError)
-
-/// Creates a new `WebSocket` connection to the URL given as a string, with
-/// the specified sub-protocols. Returns an error if `url` is not a valid
+/// Creates a new `WebSocket` connection to the URL given as a string,
+/// optionally negotiating one of the given sub-protocols. Pass `[]` to
+/// skip protocol negotiation. Returns an error if `url` is not a valid
 /// `ws:` or `wss:` URL, or if `protocols` contains duplicates or invalid
 /// entries.
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(ws) = web_socket.from_url_string_with_protocols("ws://localhost:8080", ["json"])
+/// let assert Ok(ws) = web_socket.from_url_string("ws://localhost:8080", [])
 /// ```
 ///
-@external(javascript, "./web_socket.ffi.mjs", "from_url_string_with_protocols")
-pub fn from_url_string_with_protocols(
+/// ```gleam
+/// let assert Ok(ws) = web_socket.from_url_string("ws://localhost:8080", ["json"])
+/// ```
+///
+@external(javascript, "./web_socket.ffi.mjs", "from_url_string")
+pub fn from_url_string(
   url: String,
-  with protocols: List(String),
+  protocols: List(String),
 ) -> Result(WebSocket, JsError)
 
-/// Creates a new `WebSocket` connection to `uri`. Returns an error if
-/// `uri`'s scheme is not `ws:` or `wss:`.
-///
-@external(javascript, "./web_socket.ffi.mjs", "from_uri")
-pub fn from_uri(uri: Uri) -> Result(WebSocket, JsError)
-
-/// Creates a new `WebSocket` connection to `uri` with the specified
-/// sub-protocols. Returns an error if `uri`'s scheme is not `ws:` or
+/// Creates a new `WebSocket` connection to `uri`, optionally negotiating
+/// one of the given sub-protocols. Pass `[]` to skip protocol
+/// negotiation. Returns an error if `uri`'s scheme is not `ws:` or
 /// `wss:`, or if `protocols` contains duplicates or invalid entries.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "from_uri_with_protocols")
-pub fn from_uri_with_protocols(
-  uri: Uri,
-  with protocols: List(String),
-) -> Result(WebSocket, JsError)
+@external(javascript, "./web_socket.ffi.mjs", "from_uri")
+pub fn from_uri(uri: Uri, protocols: List(String)) -> Result(WebSocket, JsError)
 
 @external(javascript, "./web_socket.ffi.mjs", "binary_type")
 pub fn binary_type(socket: WebSocket) -> BinaryType

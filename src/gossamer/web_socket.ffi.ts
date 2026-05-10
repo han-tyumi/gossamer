@@ -46,25 +46,18 @@ function toReadyState(value: number): $webSocket.ReadyState$ {
   }
 }
 
-export const from_url_string: typeof $webSocket.from_url_string = (url) => {
-  return toResult.fromThrows(() => new WebSocket(url));
+export const from_url_string: typeof $webSocket.from_url_string = (
+  url,
+  protocols,
+) => {
+  return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
 };
 
-export const from_url_string_with_protocols:
-  typeof $webSocket.from_url_string_with_protocols = (url, protocols) => {
-    return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
-  };
-
-export const from_uri: typeof $webSocket.from_uri = (uri) => {
-  return toResult.fromThrows(() => new WebSocket(uriToString(uri)));
+export const from_uri: typeof $webSocket.from_uri = (uri, protocols) => {
+  return toResult.fromThrows(
+    () => new WebSocket(uriToString(uri), toArray(protocols)),
+  );
 };
-
-export const from_uri_with_protocols:
-  typeof $webSocket.from_uri_with_protocols = (uri, protocols) => {
-    return toResult.fromThrows(
-      () => new WebSocket(uriToString(uri), toArray(protocols)),
-    );
-  };
 
 export const binary_type: typeof $webSocket.binary_type = (socket) => {
   return toBinaryType(socket.binaryType);
