@@ -1,7 +1,7 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
-import { to_string as uriToString } from "$/gleam_stdlib/gleam/uri.mjs";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { mapIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
@@ -46,28 +46,55 @@ function toReadyState(value: number): $webSocket.ReadyState$ {
   }
 }
 
-export const from_url_string: typeof $webSocket.from_url_string = (
-  url,
-  protocols,
-) => {
-  return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
-};
+export const build: typeof $webSocket.build = (builder) => {
+  return toResult.fromThrows(() => {
+    const url = $webSocket.Builder$Builder$url(builder);
+    const protocols = toArray(
+      $webSocket.Builder$Builder$protocols(builder),
+    );
+    const ws = new WebSocket(url, protocols);
 
-export const from_uri: typeof $webSocket.from_uri = (uri, protocols) => {
-  return toResult.fromThrows(
-    () => new WebSocket(uriToString(uri), toArray(protocols)),
-  );
+    mapIfSome(
+      ws,
+      "binaryType",
+      $webSocket.Builder$Builder$binary_type(builder),
+      fromBinaryType,
+    );
+
+    mapIfSome(
+      ws,
+      "onopen",
+      $webSocket.Builder$Builder$on_open(builder),
+      (handler) => () => handler(),
+    );
+
+    mapIfSome(
+      ws,
+      "onmessage",
+      $webSocket.Builder$Builder$on_message(builder),
+      (handler) => (event) => handler(event),
+    );
+
+    mapIfSome(
+      ws,
+      "onerror",
+      $webSocket.Builder$Builder$on_error(builder),
+      (handler) => () => handler(),
+    );
+
+    mapIfSome(
+      ws,
+      "onclose",
+      $webSocket.Builder$Builder$on_close(builder),
+      (handler) => (event) => handler(toCloseEvent(event)),
+    );
+
+    return ws;
+  });
 };
 
 export const binary_type: typeof $webSocket.binary_type = (socket) => {
   return toBinaryType(socket.binaryType);
-};
-
-export const set_binary_type: typeof $webSocket.set_binary_type = (
-  socket,
-  value,
-) => {
-  socket.binaryType = fromBinaryType(value);
 };
 
 export const buffered_amount: typeof $webSocket.buffered_amount = (socket) => {
@@ -120,20 +147,4 @@ export const send_string: typeof $webSocket.send_string = (socket, data) => {
   return toResult.fromThrows(() => {
     socket.send(data);
   });
-};
-
-export const on_open: typeof $webSocket.on_open = (socket, handler) => {
-  socket.onopen = () => handler();
-};
-
-export const on_message: typeof $webSocket.on_message = (socket, handler) => {
-  socket.onmessage = (event) => handler(event);
-};
-
-export const on_error: typeof $webSocket.on_error = (socket, handler) => {
-  socket.onerror = () => handler();
-};
-
-export const on_close: typeof $webSocket.on_close = (socket, handler) => {
-  socket.onclose = (event) => handler(toCloseEvent(event));
 };

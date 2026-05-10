@@ -1,13 +1,16 @@
+import gleam/option.{type Option, None, Some}
 import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}
 import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
 
-// TODO: Happy-path coverage for `send_*` and `on_*` requires a live
-// WebSocket server, which can't be created cross-runtime from pure
+// TODO: Happy-path coverage for `send_*` and listener delivery requires a
+// live WebSocket server, which can't be created cross-runtime from pure
 // Gleam. Tests currently cover the constructors, `ready_state`, `close`,
 // `close_with`, and the `send_*` error path on a Connecting socket.
 
+/// The data carried by a WebSocket close event.
+///
 pub type CloseEvent {
   CloseEvent(code: Int, reason: String, was_clean: Bool)
 }
@@ -38,62 +41,153 @@ pub type ReadyState {
 @external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket
 
-/// Creates a new `WebSocket` connection to the URL given as a string,
-/// optionally negotiating one of the given sub-protocols. Pass `[]` to
-/// skip protocol negotiation. Returns an error if `url` is not a valid
-/// `ws:` or `wss:` URL, or if `protocols` contains duplicates or invalid
-/// entries.
+/// The configuration for a `WebSocket`. Construct with `from_url_string`
+/// or `from_uri`, refine with `with_protocols` / `with_binary_type` and
+/// listener setters (`on_open`, `on_message`, `on_error`, `on_close`),
+/// then call `build` to open the connection.
 ///
-/// ## Examples
-///
-/// ```gleam
-/// let assert Ok(ws) = web_socket.from_url_string("ws://localhost:8080", [])
-/// ```
-///
-/// ```gleam
-/// let assert Ok(ws) = web_socket.from_url_string("ws://localhost:8080", ["json"])
-/// ```
-///
-@external(javascript, "./web_socket.ffi.mjs", "from_url_string")
-pub fn from_url_string(
-  url: String,
-  protocols: List(String),
-) -> Result(WebSocket, JsError)
+pub type Builder {
+  Builder(
+    url: String,
+    protocols: List(String),
+    binary_type: Option(BinaryType),
+    on_open: Option(fn() -> Nil),
+    on_message: Option(fn(MessageEvent) -> Nil),
+    on_error: Option(fn() -> Nil),
+    on_close: Option(fn(CloseEvent) -> Nil),
+  )
+}
 
-/// Creates a new `WebSocket` connection to `uri`, optionally negotiating
-/// one of the given sub-protocols. Pass `[]` to skip protocol
-/// negotiation. Returns an error if `uri`'s scheme is not `ws:` or
-/// `wss:`, or if `protocols` contains duplicates or invalid entries.
+/// Creates a `Builder` for a WebSocket connection to the URL given as a
+/// string. Protocols default to `[]` (no negotiation), and the binary
+/// type and listeners are unset.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "from_uri")
-pub fn from_uri(uri: Uri, protocols: List(String)) -> Result(WebSocket, JsError)
+pub fn from_url_string(url: String) -> Builder {
+  Builder(
+    url:,
+    protocols: [],
+    binary_type: None,
+    on_open: None,
+    on_message: None,
+    on_error: None,
+    on_close: None,
+  )
+}
 
+/// Creates a `Builder` for a WebSocket connection to `uri`. Protocols
+/// default to `[]` (no negotiation), and the binary type and listeners
+/// are unset.
+///
+pub fn from_uri(uri: Uri) -> Builder {
+  from_url_string(uri.to_string(uri))
+}
+
+/// Sets the sub-protocols offered during the WebSocket handshake. Pass
+/// `[]` to skip protocol negotiation.
+///
+pub fn with_protocols(builder: Builder, value: List(String)) -> Builder {
+  Builder(..builder, protocols: value)
+}
+
+/// Sets the format binary messages arrive as on the socket. Defaults to
+/// the runtime's default (`Blob` in browsers, `ArrayBuffer` elsewhere).
+///
+pub fn with_binary_type(builder: Builder, value: BinaryType) -> Builder {
+  Builder(..builder, binary_type: Some(value))
+}
+
+/// Registers a handler invoked when the connection opens.
+///
+pub fn on_open(builder: Builder, run handler: fn() -> a) -> Builder {
+  Builder(
+    ..builder,
+    on_open: Some(fn() {
+      handler()
+      Nil
+    }),
+  )
+}
+
+/// Registers a handler invoked for each incoming message.
+///
+pub fn on_message(
+  builder: Builder,
+  run handler: fn(MessageEvent) -> a,
+) -> Builder {
+  Builder(
+    ..builder,
+    on_message: Some(fn(event) {
+      handler(event)
+      Nil
+    }),
+  )
+}
+
+/// Registers a handler invoked when the connection encounters an error.
+///
+pub fn on_error(builder: Builder, run handler: fn() -> a) -> Builder {
+  Builder(
+    ..builder,
+    on_error: Some(fn() {
+      handler()
+      Nil
+    }),
+  )
+}
+
+/// Registers a handler invoked when the connection closes.
+///
+pub fn on_close(builder: Builder, run handler: fn(CloseEvent) -> a) -> Builder {
+  Builder(
+    ..builder,
+    on_close: Some(fn(event) {
+      handler(event)
+      Nil
+    }),
+  )
+}
+
+/// Opens the WebSocket connection from the configured `Builder`.
+/// Returns an error if the URL is not a valid `ws:` or `wss:` URL, or if
+/// `protocols` contains duplicates or invalid entries.
+///
+@external(javascript, "./web_socket.ffi.mjs", "build")
+pub fn build(builder: Builder) -> Result(WebSocket, JsError)
+
+/// The format binary messages arrive as on this socket.
+///
 @external(javascript, "./web_socket.ffi.mjs", "binary_type")
 pub fn binary_type(socket: WebSocket) -> BinaryType
 
-@external(javascript, "./web_socket.ffi.mjs", "set_binary_type")
-pub fn set_binary_type(socket: WebSocket, value: BinaryType) -> Nil
-
-/// Returns the number of bytes of application data (UTF-8 text and binary
-/// data) that have been queued using `send` but not yet been transmitted to
+/// The number of bytes of application data (UTF-8 text and binary data)
+/// that have been queued using `send_*` but not yet been transmitted to
 /// the network.
 ///
 /// If the WebSocket connection is closed, this attribute's value will only
-/// increase with each call to the `send` method. (The number does not reset
+/// increase with each call to a `send_*` method. (The number does not reset
 /// to zero once the connection closes.)
 ///
 @external(javascript, "./web_socket.ffi.mjs", "buffered_amount")
 pub fn buffered_amount(socket: WebSocket) -> Int
 
+/// The extensions selected by the server, if any.
+///
 @external(javascript, "./web_socket.ffi.mjs", "extensions")
 pub fn extensions(socket: WebSocket) -> String
 
+/// The sub-protocol selected by the server during the handshake, or `""`
+/// if none was negotiated.
+///
 @external(javascript, "./web_socket.ffi.mjs", "protocol")
 pub fn protocol(socket: WebSocket) -> String
 
+/// The current state of the connection.
+///
 @external(javascript, "./web_socket.ffi.mjs", "ready_state")
 pub fn ready_state(socket: WebSocket) -> ReadyState
 
+/// The URL the socket is connected to.
+///
 @external(javascript, "./web_socket.ffi.mjs", "url")
 pub fn url(socket: WebSocket) -> String
 
@@ -140,15 +234,3 @@ pub fn send_string(
   to socket: WebSocket,
   data data: String,
 ) -> Result(Nil, JsError)
-
-@external(javascript, "./web_socket.ffi.mjs", "on_open")
-pub fn on_open(socket: WebSocket, run handler: fn() -> a) -> Nil
-
-@external(javascript, "./web_socket.ffi.mjs", "on_message")
-pub fn on_message(socket: WebSocket, run handler: fn(MessageEvent) -> a) -> Nil
-
-@external(javascript, "./web_socket.ffi.mjs", "on_error")
-pub fn on_error(socket: WebSocket, run handler: fn() -> a) -> Nil
-
-@external(javascript, "./web_socket.ffi.mjs", "on_close")
-pub fn on_close(socket: WebSocket, run handler: fn(CloseEvent) -> a) -> Nil
