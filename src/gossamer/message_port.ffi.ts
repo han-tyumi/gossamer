@@ -17,12 +17,12 @@ export const close: typeof $messagePort.close = (port) => {
 };
 
 export const on_message: typeof $messagePort.on_message = (port, handler) => {
-  port.onmessage = (event) => handler(event);
+  port.onmessage = (event) => handler(event.data);
 };
 
 export const on_message_error: typeof $messagePort.on_message_error = (
   port,
   handler,
 ) => {
-  port.onmessageerror = (event) => handler(event);
+  port.onmessageerror = () => handler();
 };
