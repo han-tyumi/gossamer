@@ -63,18 +63,6 @@ pub type NamedCurve {
   NamedCurveOther(String)
 }
 
-pub type Fields {
-  Fields(
-    algorithm: KeyAlgorithm,
-    is_extractable: Bool,
-    type_: KeyType,
-    usages: List(KeyUsage),
-  )
-}
-
-@external(javascript, "./crypto_key.ffi.mjs", "to_fields")
-pub fn to_fields(key: CryptoKey) -> Fields
-
 pub type KeyAlgorithm {
   Aes(name: AesAlgorithm, length: Int)
   Ec(name: EcAlgorithm, named_curve: NamedCurve)

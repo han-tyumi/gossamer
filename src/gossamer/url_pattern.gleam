@@ -50,29 +50,6 @@ pub type URLPatternResult {
   )
 }
 
-/// The component patterns of a `URLPattern` as plain strings, plus a
-/// flag indicating whether any component uses regular-expression
-/// groups.
-///
-pub type Fields {
-  Fields(
-    protocol: String,
-    username: String,
-    password: String,
-    hostname: String,
-    port: String,
-    pathname: String,
-    search: String,
-    hash: String,
-    has_reg_exp_groups: Bool,
-  )
-}
-
-/// Returns the pattern's component strings as a `Fields` record.
-///
-@external(javascript, "./url_pattern.ffi.mjs", "to_fields")
-pub fn to_fields(pattern: URLPattern) -> Fields
-
 /// Creates an empty `Builder`. Every component is unset, meaning a
 /// pattern built from this matches any URL.
 ///

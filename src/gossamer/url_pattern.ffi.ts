@@ -45,20 +45,6 @@ function toURLPatternResult(
   );
 }
 
-export const to_fields: typeof $urlPattern.to_fields = (pattern) => {
-  return $urlPattern.Fields$Fields(
-    pattern.protocol,
-    pattern.username,
-    pattern.password,
-    pattern.hostname,
-    pattern.port,
-    pattern.pathname,
-    pattern.search,
-    pattern.hash,
-    pattern.hasRegExpGroups,
-  );
-};
-
 export const build: typeof $urlPattern.build = (builder) => {
   return toResult.fromThrows(() => new URLPattern(fromBuilder(builder)));
 };
