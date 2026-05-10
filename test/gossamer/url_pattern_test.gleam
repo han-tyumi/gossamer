@@ -145,14 +145,14 @@ pub fn has_reg_exp_groups_test() {
   url_pattern.has_reg_exp_groups(simple_pattern) |> should.be_false
 }
 
-pub fn url_pattern_result_fields_test() {
+pub fn match_fields_test() {
   let assert Ok(pattern) =
     url_pattern.new()
     |> url_pattern.with_pathname("/users/:id")
     |> url_pattern.build
   let assert Ok(result) =
     url_pattern.exec(pattern, "https://example.com/users/99")
-  let url_pattern.URLPatternResult(
+  let url_pattern.Match(
     protocol:,
     username:,
     password:,

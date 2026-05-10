@@ -1,1 +1,1 @@
-export type URLPattern$ = URLPattern;
+export type UrlPattern$ = URLPattern;

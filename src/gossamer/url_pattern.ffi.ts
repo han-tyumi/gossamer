@@ -20,20 +20,18 @@ function fromBuilder(builder: $urlPattern.Builder$): URLPatternInit {
 
 function toComponentResult(
   component: URLPatternComponentResult,
-): $urlPattern.URLPatternComponentResult$ {
+): $urlPattern.ComponentMatch$ {
   const entries = Object.entries(component.groups).filter(
     (entry): entry is [string, string] => typeof entry[1] === "string",
   );
-  return $urlPattern.URLPatternComponentResult$URLPatternComponentResult(
+  return $urlPattern.ComponentMatch$ComponentMatch(
     component.input,
     $dict.from_list(fromArray(entries)),
   );
 }
 
-function toURLPatternResult(
-  result: URLPatternResult,
-): $urlPattern.URLPatternResult$ {
-  return $urlPattern.URLPatternResult$URLPatternResult(
+function toMatch(result: URLPatternResult): $urlPattern.Match$ {
+  return $urlPattern.Match$Match(
     toComponentResult(result.protocol),
     toComponentResult(result.username),
     toComponentResult(result.password),
@@ -74,9 +72,7 @@ export const test_with_base: typeof $urlPattern.test_with_base = (
 
 export const exec: typeof $urlPattern.exec = (pattern, input) => {
   const result = pattern.exec(input);
-  return result === null
-    ? toResult(null)
-    : toResult(toURLPatternResult(result));
+  return result === null ? toResult(null) : toResult(toMatch(result));
 };
 
 export const exec_with_base: typeof $urlPattern.exec_with_base = (
@@ -85,9 +81,7 @@ export const exec_with_base: typeof $urlPattern.exec_with_base = (
   baseURL,
 ) => {
   const result = pattern.exec(input, baseURL);
-  return result === null
-    ? toResult(null)
-    : toResult(toURLPatternResult(result));
+  return result === null ? toResult(null) : toResult(toMatch(result));
 };
 
 export const protocol: typeof $urlPattern.protocol = (pattern) => {

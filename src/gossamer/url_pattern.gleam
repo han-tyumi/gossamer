@@ -7,10 +7,10 @@ import gossamer/js_error.{type JsError}
 ///
 /// See [URLPattern](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern) on MDN.
 ///
-@external(javascript, "./url_pattern.type.ts", "URLPattern$")
-pub type URLPattern
+@external(javascript, "./url_pattern.type.ts", "UrlPattern$")
+pub type UrlPattern
 
-/// The per-component configuration for a `URLPattern`. Construct with
+/// The per-component configuration for a `UrlPattern`. Construct with
 /// `new`, refine with the `with_X` setters, then call `build`. Unset
 /// components match any value.
 ///
@@ -31,22 +31,22 @@ pub type Builder {
 /// One captured URL component from a successful match: the input string
 /// that matched, and any named groups extracted from it.
 ///
-pub type URLPatternComponentResult {
-  URLPatternComponentResult(input: String, groups: Dict(String, String))
+pub type ComponentMatch {
+  ComponentMatch(input: String, groups: Dict(String, String))
 }
 
 /// The captured components from a successful URL match.
 ///
-pub type URLPatternResult {
-  URLPatternResult(
-    protocol: URLPatternComponentResult,
-    username: URLPatternComponentResult,
-    password: URLPatternComponentResult,
-    hostname: URLPatternComponentResult,
-    port: URLPatternComponentResult,
-    pathname: URLPatternComponentResult,
-    search: URLPatternComponentResult,
-    hash: URLPatternComponentResult,
+pub type Match {
+  Match(
+    protocol: ComponentMatch,
+    username: ComponentMatch,
+    password: ComponentMatch,
+    hostname: ComponentMatch,
+    port: ComponentMatch,
+    pathname: ComponentMatch,
+    search: ComponentMatch,
+    hash: ComponentMatch,
   )
 }
 
@@ -121,19 +121,19 @@ pub fn with_base_url(builder: Builder, value: String) -> Builder {
   Builder(..builder, base_url: Some(value))
 }
 
-/// Constructs a `URLPattern` from the configured `Builder`. Returns an
+/// Constructs a `UrlPattern` from the configured `Builder`. Returns an
 /// error if any component pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(URLPattern, JsError)
+pub fn build(builder: Builder) -> Result(UrlPattern, JsError)
 
-/// Creates a `URLPattern` from a single pattern string. Returns an error
+/// Creates a `UrlPattern` from a single pattern string. Returns an error
 /// if the pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string")
-pub fn from_string(pattern: String) -> Result(URLPattern, JsError)
+pub fn from_string(pattern: String) -> Result(UrlPattern, JsError)
 
-/// Creates a `URLPattern` from a pattern string resolved against a base
+/// Creates a `UrlPattern` from a pattern string resolved against a base
 /// URL. Returns an error if the pattern is malformed or the base URL is
 /// invalid.
 ///
@@ -141,12 +141,12 @@ pub fn from_string(pattern: String) -> Result(URLPattern, JsError)
 pub fn from_string_with_base(
   pattern: String,
   relative_to base_url: String,
-) -> Result(URLPattern, JsError)
+) -> Result(UrlPattern, JsError)
 
 /// Returns `True` if the pattern matches `input`.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "test_")
-pub fn test_(pattern: URLPattern, against input: String) -> Bool
+pub fn test_(pattern: UrlPattern, against input: String) -> Bool
 
 /// Like `test`, but resolves `input` against `base_url` before matching.
 /// Returns `False` if `base_url` is not a valid URL (the match algorithm
@@ -154,7 +154,7 @@ pub fn test_(pattern: URLPattern, against input: String) -> Bool
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "test_with_base")
 pub fn test_with_base(
-  pattern: URLPattern,
+  pattern: UrlPattern,
   against input: String,
   relative_to base_url: String,
 ) -> Bool
@@ -163,10 +163,7 @@ pub fn test_with_base(
 /// components, or `Error(Nil)` if there is no match.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "exec")
-pub fn exec(
-  pattern: URLPattern,
-  against input: String,
-) -> Result(URLPatternResult, Nil)
+pub fn exec(pattern: UrlPattern, against input: String) -> Result(Match, Nil)
 
 /// Like `exec`, but resolves `input` against `base_url` before matching.
 /// Returns `Error(Nil)` if there is no match or `base_url` is not a valid
@@ -174,52 +171,52 @@ pub fn exec(
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "exec_with_base")
 pub fn exec_with_base(
-  pattern: URLPattern,
+  pattern: UrlPattern,
   against input: String,
   relative_to base_url: String,
-) -> Result(URLPatternResult, Nil)
+) -> Result(Match, Nil)
 
 /// The compiled protocol pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "protocol")
-pub fn protocol(pattern: URLPattern) -> String
+pub fn protocol(pattern: UrlPattern) -> String
 
 /// The compiled username pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "username")
-pub fn username(pattern: URLPattern) -> String
+pub fn username(pattern: UrlPattern) -> String
 
 /// The compiled password pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "password")
-pub fn password(pattern: URLPattern) -> String
+pub fn password(pattern: UrlPattern) -> String
 
 /// The compiled hostname pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "hostname")
-pub fn hostname(pattern: URLPattern) -> String
+pub fn hostname(pattern: UrlPattern) -> String
 
 /// The compiled port pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "port")
-pub fn port(pattern: URLPattern) -> String
+pub fn port(pattern: UrlPattern) -> String
 
 /// The compiled pathname pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "pathname")
-pub fn pathname(pattern: URLPattern) -> String
+pub fn pathname(pattern: UrlPattern) -> String
 
 /// The compiled search pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "search")
-pub fn search(pattern: URLPattern) -> String
+pub fn search(pattern: UrlPattern) -> String
 
 /// The compiled hash pattern.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "hash")
-pub fn hash(pattern: URLPattern) -> String
+pub fn hash(pattern: UrlPattern) -> String
 
 /// Whether any component pattern uses regular-expression groups.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "has_reg_exp_groups")
-pub fn has_reg_exp_groups(pattern: URLPattern) -> Bool
+pub fn has_reg_exp_groups(pattern: UrlPattern) -> Bool
