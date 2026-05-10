@@ -9,21 +9,215 @@
 //// - `is_response_ok`, a status-only check that works on any
 ////   `Response(body)` including after a body consumer has swapped the
 ////   body type.
-//// - Send variants that take a `FetchOptions` for the configuration
-////   `gleam/fetch.send` doesn't expose.
+//// - A `FetchOptions` builder for configuration that
+////   `gleam/http/request.Request` doesn't carry (cache mode, credentials
+////   policy, CORS mode, priority, redirect handling, integrity check,
+////   keepalive, abort signal, referrer, referrer policy), with `send`
+////   variants that consume it.
 ////
 //// When you don't need extra configuration, prefer `gleam/fetch.send`
 //// directly.
+////
+//// ## Examples
+////
+//// ```gleam
+//// import gossamer/fetch_extra
+////
+//// let opts =
+////   fetch_extra.options()
+////   |> fetch_extra.set_cache(fetch_extra.NoCache)
+////   |> fetch_extra.set_keepalive(True)
+////
+//// fetch_extra.send(request, with: opts)
+//// ```
 
 import gleam/fetch.{type FetchBody, type FetchError}
 import gleam/fetch/form_data.{type FormData}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
-import gossamer/fetch_options.{type FetchOptions}
+import gleam/option.{type Option, None, Some}
+import gossamer/abort_signal.{type AbortSignal}
 import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
+
+/// A builder for fetch options. Construct with `options` and chain
+/// setters; pass to `send` (or its variants) via the `with` label.
+///
+/// Every field is unset by default; unset fields use the runtime's
+/// default. Setting a field forces that value.
+///
+pub type FetchOptions {
+  FetchOptions(
+    cache: Option(RequestCache),
+    credentials: Option(RequestCredentials),
+    integrity: Option(String),
+    keepalive: Option(Bool),
+    mode: Option(RequestMode),
+    priority: Option(RequestPriority),
+    redirect: Option(RequestRedirect),
+    referrer: Option(String),
+    referrer_policy: Option(ReferrerPolicy),
+    signal: Option(AbortSignal),
+  )
+}
+
+/// The cache mode for a `Request`, controlling how it interacts with the
+/// HTTP cache.
+///
+pub type RequestCache {
+  Default
+  ForceCache
+  NoCache
+  NoStore
+  OnlyIfCached
+  Reload
+}
+
+/// Whether a `Request` includes credentials (cookies, HTTP auth) for
+/// cross-origin requests.
+///
+pub type RequestCredentials {
+  Include
+  Omit
+  CredentialsSameOrigin
+}
+
+/// The CORS mode for a `Request`, controlling how cross-origin requests
+/// are handled.
+///
+pub type RequestMode {
+  Cors
+  Navigate
+  NoCors
+  ModeSameOrigin
+}
+
+/// The priority hint for a `Request`, indicating relative importance
+/// compared to other requests.
+///
+pub type RequestPriority {
+  High
+  Low
+  Auto
+}
+
+/// How a `Request` handles redirect responses.
+///
+pub type RequestRedirect {
+  Error
+  Follow
+  Manual
+}
+
+/// The referrer policy for a `Request`, controlling what URL is sent in
+/// the `Referer` header.
+///
+pub type ReferrerPolicy {
+  NoReferrer
+  NoReferrerWhenDowngrade
+  Origin
+  OriginWhenCrossOrigin
+  ReferrerSameOrigin
+  StrictOrigin
+  StrictOriginWhenCrossOrigin
+  UnsafeUrl
+}
+
+/// A `FetchOptions` with no fields set. Pass directly to `send` to use
+/// runtime defaults for every field, or chain setters to override
+/// individual fields.
+///
+pub fn options() -> FetchOptions {
+  FetchOptions(
+    cache: None,
+    credentials: None,
+    integrity: None,
+    keepalive: None,
+    mode: None,
+    priority: None,
+    redirect: None,
+    referrer: None,
+    referrer_policy: None,
+    signal: None,
+  )
+}
+
+/// Sets the cache mode, controlling how the request interacts with the
+/// HTTP cache.
+///
+pub fn set_cache(opts: FetchOptions, value: RequestCache) -> FetchOptions {
+  FetchOptions(..opts, cache: Some(value))
+}
+
+/// Sets the credentials policy, controlling whether cookies and HTTP auth
+/// are sent with cross-origin requests.
+///
+pub fn set_credentials(
+  opts: FetchOptions,
+  value: RequestCredentials,
+) -> FetchOptions {
+  FetchOptions(..opts, credentials: Some(value))
+}
+
+/// Sets a [subresource integrity](https://www.w3.org/TR/SRI/) hash that
+/// the response must match; the fetch fails if the body doesn't hash to
+/// the given value.
+///
+pub fn set_integrity(opts: FetchOptions, value: String) -> FetchOptions {
+  FetchOptions(..opts, integrity: Some(value))
+}
+
+/// Sets the keepalive flag, allowing the request to outlive its
+/// originating context (subject to per-origin size limits).
+///
+pub fn set_keepalive(opts: FetchOptions, value: Bool) -> FetchOptions {
+  FetchOptions(..opts, keepalive: Some(value))
+}
+
+/// Sets the CORS mode, controlling how cross-origin requests are handled.
+///
+pub fn set_mode(opts: FetchOptions, value: RequestMode) -> FetchOptions {
+  FetchOptions(..opts, mode: Some(value))
+}
+
+/// Sets the priority hint, indicating relative importance compared to
+/// other requests.
+///
+pub fn set_priority(opts: FetchOptions, value: RequestPriority) -> FetchOptions {
+  FetchOptions(..opts, priority: Some(value))
+}
+
+/// Sets how the request handles redirects.
+///
+pub fn set_redirect(opts: FetchOptions, value: RequestRedirect) -> FetchOptions {
+  FetchOptions(..opts, redirect: Some(value))
+}
+
+/// Sets the referrer URL. Use `"about:client"` for the default behavior
+/// or `""` to omit the `Referer` header entirely.
+///
+pub fn set_referrer(opts: FetchOptions, value: String) -> FetchOptions {
+  FetchOptions(..opts, referrer: Some(value))
+}
+
+/// Sets the referrer policy, controlling what URL is sent in the
+/// `Referer` header.
+///
+pub fn set_referrer_policy(
+  opts: FetchOptions,
+  value: ReferrerPolicy,
+) -> FetchOptions {
+  FetchOptions(..opts, referrer_policy: Some(value))
+}
+
+/// Sets the abort signal, allowing the request to be cancelled
+/// imperatively or after a timeout.
+///
+pub fn set_signal(opts: FetchOptions, value: AbortSignal) -> FetchOptions {
+  FetchOptions(..opts, signal: Some(value))
+}
 
 /// `True` when the status code is in the 200-299 range. Derived from
 /// status alone, so it works on any `Response(body)` — including after

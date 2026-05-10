@@ -7,7 +7,6 @@ import gleam/javascript/promise.{type Promise}
 import gleeunit/should
 import gossamer/abort_signal
 import gossamer/fetch_extra
-import gossamer/fetch_options
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/response_type
@@ -54,7 +53,7 @@ pub fn send_aborted_signal_yields_network_error_test() {
     |> request.set_path("/")
 
   let signal = abort_signal.abort("pre-aborted")
-  let opts = fetch_options.new() |> fetch_options.set_signal(signal)
+  let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send(req, with: opts))
   let assert Error(fetch.NetworkError(_)) = result
@@ -70,7 +69,7 @@ pub fn send_bits_aborted_signal_yields_network_error_test() {
     |> request.set_body(<<"payload">>)
 
   let signal = abort_signal.abort("pre-aborted")
-  let opts = fetch_options.new() |> fetch_options.set_signal(signal)
+  let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_bits(req, with: opts))
   let assert Error(fetch.NetworkError(_)) = result
@@ -87,7 +86,7 @@ pub fn send_form_data_aborted_signal_yields_network_error_test() {
     |> request.set_body(body)
 
   let signal = abort_signal.abort("pre-aborted")
-  let opts = fetch_options.new() |> fetch_options.set_signal(signal)
+  let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_form_data(req, with: opts))
   let assert Error(fetch.NetworkError(_)) = result
@@ -109,7 +108,7 @@ pub fn send_stream_aborted_signal_yields_network_error_test() {
     |> request.set_body(stream)
 
   let signal = abort_signal.abort("pre-aborted")
-  let opts = fetch_options.new() |> fetch_options.set_signal(signal)
+  let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_stream(req, with: opts))
   let assert Error(fetch.NetworkError(_)) = result
