@@ -1,4 +1,4 @@
-import gossamer/js_error.{type JsError}
+import gossamer/buffer.{type BufferError}
 
 /// A generic raw binary data buffer.
 ///
@@ -36,20 +36,21 @@ pub fn is_view(value: a) -> Bool
 pub fn is_detached(array_buffer: ArrayBuffer) -> Bool
 
 /// Transfers the buffer's contents to a new `ArrayBuffer`, detaching the
-/// original. Returns an error if the buffer is already detached.
+/// original. Returns `Detached` if the buffer is already detached.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "transfer")
-pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, JsError)
+pub fn transfer(array_buffer: ArrayBuffer) -> Result(ArrayBuffer, BufferError)
 
 /// Resizes the `ArrayBuffer` to the specified byte length. The buffer must
-/// have been created with `new_resizable`. Returns an error if the new length
-/// exceeds the maximum byte length.
+/// have been created with `new_resizable`. Returns `OutOfRange` if the
+/// new length exceeds the maximum byte length, or `Detached` if the
+/// buffer is already detached.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "resize")
 pub fn resize(
   array_buffer: ArrayBuffer,
   to byte_length: Int,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
 @external(javascript, "./array_buffer.ffi.mjs", "slice")
 pub fn slice(array_buffer: ArrayBuffer) -> ArrayBuffer

@@ -16,4 +16,15 @@ pub type BufferError {
 
   /// The requested range falls outside the buffer's current byte length.
   OutOfRange(at: Int, length: Int)
+
+  /// The byte offset for a typed-array view is not a multiple of the
+  /// element size. `Int8Array` and `Uint8Array` accept any offset;
+  /// `Int16Array` and `Uint16Array` require a multiple of 2; the 32-bit
+  /// views require a multiple of 4; and the 64-bit views require a
+  /// multiple of 8.
+  MisalignedOffset(at: Int, alignment: Int)
+
+  /// Allocation was requested for too many bytes. The exact limit depends
+  /// on the runtime and the available memory.
+  AllocationTooLarge(requested: Int)
 }

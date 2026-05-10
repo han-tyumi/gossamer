@@ -1,5 +1,6 @@
 import type * as $arrayBuffer from "$/gossamer/gossamer/buffer/array_buffer.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 
 export const new_: typeof $arrayBuffer.new$ = (byteLength) => {
   return new ArrayBuffer(Math.max(0, byteLength));
@@ -45,16 +46,22 @@ export const is_detached: typeof $arrayBuffer.is_detached = (
 export const transfer: typeof $arrayBuffer.transfer = (
   arrayBuffer: ArrayBuffer,
 ) => {
-  return toResult.fromThrows(() => arrayBuffer.transfer());
+  if (arrayBuffer.detached) return Result$Error($buffer.BufferError$Detached());
+  return Result$Ok(arrayBuffer.transfer());
 };
 
 export const resize: typeof $arrayBuffer.resize = (
   arrayBuffer: ArrayBuffer,
   newByteLength,
 ) => {
-  return toResult.fromThrows(() => {
-    arrayBuffer.resize(newByteLength);
-  });
+  if (arrayBuffer.detached) return Result$Error($buffer.BufferError$Detached());
+  if (newByteLength > arrayBuffer.maxByteLength || !arrayBuffer.resizable) {
+    return Result$Error(
+      $buffer.BufferError$OutOfRange(newByteLength, arrayBuffer.maxByteLength),
+    );
+  }
+  arrayBuffer.resize(newByteLength);
+  return Result$Ok(undefined);
 };
 
 export const slice: typeof $arrayBuffer.slice = (
