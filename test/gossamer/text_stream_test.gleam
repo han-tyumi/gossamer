@@ -20,26 +20,30 @@ pub fn text_encoder_stream_readable_writable_test() {
   let _writable = text_encoder_stream.writable(encoder)
 }
 
-pub fn text_decoder_stream_new_test() {
-  let decoder = text_decoder_stream.new()
+pub fn text_decoder_stream_build_test() {
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
   text_decoder_stream.encoding(decoder) |> should.equal(encoding.Utf8)
   text_decoder_stream.is_fatal(decoder) |> should.be_false
   text_decoder_stream.is_ignore_bom(decoder) |> should.be_false
 }
 
-pub fn text_decoder_stream_new_with_test() {
-  let assert Ok(decoder) = text_decoder_stream.new_with("utf-8", [])
-  text_decoder_stream.encoding(decoder) |> should.equal(encoding.Utf8)
+pub fn text_decoder_stream_build_invalid_test() {
+  text_decoder_stream.new("not-a-real-encoding")
+  |> text_decoder_stream.build
+  |> should.be_error
 }
 
 pub fn text_decoder_stream_readable_writable_test() {
-  let decoder = text_decoder_stream.new()
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
   let _readable = text_decoder_stream.readable(decoder)
   let _writable = text_decoder_stream.writable(decoder)
 }
 
 pub fn text_decoder_stream_read_write_pair_test() {
-  let decoder = text_decoder_stream.new()
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
   let #(_readable, _writable) = text_decoder_stream.read_write_pair(decoder)
 }
 
@@ -63,7 +67,8 @@ pub fn text_encode_decode_stream_roundtrip_test() {
       [],
     )
 
-  let decoder = text_decoder_stream.new()
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
 
   let assert Ok(decoded) =
     readable_stream.pipe_through(

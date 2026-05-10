@@ -1,54 +1,38 @@
 import * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
-import type { List } from "$/prelude.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
-import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export function toTextDecoderOptions(
-  options: List<$textDecoder.TextDecoderOption$>,
-): Partial<TextDecoderOptions> {
-  const result: Partial<TextDecoderOptions> = {};
-  for (const option of toArray(options)) {
-    if ($textDecoder.TextDecoderOption$isFatal(option)) {
-      result.fatal = true;
-    } else if ($textDecoder.TextDecoderOption$isIgnoreBom(option)) {
-      result.ignoreBOM = true;
-    }
-  }
-  return result;
+function fromBuilder(builder: $textDecoder.Builder$): {
+  label: string;
+  options: TextDecoderOptions;
+} {
+  return {
+    label: $textDecoder.Builder$Builder$label(builder),
+    options: {
+      fatal: $textDecoder.Builder$Builder$fatal(builder),
+      ignoreBOM: $textDecoder.Builder$Builder$ignore_bom(builder),
+    },
+  };
 }
 
-export const new_: typeof $textDecoder.new$ = () => {
-  return new TextDecoder();
+export const build: typeof $textDecoder.build = (builder) => {
+  const { label, options } = fromBuilder(builder);
+  return toResult.fromThrows(() => new TextDecoder(label, options));
 };
 
-export const new_with: typeof $textDecoder.new_with = (label, options) => {
-  return toResult.fromThrows(
-    () => new TextDecoder(label, toTextDecoderOptions(options)),
-  );
-};
-
-export const encoding: typeof $textDecoder.encoding = (
-  decoder: TextDecoder,
-) => {
+export const encoding: typeof $textDecoder.encoding = (decoder) => {
   return fromEncoding(decoder.encoding);
 };
 
-export const is_fatal: typeof $textDecoder.is_fatal = (
-  decoder: TextDecoder,
-) => {
-  return decoder.fatal;
-};
+export const is_fatal: typeof $textDecoder.is_fatal = (decoder) =>
+  decoder.fatal;
 
-export const is_ignore_bom: typeof $textDecoder.is_ignore_bom = (
-  decoder: TextDecoder,
-) => {
-  return decoder.ignoreBOM;
-};
+export const is_ignore_bom: typeof $textDecoder.is_ignore_bom = (decoder) =>
+  decoder.ignoreBOM;
 
 export const decode_chunk: typeof $textDecoder.decode_chunk = (
-  decoder: TextDecoder,
+  decoder,
   input,
 ) => {
   return toResult.fromThrows(() =>
@@ -56,17 +40,13 @@ export const decode_chunk: typeof $textDecoder.decode_chunk = (
   );
 };
 
-export const flush: typeof $textDecoder.flush = (decoder: TextDecoder) => {
+export const flush: typeof $textDecoder.flush = (decoder) => {
   return toResult.fromThrows(() => decoder.decode());
 };
 
-export const decode: typeof $textDecoder.decode = (
-  input,
-  label,
-  options,
-) => {
+export const decode: typeof $textDecoder.decode = (input, builder) => {
+  const { label, options } = fromBuilder(builder);
   return toResult.fromThrows(() =>
-    new TextDecoder(label, toTextDecoderOptions(options))
-      .decode(toBufferSource(input))
+    new TextDecoder(label, options).decode(toBufferSource(input))
   );
 };
