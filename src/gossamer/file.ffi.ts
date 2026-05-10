@@ -15,40 +15,29 @@ export const to_fields: typeof $file.to_fields = (file) => {
   );
 };
 
-function toFileOptions(options: $file.FileOption$[]): FilePropertyBag {
-  const result: FilePropertyBag = {};
-  for (const option of options) {
-    if ($file.FileOption$isType(option)) {
-      result.type = $file.FileOption$Type$0(option);
-    } else if ($file.FileOption$isLastModified(option)) {
-      result.lastModified = $file.FileOption$LastModified$0(option);
-    }
-  }
-  return result;
-}
-
 export const from_strings: typeof $file.from_strings = (parts, name) => {
   return new File(toArray(parts), name);
-};
-
-export const from_strings_with: typeof $file.from_strings_with = (
-  parts,
-  name,
-  options,
-) => {
-  return new File(toArray(parts), name, toFileOptions(toArray(options)));
 };
 
 export const from_blob: typeof $file.from_blob = (blob, name) => {
   return new File([blob], name);
 };
 
-export const from_blob_with: typeof $file.from_blob_with = (
-  blob,
-  name,
-  options,
+export const set_type: typeof $file.set_type = (file, value) => {
+  return new File([file], file.name, {
+    type: value,
+    lastModified: file.lastModified,
+  });
+};
+
+export const set_last_modified: typeof $file.set_last_modified = (
+  file,
+  value,
 ) => {
-  return new File([blob], name, toFileOptions(toArray(options)));
+  return new File([file], file.name, {
+    type: file.type,
+    lastModified: value,
+  });
 };
 
 export const name: typeof $file.name = (file) => {

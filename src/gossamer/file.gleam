@@ -19,30 +19,24 @@ pub type Fields {
 @external(javascript, "./file.ffi.mjs", "to_fields")
 pub fn to_fields(file: File) -> Fields
 
-pub type FileOption {
-  Type(String)
-  LastModified(Int)
-}
-
 @external(javascript, "./file.ffi.mjs", "from_strings")
 pub fn from_strings(parts: List(String), named name: String) -> File
-
-@external(javascript, "./file.ffi.mjs", "from_strings_with")
-pub fn from_strings_with(
-  parts: List(String),
-  named name: String,
-  with options: List(FileOption),
-) -> File
 
 @external(javascript, "./file.ffi.mjs", "from_blob")
 pub fn from_blob(blob: Blob, named name: String) -> File
 
-@external(javascript, "./file.ffi.mjs", "from_blob_with")
-pub fn from_blob_with(
-  blob: Blob,
-  named name: String,
-  with options: List(FileOption),
-) -> File
+/// Sets the MIME type. Returns a new `File` with the given type; the
+/// original is unchanged.
+///
+@external(javascript, "./file.ffi.mjs", "set_type")
+pub fn set_type(file: File, value: String) -> File
+
+/// Sets the last-modified timestamp in milliseconds since the Unix
+/// epoch. Returns a new `File` with the given timestamp; the original is
+/// unchanged.
+///
+@external(javascript, "./file.ffi.mjs", "set_last_modified")
+pub fn set_last_modified(file: File, value: Int) -> File
 
 @external(javascript, "./file.ffi.mjs", "name")
 pub fn name(file: File) -> String

@@ -32,20 +32,24 @@ pub fn file_last_modified_test() {
   should.be_true(file.last_modified(f) > 0)
 }
 
-pub fn file_from_strings_with_test() {
+pub fn file_set_type_from_strings_test() {
   let f =
-    file.from_strings_with(["hello"], "typed.txt", [
-      file.Type("text/plain"),
-    ])
+    file.from_strings(["hello"], "typed.txt") |> file.set_type("text/plain")
   file.name(f) |> should.equal("typed.txt")
   should.be_true(string.starts_with(file.type_(f), "text/plain"))
 }
 
-pub fn file_from_blob_with_test() {
+pub fn file_set_type_from_blob_test() {
   let b = blob.from_string("blob data")
-  let f = file.from_blob_with(b, "blob.txt", [file.Type("text/plain")])
+  let f = file.from_blob(b, "blob.txt") |> file.set_type("text/plain")
   file.name(f) |> should.equal("blob.txt")
   should.be_true(string.starts_with(file.type_(f), "text/plain"))
+}
+
+pub fn file_set_last_modified_test() {
+  let f =
+    file.from_strings(["data"], "modified.txt") |> file.set_last_modified(0)
+  file.last_modified(f) |> should.equal(0)
 }
 
 pub fn file_size_test() {
