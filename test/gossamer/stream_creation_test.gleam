@@ -23,9 +23,9 @@ pub fn readable_stream_new_start_throws_test() {
 }
 
 pub fn writable_stream_new_start_throws_test() {
-  writable_stream.new([
-    writable_stream.Start(fn(_controller) { panic as "boom" }),
-  ])
+  writable_stream.new()
+  |> writable_stream.on_start(run: fn(_controller) { panic as "boom" })
+  |> writable_stream.build
   |> should.be_error
 }
 
@@ -92,14 +92,14 @@ pub fn writable_stream_from_write_test() {
   promise.resolve(Nil)
 }
 
-pub fn writable_stream_new_with_options_test() {
+pub fn writable_stream_build_test() {
   let assert Ok(stream) =
-    writable_stream.new([
-      writable_stream.Write(fn(chunk, _controller) {
-        should.equal(chunk, "test")
-        promise.resolve(Nil)
-      }),
-    ])
+    writable_stream.new()
+    |> writable_stream.on_write(run: fn(chunk, _controller) {
+      should.equal(chunk, "test")
+      promise.resolve(Nil)
+    })
+    |> writable_stream.build
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
@@ -389,12 +389,12 @@ pub fn writer_abort_test() {
 
 pub fn writable_controller_signal_test() {
   let assert Ok(stream) =
-    writable_stream.new([
-      writable_stream.Write(fn(_chunk, controller) {
-        let _signal = writable_controller.signal(controller)
-        promise.resolve(Nil)
-      }),
-    ])
+    writable_stream.new()
+    |> writable_stream.on_write(run: fn(_chunk, controller) {
+      let _signal = writable_controller.signal(controller)
+      promise.resolve(Nil)
+    })
+    |> writable_stream.build
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 
@@ -405,12 +405,12 @@ pub fn writable_controller_signal_test() {
 
 pub fn writable_controller_error_test() {
   let assert Ok(stream) =
-    writable_stream.new([
-      writable_stream.Write(fn(_chunk, controller) {
-        let _ = writable_controller.error(controller, dynamic.string("fail"))
-        promise.resolve(Nil)
-      }),
-    ])
+    writable_stream.new()
+    |> writable_stream.on_write(run: fn(_chunk, controller) {
+      let _ = writable_controller.error(controller, dynamic.string("fail"))
+      promise.resolve(Nil)
+    })
+    |> writable_stream.build
 
   let assert Ok(w) = writable_stream.get_writer(stream)
 

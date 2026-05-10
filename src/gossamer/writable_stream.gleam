@@ -1,5 +1,6 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
+import gleam/option.{type Option, None, Some}
 import gossamer/js_error.{type JsError}
 import gossamer/writable_stream/default_controller.{type DefaultController}
 import gossamer/writable_stream/writer.{type Writer}
@@ -11,21 +12,78 @@ import gossamer/writable_stream/writer.{type Writer}
 @external(javascript, "./writable_stream.type.ts", "WritableStream$")
 pub type WritableStream(a)
 
-pub type UnderlyingSink(a) {
-  Start(fn(DefaultController) -> Nil)
-  Write(fn(a, DefaultController) -> Promise(Nil))
-  Close(fn() -> Promise(Nil))
-  Abort(fn(Dynamic) -> Promise(Nil))
+/// The configuration for a `WritableStream`. Construct with `new` and
+/// refine with `on_start`, `on_write`, `on_close`, and `on_abort`, then
+/// call `build` to create the stream.
+///
+pub type Builder(a) {
+  Builder(
+    start: Option(fn(DefaultController) -> Nil),
+    write: Option(fn(a, DefaultController) -> Promise(Nil)),
+    close: Option(fn() -> Promise(Nil)),
+    abort: Option(fn(Dynamic) -> Promise(Nil)),
+  )
 }
 
-/// Creates a `WritableStream` driven by the given underlying-sink callbacks
-/// (`Start`, `Write`, `Close`, `Abort`). Returns an error if the `Start`
-/// callback throws synchronously.
+/// Creates a `Builder` with no underlying-sink callbacks set.
 ///
-@external(javascript, "./writable_stream.ffi.mjs", "new_")
-pub fn new(sink: List(UnderlyingSink(a))) -> Result(WritableStream(a), JsError)
+pub fn new() -> Builder(a) {
+  Builder(start: None, write: None, close: None, abort: None)
+}
 
-/// Creates a `WritableStream` from only a `Write` callback — use when the
+/// Registers the `start` callback that runs once at construction. Use to
+/// acquire resources or set up state.
+///
+pub fn on_start(
+  builder: Builder(a),
+  run callback: fn(DefaultController) -> b,
+) -> Builder(a) {
+  Builder(
+    ..builder,
+    start: Some(fn(controller) {
+      callback(controller)
+      Nil
+    }),
+  )
+}
+
+/// Registers the `write` callback that runs for each chunk written to the
+/// sink.
+///
+pub fn on_write(
+  builder: Builder(a),
+  run callback: fn(a, DefaultController) -> Promise(Nil),
+) -> Builder(a) {
+  Builder(..builder, write: Some(callback))
+}
+
+/// Registers the `close` callback that runs once after all writes
+/// complete.
+///
+pub fn on_close(
+  builder: Builder(a),
+  run callback: fn() -> Promise(Nil),
+) -> Builder(a) {
+  Builder(..builder, close: Some(callback))
+}
+
+/// Registers the `abort` callback that runs if the stream is aborted.
+/// Receives the abort reason.
+///
+pub fn on_abort(
+  builder: Builder(a),
+  run callback: fn(Dynamic) -> Promise(Nil),
+) -> Builder(a) {
+  Builder(..builder, abort: Some(callback))
+}
+
+/// Creates a `WritableStream` from the configured `Builder`. Returns an
+/// error if the `start` callback throws synchronously.
+///
+@external(javascript, "./writable_stream.ffi.mjs", "build")
+pub fn build(builder: Builder(a)) -> Result(WritableStream(a), JsError)
+
+/// Creates a `WritableStream` from only a `write` callback — use when the
 /// sink just needs to handle incoming chunks.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "from_write")
