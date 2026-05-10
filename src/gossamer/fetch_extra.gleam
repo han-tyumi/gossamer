@@ -50,13 +50,13 @@ import gossamer/response_type.{type ResponseType}
 ///
 pub type FetchOptions {
   FetchOptions(
-    cache: Option(RequestCache),
-    credentials: Option(RequestCredentials),
+    cache: Option(Cache),
+    credentials: Option(Credentials),
     integrity: Option(String),
     keepalive: Option(Bool),
-    mode: Option(RequestMode),
-    priority: Option(RequestPriority),
-    redirect: Option(RequestRedirect),
+    mode: Option(Mode),
+    priority: Option(Priority),
+    redirect: Option(Redirect),
     referrer: Option(String),
     referrer_policy: Option(ReferrerPolicy),
     signal: Option(AbortSignal),
@@ -66,7 +66,7 @@ pub type FetchOptions {
 /// The cache mode for a `Request`, controlling how it interacts with the
 /// HTTP cache.
 ///
-pub type RequestCache {
+pub type Cache {
   Default
   ForceCache
   NoCache
@@ -78,7 +78,7 @@ pub type RequestCache {
 /// Whether a `Request` includes credentials (cookies, HTTP auth) for
 /// cross-origin requests.
 ///
-pub type RequestCredentials {
+pub type Credentials {
   Include
   Omit
   CredentialsSameOrigin
@@ -87,7 +87,7 @@ pub type RequestCredentials {
 /// The CORS mode for a `Request`, controlling how cross-origin requests
 /// are handled.
 ///
-pub type RequestMode {
+pub type Mode {
   Cors
   Navigate
   NoCors
@@ -97,7 +97,7 @@ pub type RequestMode {
 /// The priority hint for a `Request`, indicating relative importance
 /// compared to other requests.
 ///
-pub type RequestPriority {
+pub type Priority {
   High
   Low
   Auto
@@ -105,7 +105,7 @@ pub type RequestPriority {
 
 /// How a `Request` handles redirect responses.
 ///
-pub type RequestRedirect {
+pub type Redirect {
   Error
   Follow
   Manual
@@ -147,17 +147,14 @@ pub fn options() -> FetchOptions {
 /// Sets the cache mode, controlling how the request interacts with the
 /// HTTP cache.
 ///
-pub fn set_cache(opts: FetchOptions, value: RequestCache) -> FetchOptions {
+pub fn set_cache(opts: FetchOptions, value: Cache) -> FetchOptions {
   FetchOptions(..opts, cache: Some(value))
 }
 
 /// Sets the credentials policy, controlling whether cookies and HTTP auth
 /// are sent with cross-origin requests.
 ///
-pub fn set_credentials(
-  opts: FetchOptions,
-  value: RequestCredentials,
-) -> FetchOptions {
+pub fn set_credentials(opts: FetchOptions, value: Credentials) -> FetchOptions {
   FetchOptions(..opts, credentials: Some(value))
 }
 
@@ -178,20 +175,20 @@ pub fn set_keepalive(opts: FetchOptions, value: Bool) -> FetchOptions {
 
 /// Sets the CORS mode, controlling how cross-origin requests are handled.
 ///
-pub fn set_mode(opts: FetchOptions, value: RequestMode) -> FetchOptions {
+pub fn set_mode(opts: FetchOptions, value: Mode) -> FetchOptions {
   FetchOptions(..opts, mode: Some(value))
 }
 
 /// Sets the priority hint, indicating relative importance compared to
 /// other requests.
 ///
-pub fn set_priority(opts: FetchOptions, value: RequestPriority) -> FetchOptions {
+pub fn set_priority(opts: FetchOptions, value: Priority) -> FetchOptions {
   FetchOptions(..opts, priority: Some(value))
 }
 
 /// Sets how the request handles redirects.
 ///
-pub fn set_redirect(opts: FetchOptions, value: RequestRedirect) -> FetchOptions {
+pub fn set_redirect(opts: FetchOptions, value: Redirect) -> FetchOptions {
   FetchOptions(..opts, redirect: Some(value))
 }
 

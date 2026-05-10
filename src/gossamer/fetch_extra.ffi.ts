@@ -18,43 +18,43 @@ import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-function toRequestCache(value: $fetchExtra.RequestCache$): RequestCache {
-  if ($fetchExtra.RequestCache$isForceCache(value)) return "force-cache";
-  if ($fetchExtra.RequestCache$isNoCache(value)) return "no-cache";
-  if ($fetchExtra.RequestCache$isNoStore(value)) return "no-store";
-  if ($fetchExtra.RequestCache$isOnlyIfCached(value)) return "only-if-cached";
-  if ($fetchExtra.RequestCache$isReload(value)) return "reload";
+function toCache(value: $fetchExtra.Cache$): RequestCache {
+  if ($fetchExtra.Cache$isForceCache(value)) return "force-cache";
+  if ($fetchExtra.Cache$isNoCache(value)) return "no-cache";
+  if ($fetchExtra.Cache$isNoStore(value)) return "no-store";
+  if ($fetchExtra.Cache$isOnlyIfCached(value)) return "only-if-cached";
+  if ($fetchExtra.Cache$isReload(value)) return "reload";
   return "default";
 }
 
-function toRequestCredentials(
-  value: $fetchExtra.RequestCredentials$,
+function toCredentials(
+  value: $fetchExtra.Credentials$,
 ): RequestCredentials {
-  if ($fetchExtra.RequestCredentials$isInclude(value)) return "include";
-  if ($fetchExtra.RequestCredentials$isOmit(value)) return "omit";
+  if ($fetchExtra.Credentials$isInclude(value)) return "include";
+  if ($fetchExtra.Credentials$isOmit(value)) return "omit";
   return "same-origin";
 }
 
-function toRequestMode(value: $fetchExtra.RequestMode$): RequestMode {
-  if ($fetchExtra.RequestMode$isNavigate(value)) return "navigate";
-  if ($fetchExtra.RequestMode$isNoCors(value)) return "no-cors";
-  if ($fetchExtra.RequestMode$isModeSameOrigin(value)) return "same-origin";
+function toMode(value: $fetchExtra.Mode$): RequestMode {
+  if ($fetchExtra.Mode$isNavigate(value)) return "navigate";
+  if ($fetchExtra.Mode$isNoCors(value)) return "no-cors";
+  if ($fetchExtra.Mode$isModeSameOrigin(value)) return "same-origin";
   return "cors";
 }
 
-function toRequestPriority(
-  value: $fetchExtra.RequestPriority$,
+function toPriority(
+  value: $fetchExtra.Priority$,
 ): RequestPriority {
-  if ($fetchExtra.RequestPriority$isHigh(value)) return "high";
-  if ($fetchExtra.RequestPriority$isLow(value)) return "low";
+  if ($fetchExtra.Priority$isHigh(value)) return "high";
+  if ($fetchExtra.Priority$isLow(value)) return "low";
   return "auto";
 }
 
-function toRequestRedirect(
-  value: $fetchExtra.RequestRedirect$,
+function toRedirect(
+  value: $fetchExtra.Redirect$,
 ): RequestRedirect {
-  if ($fetchExtra.RequestRedirect$isError(value)) return "error";
-  if ($fetchExtra.RequestRedirect$isManual(value)) return "manual";
+  if ($fetchExtra.Redirect$isError(value)) return "error";
+  if ($fetchExtra.Redirect$isManual(value)) return "manual";
   return "follow";
 }
 
@@ -82,13 +82,13 @@ function buildInit(options: $fetchExtra.FetchOptions$): RequestInit {
     init,
     "cache",
     $fetchExtra.FetchOptions$FetchOptions$cache(options),
-    toRequestCache,
+    toCache,
   );
   mapIfSome(
     init,
     "credentials",
     $fetchExtra.FetchOptions$FetchOptions$credentials(options),
-    toRequestCredentials,
+    toCredentials,
   );
   setIfSome(
     init,
@@ -104,19 +104,19 @@ function buildInit(options: $fetchExtra.FetchOptions$): RequestInit {
     init,
     "mode",
     $fetchExtra.FetchOptions$FetchOptions$mode(options),
-    toRequestMode,
+    toMode,
   );
   mapIfSome(
     init,
     "priority",
     $fetchExtra.FetchOptions$FetchOptions$priority(options),
-    toRequestPriority,
+    toPriority,
   );
   mapIfSome(
     init,
     "redirect",
     $fetchExtra.FetchOptions$FetchOptions$redirect(options),
-    toRequestRedirect,
+    toRedirect,
   );
   setIfSome(
     init,
