@@ -16,14 +16,16 @@ import gossamer/writable_stream.{type WritableStream}
 @external(javascript, "./readable_stream.type.ts", "ReadableStream$")
 pub type ReadableStream(a)
 
-/// One of the underlying-source callbacks driving a `ReadableStream`:
-/// `Start` runs once at construction, `Pull` runs when more chunks are
-/// requested, and `Cancel` runs when the consumer aborts.
+/// The configuration for a `ReadableStream`. Construct with `new` and
+/// refine with `on_start`, `on_pull`, and `on_cancel`, then call `build`
+/// to create the stream.
 ///
-pub type UnderlyingSource(a) {
-  Start(fn(DefaultController(a)) -> Nil)
-  Pull(fn(DefaultController(a)) -> Promise(Nil))
-  Cancel(fn(Dynamic) -> Promise(Nil))
+pub type Builder(a) {
+  Builder(
+    start: Option(fn(DefaultController(a)) -> Nil),
+    pull: Option(fn(DefaultController(a)) -> Promise(Nil)),
+    cancel: Option(fn(Dynamic) -> Promise(Nil)),
+  )
 }
 
 /// Per-call options for `pipe_through` and `pipe_to`. Construct with
@@ -76,26 +78,65 @@ pub fn set_signal(opts: PipeOptions, value: AbortSignal) -> PipeOptions {
   PipeOptions(..opts, signal: Some(value))
 }
 
-/// Creates a `ReadableStream` driven by the given underlying-source
-/// callbacks (`Start`, `Pull`, `Cancel`). Returns an error if the `Start`
-/// callback throws synchronously.
+/// Creates a `Builder` with no underlying-source callbacks set.
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "new_")
-pub fn new(
-  source: List(UnderlyingSource(a)),
-) -> Result(ReadableStream(a), JsError)
+pub fn new() -> Builder(a) {
+  Builder(start: None, pull: None, cancel: None)
+}
 
-/// Creates a `ReadableStream` from only a `Start` callback — use when all
+/// Registers the `start` callback that runs once at construction. Use to
+/// enqueue initial chunks or set up state.
+///
+pub fn on_start(
+  builder: Builder(a),
+  run callback: fn(DefaultController(a)) -> b,
+) -> Builder(a) {
+  Builder(
+    ..builder,
+    start: Some(fn(controller) {
+      callback(controller)
+      Nil
+    }),
+  )
+}
+
+/// Registers the `pull` callback that runs whenever the consumer requests
+/// more chunks.
+///
+pub fn on_pull(
+  builder: Builder(a),
+  run callback: fn(DefaultController(a)) -> Promise(Nil),
+) -> Builder(a) {
+  Builder(..builder, pull: Some(callback))
+}
+
+/// Registers the `cancel` callback that runs when the consumer aborts.
+/// Receives the cancellation reason.
+///
+pub fn on_cancel(
+  builder: Builder(a),
+  run callback: fn(Dynamic) -> Promise(Nil),
+) -> Builder(a) {
+  Builder(..builder, cancel: Some(callback))
+}
+
+/// Creates a `ReadableStream` from the configured `Builder`. Returns an
+/// error if the `start` callback throws synchronously.
+///
+@external(javascript, "./readable_stream.ffi.mjs", "build")
+pub fn build(builder: Builder(a)) -> Result(ReadableStream(a), JsError)
+
+/// Creates a `ReadableStream` from only a `start` callback — use when all
 /// chunks can be enqueued up front. Returns an error if `start` throws
 /// synchronously.
 ///
 pub fn from_start(
   start: fn(DefaultController(a)) -> Nil,
 ) -> Result(ReadableStream(a), JsError) {
-  new([Start(start)])
+  new() |> on_start(run: start) |> build
 }
 
-/// Creates a `ReadableStream` from only a `Pull` callback — use when chunks
+/// Creates a `ReadableStream` from only a `pull` callback — use when chunks
 /// are produced on demand.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_pull")

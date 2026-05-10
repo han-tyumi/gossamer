@@ -16,9 +16,9 @@ import gossamer/writable_stream/default_controller as writable_controller
 import gossamer/writable_stream/writer
 
 pub fn readable_stream_new_start_throws_test() {
-  readable_stream.new([
-    readable_stream.Start(fn(_controller) { panic as "boom" }),
-  ])
+  readable_stream.new()
+  |> readable_stream.on_start(run: fn(_controller) { panic as "boom" })
+  |> readable_stream.build
   |> should.be_error
 }
 
@@ -62,15 +62,15 @@ pub fn readable_stream_from_start_test() {
   should.equal(result, Ok(read_result.Done(None)))
 }
 
-pub fn readable_stream_new_with_options_test() {
+pub fn readable_stream_build_test() {
   let assert Ok(stream) =
-    readable_stream.new([
-      readable_stream.Start(fn(controller) {
-        let _ = default_controller.enqueue(controller, 42)
-        let _ = default_controller.close(controller)
-        Nil
-      }),
-    ])
+    readable_stream.new()
+    |> readable_stream.on_start(run: fn(controller) {
+      let _ = default_controller.enqueue(controller, 42)
+      let _ = default_controller.close(controller)
+      Nil
+    })
+    |> readable_stream.build
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 
@@ -325,14 +325,14 @@ pub fn reader_cancel_test() {
 
 pub fn readable_controller_desired_size_test() {
   let assert Ok(stream) =
-    readable_stream.new([
-      readable_stream.Start(fn(controller) {
-        let assert Ok(size) = default_controller.desired_size(controller)
-        should.be_true(size >= 0)
-        let _ = default_controller.close(controller)
-        Nil
-      }),
-    ])
+    readable_stream.new()
+    |> readable_stream.on_start(run: fn(controller) {
+      let assert Ok(size) = default_controller.desired_size(controller)
+      should.be_true(size >= 0)
+      let _ = default_controller.close(controller)
+      Nil
+    })
+    |> readable_stream.build
 
   let assert Ok(r) = readable_stream.get_reader(stream)
 

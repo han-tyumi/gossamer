@@ -3,25 +3,8 @@ import {
   fromBitArrayReadable,
   toBitArrayResult,
 } from "~/utils/bit_array.ffi.ts";
-import { toArray } from "~/utils/list.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
-
-function toUnderlyingSource<T>(
-  options: $readableStream.UnderlyingSource$<T>[],
-): UnderlyingDefaultSource<T> {
-  const result: UnderlyingDefaultSource<T> = {};
-  for (const option of options) {
-    if ($readableStream.UnderlyingSource$isStart(option)) {
-      result.start = $readableStream.UnderlyingSource$Start$0(option);
-    } else if ($readableStream.UnderlyingSource$isPull(option)) {
-      result.pull = $readableStream.UnderlyingSource$Pull$0(option);
-    } else if ($readableStream.UnderlyingSource$isCancel(option)) {
-      result.cancel = $readableStream.UnderlyingSource$Cancel$0(option);
-    }
-  }
-  return result;
-}
 
 function fromPipeOptions(
   options: $readableStream.PipeOptions$,
@@ -45,10 +28,26 @@ function fromPipeOptions(
   return result;
 }
 
-export const new_: typeof $readableStream.new$ = (source) => {
-  return toResult.fromThrows(() =>
-    new ReadableStream(toUnderlyingSource(toArray(source)))
-  );
+export const build: typeof $readableStream.build = (builder) => {
+  return toResult.fromThrows(() => {
+    const source: UnderlyingDefaultSource = {};
+    setIfSome(
+      source,
+      "start",
+      $readableStream.Builder$Builder$start(builder),
+    );
+    setIfSome(
+      source,
+      "pull",
+      $readableStream.Builder$Builder$pull(builder),
+    );
+    setIfSome(
+      source,
+      "cancel",
+      $readableStream.Builder$Builder$cancel(builder),
+    );
+    return new ReadableStream(source);
+  });
 };
 
 export const from_pull: typeof $readableStream.from_pull = (pull) => {
