@@ -1,21 +1,124 @@
 import gleam/javascript/promise.{type Promise}
-import gossamer/crypto_key.{type CryptoKey}
-import gossamer/hash_algorithm.{type HashAlgorithm}
+import gossamer/aes_algorithm.{type AesAlgorithm}
+import gossamer/crypto_key.{
+  type CryptoKey, type HashAlgorithm, type KeyUsage, type NamedCurve,
+}
+import gossamer/ec_algorithm.{type EcAlgorithm}
 import gossamer/js_error.{type JsError}
 import gossamer/json_web_key.{type JsonWebKey}
-import gossamer/key_format.{type KeyFormat}
-import gossamer/key_usage.{type KeyUsage}
-import gossamer/subtle_crypto/derive_algorithm.{type DeriveAlgorithm}
-import gossamer/subtle_crypto/derived_key_type.{type DerivedKeyType}
-import gossamer/subtle_crypto/encrypt_algorithm.{type EncryptAlgorithm}
-import gossamer/subtle_crypto/import_algorithm.{type ImportAlgorithm}
-import gossamer/subtle_crypto/key_gen_algorithm.{type KeyGenAlgorithm}
-import gossamer/subtle_crypto/key_pair_gen_algorithm.{type KeyPairGenAlgorithm}
-import gossamer/subtle_crypto/sign_algorithm.{type SignAlgorithm}
-import gossamer/subtle_crypto/wrap_algorithm.{type WrapAlgorithm}
+import gossamer/rsa_algorithm.{type RsaAlgorithm}
 
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
+}
+
+/// The serialization format of a key imported or exported via
+/// `subtle_crypto`.
+///
+/// Unrecognized values use `KeyFormatOther(String)`.
+///
+pub type KeyFormat {
+  Pkcs8
+  Raw
+  Spki
+  KeyFormatOther(String)
+}
+
+/// Algorithm parameters for `derive_bits` and `derive_key`.
+///
+/// Non-standard or unnamed algorithms use `DeriveOther(String)`.
+///
+pub type DeriveAlgorithm {
+  Hkdf(hash: HashAlgorithm, info: BitArray, salt: BitArray)
+  Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: BitArray)
+  Ecdh(public: CryptoKey)
+  DeriveOther(String)
+}
+
+/// The target key type for `derive_key`.
+///
+/// Non-standard or unnamed algorithms use `DerivedKeyOther(String)`.
+///
+pub type DerivedKeyType {
+  AesDerived(name: AesAlgorithm, length: Int)
+  HmacDerived(hash: HashAlgorithm)
+  DerivedKeyOther(String)
+}
+
+/// Algorithm parameters for `encrypt` and `decrypt`.
+///
+/// Non-standard or unnamed algorithms use `EncryptOther(String)`.
+///
+pub type EncryptAlgorithm {
+  EncryptAesCbc(iv: BitArray)
+  AesGcm(iv: BitArray)
+  AesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+  EncryptAesCtr(counter: BitArray, length: Int)
+  EncryptRsaOaep
+  EncryptRsaOaepWith(label: BitArray)
+  EncryptOther(String)
+}
+
+/// Algorithm parameters for `import_key` and `import_key_jwk`.
+///
+/// Non-standard or unnamed algorithms use `ImportOther(String)`.
+///
+pub type ImportAlgorithm {
+  HmacImport(hash: HashAlgorithm)
+  RsaHashedImport(name: RsaAlgorithm, hash: HashAlgorithm)
+  EcImport(name: EcAlgorithm, named_curve: NamedCurve)
+  ImportOther(String)
+}
+
+/// Algorithm parameters for `generate_key` (symmetric keys).
+///
+/// Non-standard or unnamed algorithms use `KeyGenOther(String)`.
+///
+pub type KeyGenAlgorithm {
+  Aes(name: AesAlgorithm, length: Int)
+  HmacGen(hash: HashAlgorithm)
+  KeyGenOther(String)
+}
+
+/// Algorithm parameters for `generate_key_pair` (asymmetric keys).
+///
+/// Non-standard or unnamed algorithms use `KeyPairGenOther(String)`.
+///
+pub type KeyPairGenAlgorithm {
+  Rsa(
+    name: RsaAlgorithm,
+    modulus_length: Int,
+    public_exponent: BitArray,
+    hash: HashAlgorithm,
+  )
+  Ec(name: EcAlgorithm, named_curve: NamedCurve)
+  Ed25519
+  X25519
+  KeyPairGenOther(String)
+}
+
+/// Algorithm parameters for `sign` and `verify`.
+///
+/// Non-standard or unnamed algorithms use `SignOther(String)`.
+///
+pub type SignAlgorithm {
+  Hmac
+  RsassaPkcs1V15
+  RsaPss(salt_length: Int)
+  Ecdsa(hash: HashAlgorithm)
+  SignOther(String)
+}
+
+/// Algorithm parameters for `wrap_key` and `unwrap_key`.
+///
+/// Non-standard or unnamed algorithms use `WrapOther(String)`.
+///
+pub type WrapAlgorithm {
+  WrapAesCbc(iv: BitArray)
+  WrapAesCtr(counter: BitArray, length: Int)
+  WrapRsaOaep
+  WrapRsaOaepWith(label: BitArray)
+  WrapOther(String)
 }
 
 /// Computes a cryptographic hash of `data`. Returns an error if the algorithm is
