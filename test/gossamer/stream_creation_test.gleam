@@ -130,7 +130,7 @@ pub fn transform_stream_from_transform_test() {
         transform_stream.readable(transform),
         transform_stream.writable(transform),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(r) = readable_stream.get_reader(transformed)
@@ -163,7 +163,11 @@ pub fn readable_pipe_to_writable_test() {
       promise.resolve(Nil)
     })
 
-  use _ <- promise.await(readable_stream.pipe_to(readable, writable, []))
+  use _ <- promise.await(readable_stream.pipe_to(
+    readable,
+    writable,
+    readable_stream.pipe_options(),
+  ))
   promise.resolve(Nil)
 }
 
@@ -440,7 +444,7 @@ pub fn transform_controller_desired_size_test() {
         transform_stream.readable(transform),
         transform_stream.writable(transform),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(r) = readable_stream.get_reader(transformed)
@@ -476,7 +480,7 @@ pub fn transform_controller_error_test() {
         transform_stream.readable(transform),
         transform_stream.writable(transform),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(r) = readable_stream.get_reader(transformed)
@@ -511,7 +515,7 @@ pub fn transform_controller_terminate_test() {
         transform_stream.readable(transform),
         transform_stream.writable(transform),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(r) = readable_stream.get_reader(transformed)

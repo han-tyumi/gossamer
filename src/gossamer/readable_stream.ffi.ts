@@ -1,10 +1,10 @@
 import * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
-import type { List } from "$/prelude.mjs";
 import {
   fromBitArrayReadable,
   toBitArrayResult,
 } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
+import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 function toUnderlyingSource<T>(
@@ -23,21 +23,25 @@ function toUnderlyingSource<T>(
   return result;
 }
 
-function toStreamPipeOptions(
-  options: List<$readableStream.StreamPipeOption$>,
-): Partial<StreamPipeOptions> {
-  const result: Partial<StreamPipeOptions> = {};
-  for (const option of toArray(options)) {
-    if ($readableStream.StreamPipeOption$isPreventAbort(option)) {
-      result.preventAbort = true;
-    } else if ($readableStream.StreamPipeOption$isPreventCancel(option)) {
-      result.preventCancel = true;
-    } else if ($readableStream.StreamPipeOption$isPreventClose(option)) {
-      result.preventClose = true;
-    } else if ($readableStream.StreamPipeOption$isSignal(option)) {
-      result.signal = $readableStream.StreamPipeOption$Signal$0(option);
-    }
-  }
+function fromPipeOptions(
+  options: $readableStream.PipeOptions$,
+): StreamPipeOptions {
+  const result: StreamPipeOptions = {
+    preventAbort: $readableStream.PipeOptions$PipeOptions$prevent_abort(
+      options,
+    ),
+    preventCancel: $readableStream.PipeOptions$PipeOptions$prevent_cancel(
+      options,
+    ),
+    preventClose: $readableStream.PipeOptions$PipeOptions$prevent_close(
+      options,
+    ),
+  };
+  setIfSome(
+    result,
+    "signal",
+    $readableStream.PipeOptions$PipeOptions$signal(options),
+  );
   return result;
 }
 
@@ -100,7 +104,7 @@ export const pipe_through: typeof $readableStream.pipe_through = (
   return toResult.fromThrows(() =>
     stream.pipeThrough(
       { readable, writable },
-      toStreamPipeOptions(options),
+      fromPipeOptions(options),
     )
   );
 };
@@ -113,7 +117,7 @@ export const pipe_to: typeof $readableStream.pipe_to = (
   return toResult.fromPromise(
     stream.pipeTo(
       destination,
-      toStreamPipeOptions(options),
+      fromPipeOptions(options),
     ).then(() => undefined),
   );
 };

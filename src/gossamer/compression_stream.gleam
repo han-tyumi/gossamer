@@ -17,9 +17,9 @@ import gossamer/writable_stream.{type WritableStream}
 ///     compression_stream.readable(compressor),
 ///     compression_stream.writable(compressor),
 ///   ),
-///   [],
+///   readable_stream.pipe_options(),
 /// )
-/// |> readable_stream.pipe_to(stdout.writable(), [])
+/// |> readable_stream.pipe_to(stdout.writable(), readable_stream.pipe_options())
 /// ```
 ///
 @external(javascript, "./compression_stream.type.ts", "CompressionStream$")

@@ -29,7 +29,7 @@ pub fn gzip_round_trip_test() {
         compression_stream.readable(compressor),
         compression_stream.writable(compressor),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
   let assert Ok(output) =
     first
@@ -38,7 +38,7 @@ pub fn gzip_round_trip_test() {
         decompression_stream.readable(decompressor),
         decompression_stream.writable(decompressor),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(reader) = readable_stream.get_reader(output)

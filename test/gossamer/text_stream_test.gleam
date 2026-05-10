@@ -64,7 +64,7 @@ pub fn text_encode_decode_stream_roundtrip_test() {
         text_encoder_stream.readable(encoder),
         text_encoder_stream.writable(encoder),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(decoder) =
@@ -77,7 +77,7 @@ pub fn text_encode_decode_stream_roundtrip_test() {
         text_decoder_stream.readable(decoder),
         text_decoder_stream.writable(decoder),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(r) = readable_stream.get_reader(decoded)

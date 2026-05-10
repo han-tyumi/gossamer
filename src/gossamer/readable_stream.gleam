@@ -1,5 +1,6 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
+import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/async_iterator.{type AsyncIterator}
 import gossamer/iterator.{type Iterator}
@@ -15,17 +16,64 @@ import gossamer/writable_stream.{type WritableStream}
 @external(javascript, "./readable_stream.type.ts", "ReadableStream$")
 pub type ReadableStream(a)
 
+/// One of the underlying-source callbacks driving a `ReadableStream`:
+/// `Start` runs once at construction, `Pull` runs when more chunks are
+/// requested, and `Cancel` runs when the consumer aborts.
+///
 pub type UnderlyingSource(a) {
   Start(fn(DefaultController(a)) -> Nil)
   Pull(fn(DefaultController(a)) -> Promise(Nil))
   Cancel(fn(Dynamic) -> Promise(Nil))
 }
 
-pub type StreamPipeOption {
-  PreventAbort
-  PreventCancel
-  PreventClose
-  Signal(AbortSignal)
+/// Per-call options for `pipe_through` and `pipe_to`. Construct with
+/// `pipe_options` and chain setters.
+///
+pub type PipeOptions {
+  PipeOptions(
+    prevent_abort: Bool,
+    prevent_cancel: Bool,
+    prevent_close: Bool,
+    signal: Option(AbortSignal),
+  )
+}
+
+/// A `PipeOptions` with every flag at its default. The three prevent
+/// flags default to `False`; no abort signal is attached.
+///
+pub fn pipe_options() -> PipeOptions {
+  PipeOptions(
+    prevent_abort: False,
+    prevent_cancel: False,
+    prevent_close: False,
+    signal: None,
+  )
+}
+
+/// Sets whether errors in the destination should propagate back to
+/// abort the source.
+///
+pub fn set_prevent_abort(opts: PipeOptions, value: Bool) -> PipeOptions {
+  PipeOptions(..opts, prevent_abort: value)
+}
+
+/// Sets whether errors in the source should propagate forward to
+/// cancel the destination.
+///
+pub fn set_prevent_cancel(opts: PipeOptions, value: Bool) -> PipeOptions {
+  PipeOptions(..opts, prevent_cancel: value)
+}
+
+/// Sets whether closing the source should also close the destination.
+///
+pub fn set_prevent_close(opts: PipeOptions, value: Bool) -> PipeOptions {
+  PipeOptions(..opts, prevent_close: value)
+}
+
+/// Sets an abort signal that, when triggered, aborts the pipe.
+///
+pub fn set_signal(opts: PipeOptions, value: AbortSignal) -> PipeOptions {
+  PipeOptions(..opts, signal: Some(value))
 }
 
 /// Creates a `ReadableStream` driven by the given underlying-source
@@ -102,7 +150,7 @@ pub fn get_reader(stream: ReadableStream(a)) -> Result(Reader(a), JsError)
 pub fn pipe_through(
   stream: ReadableStream(a),
   transform: #(ReadableStream(b), WritableStream(a)),
-  with options: List(StreamPipeOption),
+  with options: PipeOptions,
 ) -> Result(ReadableStream(b), JsError)
 
 /// Pipes the stream to a `WritableStream`. Returns an error if piping
@@ -113,7 +161,7 @@ pub fn pipe_through(
 pub fn pipe_to(
   stream: ReadableStream(a),
   destination: WritableStream(a),
-  with options: List(StreamPipeOption),
+  with options: PipeOptions,
 ) -> Promise(Result(Nil, JsError))
 
 /// Splits the stream into two independent streams reading the same data.

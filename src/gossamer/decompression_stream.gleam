@@ -20,9 +20,12 @@ import gossamer/writable_stream.{type WritableStream}
 ///     decompression_stream.readable(decompressor),
 ///     decompression_stream.writable(decompressor),
 ///   ),
-///   [],
+///   readable_stream.pipe_options(),
 /// )
-/// |> readable_stream.pipe_to(fs_file.writable(output), [])
+/// |> readable_stream.pipe_to(
+///   fs_file.writable(output),
+///   readable_stream.pipe_options(),
+/// )
 /// ```
 ///
 @external(javascript, "./decompression_stream.type.ts", "DecompressionStream$")
