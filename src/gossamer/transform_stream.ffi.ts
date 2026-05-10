@@ -1,29 +1,32 @@
 import * as $transformStream from "$/gossamer/gossamer/transform_stream.mjs";
-import { toArray } from "~/utils/list.ffi.ts";
+import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-function toTransformer<I, O>(
-  options: $transformStream.Transformer$<I, O>[],
-): Transformer<I, O> {
-  const result: Transformer<I, O> = {};
-  for (const option of options) {
-    if ($transformStream.Transformer$isStart(option)) {
-      result.start = $transformStream.Transformer$Start$0(option);
-    } else if ($transformStream.Transformer$isTransform(option)) {
-      result.transform = $transformStream.Transformer$Transform$0(option);
-    } else if ($transformStream.Transformer$isFlush(option)) {
-      result.flush = $transformStream.Transformer$Flush$0(option);
-    } else if ($transformStream.Transformer$isCancel(option)) {
-      result.cancel = $transformStream.Transformer$Cancel$0(option);
-    }
-  }
-  return result;
-}
-
-export const new_: typeof $transformStream.new$ = (transformer) => {
-  return toResult.fromThrows(() =>
-    new TransformStream(toTransformer(toArray(transformer)))
-  );
+export const build: typeof $transformStream.build = (builder) => {
+  return toResult.fromThrows(() => {
+    const transformer: Transformer = {};
+    setIfSome(
+      transformer,
+      "start",
+      $transformStream.Builder$Builder$start(builder),
+    );
+    setIfSome(
+      transformer,
+      "transform",
+      $transformStream.Builder$Builder$transform(builder),
+    );
+    setIfSome(
+      transformer,
+      "flush",
+      $transformStream.Builder$Builder$flush(builder),
+    );
+    setIfSome(
+      transformer,
+      "cancel",
+      $transformStream.Builder$Builder$cancel(builder),
+    );
+    return new TransformStream(transformer);
+  });
 };
 
 export const from_transform: typeof $transformStream.from_transform = (

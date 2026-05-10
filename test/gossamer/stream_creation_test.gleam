@@ -30,9 +30,9 @@ pub fn writable_stream_new_start_throws_test() {
 }
 
 pub fn transform_stream_new_start_throws_test() {
-  transform_stream.new([
-    transform_stream.Start(fn(_controller) { panic as "boom" }),
-  ])
+  transform_stream.new()
+  |> transform_stream.on_start(run: fn(_controller) { panic as "boom" })
+  |> transform_stream.build
   |> should.be_error
 }
 
@@ -422,13 +422,13 @@ pub fn writable_controller_error_test() {
 
 pub fn transform_controller_desired_size_test() {
   let assert Ok(transform) =
-    transform_stream.new([
-      transform_stream.Transform(fn(_chunk: String, controller) {
-        let _size = transform_controller.desired_size(controller)
-        let _ = transform_controller.enqueue(controller, "out")
-        promise.resolve(Nil)
-      }),
-    ])
+    transform_stream.new()
+    |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
+      let _size = transform_controller.desired_size(controller)
+      let _ = transform_controller.enqueue(controller, "out")
+      promise.resolve(Nil)
+    })
+    |> transform_stream.build
 
   let assert Ok(readable) =
     readable_stream.from_start(fn(controller) {
@@ -455,16 +455,16 @@ pub fn transform_controller_desired_size_test() {
 
 pub fn transform_controller_error_test() {
   let assert Ok(transform) =
-    transform_stream.new([
-      transform_stream.Transform(fn(_chunk: String, controller) {
-        let _ =
-          transform_controller.error(
-            controller,
-            dynamic.string("transform error"),
-          )
-        promise.resolve(Nil)
-      }),
-    ])
+    transform_stream.new()
+    |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
+      let _ =
+        transform_controller.error(
+          controller,
+          dynamic.string("transform error"),
+        )
+      promise.resolve(Nil)
+    })
+    |> transform_stream.build
 
   let assert Ok(source) =
     readable_stream.from_start(fn(controller) {
@@ -494,12 +494,12 @@ pub fn transform_controller_error_test() {
 
 pub fn transform_controller_terminate_test() {
   let assert Ok(transform) =
-    transform_stream.new([
-      transform_stream.Transform(fn(_chunk: String, controller) {
-        let _ = transform_controller.terminate(controller)
-        promise.resolve(Nil)
-      }),
-    ])
+    transform_stream.new()
+    |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
+      let _ = transform_controller.terminate(controller)
+      promise.resolve(Nil)
+    })
+    |> transform_stream.build
 
   let assert Ok(readable) =
     readable_stream.from_start(fn(controller) {
