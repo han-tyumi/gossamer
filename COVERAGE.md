@@ -40,21 +40,28 @@ interop. All APIs must work in Deno, Node.js, Bun, and browsers.
 
 ### Fetch & HTTP
 
-| Interface | Status | Module               |
-| --------- | ------ | -------------------- |
-| fetch()   | ✅     | `gossamer`           |
-| Headers   | ✅     | `gossamer/headers`   |
-| Request   | ✅     | `gossamer/request`   |
-| Response  | ✅     | `gossamer/response`  |
-| FormData  | ✅     | `gossamer/form_data` |
+| Interface | Status | Module                                    |
+| --------- | ------ | ----------------------------------------- |
+| fetch()   | ✅     | `gossamer/fetch_extra`                    |
+| FormData  | ✅     | `gossamer/form_data_extra` (file uploads) |
+
+`Headers`, `Request`, and `Response` are delegated to `gleam_http`. The
+outgoing-request body and Fetch-spec init dict (cache, credentials, mode,
+priority, integrity, keepalive, signal, redirect) live on `gossamer/fetch_extra`
+and `gossamer/fetch_options`. Plain `FormData` string and `BitArray` values use
+`gleam/fetch/form_data`; `gossamer/form_data_extra` adds `append_file` /
+`set_file` for multipart file uploads.
 
 ### URL
 
-| Interface       | Status | Module                       |
-| --------------- | ------ | ---------------------------- |
-| URL             | ✅     | `gossamer/url`               |
-| URLSearchParams | ✅     | `gossamer/url_search_params` |
-| URLPattern      | ✅     | `gossamer/url_pattern`       |
+| Interface  | Status | Module                 |
+| ---------- | ------ | ---------------------- |
+| URL        | ✅     | `gossamer/url`         |
+| URLPattern | ✅     | `gossamer/url_pattern` |
+
+`gossamer/url` is slimmed to `parse` + `is_valid` (WHATWG-strict; returns
+`gleam/uri.Uri`). `URLSearchParams` is delegated to `gleam/uri.parse_query`
+(returns `List(#(String, String))`).
 
 ### Streams
 
