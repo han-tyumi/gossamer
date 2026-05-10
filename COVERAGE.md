@@ -205,9 +205,13 @@ types, and expose functionality Gleam's stdlib doesn't cover.
 | WeakSet              | ✅     | `gossamer/weak_set`              |
 | WeakRef              | ✅     | `gossamer/weak_ref`              |
 | FinalizationRegistry | ✅     | `gossamer/finalization_registry` |
-| Array                | ✅     | `gossamer/array`                 |
 | String               | ✅     | `gossamer/string_extra`          |
 | Date                 | ✅     | `gossamer/time_extra`            |
+
+`Array` is delegated to `gleam/javascript/array`, which exposes it as a transit
+type for JS interop (`from_list` / `to_list` / `size` / `map` / `fold` /
+`fold_right` / `get`). For collection operations beyond those, convert to `List`
+via `array.to_list` and use `gleam/list`.
 
 ## Out of Scope
 
