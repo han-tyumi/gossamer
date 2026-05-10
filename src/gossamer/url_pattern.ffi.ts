@@ -1,33 +1,20 @@
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
 import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
-import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { fromArray } from "~/utils/list.ffi.ts";
+import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
-function toURLPatternInit(
-  options: $urlPattern.URLPatternInit$[],
-): URLPatternInit {
+function fromBuilder(builder: $urlPattern.Builder$): URLPatternInit {
   const result: URLPatternInit = {};
-  for (const option of options) {
-    if ($urlPattern.URLPatternInit$isProtocol(option)) {
-      result.protocol = $urlPattern.URLPatternInit$Protocol$0(option);
-    } else if ($urlPattern.URLPatternInit$isUsername(option)) {
-      result.username = $urlPattern.URLPatternInit$Username$0(option);
-    } else if ($urlPattern.URLPatternInit$isPassword(option)) {
-      result.password = $urlPattern.URLPatternInit$Password$0(option);
-    } else if ($urlPattern.URLPatternInit$isHostname(option)) {
-      result.hostname = $urlPattern.URLPatternInit$Hostname$0(option);
-    } else if ($urlPattern.URLPatternInit$isPort(option)) {
-      result.port = $urlPattern.URLPatternInit$Port$0(option);
-    } else if ($urlPattern.URLPatternInit$isPathname(option)) {
-      result.pathname = $urlPattern.URLPatternInit$Pathname$0(option);
-    } else if ($urlPattern.URLPatternInit$isSearch(option)) {
-      result.search = $urlPattern.URLPatternInit$Search$0(option);
-    } else if ($urlPattern.URLPatternInit$isHash(option)) {
-      result.hash = $urlPattern.URLPatternInit$Hash$0(option);
-    } else if ($urlPattern.URLPatternInit$isBaseURL(option)) {
-      result.baseURL = $urlPattern.URLPatternInit$BaseURL$0(option);
-    }
-  }
+  setIfSome(result, "protocol", $urlPattern.Builder$Builder$protocol(builder));
+  setIfSome(result, "username", $urlPattern.Builder$Builder$username(builder));
+  setIfSome(result, "password", $urlPattern.Builder$Builder$password(builder));
+  setIfSome(result, "hostname", $urlPattern.Builder$Builder$hostname(builder));
+  setIfSome(result, "port", $urlPattern.Builder$Builder$port(builder));
+  setIfSome(result, "pathname", $urlPattern.Builder$Builder$pathname(builder));
+  setIfSome(result, "search", $urlPattern.Builder$Builder$search(builder));
+  setIfSome(result, "hash", $urlPattern.Builder$Builder$hash(builder));
+  setIfSome(result, "baseURL", $urlPattern.Builder$Builder$base_url(builder));
   return result;
 }
 
@@ -72,15 +59,11 @@ export const to_fields: typeof $urlPattern.to_fields = (pattern) => {
   );
 };
 
-export const new_: typeof $urlPattern.new$ = (init) => {
-  return toResult.fromThrows(() =>
-    new URLPattern(toURLPatternInit(toArray(init)))
-  );
+export const build: typeof $urlPattern.build = (builder) => {
+  return toResult.fromThrows(() => new URLPattern(fromBuilder(builder)));
 };
 
-export const from_string: typeof $urlPattern.from_string = (
-  pattern,
-) => {
+export const from_string: typeof $urlPattern.from_string = (pattern) => {
   return toResult.fromThrows(() => new URLPattern(pattern));
 };
 
