@@ -1,1 +1,0 @@
-export type ErrorEvent$ = ErrorEvent;

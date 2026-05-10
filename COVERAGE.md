@@ -114,13 +114,13 @@ and `gossamer/fetch_options`. Plain `FormData` string and `BitArray` values use
 
 ### Events & DOM
 
-| Interface             | Status | Module                  | Notes                                  |
-| --------------------- | ------ | ----------------------- | -------------------------------------- |
-| Event                 | ✅     | `gossamer/event`        |                                        |
-| EventTarget           | ✅     | `gossamer/event_target` |                                        |
-| CustomEvent           | ✅     | `gossamer/custom_event` |                                        |
-| ErrorEvent            | ✅     | `gossamer/error_event`  |                                        |
-| PromiseRejectionEvent | ❌     | —                       | Not exposed as a global on Node or Bun |
+| Interface             | Status | Module | Notes                                                                                |
+| --------------------- | ------ | ------ | ------------------------------------------------------------------------------------ |
+| Event                 | ❌     | —      | Out of scope. Use a typed Gleam dispatcher; FFI for interop with JS-library targets. |
+| EventTarget           | ❌     | —      | Out of scope. Use a typed Gleam dispatcher; FFI for interop with JS-library targets. |
+| CustomEvent           | ❌     | —      | Out of scope. See Event.                                                             |
+| ErrorEvent            | ❌     | —      | Out of scope. Re-add receive-only when Worker support arrives.                       |
+| PromiseRejectionEvent | ❌     | —      | Not exposed as a global on Node or Bun.                                              |
 
 ### Cancellation
 
