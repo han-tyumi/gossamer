@@ -64,3 +64,9 @@ pub fn slice_range(
   from start: Int,
   to end: Int,
 ) -> ArrayBuffer
+
+/// Wraps the buffer's bytes as a `BitArray`. Returns `Detached` if the
+/// buffer is detached.
+///
+@external(javascript, "./array_buffer.ffi.mjs", "to_bit_array")
+pub fn to_bit_array(array_buffer: ArrayBuffer) -> Result(BitArray, BufferError)

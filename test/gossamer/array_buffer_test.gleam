@@ -95,3 +95,17 @@ pub fn resize_fixed_buffer_test() {
   let buffer = array_buffer.new(8)
   array_buffer.resize(buffer, 4) |> should.be_error()
 }
+
+pub fn to_bit_array_test() {
+  let buffer =
+    uint8_array.from_list([0x68, 0x69, 0x21, 0x00])
+    |> uint8_array.buffer
+  let assert Ok(bits) = array_buffer.to_bit_array(buffer)
+  bits |> should.equal(<<0x68, 0x69, 0x21, 0x00>>)
+}
+
+pub fn to_bit_array_detached_test() {
+  let buf = array_buffer.new(4)
+  let assert Ok(_) = array_buffer.transfer(buf)
+  array_buffer.to_bit_array(buf) |> should.be_error
+}
