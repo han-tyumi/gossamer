@@ -1,6 +1,30 @@
 import type * as $int8Array from "$/gossamer/gossamer/buffer/int8_array.mjs";
+import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
+
+function checkArrayDetached<T>(array: Int8Array, op: () => T) {
+  if ((array.buffer as ArrayBuffer).detached) {
+    return Result$Error($buffer.BufferError$Detached());
+  }
+  return Result$Ok(op());
+}
+
+function checkArrayRange<T>(
+  array: Int8Array,
+  index: number,
+  length: number,
+  op: () => T,
+) {
+  if ((array.buffer as ArrayBuffer).detached) {
+    return Result$Error($buffer.BufferError$Detached());
+  }
+  if (index < 0 || index + length > array.length) {
+    return Result$Error($buffer.BufferError$OutOfRange(index, array.length));
+  }
+  return Result$Ok(op());
+}
 
 export const new_: typeof $int8Array.new$ = () => new Int8Array();
 
@@ -10,21 +34,32 @@ export const from_length: typeof $int8Array.from_length = (length) =>
 export const from_list: typeof $int8Array.from_list = (list) =>
   new Int8Array(toArray(list));
 
-export const from_buffer: typeof $int8Array.from_buffer = (buffer) =>
-  toResult.fromThrows(() => new Int8Array(buffer));
+export const from_buffer: typeof $int8Array.from_buffer = (buffer) => {
+  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
+  return Result$Ok(new Int8Array(buffer));
+};
 
 export const from_buffer_range: typeof $int8Array.from_buffer_range = (
   buffer,
   byteOffset,
   length,
-) => toResult.fromThrows(() => new Int8Array(buffer, byteOffset, length));
+) => {
+  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
+  if (byteOffset < 0 || byteOffset + length > buffer.byteLength) {
+    return Result$Error(
+      $buffer.BufferError$OutOfRange(byteOffset + length, buffer.byteLength),
+    );
+  }
+  return Result$Ok(new Int8Array(buffer, byteOffset, length));
+};
 
 export const buffer: typeof $int8Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $int8Array.bytes = (array) =>
-  toResult.fromThrows(() =>
-    new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+  checkArrayDetached(
+    array,
+    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
   );
 
 export const byte_length: typeof $int8Array.byte_length = (array) =>
@@ -39,7 +74,12 @@ export const at: typeof $int8Array.at = (array, index) =>
   toResult(array.at(index));
 
 export const with_: typeof $int8Array.with$ = (array, index, value) =>
-  toResult.fromThrows(() => array.with(index, value));
+  checkArrayRange(
+    array,
+    index < 0 ? array.length + index : index,
+    1,
+    () => array.with(index, value),
+  );
 
 export const includes: typeof $int8Array.includes = (array, value) =>
   array.includes(value);
@@ -62,9 +102,8 @@ export const subarray: typeof $int8Array.subarray = (array, begin, end) =>
   array.subarray(begin, end);
 
 export const set: typeof $int8Array.set = (array, values) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, 0, values.length, () => {
     array.set(values);
-    return undefined;
   });
 
 export const set_with_offset: typeof $int8Array.set_with_offset = (
@@ -72,9 +111,8 @@ export const set_with_offset: typeof $int8Array.set_with_offset = (
   values,
   offset,
 ) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
-    return undefined;
   });
 
 export const fill: typeof $int8Array.fill = (array, value) => array.fill(value);

@@ -1,6 +1,6 @@
+import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/buffer/uint8_array.{type Uint8Array}
-import gossamer/js_error.{type JsError}
 
 /// A typed array of 8-bit signed integers.
 ///
@@ -26,31 +26,33 @@ pub fn from_length(length: Int) -> Int8Array
 pub fn from_list(list: List(Int)) -> Int8Array
 
 /// Creates an `Int8Array` view over the entirety of `buffer`. Returns
-/// an error if `buffer` is detached.
+/// `Detached` if `buffer` is detached.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int8Array, JsError)
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int8Array, BufferError)
 
 /// Creates an `Int8Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns an error if
-/// the range is out of bounds or `buffer` is detached.
+/// `byte_offset` and spanning `length` elements. Returns `Detached`
+/// if `buffer` is detached, or `OutOfRange` if the range falls outside
+/// `buffer`.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
   buffer: ArrayBuffer,
   byte_offset byte_offset: Int,
   length length: Int,
-) -> Result(Int8Array, JsError)
+) -> Result(Int8Array, BufferError)
 
 @external(javascript, "./int8_array.ffi.mjs", "buffer")
 pub fn buffer(array: Int8Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
-/// the underlying buffer. Returns an error if the underlying buffer
-/// has been detached or resized below the array's range.
+/// the underlying buffer. Returns `Detached` if the underlying buffer
+/// has been detached, or `OutOfRange` if it has been resized below the
+/// array's range.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "bytes")
-pub fn bytes(array: Int8Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Int8Array) -> Result(Uint8Array, BufferError)
 
 @external(javascript, "./int8_array.ffi.mjs", "byte_length")
 pub fn byte_length(array: Int8Array) -> Int
@@ -68,15 +70,15 @@ pub fn length(array: Int8Array) -> Int
 pub fn at(array: Int8Array, index index: Int) -> Result(Int, Nil)
 
 /// Returns a copy of `array` with the value at `index` replaced.
-/// Negative indices count from the end. Returns an error if `index`
-/// is out of range.
+/// Negative indices count from the end. Returns `OutOfRange` if
+/// `index` is out of range.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "with_")
 pub fn with(
   array: Int8Array,
   at_index index: Int,
   value value: Int,
-) -> Result(Int8Array, JsError)
+) -> Result(Int8Array, BufferError)
 
 @external(javascript, "./int8_array.ffi.mjs", "includes")
 pub fn includes(in array: Int8Array, value value: Int) -> Bool
@@ -100,25 +102,25 @@ pub fn slice_range(array: Int8Array, from start: Int, to end: Int) -> Int8Array
 @external(javascript, "./int8_array.ffi.mjs", "subarray")
 pub fn subarray(array: Int8Array, from begin: Int, to end: Int) -> Int8Array
 
-/// Copies `values` into `array` starting at index `0`. Returns an
-/// error if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at index `0`. Returns
+/// `OutOfRange` if `values` would extend past the end of `array`.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "set")
 pub fn set(
   in array: Int8Array,
   values values: Int8Array,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
-/// Copies `values` into `array` starting at `offset`. Returns an
-/// error if `offset` is negative or the copy would extend past the
-/// end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Int8Array,
   values values: Int8Array,
   offset offset: Int,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
 @external(javascript, "./int8_array.ffi.mjs", "fill")
 pub fn fill(array: Int8Array, with value: Int) -> Int8Array
