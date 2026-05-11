@@ -1,5 +1,5 @@
 import gleeunit/should
-import gossamer/weak_ref
+import gossamer/weak/weak_ref
 
 pub fn deref_object_test() {
   let target = #("opaque-tuple-target")

@@ -1,4 +1,4 @@
-import type * as $weakSet from "$/gossamer/gossamer/weak_set.mjs";
+import type * as $weakSet from "$/gossamer/gossamer/weak/weak_set.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 

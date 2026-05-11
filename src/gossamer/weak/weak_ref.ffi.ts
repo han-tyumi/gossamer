@@ -1,4 +1,4 @@
-import type * as $weakRef from "$/gossamer/gossamer/weak_ref.mjs";
+import type * as $weakRef from "$/gossamer/gossamer/weak/weak_ref.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $weakRef.new$ = (target) => {

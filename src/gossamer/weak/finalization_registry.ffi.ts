@@ -1,4 +1,4 @@
-import type * as $finalizationRegistry from "$/gossamer/gossamer/finalization_registry.mjs";
+import type * as $finalizationRegistry from "$/gossamer/gossamer/weak/finalization_registry.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $finalizationRegistry.new$ = (callback) => {

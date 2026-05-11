@@ -1,4 +1,4 @@
-import type * as $weakMap from "$/gossamer/gossamer/weak_map.mjs";
+import type * as $weakMap from "$/gossamer/gossamer/weak/weak_map.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 

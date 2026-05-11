@@ -1,5 +1,5 @@
 import gleeunit/should
-import gossamer/weak_set
+import gossamer/weak/weak_set
 
 pub fn new_test() {
   let _ = weak_set.new()

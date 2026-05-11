@@ -1,4 +1,4 @@
-import gossamer/finalization_registry
+import gossamer/weak/finalization_registry
 
 pub fn new_test() {
   let _ = finalization_registry.new(fn(_held) { Nil })
