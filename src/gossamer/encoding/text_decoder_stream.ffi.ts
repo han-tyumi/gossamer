@@ -1,8 +1,9 @@
 import type { BitArray } from "$/prelude.mjs";
+import * as $encoding from "$/gossamer/gossamer/encoding.mjs";
 import * as $textDecoderStream from "$/gossamer/gossamer/encoding/text_decoder_stream.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { fromBitArrayStream } from "~/utils/bit_array.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 const wrappedWritables = new WeakMap<
   TextDecoderStream,
@@ -15,7 +16,11 @@ export const build: typeof $textDecoderStream.build = (builder) => {
     fatal: $textDecoderStream.Builder$Builder$fatal(builder),
     ignoreBOM: $textDecoderStream.Builder$Builder$ignore_bom(builder),
   };
-  return toResult.fromThrows(() => new TextDecoderStream(label, options));
+  try {
+    return Result$Ok(new TextDecoderStream(label, options));
+  } catch {
+    return Result$Error($encoding.DecoderError$UnsupportedEncoding(label));
+  }
 };
 
 export const readable: typeof $textDecoderStream.readable = (decoder) => {

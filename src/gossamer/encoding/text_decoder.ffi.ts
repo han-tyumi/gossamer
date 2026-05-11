@@ -1,7 +1,8 @@
+import * as $encoding from "$/gossamer/gossamer/encoding.mjs";
 import * as $textDecoder from "$/gossamer/gossamer/encoding/text_decoder.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 function fromBuilder(builder: $textDecoder.Builder$): {
   label: string;
@@ -16,9 +17,29 @@ function fromBuilder(builder: $textDecoder.Builder$): {
   };
 }
 
+function constructDecoder(label: string, options: TextDecoderOptions) {
+  try {
+    return Result$Ok(new TextDecoder(label, options));
+  } catch {
+    return Result$Error($encoding.DecoderError$UnsupportedEncoding(label));
+  }
+}
+
+function decodeBytes(
+  decoder: TextDecoder,
+  input?: BufferSource,
+  stream?: boolean,
+) {
+  try {
+    return Result$Ok(decoder.decode(input, { stream }));
+  } catch {
+    return Result$Error($encoding.DecoderError$MalformedInput());
+  }
+}
+
 export const build: typeof $textDecoder.build = (builder) => {
   const { label, options } = fromBuilder(builder);
-  return toResult.fromThrows(() => new TextDecoder(label, options));
+  return constructDecoder(label, options);
 };
 
 export const encoding: typeof $textDecoder.encoding = (decoder) => {
@@ -34,19 +55,18 @@ export const is_ignore_bom: typeof $textDecoder.is_ignore_bom = (decoder) =>
 export const decode_chunk: typeof $textDecoder.decode_chunk = (
   decoder,
   input,
-) => {
-  return toResult.fromThrows(() =>
-    decoder.decode(toBufferSource(input), { stream: true })
-  );
-};
+) => decodeBytes(decoder, toBufferSource(input), true);
 
-export const flush: typeof $textDecoder.flush = (decoder) => {
-  return toResult.fromThrows(() => decoder.decode());
-};
+export const flush: typeof $textDecoder.flush = (decoder) =>
+  decodeBytes(decoder);
 
 export const decode: typeof $textDecoder.decode = (input, builder) => {
   const { label, options } = fromBuilder(builder);
-  return toResult.fromThrows(() =>
-    new TextDecoder(label, options).decode(toBufferSource(input))
-  );
+  let decoder;
+  try {
+    decoder = new TextDecoder(label, options);
+  } catch {
+    return Result$Error($encoding.DecoderError$UnsupportedEncoding(label));
+  }
+  return decodeBytes(decoder, toBufferSource(input));
 };

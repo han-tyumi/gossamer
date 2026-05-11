@@ -1,5 +1,4 @@
-import gossamer/encoding.{type Encoding}
-import gossamer/js_error.{type JsError}
+import gossamer/encoding.{type DecoderError, type Encoding}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/writable_stream.{type WritableStream}
 
@@ -40,10 +39,11 @@ pub fn with_ignore_bom(builder: Builder, value: Bool) -> Builder {
 }
 
 /// Constructs a `TextDecoderStream` from the configured `Builder`.
-/// Returns an error if the label isn't a recognized encoding.
+/// Returns `UnsupportedEncoding` if the label isn't a recognized
+/// encoding.
 ///
 @external(javascript, "./text_decoder_stream.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(TextDecoderStream, JsError)
+pub fn build(builder: Builder) -> Result(TextDecoderStream, DecoderError)
 
 /// The readable side of the decoder, yielding decoded strings.
 ///

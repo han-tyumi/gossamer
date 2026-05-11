@@ -1,5 +1,4 @@
-import gossamer/encoding.{type Encoding}
-import gossamer/js_error.{type JsError}
+import gossamer/encoding.{type DecoderError, type Encoding}
 
 /// Decodes a stream of bytes into text using a specified character
 /// encoding.
@@ -39,10 +38,10 @@ pub fn with_ignore_bom(builder: Builder, value: Bool) -> Builder {
 }
 
 /// Constructs a `TextDecoder` from the configured `Builder`. Returns
-/// an error if the label isn't a recognized encoding.
+/// `UnsupportedEncoding` if the label isn't a recognized encoding.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(TextDecoder, JsError)
+pub fn build(builder: Builder) -> Result(TextDecoder, DecoderError)
 
 /// The decoder's resolved encoding.
 ///
@@ -62,27 +61,31 @@ pub fn is_fatal(decoder: TextDecoder) -> Bool
 pub fn is_ignore_bom(decoder: TextDecoder) -> Bool
 
 /// Decodes `input`, keeping state for multi-byte sequences that span
-/// chunks. Returns an error if the decoder is fatal and `input`
-/// contains malformed data.
+/// chunks. Returns `MalformedInput` if the decoder is fatal and
+/// `input` contains bytes that don't form a valid sequence.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "decode_chunk")
 pub fn decode_chunk(
   decoder: TextDecoder,
   input: BitArray,
-) -> Result(String, JsError)
+) -> Result(String, DecoderError)
 
 /// Emits any remaining bytes buffered from prior `decode_chunk` calls.
-/// Returns an error if the decoder is fatal and an incomplete
+/// Returns `MalformedInput` if the decoder is fatal and an incomplete
 /// multi-byte sequence was left in the buffer.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "flush")
-pub fn flush(decoder: TextDecoder) -> Result(String, JsError)
+pub fn flush(decoder: TextDecoder) -> Result(String, DecoderError)
 
 /// Decodes `input` using the given builder configuration in a single
-/// shot (no streaming state retained). Returns an error if the
-/// builder's label isn't a recognized encoding, or if the builder is
-/// fatal and decoding encounters malformed data. For default UTF-8
-/// decoding, use `gleam/bit_array.to_string`.
+/// shot (no streaming state retained). Returns `UnsupportedEncoding`
+/// if the builder's label isn't a recognized encoding, or
+/// `MalformedInput` if the builder is fatal and decoding encounters
+/// bytes that don't form a valid sequence. For default UTF-8 decoding,
+/// use `gleam/bit_array.to_string`.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "decode")
-pub fn decode(input: BitArray, with builder: Builder) -> Result(String, JsError)
+pub fn decode(
+  input: BitArray,
+  with builder: Builder,
+) -> Result(String, DecoderError)
