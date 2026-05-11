@@ -1,4 +1,6 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/time/duration.{type Duration}
+import gleam/time/timestamp.{type Timestamp}
 import gossamer/performance_entry.{type PerformanceEntry}
 
 /// Errors raised by `performance.mark` and `performance.measure`.
@@ -14,17 +16,19 @@ pub type PerformanceError {
   MarkNotFound
 }
 
-/// Returns a high-resolution timestamp (in milliseconds) relative to the
-/// time origin.
+/// Returns the high-resolution elapsed time since `time_origin`. Pair
+/// with `time_origin` to recover an absolute `Timestamp`, or subtract
+/// two `now()` values via `duration.difference` to measure elapsed
+/// time.
 ///
 @external(javascript, "./performance.ffi.mjs", "now")
-pub fn now() -> Float
+pub fn now() -> Duration
 
-/// Returns the time origin — the reference point all performance
-/// timestamps are measured from.
+/// Returns the time origin — the absolute reference point all
+/// performance timestamps are measured from.
 ///
 @external(javascript, "./performance.ffi.mjs", "time_origin")
-pub fn time_origin() -> Float
+pub fn time_origin() -> Timestamp
 
 /// Records a performance mark with `name` at the current time. Returns
 /// `ReservedName` in browser Window contexts when `name` collides with

@@ -1,24 +1,30 @@
 import gleam/list
+import gleam/order
+import gleam/time/duration
+import gleam/time/timestamp
 import gleeunit/should
 import gossamer/performance
 import gossamer/performance_entry
 
 pub fn now_test() {
-  let timestamp = performance.now()
-  should.be_true(timestamp >=. 0.0)
+  let elapsed = performance.now()
+  duration.compare(elapsed, duration.seconds(0))
+  |> should.not_equal(order.Lt)
 }
 
 pub fn time_origin_test() {
   let origin = performance.time_origin()
-  should.be_true(origin >. 0.0)
+  timestamp.compare(origin, timestamp.from_unix_seconds(0))
+  |> should.equal(order.Gt)
 }
 
 pub fn mark_test() {
   let assert Ok(entry) = performance.mark("test-mark")
   performance_entry.name(entry) |> should.equal("test-mark")
   performance_entry.entry_type(entry) |> should.equal("mark")
-  should.be_true(performance_entry.start_time(entry) >=. 0.0)
-  performance_entry.duration(entry) |> should.equal(0.0)
+  duration.compare(performance_entry.start_time(entry), duration.seconds(0))
+  |> should.not_equal(order.Lt)
+  performance_entry.duration(entry) |> should.equal(duration.seconds(0))
   performance.clear_marks()
 }
 
@@ -29,7 +35,8 @@ pub fn measure_test() {
     performance.measure("test-measure", "measure-start", "measure-end")
   performance_entry.name(entry) |> should.equal("test-measure")
   performance_entry.entry_type(entry) |> should.equal("measure")
-  should.be_true(performance_entry.duration(entry) >=. 0.0)
+  duration.compare(performance_entry.duration(entry), duration.seconds(0))
+  |> should.not_equal(order.Lt)
   performance.clear_marks()
   performance.clear_measures()
 }

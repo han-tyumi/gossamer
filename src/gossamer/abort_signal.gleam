@@ -1,4 +1,5 @@
 import gleam/dynamic.{type Dynamic}
+import gleam/time/duration.{type Duration}
 
 /// A signal that communicates when an operation should be aborted.
 /// Used with `fetch`, streams, and other cancellable operations.
@@ -14,12 +15,13 @@ pub fn abort(reason: r) -> AbortSignal
 @external(javascript, "./abort_signal.ffi.mjs", "any")
 pub fn any(signals: List(AbortSignal)) -> AbortSignal
 
-/// Creates an `AbortSignal` that aborts automatically after `milliseconds`.
-/// Negative values are treated as `0`. Node enforces an unsigned 32-bit
-/// upper bound; Deno and Bun accept values up to `9_007_199_254_740_991`.
+/// Creates an `AbortSignal` that aborts automatically after `duration`.
+/// Negative durations are treated as zero. Node enforces an unsigned
+/// 32-bit upper bound on the resolved millisecond value; Deno and Bun
+/// accept values up to `9_007_199_254_740_991`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
-pub fn timeout(milliseconds: Int) -> AbortSignal
+pub fn timeout(after duration: Duration) -> AbortSignal
 
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool

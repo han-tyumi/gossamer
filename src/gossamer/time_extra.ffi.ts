@@ -1,14 +1,7 @@
 import { to_milliseconds } from "$/gleam_time/gleam/time/duration.mjs";
-import {
-  type Timestamp$,
-  to_unix_seconds_and_nanoseconds,
-} from "$/gleam_time/gleam/time/timestamp.mjs";
+import type { Timestamp$ } from "$/gleam_time/gleam/time/timestamp.mjs";
 import type * as $time_extra from "$/gossamer/gossamer/time_extra.mjs";
-
-function timestampToMs(timestamp: Timestamp$): number {
-  const [seconds, nanoseconds] = to_unix_seconds_and_nanoseconds(timestamp);
-  return seconds * 1000 + nanoseconds / 1_000_000;
-}
+import { timestampToMs } from "~/utils/time.ffi.ts";
 
 function timestampToDate(timestamp: Timestamp$): Date {
   return new Date(timestampToMs(timestamp));

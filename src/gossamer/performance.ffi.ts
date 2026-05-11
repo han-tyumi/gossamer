@@ -1,13 +1,14 @@
 import * as $performance from "$/gossamer/gossamer/performance.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray } from "~/utils/list.ffi.ts";
+import { msToDuration, msToTimestamp } from "~/utils/time.ffi.ts";
 
 export const now: typeof $performance.now = () => {
-  return performance.now();
+  return msToDuration(performance.now());
 };
 
 export const time_origin: typeof $performance.time_origin = () => {
-  return performance.timeOrigin;
+  return msToTimestamp(performance.timeOrigin);
 };
 
 export const mark: typeof $performance.mark = (name) => {

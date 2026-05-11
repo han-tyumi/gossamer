@@ -1,5 +1,6 @@
 import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
+import { msToDuration } from "~/utils/time.ffi.ts";
 
 export const name: typeof $performanceEntry.name = (entry) => {
   return entry.name;
@@ -10,11 +11,11 @@ export const entry_type: typeof $performanceEntry.entry_type = (entry) => {
 };
 
 export const start_time: typeof $performanceEntry.start_time = (entry) => {
-  return entry.startTime;
+  return msToDuration(entry.startTime);
 };
 
 export const duration: typeof $performanceEntry.duration = (entry) => {
-  return entry.duration;
+  return msToDuration(entry.duration);
 };
 
 export const detail: typeof $performanceEntry.detail = (entry) => {
