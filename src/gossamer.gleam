@@ -3,6 +3,8 @@
 //// `gossamer/url`, `gossamer/stream/readable_stream`, `gossamer/fetch_extra`,
 //// etc.).
 
+import gleam/time/duration.{type Duration}
+
 /// Errors raised by `structured_clone`.
 pub type StructuredCloneError {
   /// `value` contains a function, symbol, `DOM` node, or other
@@ -57,18 +59,19 @@ pub fn clear_timeout(id: Int) -> Nil
 @external(javascript, "./gossamer.ffi.mjs", "queue_microtask")
 pub fn queue_microtask(run func: fn() -> a) -> Nil
 
-/// Schedules `callback` to run repeatedly every `delay` milliseconds.
-/// Returns an id that can be passed to `clear_interval` to cancel.
+/// Schedules `callback` to run repeatedly every `delay`. Returns an id
+/// that can be passed to `clear_interval` to cancel. Negative durations
+/// are treated as zero.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_interval")
-pub fn set_interval(every delay: Int, run callback: fn() -> a) -> Int
+pub fn set_interval(every delay: Duration, run callback: fn() -> a) -> Int
 
-/// Sets a timer which executes a function once after the delay
-/// (in milliseconds) elapses. Returns an id which may be used to cancel the
-/// timeout.
+/// Sets a timer which executes `callback` once after `delay` elapses.
+/// Returns an id that can be passed to `clear_timeout` to cancel.
+/// Negative durations are treated as zero.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_timeout")
-pub fn set_timeout(after delay: Int, run callback: fn() -> a) -> Int
+pub fn set_timeout(after delay: Duration, run callback: fn() -> a) -> Int
 
 /// Returns the runtime's user agent string (e.g., browser identity,
 /// Deno/Node version).

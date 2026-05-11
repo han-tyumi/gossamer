@@ -1,5 +1,6 @@
 import * as $gossamer from "$/gossamer/gossamer.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { durationToMs } from "~/utils/time.ffi.ts";
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
@@ -56,11 +57,15 @@ export const set_interval: typeof $gossamer.set_interval = (
   delay,
   callback,
 ) => {
-  return Number(globalThis.setInterval(callback, delay));
+  return Number(
+    globalThis.setInterval(callback, Math.max(0, durationToMs(delay))),
+  );
 };
 
 export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
-  return Number(globalThis.setTimeout(callback, delay));
+  return Number(
+    globalThis.setTimeout(callback, Math.max(0, durationToMs(delay))),
+  );
 };
 
 export const user_agent: typeof $gossamer.user_agent = () => {

@@ -1,4 +1,5 @@
 import gleam/javascript/promise
+import gleam/time/duration
 import gleeunit/should
 import gossamer
 
@@ -50,7 +51,7 @@ pub fn set_timeout_and_clear_test() {
   let #(p, resolve) = promise.start()
 
   let id =
-    gossamer.set_timeout(10, fn() {
+    gossamer.set_timeout(duration.milliseconds(10), fn() {
       resolve("fired")
       Nil
     })
@@ -63,12 +64,12 @@ pub fn set_timeout_and_clear_test() {
 }
 
 pub fn clear_timeout_test() {
-  let id = gossamer.set_timeout(100_000, fn() { Nil })
+  let id = gossamer.set_timeout(duration.seconds(100), fn() { Nil })
   gossamer.clear_timeout(id)
 }
 
 pub fn set_interval_and_clear_test() {
-  let id = gossamer.set_interval(100_000, fn() { Nil })
+  let id = gossamer.set_interval(duration.seconds(100), fn() { Nil })
   should.be_true(id >= 0)
   gossamer.clear_interval(id)
 }
