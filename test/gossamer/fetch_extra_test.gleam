@@ -7,9 +7,9 @@ import gleam/javascript/promise.{type Promise}
 import gleeunit/should
 import gossamer/abort_signal
 import gossamer/fetch_extra
-import gossamer/readable_stream
-import gossamer/readable_stream/default_controller
 import gossamer/response_type
+import gossamer/stream/readable_stream
+import gossamer/stream/readable_stream/default_controller
 import runtime
 
 @external(javascript, "./fetch_extra_test.ffi.mjs", "make_test_response")

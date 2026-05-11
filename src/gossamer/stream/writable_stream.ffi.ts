@@ -1,4 +1,4 @@
-import * as $writableStream from "$/gossamer/gossamer/writable_stream.mjs";
+import * as $writableStream from "$/gossamer/gossamer/stream/writable_stream.mjs";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 

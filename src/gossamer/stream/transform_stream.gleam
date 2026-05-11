@@ -2,9 +2,11 @@ import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/js_error.{type JsError}
-import gossamer/readable_stream.{type ReadableStream}
-import gossamer/transform_stream/default_controller.{type DefaultController}
-import gossamer/writable_stream.{type WritableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
+import gossamer/stream/transform_stream/default_controller.{
+  type DefaultController,
+}
+import gossamer/stream/writable_stream.{type WritableStream}
 
 /// A pair of streams — a writable side that receives input and a readable
 /// side that produces transformed output.

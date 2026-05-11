@@ -1,6 +1,6 @@
 import gleam/javascript/promise.{type Promise}
 import gossamer/js_error.{type JsError}
-import gossamer/readable_stream/read_result.{type ReadResult}
+import gossamer/stream/readable_stream/read_result.{type ReadResult}
 
 /// A locked reader over a `ReadableStream`.
 ///

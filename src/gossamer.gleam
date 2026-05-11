@@ -1,6 +1,6 @@
 //// Top-level cross-runtime APIs: timers, base64, structured cloning,
 //// and more. Domain-specific APIs live in submodules (see
-//// `gossamer/url`, `gossamer/readable_stream`, `gossamer/fetch_extra`,
+//// `gossamer/url`, `gossamer/stream/readable_stream`, `gossamer/fetch_extra`,
 //// etc.).
 
 import gossamer/js_error.{type JsError}

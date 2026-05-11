@@ -5,9 +5,11 @@ import gossamer/abort_signal.{type AbortSignal}
 import gossamer/async_iterator.{type AsyncIterator}
 import gossamer/iterator.{type Iterator}
 import gossamer/js_error.{type JsError}
-import gossamer/readable_stream/default_controller.{type DefaultController}
-import gossamer/readable_stream/reader.{type Reader}
-import gossamer/writable_stream.{type WritableStream}
+import gossamer/stream/readable_stream/default_controller.{
+  type DefaultController,
+}
+import gossamer/stream/readable_stream/reader.{type Reader}
+import gossamer/stream/writable_stream.{type WritableStream}
 
 /// A pull-based stream of bytes or objects, used as a source for data.
 ///

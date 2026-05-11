@@ -1,4 +1,4 @@
-import type * as $writer from "$/gossamer/gossamer/writable_stream/writer.mjs";
+import type * as $writer from "$/gossamer/gossamer/stream/writable_stream/writer.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const closed: typeof $writer.closed = (

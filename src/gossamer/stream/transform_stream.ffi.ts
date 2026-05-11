@@ -1,4 +1,4 @@
-import * as $transformStream from "$/gossamer/gossamer/transform_stream.mjs";
+import * as $transformStream from "$/gossamer/gossamer/stream/transform_stream.mjs";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 

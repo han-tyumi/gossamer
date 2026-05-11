@@ -1,4 +1,4 @@
-import type * as $defaultController from "$/gossamer/gossamer/writable_stream/default_controller.mjs";
+import type * as $defaultController from "$/gossamer/gossamer/stream/writable_stream/default_controller.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const signal: typeof $defaultController.signal = (controller) => {

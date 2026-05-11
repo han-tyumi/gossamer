@@ -1,4 +1,4 @@
-import * as $readableStream from "$/gossamer/gossamer/readable_stream.mjs";
+import * as $readableStream from "$/gossamer/gossamer/stream/readable_stream.mjs";
 import {
   fromBitArrayReadable,
   toBitArrayResult,

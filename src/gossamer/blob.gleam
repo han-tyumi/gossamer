@@ -1,7 +1,7 @@
 import gleam/fetch.{type FetchError}
 import gleam/javascript/promise.{type Promise}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/readable_stream.{type ReadableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
 
 /// A file-like object of immutable, raw data. Can be read as text, bytes,
 /// or a stream.

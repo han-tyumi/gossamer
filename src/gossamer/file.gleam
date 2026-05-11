@@ -2,7 +2,7 @@ import gleam/fetch.{type FetchError}
 import gleam/javascript/promise.{type Promise}
 import gossamer/blob.{type Blob}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/readable_stream.{type ReadableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
 
 /// A `Blob` with a filename and last-modified timestamp.
 ///

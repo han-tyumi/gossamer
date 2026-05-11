@@ -1,6 +1,6 @@
 import gossamer/encoding.{type Encoding}
-import gossamer/readable_stream.{type ReadableStream}
-import gossamer/writable_stream.{type WritableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
+import gossamer/stream/writable_stream.{type WritableStream}
 
 /// A stream-based encoder: writes text to the writable side, reads UTF-8
 /// bytes from the readable side.

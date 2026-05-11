@@ -39,8 +39,8 @@ import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/js_error.{type JsError}
-import gossamer/readable_stream.{type ReadableStream}
 import gossamer/response_type.{type ResponseType}
+import gossamer/stream/readable_stream.{type ReadableStream}
 
 /// A builder for fetch options. Construct with `options` and chain
 /// setters; pass to `send` (or its variants) via the `with` label.

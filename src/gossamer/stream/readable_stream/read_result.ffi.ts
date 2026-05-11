@@ -1,7 +1,7 @@
 import {
   ReadResult$Done,
   ReadResult$Value,
-} from "$/gossamer/gossamer/readable_stream/read_result.mjs";
+} from "$/gossamer/gossamer/stream/readable_stream/read_result.mjs";
 import { toOption } from "~/utils/option.ffi.ts";
 
 export function toReadResult<T>(result: ReadableStreamReadResult<T>) {

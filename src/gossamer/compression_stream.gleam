@@ -1,5 +1,5 @@
-import gossamer/readable_stream.{type ReadableStream}
-import gossamer/writable_stream.{type WritableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
+import gossamer/stream/writable_stream.{type WritableStream}
 
 /// A transform stream that compresses its input.
 ///

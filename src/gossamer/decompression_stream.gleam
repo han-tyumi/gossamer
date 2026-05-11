@@ -1,8 +1,8 @@
 import gossamer/compression_stream.{
   type CompressionError, type CompressionFormat,
 }
-import gossamer/readable_stream.{type ReadableStream}
-import gossamer/writable_stream.{type WritableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
+import gossamer/stream/writable_stream.{type WritableStream}
 
 /// A transform stream that decompresses its input.
 ///

@@ -1,5 +1,5 @@
-import type * as $reader from "$/gossamer/gossamer/readable_stream/reader.mjs";
-import { toReadResult } from "~/gossamer/readable_stream/read_result.ffi.ts";
+import type * as $reader from "$/gossamer/gossamer/stream/readable_stream/reader.mjs";
+import { toReadResult } from "~/gossamer/stream/readable_stream/read_result.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const closed: typeof $reader.closed = (

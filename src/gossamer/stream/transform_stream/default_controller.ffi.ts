@@ -1,17 +1,10 @@
-import type * as $defaultController from "$/gossamer/gossamer/readable_stream/default_controller.mjs";
+import type * as $defaultController from "$/gossamer/gossamer/stream/transform_stream/default_controller.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const desired_size: typeof $defaultController.desired_size = (
   controller,
 ) => {
   return toResult(controller.desiredSize);
-};
-
-export const close: typeof $defaultController.close = (controller) => {
-  return toResult.fromThrows(() => {
-    controller.close();
-    return undefined;
-  });
 };
 
 export const enqueue: typeof $defaultController.enqueue = (
@@ -27,6 +20,13 @@ export const enqueue: typeof $defaultController.enqueue = (
 export const error: typeof $defaultController.error = (controller, reason) => {
   return toResult.fromThrows(() => {
     controller.error(reason);
+    return undefined;
+  });
+};
+
+export const terminate: typeof $defaultController.terminate = (controller) => {
+  return toResult.fromThrows(() => {
+    controller.terminate();
     return undefined;
   });
 };

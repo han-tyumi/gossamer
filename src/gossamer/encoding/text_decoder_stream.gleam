@@ -1,6 +1,6 @@
 import gossamer/encoding.{type DecoderError, type Encoding}
-import gossamer/readable_stream.{type ReadableStream}
-import gossamer/writable_stream.{type WritableStream}
+import gossamer/stream/readable_stream.{type ReadableStream}
+import gossamer/stream/writable_stream.{type WritableStream}
 
 /// A stream-based decoder: writes bytes to the writable side, reads text
 /// from the readable side.

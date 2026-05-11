@@ -5,15 +5,15 @@ import gleam/option.{None}
 import gleeunit/should
 import gossamer/async_iterator
 import gossamer/iterator_result
-import gossamer/readable_stream
-import gossamer/readable_stream/default_controller
-import gossamer/readable_stream/read_result
-import gossamer/readable_stream/reader
-import gossamer/transform_stream
-import gossamer/transform_stream/default_controller as transform_controller
-import gossamer/writable_stream
-import gossamer/writable_stream/default_controller as writable_controller
-import gossamer/writable_stream/writer
+import gossamer/stream/readable_stream
+import gossamer/stream/readable_stream/default_controller
+import gossamer/stream/readable_stream/read_result
+import gossamer/stream/readable_stream/reader
+import gossamer/stream/transform_stream
+import gossamer/stream/transform_stream/default_controller as transform_controller
+import gossamer/stream/writable_stream
+import gossamer/stream/writable_stream/default_controller as writable_controller
+import gossamer/stream/writable_stream/writer
 
 pub fn readable_stream_new_start_throws_test() {
   readable_stream.new()

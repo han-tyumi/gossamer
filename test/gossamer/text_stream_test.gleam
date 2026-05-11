@@ -4,10 +4,10 @@ import gleeunit/should
 import gossamer/encoding
 import gossamer/encoding/text_decoder_stream
 import gossamer/encoding/text_encoder_stream
-import gossamer/readable_stream
-import gossamer/readable_stream/default_controller
-import gossamer/readable_stream/read_result
-import gossamer/readable_stream/reader
+import gossamer/stream/readable_stream
+import gossamer/stream/readable_stream/default_controller
+import gossamer/stream/readable_stream/read_result
+import gossamer/stream/readable_stream/reader
 
 pub fn text_encoder_stream_new_test() {
   let encoder = text_encoder_stream.new()

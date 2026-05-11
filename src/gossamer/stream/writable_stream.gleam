@@ -2,8 +2,10 @@ import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/js_error.{type JsError}
-import gossamer/writable_stream/default_controller.{type DefaultController}
-import gossamer/writable_stream/writer.{type Writer}
+import gossamer/stream/writable_stream/default_controller.{
+  type DefaultController,
+}
+import gossamer/stream/writable_stream/writer.{type Writer}
 
 /// A destination stream for writing bytes or objects.
 ///
