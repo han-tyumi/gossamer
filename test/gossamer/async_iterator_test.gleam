@@ -110,6 +110,14 @@ pub fn throw_passes_reason_test() {
   promise.resolve(Nil)
 }
 
+pub fn next_callback_throws_test() {
+  let iter = async_iterator.new(fn(_) { panic as "next boom" })
+
+  use result <- promise.await(async_iterator.next(iter))
+  let assert Error(iteration.CallbackThrew(_)) = result
+  promise.resolve(Nil)
+}
+
 pub fn for_await_test() {
   // `for_await` consumes the iterator. After it resolves, `next` must
   // return Return.

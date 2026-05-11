@@ -96,6 +96,14 @@ pub fn throw_passes_reason_test() {
   |> should.equal(Ok(iteration.Handled(iteration.Return("specific-reason"))))
 }
 
+pub fn return_callback_throws_test() {
+  let iter =
+    iterator.new(fn(_) { iteration.Yield(1) })
+    |> iterator.with_return(fn(_value) { panic as "handler boom" })
+
+  let assert Error(iteration.CallbackThrew(_)) = iterator.return(iter)
+}
+
 pub fn for_test() {
   // `for` consumes the iterator. After it runs, `next` must return Return.
   let iter = iterator.from_list([1, 2, 3])

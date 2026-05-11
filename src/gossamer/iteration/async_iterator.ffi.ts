@@ -8,12 +8,12 @@ import {
   Result$Ok,
 } from "$/prelude.mjs";
 import {
+  toCallbackResultPromise,
   toGleamIteratorResult,
   toIteratorResult,
 } from "~/gossamer/iteration.ffi.ts";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $asyncIterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $asyncIterator.new$<TNext, T, TReturn>>
@@ -53,7 +53,7 @@ export const from_list: typeof $asyncIterator.from_list = <T>(
 export const to_list: typeof $asyncIterator.to_list = <T>(
   iterator: AsyncIterator<T, unknown, unknown>,
 ) => {
-  return toResult.fromPromise((async () => {
+  return toCallbackResultPromise((async () => {
     const values: T[] = [];
     while (true) {
       // deno-lint-ignore no-await-in-loop
@@ -109,7 +109,7 @@ export const with_throw: typeof $asyncIterator.with_throw = <
 export const next: typeof $asyncIterator.next = <T, TReturn, TNext>(
   iterator: AsyncIterator<T, TReturn, TNext>,
 ) => {
-  return toResult.fromPromise(
+  return toCallbackResultPromise(
     Promise.resolve(iterator.next()).then((result) =>
       toGleamIteratorResult(result)
     ),
@@ -124,7 +124,7 @@ export const next_with: typeof $asyncIterator.next_with = <
   iterator: AsyncIterator<T, TReturn, TNext>,
   value: Parameters<typeof $asyncIterator.next_with<T, TReturn, TNext>>[1],
 ) => {
-  return toResult.fromPromise(
+  return toCallbackResultPromise(
     Promise.resolve(iterator.next(value)).then((result) =>
       toGleamIteratorResult(result)
     ),
@@ -139,7 +139,7 @@ export const return_: typeof $asyncIterator.return$ = <T, TReturn, TNext>(
       Result$Ok($iteration.IteratorHandlerOutcome$NoHandler()),
     );
   }
-  return toResult.fromPromise(
+  return toCallbackResultPromise(
     iterator.return().then((result) =>
       $iteration.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
@@ -161,7 +161,7 @@ export const return_with: typeof $asyncIterator.return_with = <
       Result$Ok($iteration.IteratorHandlerOutcome$NoHandler()),
     );
   }
-  return toResult.fromPromise(
+  return toCallbackResultPromise(
     iterator.return(value).then((result) =>
       $iteration.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
@@ -179,7 +179,7 @@ export const throw_: typeof $asyncIterator.throw$ = <T, TReturn, TNext>(
       Result$Ok($iteration.IteratorHandlerOutcome$NoHandler()),
     );
   }
-  return toResult.fromPromise(
+  return toCallbackResultPromise(
     iterator.throw(reason).then((result) =>
       $iteration.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
@@ -196,7 +196,7 @@ export const for_await: typeof $asyncIterator.for_await = <
   iterator: AsyncIterator<T, TReturn, TNext>,
   fun: Parameters<typeof $asyncIterator.for_await<T>>[1],
 ) => {
-  return toResult.fromPromise((async () => {
+  return toCallbackResultPromise((async () => {
     while (true) {
       // deno-lint-ignore no-await-in-loop
       const result = await iterator.next();

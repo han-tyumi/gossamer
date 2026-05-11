@@ -1,7 +1,8 @@
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option}
-import gossamer/iteration.{type IteratorHandlerOutcome, type IteratorResult}
-import gossamer/js_error.{type JsError}
+import gossamer/iteration.{
+  type IteratorError, type IteratorHandlerOutcome, type IteratorResult,
+}
 
 /// A pull-based iterator that yields values asynchronously. Each call to
 /// `next` returns a promise. `a` is the yielded value type, `return` is
@@ -27,12 +28,12 @@ pub fn new(
 pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 
 /// Collects all values from an async iterator into a list. Consumes the
-/// iterator. Returns an error if any `next` call rejects.
+/// iterator. Returns `Error(CallbackThrew(_))` if any `next` call rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "to_list")
 pub fn to_list(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(List(a), JsError))
+) -> Promise(Result(List(a), IteratorError))
 
 /// Adds a `return` handler called when the consumer ends iteration early.
 ///
@@ -51,33 +52,33 @@ pub fn with_throw(
 ) -> AsyncIterator(a, return, next)
 
 /// Advances the iterator and returns a promise for the next result.
-/// Returns an error if the underlying `next` callback throws or returns
-/// a rejecting promise.
+/// Returns `Error(CallbackThrew(_))` if the underlying `next` callback
+/// throws or returns a rejecting promise.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "next")
 pub fn next(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(IteratorResult(a, return), JsError))
+) -> Promise(Result(IteratorResult(a, return), IteratorError))
 
 /// Advances the iterator, passing `value` to its internal logic. Returns
-/// an error if the underlying callback throws or returns a rejecting
-/// promise.
+/// `Error(CallbackThrew(_))` if the underlying callback throws or returns
+/// a rejecting promise.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "next_with")
 pub fn next_with(
   iterator: AsyncIterator(a, return, next),
   value: next,
-) -> Promise(Result(IteratorResult(a, return), JsError))
+) -> Promise(Result(IteratorResult(a, return), IteratorError))
 
 /// Ends iteration early by invoking the iterator's optional `return`
 /// handler. `Ok(NoHandler)` if the iterator doesn't define one;
-/// `Ok(Handled)` carries the result the handler produced. Returns an
-/// error if the handler rejects.
+/// `Ok(Handled)` carries the result the handler produced. Returns
+/// `Error(CallbackThrew(_))` if the handler rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), IteratorError))
 
 /// Like `return`, but passes `value` to the iterator's `return` handler.
 /// `value` is discarded if the iterator doesn't define one.
@@ -86,25 +87,25 @@ pub fn return(
 pub fn return_with(
   iterator: AsyncIterator(a, return, next),
   value: return,
-) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), IteratorError))
 
 /// Signals an error to the iterator by invoking its optional `throw`
 /// handler. `Ok(NoHandler)` if the iterator doesn't define one — `reason`
 /// is discarded; the caller must decide whether to propagate. `Ok(Handled)`
-/// carries the result the handler produced. Returns an error if the
-/// handler itself rejects.
+/// carries the result the handler produced. Returns
+/// `Error(CallbackThrew(_))` if the handler itself rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: AsyncIterator(a, return, next),
   reason reason: e,
-) -> Promise(Result(IteratorHandlerOutcome(a, return), JsError))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), IteratorError))
 
 /// Consumes the iterator, calling `fun` on each yielded value. Returns
-/// an error if the iterator or callback throws.
+/// `Error(CallbackThrew(_))` if the iterator or `fun` throws or rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "for_await")
 pub fn for_await(
   in iterator: AsyncIterator(a, return, next),
   run fun: fn(a) -> any,
-) -> Promise(Result(Nil, JsError))
+) -> Promise(Result(Nil, IteratorError))

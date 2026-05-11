@@ -8,6 +8,7 @@ import {
   Result$Ok,
 } from "$/prelude.mjs";
 import {
+  toCallbackResult,
   toGleamIteratorResult,
   toIteratorResult,
 } from "~/gossamer/iteration.ffi.ts";
@@ -121,7 +122,7 @@ export const return_: typeof $iterator.return$ = <T, TReturn, TNext>(
       $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
-  return toResult.fromThrows(() =>
+  return toCallbackResult(() =>
     $iteration.IteratorHandlerOutcome$Handled(
       toGleamIteratorResult(returnFn.call(iterator)),
     )
@@ -138,7 +139,7 @@ export const return_with: typeof $iterator.return_with = <T, TReturn, TNext>(
       $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
-  return toResult.fromThrows(() =>
+  return toCallbackResult(() =>
     $iteration.IteratorHandlerOutcome$Handled(
       toGleamIteratorResult(returnFn.call(iterator, value)),
     )
@@ -155,7 +156,7 @@ export const throw_: typeof $iterator.throw$ = <T, TReturn, TNext>(
       $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
-  return toResult.fromThrows(() =>
+  return toCallbackResult(() =>
     $iteration.IteratorHandlerOutcome$Handled(
       toGleamIteratorResult(throwFn.call(iterator, reason)),
     )
