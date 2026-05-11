@@ -1,6 +1,6 @@
+import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/buffer/uint8_array.{type Uint8Array}
-import gossamer/js_error.{type JsError}
 
 /// A typed array of 32-bit IEEE 754 single-precision floats. Values
 /// are rounded to the nearest single-precision value on write — Gleam
@@ -23,34 +23,36 @@ pub fn from_length(length: Int) -> Float32Array
 @external(javascript, "./float32_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Float)) -> Float32Array
 
-/// Creates a `Float32Array` view over `buffer`. Returns an error if
-/// `buffer.byteLength` is not a multiple of `4` (the element
-/// size).
+/// Creates a `Float32Array` view over `buffer`. Returns `Detached` if
+/// `buffer` is detached, or `MisalignedOffset` if `buffer.byteLength`
+/// is not a multiple of `4` (the element size).
 ///
 @external(javascript, "./float32_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Float32Array, JsError)
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Float32Array, BufferError)
 
 /// Creates a `Float32Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns an error if
-/// the range is out of bounds, `buffer` is detached, or `byte_offset`
-/// is not a multiple of `4`.
+/// `byte_offset` and spanning `length` elements. Returns `Detached`
+/// if `buffer` is detached, `MisalignedOffset` if `byte_offset` is
+/// not a multiple of `4`, or `OutOfRange` if the range falls outside
+/// `buffer`.
 ///
 @external(javascript, "./float32_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
   buffer: ArrayBuffer,
   byte_offset byte_offset: Int,
   length length: Int,
-) -> Result(Float32Array, JsError)
+) -> Result(Float32Array, BufferError)
 
 @external(javascript, "./float32_array.ffi.mjs", "buffer")
 pub fn buffer(array: Float32Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
-/// the underlying buffer. Returns an error if the underlying buffer
-/// has been detached or resized below the array's range.
+/// the underlying buffer. Returns `Detached` if the underlying buffer
+/// has been detached, or `OutOfRange` if it has been resized below the
+/// array's range.
 ///
 @external(javascript, "./float32_array.ffi.mjs", "bytes")
-pub fn bytes(array: Float32Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Float32Array) -> Result(Uint8Array, BufferError)
 
 @external(javascript, "./float32_array.ffi.mjs", "byte_length")
 pub fn byte_length(array: Float32Array) -> Int
@@ -68,15 +70,15 @@ pub fn length(array: Float32Array) -> Int
 pub fn at(array: Float32Array, index index: Int) -> Result(Float, Nil)
 
 /// Returns a copy of `array` with the value at `index` replaced.
-/// Negative indices count from the end. Returns an error if `index`
-/// is out of range.
+/// Negative indices count from the end. Returns `OutOfRange` if
+/// `index` is out of range.
 ///
 @external(javascript, "./float32_array.ffi.mjs", "with_")
 pub fn with(
   array: Float32Array,
   at_index index: Int,
   value value: Float,
-) -> Result(Float32Array, JsError)
+) -> Result(Float32Array, BufferError)
 
 @external(javascript, "./float32_array.ffi.mjs", "includes")
 pub fn includes(in array: Float32Array, value value: Float) -> Bool
@@ -111,25 +113,25 @@ pub fn subarray(
   to end: Int,
 ) -> Float32Array
 
-/// Copies `values` into `array` starting at index `0`. Returns an
-/// error if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at index `0`. Returns
+/// `OutOfRange` if `values` would extend past the end of `array`.
 ///
 @external(javascript, "./float32_array.ffi.mjs", "set")
 pub fn set(
   in array: Float32Array,
   values values: Float32Array,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
-/// Copies `values` into `array` starting at `offset`. Returns an
-/// error if `offset` is negative or the copy would extend past the
-/// end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./float32_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Float32Array,
   values values: Float32Array,
   offset offset: Int,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
 @external(javascript, "./float32_array.ffi.mjs", "fill")
 pub fn fill(array: Float32Array, with value: Float) -> Float32Array

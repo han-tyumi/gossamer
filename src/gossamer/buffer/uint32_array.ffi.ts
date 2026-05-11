@@ -1,4 +1,10 @@
 import type * as $uint32Array from "$/gossamer/gossamer/buffer/uint32_array.mjs";
+import {
+  checkArrayDetached,
+  checkArrayRange,
+  checkBufferAligned,
+  checkBufferRangeAligned,
+} from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
@@ -11,20 +17,28 @@ export const from_list: typeof $uint32Array.from_list = (list) =>
   new Uint32Array(toArray(list));
 
 export const from_buffer: typeof $uint32Array.from_buffer = (buffer) =>
-  toResult.fromThrows(() => new Uint32Array(buffer));
+  checkBufferAligned(buffer, 4, () => new Uint32Array(buffer));
 
 export const from_buffer_range: typeof $uint32Array.from_buffer_range = (
   buffer,
   byteOffset,
   length,
-) => toResult.fromThrows(() => new Uint32Array(buffer, byteOffset, length));
+) =>
+  checkBufferRangeAligned(
+    buffer,
+    byteOffset,
+    length,
+    4,
+    () => new Uint32Array(buffer, byteOffset, length),
+  );
 
 export const buffer: typeof $uint32Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $uint32Array.bytes = (array) =>
-  toResult.fromThrows(() =>
-    new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+  checkArrayDetached(
+    array,
+    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
   );
 
 export const byte_length: typeof $uint32Array.byte_length = (array) =>
@@ -39,7 +53,12 @@ export const at: typeof $uint32Array.at = (array, index) =>
   toResult(array.at(index));
 
 export const with_: typeof $uint32Array.with$ = (array, index, value) =>
-  toResult.fromThrows(() => array.with(index, value));
+  checkArrayRange(
+    array,
+    index < 0 ? array.length + index : index,
+    1,
+    () => array.with(index, value),
+  );
 
 export const includes: typeof $uint32Array.includes = (array, value) =>
   array.includes(value);
@@ -64,9 +83,8 @@ export const subarray: typeof $uint32Array.subarray = (array, begin, end) =>
   array.subarray(begin, end);
 
 export const set: typeof $uint32Array.set = (array, values) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, 0, values.length, () => {
     array.set(values);
-    return undefined;
   });
 
 export const set_with_offset: typeof $uint32Array.set_with_offset = (
@@ -74,9 +92,8 @@ export const set_with_offset: typeof $uint32Array.set_with_offset = (
   values,
   offset,
 ) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
-    return undefined;
   });
 
 export const fill: typeof $uint32Array.fill = (array, value) =>
