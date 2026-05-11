@@ -3,8 +3,10 @@ import gleam/int
 import gleam/javascript/promise
 import gleam/option.{None}
 import gleeunit/should
+import gossamer/abort_signal
 import gossamer/iteration
 import gossamer/iteration/async_iterator
+import gossamer/stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/read_result
@@ -168,6 +170,25 @@ pub fn readable_pipe_to_writable_test() {
     writable,
     readable_stream.pipe_options(),
   ))
+  promise.resolve(Nil)
+}
+
+pub fn pipe_to_aborted_signal_yields_aborted_test() {
+  let assert Ok(readable) =
+    readable_stream.from_start(fn(controller) {
+      let _ = default_controller.enqueue(controller, "a")
+      let _ = default_controller.close(controller)
+      Nil
+    })
+  let writable =
+    writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
+
+  let signal = abort_signal.abort("stop the pipe")
+  let opts =
+    readable_stream.pipe_options() |> readable_stream.set_signal(signal)
+
+  use result <- promise.await(readable_stream.pipe_to(readable, writable, opts))
+  let assert Error(stream.Aborted(_)) = result
   promise.resolve(Nil)
 }
 

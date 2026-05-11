@@ -25,4 +25,10 @@ pub type StreamLifecycleError {
   /// callback throwing or by the consumer explicitly erroring the
   /// controller.
   Errored(reason: Dynamic)
+
+  /// A `pipe_to` operation was aborted via the `AbortSignal` set on
+  /// its `PipeOptions`. The `reason` payload carries whatever value
+  /// was passed to `abort(reason)` — or an `AbortError` `DOMException`
+  /// if `abort()` was called with no argument.
+  Aborted(reason: Dynamic)
 }

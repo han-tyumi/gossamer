@@ -202,8 +202,9 @@ pub fn pipe_through(
 ) -> Result(ReadableStream(b), StreamLifecycleError)
 
 /// Pipes the stream to a `WritableStream`. Returns `Locked` if either
-/// side is already locked, or `Errored` if either side enters an
-/// errored state during the pipe.
+/// side is already locked, `Aborted(reason)` if the pipe is cancelled
+/// via the `AbortSignal` on `options`, or `Errored(reason)` if either
+/// side enters an errored state during the pipe.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "pipe_to")
 pub fn pipe_to(

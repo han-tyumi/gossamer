@@ -122,9 +122,17 @@ export const pipe_to: typeof $readableStream.pipe_to = (
   if (stream.locked || destination.locked) {
     return Promise.resolve(lockedError());
   }
-  return stream.pipeTo(destination, fromPipeOptions(options)).then(
+  const pipeOptions = fromPipeOptions(options);
+  return stream.pipeTo(destination, pipeOptions).then(
     () => Result$Ok(undefined),
-    (err) => erroredError(err),
+    (err) => {
+      if (pipeOptions.signal?.aborted) {
+        return Result$Error(
+          $stream.StreamLifecycleError$Aborted(pipeOptions.signal.reason),
+        );
+      }
+      return erroredError(err);
+    },
   );
 };
 
