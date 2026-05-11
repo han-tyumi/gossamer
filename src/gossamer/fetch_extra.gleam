@@ -31,13 +31,14 @@
 //// fetch_extra.send(request, with: opts)
 //// ```
 
-import gleam/fetch.{type FetchBody, type FetchError}
+import gleam/fetch.{type FetchBody}
 import gleam/fetch/form_data.{type FormData}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
+import gossamer/fetch_error.{type FetchError}
 import gossamer/response_type.{type ResponseType}
 import gossamer/stream/readable_stream.{type ReadableStream}
 

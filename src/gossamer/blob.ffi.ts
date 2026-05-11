@@ -1,12 +1,12 @@
 import type * as $blob from "$/gossamer/gossamer/blob.mjs";
-import * as $fetch from "$/gleam_fetch/gleam/fetch.mjs";
+import * as $fetchError from "$/gossamer/gossamer/fetch_error.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toBitArrayStream, toBufferSource } from "~/utils/bit_array.ffi.ts";
 
 function readBody<T>(promise: Promise<T>) {
   return promise.then(
     (value) => Result$Ok(value),
-    () => Result$Error($fetch.FetchError$UnableToReadBody()),
+    () => Result$Error($fetchError.FetchError$UnableToReadBody()),
   );
 }
 

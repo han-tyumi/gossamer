@@ -1,3 +1,4 @@
+import gleam/dynamic/decode
 import gleam/fetch.{type FetchBody}
 import gleam/fetch/form_data
 import gleam/http
@@ -6,6 +7,7 @@ import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gleeunit/should
 import gossamer/abort_signal
+import gossamer/fetch_error
 import gossamer/fetch_extra
 import gossamer/response_type
 import gossamer/stream/readable_stream
@@ -45,7 +47,7 @@ pub fn is_response_ok_polymorphic_test() {
   fetch_extra.is_response_ok(with_list) |> should.be_false
 }
 
-pub fn send_aborted_signal_yields_network_error_test() {
+pub fn send_aborted_signal_yields_aborted_test() {
   let req =
     request.new()
     |> request.set_method(http.Get)
@@ -56,11 +58,13 @@ pub fn send_aborted_signal_yields_network_error_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send(req, with: opts))
-  let assert Error(fetch.NetworkError(_)) = result
+  let assert Error(fetch_error.Aborted(reason)) = result
+  let assert Ok(value) = decode.run(reason, decode.string)
+  should.equal(value, "pre-aborted")
   promise.resolve(Nil)
 }
 
-pub fn send_bits_aborted_signal_yields_network_error_test() {
+pub fn send_bits_aborted_signal_yields_aborted_test() {
   let req =
     request.new()
     |> request.set_method(http.Post)
@@ -72,11 +76,11 @@ pub fn send_bits_aborted_signal_yields_network_error_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_bits(req, with: opts))
-  let assert Error(fetch.NetworkError(_)) = result
+  let assert Error(fetch_error.Aborted(_)) = result
   promise.resolve(Nil)
 }
 
-pub fn send_form_data_aborted_signal_yields_network_error_test() {
+pub fn send_form_data_aborted_signal_yields_aborted_test() {
   let body = form_data.new() |> form_data.append("key", "value")
   let req =
     request.new()
@@ -89,11 +93,11 @@ pub fn send_form_data_aborted_signal_yields_network_error_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_form_data(req, with: opts))
-  let assert Error(fetch.NetworkError(_)) = result
+  let assert Error(fetch_error.Aborted(_)) = result
   promise.resolve(Nil)
 }
 
-pub fn send_stream_aborted_signal_yields_network_error_test() {
+pub fn send_stream_aborted_signal_yields_aborted_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
       let assert Ok(_) = default_controller.enqueue(controller, <<"payload">>)
@@ -111,7 +115,7 @@ pub fn send_stream_aborted_signal_yields_network_error_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_stream(req, with: opts))
-  let assert Error(fetch.NetworkError(_)) = result
+  let assert Error(fetch_error.Aborted(_)) = result
   promise.resolve(Nil)
 }
 

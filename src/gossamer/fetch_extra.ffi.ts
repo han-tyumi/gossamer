@@ -1,4 +1,5 @@
 import type * as $fetch from "$/gleam_fetch/gleam/fetch.mjs";
+import * as $fetchError from "$/gossamer/gossamer/fetch_error.mjs";
 import * as $fetchExtra from "$/gossamer/gossamer/fetch_extra.mjs";
 import * as $http from "$/gleam_http/gleam/http.mjs";
 import * as $request from "$/gleam_http/gleam/http/request.mjs";
@@ -6,8 +7,6 @@ import * as $response from "$/gleam_http/gleam/http/response.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   bitarray_request_to_fetch_request,
-  FetchError$NetworkError,
-  FetchError$UnableToReadBody,
   form_data_to_fetch_request,
   from_fetch_response,
   to_fetch_request,
@@ -168,7 +167,10 @@ async function send_internal(jsRequest: Request, init: RequestInit) {
     const jsResponse = await globalThis.fetch(jsRequest, init);
     return Result$Ok(from_fetch_response(jsResponse));
   } catch (error) {
-    return Result$Error(FetchError$NetworkError(String(error)));
+    if (init.signal?.aborted) {
+      return Result$Error($fetchError.FetchError$Aborted(init.signal.reason));
+    }
+    return Result$Error($fetchError.FetchError$NetworkError(String(error)));
   }
 }
 
@@ -209,6 +211,6 @@ export const response_clone: typeof $fetchExtra.response_clone = (response) => {
   try {
     return Result$Ok(from_fetch_response(jsResponseOf(response).clone()));
   } catch {
-    return Result$Error(FetchError$UnableToReadBody());
+    return Result$Error($fetchError.FetchError$UnableToReadBody());
   }
 };
