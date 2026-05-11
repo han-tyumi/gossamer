@@ -1,9 +1,72 @@
 import * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
 import { BitArray$BitArray } from "$/prelude.mjs";
-import { fromAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
-import { fromEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
-import { fromRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
 import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+
+export function toAesAlgorithm(value: $cryptoKey.AesAlgorithm$): string {
+  if ($cryptoKey.AesAlgorithm$isAesCbc(value)) return "AES-CBC";
+  if ($cryptoKey.AesAlgorithm$isAesCtr(value)) return "AES-CTR";
+  if ($cryptoKey.AesAlgorithm$isAesKw(value)) return "AES-KW";
+  if ($cryptoKey.AesAlgorithm$isAesOther(value)) {
+    return $cryptoKey.AesAlgorithm$AesOther$0(value);
+  }
+  return "AES-GCM";
+}
+
+export function fromAesAlgorithm(value: string): $cryptoKey.AesAlgorithm$ {
+  switch (value) {
+    case "AES-CBC":
+      return $cryptoKey.AesAlgorithm$AesCbc();
+    case "AES-CTR":
+      return $cryptoKey.AesAlgorithm$AesCtr();
+    case "AES-GCM":
+      return $cryptoKey.AesAlgorithm$AesGcm();
+    case "AES-KW":
+      return $cryptoKey.AesAlgorithm$AesKw();
+    default:
+      return $cryptoKey.AesAlgorithm$AesOther(value);
+  }
+}
+
+export function toRsaAlgorithm(value: $cryptoKey.RsaAlgorithm$): string {
+  if ($cryptoKey.RsaAlgorithm$isRsaOaep(value)) return "RSA-OAEP";
+  if ($cryptoKey.RsaAlgorithm$isRsaPss(value)) return "RSA-PSS";
+  if ($cryptoKey.RsaAlgorithm$isRsaOther(value)) {
+    return $cryptoKey.RsaAlgorithm$RsaOther$0(value);
+  }
+  return "RSASSA-PKCS1-v1_5";
+}
+
+export function fromRsaAlgorithm(value: string): $cryptoKey.RsaAlgorithm$ {
+  switch (value) {
+    case "RSA-OAEP":
+      return $cryptoKey.RsaAlgorithm$RsaOaep();
+    case "RSA-PSS":
+      return $cryptoKey.RsaAlgorithm$RsaPss();
+    case "RSASSA-PKCS1-v1_5":
+      return $cryptoKey.RsaAlgorithm$RsaSsaPkcs1V15();
+    default:
+      return $cryptoKey.RsaAlgorithm$RsaOther(value);
+  }
+}
+
+export function toEcAlgorithm(value: $cryptoKey.EcAlgorithm$): string {
+  if ($cryptoKey.EcAlgorithm$isEcDh(value)) return "ECDH";
+  if ($cryptoKey.EcAlgorithm$isEcOther(value)) {
+    return $cryptoKey.EcAlgorithm$EcOther$0(value);
+  }
+  return "ECDSA";
+}
+
+export function fromEcAlgorithm(value: string): $cryptoKey.EcAlgorithm$ {
+  switch (value) {
+    case "ECDH":
+      return $cryptoKey.EcAlgorithm$EcDh();
+    case "ECDSA":
+      return $cryptoKey.EcAlgorithm$EcDsa();
+    default:
+      return $cryptoKey.EcAlgorithm$EcOther(value);
+  }
+}
 
 interface AesKeyAlgorithmShape extends KeyAlgorithm {
   length: number;

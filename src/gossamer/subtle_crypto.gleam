@@ -1,11 +1,9 @@
 import gleam/javascript/promise.{type Promise}
-import gossamer/aes_algorithm.{type AesAlgorithm}
 import gossamer/crypto_key.{
-  type CryptoKey, type HashAlgorithm, type KeyUsage, type NamedCurve,
+  type AesAlgorithm, type CryptoKey, type EcAlgorithm, type HashAlgorithm,
+  type KeyUsage, type NamedCurve, type RsaAlgorithm,
 }
-import gossamer/ec_algorithm.{type EcAlgorithm}
 import gossamer/json_web_key.{type JsonWebKey}
-import gossamer/rsa_algorithm.{type RsaAlgorithm}
 
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
@@ -74,7 +72,7 @@ pub type KeyFormat {
 pub type DeriveAlgorithm {
   Hkdf(hash: HashAlgorithm, info: BitArray, salt: BitArray)
   Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: BitArray)
-  Ecdh(public: CryptoKey)
+  EcDh(public: CryptoKey)
   DeriveOther(String)
 }
 
@@ -146,9 +144,9 @@ pub type KeyPairGenAlgorithm {
 ///
 pub type SignAlgorithm {
   Hmac
-  RsassaPkcs1V15
+  RsaSsaPkcs1V15
   RsaPss(salt_length: Int)
-  Ecdsa(hash: HashAlgorithm)
+  EcDsa(hash: HashAlgorithm)
   SignOther(String)
 }
 

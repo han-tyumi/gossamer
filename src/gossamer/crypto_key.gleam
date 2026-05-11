@@ -1,7 +1,3 @@
-import gossamer/aes_algorithm.{type AesAlgorithm}
-import gossamer/ec_algorithm.{type EcAlgorithm}
-import gossamer/rsa_algorithm.{type RsaAlgorithm}
-
 /// A cryptographic key used with `subtle_crypto` operations (encryption,
 /// signing, key derivation, etc.).
 ///
@@ -9,6 +5,39 @@ import gossamer/rsa_algorithm.{type RsaAlgorithm}
 ///
 @external(javascript, "./crypto_key.type.ts", "CryptoKey$")
 pub type CryptoKey
+
+/// AES cipher modes supported by `subtle_crypto`.
+///
+/// Unrecognized or non-standard algorithms use `AesOther(String)`.
+///
+pub type AesAlgorithm {
+  AesCbc
+  AesCtr
+  AesGcm
+  AesKw
+  AesOther(String)
+}
+
+/// RSA algorithms supported by `subtle_crypto`.
+///
+/// Unrecognized or non-standard algorithms use `RsaOther(String)`.
+///
+pub type RsaAlgorithm {
+  RsaOaep
+  RsaPss
+  RsaSsaPkcs1V15
+  RsaOther(String)
+}
+
+/// Elliptic curve algorithms supported by `subtle_crypto`.
+///
+/// Unrecognized or non-standard algorithms use `EcOther(String)`.
+///
+pub type EcAlgorithm {
+  EcDh
+  EcDsa
+  EcOther(String)
+}
 
 /// Cryptographic hash algorithms supported by `subtle_crypto`.
 ///

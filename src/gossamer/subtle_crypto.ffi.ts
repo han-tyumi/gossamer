@@ -1,15 +1,15 @@
 import * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
 import * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
 import {
+  toAesAlgorithm,
+  toEcAlgorithm,
   toHashAlgorithm,
   toKeyUsageArray,
   toNamedCurve,
+  toRsaAlgorithm,
 } from "~/gossamer/crypto_key.ffi.ts";
-import { toEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ffi.ts";
-import { toRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
 import { toBufferSource, toUint8Array } from "~/utils/bit_array.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
@@ -134,7 +134,7 @@ function toDeriveAlgorithm(
   }
   return {
     name: "ECDH",
-    public: $subtleCrypto.DeriveAlgorithm$Ecdh$public(algorithm),
+    public: $subtleCrypto.DeriveAlgorithm$EcDh$public(algorithm),
   };
 }
 
@@ -319,7 +319,7 @@ function toSignAlgorithm(
     return $subtleCrypto.SignAlgorithm$SignOther$0(algorithm);
   }
   if ($subtleCrypto.SignAlgorithm$isHmac(algorithm)) return "HMAC";
-  if ($subtleCrypto.SignAlgorithm$isRsassaPkcs1V15(algorithm)) {
+  if ($subtleCrypto.SignAlgorithm$isRsaSsaPkcs1V15(algorithm)) {
     return "RSASSA-PKCS1-v1_5";
   }
   if ($subtleCrypto.SignAlgorithm$isRsaPss(algorithm)) {
@@ -331,7 +331,7 @@ function toSignAlgorithm(
   return {
     name: "ECDSA",
     hash: toHashAlgorithm(
-      $subtleCrypto.SignAlgorithm$Ecdsa$hash(algorithm),
+      $subtleCrypto.SignAlgorithm$EcDsa$hash(algorithm),
     ),
   };
 }
