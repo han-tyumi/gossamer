@@ -39,17 +39,6 @@ export function toBitArrayResult(
 }
 
 /**
- * Awaits a `Uint8Array`-returning Web API call and wraps the result as
- * a `BitArray` Result. Sync throws inside `fn` become `Error` rather
- * than unhandled FFI panics.
- */
-export function toBitArrayBytesResult(
-  fn: () => Promise<Uint8Array>,
-): Promise<Result<BitArray, Error>> {
-  return toResult.fromAsync(async () => BitArray$BitArray(await fn()));
-}
-
-/**
  * Wraps a `ReadableStream<Uint8Array>` so each chunk is read as a
  * `BitArray`.
  */

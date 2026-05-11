@@ -1,10 +1,14 @@
 import type * as $blob from "$/gossamer/gossamer/blob.mjs";
-import {
-  toBitArrayBytesResult,
-  toBitArrayStream,
-  toBufferSource,
-} from "~/utils/bit_array.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $fetch from "$/gleam_fetch/gleam/fetch.mjs";
+import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toBitArrayStream, toBufferSource } from "~/utils/bit_array.ffi.ts";
+
+function readBody<T>(promise: Promise<T>) {
+  return promise.then(
+    (value) => Result$Ok(value),
+    () => Result$Error($fetch.FetchError$UnableToReadBody()),
+  );
+}
 
 export const new_: typeof $blob.new$ = () => {
   return new Blob();
@@ -41,11 +45,11 @@ export const type_: typeof $blob.type_ = (blob) => {
 };
 
 export const array_buffer: typeof $blob.array_buffer = (blob) => {
-  return toResult.fromPromise(blob.arrayBuffer());
+  return readBody(blob.arrayBuffer());
 };
 
 export const bytes: typeof $blob.bytes = (blob) => {
-  return toBitArrayBytesResult(() => blob.bytes());
+  return readBody(blob.bytes().then(BitArray$BitArray));
 };
 
 export const slice: typeof $blob.slice = (blob, start, end) => {
@@ -66,7 +70,7 @@ export const stream: typeof $blob.stream = (blob) => {
 };
 
 export const text: typeof $blob.text = (blob) => {
-  return toResult.fromPromise(blob.text());
+  return readBody(blob.text());
 };
 
 export const to_object_url: typeof $blob.to_object_url = (blob) => {

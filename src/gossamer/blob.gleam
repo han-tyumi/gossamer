@@ -1,6 +1,6 @@
+import gleam/fetch.{type FetchError}
 import gleam/javascript/promise.{type Promise}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 
 /// A file-like object of immutable, raw data. Can be read as text, bytes,
@@ -38,17 +38,17 @@ pub fn size(blob: Blob) -> Int
 @external(javascript, "./blob.ffi.mjs", "type_")
 pub fn type_(blob: Blob) -> String
 
-/// Reads the blob's contents as an `ArrayBuffer`. Returns an error if
-/// the blob cannot be read.
+/// Reads the blob's contents as an `ArrayBuffer`. Returns
+/// `UnableToReadBody` if the blob's source can't be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "array_buffer")
-pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, JsError))
+pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, FetchError))
 
-/// Reads the blob's contents as a `BitArray`. Returns an error if the
-/// blob cannot be read.
+/// Reads the blob's contents as a `BitArray`. Returns
+/// `UnableToReadBody` if the blob's source can't be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "bytes")
-pub fn bytes(blob: Blob) -> Promise(Result(BitArray, JsError))
+pub fn bytes(blob: Blob) -> Promise(Result(BitArray, FetchError))
 
 @external(javascript, "./blob.ffi.mjs", "slice")
 pub fn slice(blob: Blob, from start: Int, to end: Int) -> Blob
@@ -64,11 +64,11 @@ pub fn slice_with_type(
 @external(javascript, "./blob.ffi.mjs", "stream")
 pub fn stream(blob: Blob) -> ReadableStream(BitArray)
 
-/// Reads the blob's contents as a UTF-8 string. Returns an error if the
-/// blob cannot be read.
+/// Reads the blob's contents as a UTF-8 string. Returns
+/// `UnableToReadBody` if the blob's source can't be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "text")
-pub fn text(blob: Blob) -> Promise(Result(String, JsError))
+pub fn text(blob: Blob) -> Promise(Result(String, FetchError))
 
 /// Creates a string containing a URL representing the blob. The URL
 /// lifetime is tied to the document or worker that created it; release

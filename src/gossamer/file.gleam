@@ -1,7 +1,7 @@
+import gleam/fetch.{type FetchError}
 import gleam/javascript/promise.{type Promise}
 import gossamer/blob.{type Blob}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/js_error.{type JsError}
 import gossamer/readable_stream.{type ReadableStream}
 
 /// A `Blob` with a filename and last-modified timestamp.
@@ -43,17 +43,17 @@ pub fn size(file: File) -> Int {
   blob.size(file.blob)
 }
 
-/// Reads the file's contents as an `ArrayBuffer`. Returns an error if
-/// the file cannot be read.
+/// Reads the file's contents as an `ArrayBuffer`. Returns
+/// `UnableToReadBody` if the file's source can't be read.
 ///
-pub fn array_buffer(file: File) -> Promise(Result(ArrayBuffer, JsError)) {
+pub fn array_buffer(file: File) -> Promise(Result(ArrayBuffer, FetchError)) {
   blob.array_buffer(file.blob)
 }
 
-/// Reads the file's contents as a `BitArray`. Returns an error if the
-/// file cannot be read.
+/// Reads the file's contents as a `BitArray`. Returns
+/// `UnableToReadBody` if the file's source can't be read.
 ///
-pub fn bytes(file: File) -> Promise(Result(BitArray, JsError)) {
+pub fn bytes(file: File) -> Promise(Result(BitArray, FetchError)) {
   blob.bytes(file.blob)
 }
 
@@ -81,9 +81,9 @@ pub fn stream(file: File) -> ReadableStream(BitArray) {
   blob.stream(file.blob)
 }
 
-/// Reads the file's contents as a UTF-8 string. Returns an error if the
-/// file cannot be read.
+/// Reads the file's contents as a UTF-8 string. Returns
+/// `UnableToReadBody` if the file's source can't be read.
 ///
-pub fn text(file: File) -> Promise(Result(String, JsError)) {
+pub fn text(file: File) -> Promise(Result(String, FetchError)) {
   blob.text(file.blob)
 }
