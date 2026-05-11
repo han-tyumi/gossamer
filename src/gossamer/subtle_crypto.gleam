@@ -4,7 +4,6 @@ import gossamer/crypto_key.{
   type CryptoKey, type HashAlgorithm, type KeyUsage, type NamedCurve,
 }
 import gossamer/ec_algorithm.{type EcAlgorithm}
-import gossamer/js_error.{type JsError}
 import gossamer/json_web_key.{type JsonWebKey}
 import gossamer/rsa_algorithm.{type RsaAlgorithm}
 
@@ -25,12 +24,35 @@ pub type CryptoError {
   /// requires it.
   KeyNotExtractable
 
-  /// A runtime failure during the cryptographic operation. The
-  /// underlying error carries through as `JsError`; inspect its `name`
-  /// to distinguish causes such as `NotSupportedError` (unrecognized
-  /// algorithm), `OperationError` (e.g., malformed ciphertext), or
-  /// `DataError` (e.g., malformed imported key data).
-  OperationFailed(error: JsError)
+  /// The runtime does not support the requested algorithm or
+  /// algorithm/operation combination. Corresponds to the
+  /// `NotSupportedError` DOMException.
+  AlgorithmNotSupported
+
+  /// The key is not appropriate for the requested operation (e.g.,
+  /// using an asymmetric key in a symmetric operation). Corresponds to
+  /// the `InvalidAccessError` DOMException.
+  InvalidAccess
+
+  /// The cryptographic operation failed for an operation-specific
+  /// reason — authenticated decryption failed, signature verification
+  /// produced an invalid result, etc. Corresponds to the
+  /// `OperationError` DOMException.
+  OperationFailed
+
+  /// The input data is malformed for the operation (e.g., an imported
+  /// key has the wrong structure). Corresponds to the `DataError`
+  /// DOMException.
+  DataMalformed
+
+  /// The input exceeds runtime-imposed size limits. Corresponds to the
+  /// `QuotaExceededError` DOMException.
+  QuotaExceeded
+
+  /// A failure that doesn't match any of the above DOMException names.
+  /// The `message` payload carries the underlying JavaScript error
+  /// description.
+  OtherError(message: String)
 }
 
 /// The serialization format of a key imported or exported via

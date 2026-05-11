@@ -15,10 +15,22 @@ import { toBufferSource, toUint8Array } from "~/utils/bit_array.ffi.ts";
 const subtle = globalThis.crypto.subtle;
 
 function toCryptoError(value: unknown): $subtleCrypto.CryptoError$ {
-  const error = value instanceof Error
-    ? value
-    : new Error(String(value), { cause: value });
-  return $subtleCrypto.CryptoError$OperationFailed(error);
+  if (value instanceof Error) {
+    switch (value.name) {
+      case "NotSupportedError":
+        return $subtleCrypto.CryptoError$AlgorithmNotSupported();
+      case "InvalidAccessError":
+        return $subtleCrypto.CryptoError$InvalidAccess();
+      case "OperationError":
+        return $subtleCrypto.CryptoError$OperationFailed();
+      case "DataError":
+        return $subtleCrypto.CryptoError$DataMalformed();
+      case "QuotaExceededError":
+        return $subtleCrypto.CryptoError$QuotaExceeded();
+    }
+    return $subtleCrypto.CryptoError$OtherError(value.message);
+  }
+  return $subtleCrypto.CryptoError$OtherError(String(value));
 }
 
 async function toCryptoResult<T>(thunk: () => Promise<T>) {

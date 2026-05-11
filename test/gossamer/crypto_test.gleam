@@ -448,10 +448,10 @@ pub fn export_key_not_extractable_test() {
   promise.resolve(Nil)
 }
 
-pub fn digest_operation_failed_test() {
+pub fn digest_algorithm_not_supported_test() {
   use result <- promise.await(
     subtle_crypto.digest(crypto_key.HashOther("MADE-UP-HASH"), <<1, 2, 3>>),
   )
-  let assert Error(subtle_crypto.OperationFailed(_)) = result
+  let assert Error(subtle_crypto.AlgorithmNotSupported) = result
   promise.resolve(Nil)
 }
