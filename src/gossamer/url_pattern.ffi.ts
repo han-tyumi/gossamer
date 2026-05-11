@@ -1,8 +1,13 @@
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
 import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+function invalidPattern() {
+  return Result$Error($urlPattern.UrlPatternError$InvalidPattern());
+}
 
 function fromBuilder(builder: $urlPattern.Builder$): URLPatternInit {
   const result: URLPatternInit = {};
@@ -44,18 +49,30 @@ function toMatch(result: URLPatternResult): $urlPattern.Match$ {
 }
 
 export const build: typeof $urlPattern.build = (builder) => {
-  return toResult.fromThrows(() => new URLPattern(fromBuilder(builder)));
+  try {
+    return Result$Ok(new URLPattern(fromBuilder(builder)));
+  } catch {
+    return invalidPattern();
+  }
 };
 
 export const from_string: typeof $urlPattern.from_string = (pattern) => {
-  return toResult.fromThrows(() => new URLPattern(pattern));
+  try {
+    return Result$Ok(new URLPattern(pattern));
+  } catch {
+    return invalidPattern();
+  }
 };
 
 export const from_string_with_base: typeof $urlPattern.from_string_with_base = (
   pattern,
   baseURL,
 ) => {
-  return toResult.fromThrows(() => new URLPattern(pattern, baseURL));
+  try {
+    return Result$Ok(new URLPattern(pattern, baseURL));
+  } catch {
+    return invalidPattern();
+  }
 };
 
 export const test_: typeof $urlPattern.test_ = (pattern, input) => {

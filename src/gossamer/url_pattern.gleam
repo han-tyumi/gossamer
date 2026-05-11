@@ -1,6 +1,5 @@
 import gleam/dict.{type Dict}
 import gleam/option.{type Option, None, Some}
-import gossamer/js_error.{type JsError}
 
 /// A pattern for matching URLs, with support for wildcards and named
 /// groups. Useful for routing and URL matching.
@@ -48,6 +47,13 @@ pub type Match {
     search: ComponentMatch,
     hash: ComponentMatch,
   )
+}
+
+/// Errors raised by `UrlPattern` construction.
+pub type UrlPatternError {
+  /// At least one component pattern (or the base URL) is malformed and
+  /// can't be compiled.
+  InvalidPattern
 }
 
 /// Creates an empty `Builder`. Every component is unset, meaning a
@@ -121,27 +127,27 @@ pub fn with_base_url(builder: Builder, value: String) -> Builder {
   Builder(..builder, base_url: Some(value))
 }
 
-/// Constructs a `UrlPattern` from the configured `Builder`. Returns an
-/// error if any component pattern is malformed.
+/// Constructs a `UrlPattern` from the configured `Builder`. Returns
+/// `InvalidPattern` if any component pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(UrlPattern, JsError)
+pub fn build(builder: Builder) -> Result(UrlPattern, UrlPatternError)
 
-/// Creates a `UrlPattern` from a single pattern string. Returns an error
-/// if the pattern is malformed.
+/// Creates a `UrlPattern` from a single pattern string. Returns
+/// `InvalidPattern` if the pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string")
-pub fn from_string(pattern: String) -> Result(UrlPattern, JsError)
+pub fn from_string(pattern: String) -> Result(UrlPattern, UrlPatternError)
 
 /// Creates a `UrlPattern` from a pattern string resolved against a base
-/// URL. Returns an error if the pattern is malformed or the base URL is
-/// invalid.
+/// URL. Returns `InvalidPattern` if the pattern is malformed or the
+/// base URL is invalid.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string_with_base")
 pub fn from_string_with_base(
   pattern: String,
   relative_to base_url: String,
-) -> Result(UrlPattern, JsError)
+) -> Result(UrlPattern, UrlPatternError)
 
 /// Returns `True` if the pattern matches `input`.
 ///
