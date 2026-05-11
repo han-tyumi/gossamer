@@ -1,7 +1,7 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
-import gossamer/js_error.{type JsError}
+import gossamer/stream.{type StreamLifecycleError}
 import gossamer/stream/writable_stream/default_controller.{
   type DefaultController,
 }
@@ -79,11 +79,14 @@ pub fn on_abort(
   Builder(..builder, abort: Some(callback))
 }
 
-/// Creates a `WritableStream` from the configured `Builder`. Returns an
-/// error if the `start` callback throws synchronously.
+/// Creates a `WritableStream` from the configured `Builder`. Returns
+/// `Errored` if the `start` callback throws synchronously; the thrown
+/// value is the variant's reason.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "build")
-pub fn build(builder: Builder(a)) -> Result(WritableStream(a), JsError)
+pub fn build(
+  builder: Builder(a),
+) -> Result(WritableStream(a), StreamLifecycleError)
 
 /// Creates a `WritableStream` from only a `write` callback — use when the
 /// sink just needs to handle incoming chunks.
@@ -98,24 +101,28 @@ pub fn from_write(
 @external(javascript, "./writable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: WritableStream(a)) -> Bool
 
-/// Aborts the stream. Returns an error if the underlying sink's abort
-/// callback throws or returns a rejecting promise.
+/// Aborts the stream. Returns `Errored` if the underlying sink's
+/// abort callback throws or returns a rejecting promise.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "abort")
 pub fn abort(
   stream: WritableStream(a),
   reason reason: r,
-) -> Promise(Result(Nil, JsError))
+) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Closes the stream after all writes complete. Returns an error if the
-/// underlying sink's close callback throws or returns a rejecting
+/// Closes the stream after all writes complete. Returns `Errored` if
+/// the underlying sink's close callback throws or returns a rejecting
 /// promise.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "close")
-pub fn close(stream: WritableStream(a)) -> Promise(Result(Nil, JsError))
+pub fn close(
+  stream: WritableStream(a),
+) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Acquires a `Writer` that locks the stream. Returns an error if the
+/// Acquires a `Writer` that locks the stream. Returns `Locked` if the
 /// stream is already locked.
 ///
 @external(javascript, "./writable_stream.ffi.mjs", "get_writer")
-pub fn get_writer(stream: WritableStream(a)) -> Result(Writer(a), JsError)
+pub fn get_writer(
+  stream: WritableStream(a),
+) -> Result(Writer(a), StreamLifecycleError)

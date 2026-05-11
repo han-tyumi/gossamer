@@ -1,5 +1,5 @@
 import gleam/javascript/promise.{type Promise}
-import gossamer/js_error.{type JsError}
+import gossamer/stream.{type StreamLifecycleError}
 
 /// A locked writer over a `WritableStream`.
 ///
@@ -8,11 +8,14 @@ import gossamer/js_error.{type JsError}
 @external(javascript, "./writer.type.ts", "Writer$")
 pub type Writer(a)
 
-/// Resolves when the stream closes. Returns an error if the stream
-/// errored or the writer was released.
+/// Resolves when the stream closes. Returns `Errored` if the stream
+/// enters an errored state, or `Released` if the writer no longer
+/// holds the lock.
 ///
 @external(javascript, "./writer.ffi.mjs", "closed")
-pub fn closed(of writer: Writer(a)) -> Promise(Result(Nil, JsError))
+pub fn closed(
+  of writer: Writer(a),
+) -> Promise(Result(Nil, StreamLifecycleError))
 
 /// The desired size to fill the stream's internal queue. Returns an error
 /// if the stream has been closed or errored.
@@ -20,39 +23,43 @@ pub fn closed(of writer: Writer(a)) -> Promise(Result(Nil, JsError))
 @external(javascript, "./writer.ffi.mjs", "desired_size")
 pub fn desired_size(of writer: Writer(a)) -> Result(Int, Nil)
 
-/// Resolves when the stream is ready to accept more writes (backpressure
-/// has cleared). Returns an error if the stream errored.
+/// Resolves when the stream is ready to accept more writes
+/// (backpressure has cleared). Returns `Errored` if the stream enters
+/// an errored state.
 ///
 @external(javascript, "./writer.ffi.mjs", "ready")
-pub fn ready(of writer: Writer(a)) -> Promise(Result(Nil, JsError))
+pub fn ready(of writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Aborts the stream. Returns an error if the underlying sink's abort
-/// callback throws or returns a rejecting promise.
+/// Aborts the stream. Returns `Errored` if the underlying sink's
+/// abort callback throws or returns a rejecting promise.
 ///
 @external(javascript, "./writer.ffi.mjs", "abort")
 pub fn abort(
   writer: Writer(a),
   reason reason: r,
-) -> Promise(Result(Nil, JsError))
+) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Closes the stream after all writes complete. Returns an error if the
-/// underlying sink's close callback throws or returns a rejecting
+/// Closes the stream after all writes complete. Returns `Errored` if
+/// the underlying sink's close callback throws or returns a rejecting
 /// promise.
 ///
 @external(javascript, "./writer.ffi.mjs", "close")
-pub fn close(writer: Writer(a)) -> Promise(Result(Nil, JsError))
+pub fn close(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Releases the writer's lock on the stream. Returns an error if there
-/// are outstanding writes.
+/// Releases the writer's lock on the stream. Returns `Released` if
+/// the writer is no longer the active writer.
 ///
 @external(javascript, "./writer.ffi.mjs", "release_lock")
-pub fn release_lock(writer: Writer(a)) -> Result(Writer(a), JsError)
+pub fn release_lock(
+  writer: Writer(a),
+) -> Result(Writer(a), StreamLifecycleError)
 
-/// Writes `chunk` to the stream. Returns an error if the stream errored
-/// or was closed.
+/// Writes `chunk` to the stream. Returns `Errored` if the stream
+/// enters an errored state, or `Closed` if the stream was already
+/// closed when write was called.
 ///
 @external(javascript, "./writer.ffi.mjs", "write")
 pub fn write(
   to writer: Writer(a),
   chunk chunk: a,
-) -> Promise(Result(Nil, JsError))
+) -> Promise(Result(Nil, StreamLifecycleError))

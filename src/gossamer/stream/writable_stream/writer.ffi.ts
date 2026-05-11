@@ -1,10 +1,23 @@
 import type * as $writer from "$/gossamer/gossamer/stream/writable_stream/writer.mjs";
+import * as $stream from "$/gossamer/gossamer/stream.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
+
+function erroredError(reason: unknown) {
+  return Result$Error($stream.StreamLifecycleError$Errored(reason));
+}
+
+function releasedError() {
+  return Result$Error($stream.StreamLifecycleError$Released());
+}
 
 export const closed: typeof $writer.closed = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toResult.fromPromise(writer.closed.then(() => undefined));
+  return writer.closed.then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const desired_size: typeof $writer.desired_size = (
@@ -16,34 +29,48 @@ export const desired_size: typeof $writer.desired_size = (
 export const ready: typeof $writer.ready = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toResult.fromPromise(writer.ready.then(() => undefined));
+  return writer.ready.then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const abort: typeof $writer.abort = (
   writer: WritableStreamDefaultWriter,
   reason,
 ) => {
-  return toResult.fromPromise(writer.abort(reason).then(() => undefined));
+  return writer.abort(reason).then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const close: typeof $writer.close = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toResult.fromPromise(writer.close().then(() => undefined));
+  return writer.close().then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const release_lock: typeof $writer.release_lock = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toResult.fromThrows(() => {
+  try {
     writer.releaseLock();
-    return writer;
-  });
+    return Result$Ok(writer);
+  } catch {
+    return releasedError();
+  }
 };
 
 export const write: typeof $writer.write = <W>(
   writer: WritableStreamDefaultWriter<W>,
   chunk: W,
 ) => {
-  return toResult.fromPromise(writer.write(chunk).then(() => undefined));
+  return writer.write(chunk).then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };

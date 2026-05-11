@@ -1,5 +1,5 @@
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/js_error.{type JsError}
+import gossamer/stream.{type StreamLifecycleError}
 
 /// A controller for a `WritableStream`'s underlying sink, passed to the
 /// `Start`, `Write`, `Close`, and `Abort` callbacks. Used to signal stream
@@ -13,11 +13,11 @@ pub type DefaultController
 @external(javascript, "./default_controller.ffi.mjs", "signal")
 pub fn signal(of controller: DefaultController) -> AbortSignal
 
-/// Signals an error on the stream. Returns an error if the stream is
-/// already closed or errored.
+/// Signals an error on the stream. Returns `Closed` if the stream is
+/// already closed.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "error")
 pub fn error(
   controller: DefaultController,
   reason reason: a,
-) -> Result(Nil, JsError)
+) -> Result(Nil, StreamLifecycleError)

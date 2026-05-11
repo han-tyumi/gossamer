@@ -1,13 +1,16 @@
 import type * as $defaultController from "$/gossamer/gossamer/stream/writable_stream/default_controller.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $stream from "$/gossamer/gossamer/stream.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 
 export const signal: typeof $defaultController.signal = (controller) => {
   return controller.signal;
 };
 
 export const error: typeof $defaultController.error = (controller, reason) => {
-  return toResult.fromThrows(() => {
+  try {
     controller.error(reason);
-    return undefined;
-  });
+    return Result$Ok(undefined);
+  } catch {
+    return Result$Error($stream.StreamLifecycleError$Closed());
+  }
 };
