@@ -1,4 +1,10 @@
 import type * as $bigUint64Array from "$/gossamer/gossamer/buffer/biguint64_array.mjs";
+import {
+  checkArrayDetached,
+  checkArrayRange,
+  checkBufferAligned,
+  checkBufferRangeAligned,
+} from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
@@ -11,20 +17,28 @@ export const from_list: typeof $bigUint64Array.from_list = (list) =>
   new BigUint64Array(toArray(list));
 
 export const from_buffer: typeof $bigUint64Array.from_buffer = (buffer) =>
-  toResult.fromThrows(() => new BigUint64Array(buffer));
+  checkBufferAligned(buffer, 8, () => new BigUint64Array(buffer));
 
 export const from_buffer_range: typeof $bigUint64Array.from_buffer_range = (
   buffer,
   byteOffset,
   length,
-) => toResult.fromThrows(() => new BigUint64Array(buffer, byteOffset, length));
+) =>
+  checkBufferRangeAligned(
+    buffer,
+    byteOffset,
+    length,
+    8,
+    () => new BigUint64Array(buffer, byteOffset, length),
+  );
 
 export const buffer: typeof $bigUint64Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $bigUint64Array.bytes = (array) =>
-  toResult.fromThrows(() =>
-    new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+  checkArrayDetached(
+    array,
+    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
   );
 
 export const byte_length: typeof $bigUint64Array.byte_length = (array) =>
@@ -39,7 +53,12 @@ export const at: typeof $bigUint64Array.at = (array, index) =>
   toResult(array.at(index));
 
 export const with_: typeof $bigUint64Array.with$ = (array, index, value) =>
-  toResult.fromThrows(() => array.with(index, value));
+  checkArrayRange(
+    array,
+    index < 0 ? array.length + index : index,
+    1,
+    () => array.with(index, value),
+  );
 
 export const includes: typeof $bigUint64Array.includes = (array, value) =>
   array.includes(value);
@@ -64,9 +83,8 @@ export const subarray: typeof $bigUint64Array.subarray = (array, begin, end) =>
   array.subarray(begin, end);
 
 export const set: typeof $bigUint64Array.set = (array, values) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, 0, values.length, () => {
     array.set(values);
-    return undefined;
   });
 
 export const set_with_offset: typeof $bigUint64Array.set_with_offset = (
@@ -74,9 +92,8 @@ export const set_with_offset: typeof $bigUint64Array.set_with_offset = (
   values,
   offset,
 ) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
-    return undefined;
   });
 
 export const fill: typeof $bigUint64Array.fill = (array, value) =>
