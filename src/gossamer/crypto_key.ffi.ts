@@ -1,4 +1,5 @@
 import * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
+import { BitArray$BitArray } from "$/prelude.mjs";
 import { fromAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
 import { fromEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
 import { fromRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
@@ -147,7 +148,7 @@ export function toKeyAlgorithm(
     return $cryptoKey.KeyAlgorithm$Rsa(
       fromRsaAlgorithm(name),
       rsa.modulusLength,
-      new Uint8Array(rsa.publicExponent),
+      BitArray$BitArray(new Uint8Array(rsa.publicExponent)),
       fromHashAlgorithm(hashName(rsa.hash)),
     );
   }

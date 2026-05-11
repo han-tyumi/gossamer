@@ -1,5 +1,4 @@
 import gossamer/aes_algorithm.{type AesAlgorithm}
-import gossamer/buffer/uint8_array.{type Uint8Array}
 import gossamer/ec_algorithm.{type EcAlgorithm}
 import gossamer/rsa_algorithm.{type RsaAlgorithm}
 
@@ -70,7 +69,7 @@ pub type KeyAlgorithm {
   Rsa(
     name: RsaAlgorithm,
     modulus_length: Int,
-    public_exponent: Uint8Array,
+    public_exponent: BitArray,
     hash: HashAlgorithm,
   )
 }
