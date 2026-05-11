@@ -1,4 +1,4 @@
-import gossamer/js_error.{type JsError}
+import gleam/dynamic.{type Dynamic}
 
 /// The result of advancing an iterator. `Yield` carries a value produced
 /// by the iterator; `Return` signals iteration has ended, carrying any
@@ -23,8 +23,8 @@ pub type IteratorError {
   /// A callback supplied to the iterator (the `next` function passed to
   /// `new`, a handler attached via `with_return` or `with_throw`, or a
   /// per-call callback like `for_await`'s body) threw synchronously or
-  /// returned a rejecting promise. The thrown value carries through as
-  /// `JsError` for inspection of message, name, and cause.
+  /// returned a rejecting promise. The `reason` payload carries the
+  /// thrown value as a `Dynamic`.
   ///
-  CallbackThrew(error: JsError)
+  CallbackThrew(reason: Dynamic)
 }

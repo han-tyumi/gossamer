@@ -34,10 +34,7 @@ export function yielderAsJsIterator<T>(
 }
 
 function toIteratorError(value: unknown): $iteration.IteratorError$ {
-  const error = value instanceof Error
-    ? value
-    : new Error(String(value), { cause: value });
-  return $iteration.IteratorError$CallbackThrew(error);
+  return $iteration.IteratorError$CallbackThrew(value);
 }
 
 export function toCallbackResult<T>(thunk: () => T) {
