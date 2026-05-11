@@ -3,7 +3,6 @@
 //// UTF-16 well-formedness checks.
 
 import gleam/order.{type Order}
-import gossamer/js_error.{type JsError}
 
 /// A Unicode normalization form used by `normalize_to`. NFC and NFD
 /// preserve equivalence; NFKC and NFKD also apply compatibility
@@ -16,17 +15,28 @@ pub type NormalizationForm {
   Nfkd
 }
 
-/// Constructs a string from a Unicode code point. Returns an error if
-/// `code` is not a valid code point.
+/// Errors raised by code-point construction.
+pub type CodePointError {
+  /// The supplied integer is not a valid Unicode code point. Valid
+  /// values are `0`–`1_114_111` (`0x10FFFF`). The payload carries the
+  /// offending code; for `from_code_points`, it's the first invalid
+  /// code in the input list.
+  InvalidCodePoint(code: Int)
+}
+
+/// Constructs a string from a Unicode code point. Returns
+/// `InvalidCodePoint` if `code` is outside the valid range
+/// (`0`–`1_114_111`).
 ///
 @external(javascript, "./string_extra.ffi.mjs", "from_code_point")
-pub fn from_code_point(code: Int) -> Result(String, JsError)
+pub fn from_code_point(code: Int) -> Result(String, CodePointError)
 
-/// Constructs a string from a list of Unicode code points. Returns an
-/// error if any code point is invalid.
+/// Constructs a string from a list of Unicode code points. Returns
+/// `InvalidCodePoint` carrying the first invalid code if any element
+/// of `codes` is outside the valid range (`0`–`1_114_111`).
 ///
 @external(javascript, "./string_extra.ffi.mjs", "from_code_points")
-pub fn from_code_points(codes: List(Int)) -> Result(String, JsError)
+pub fn from_code_points(codes: List(Int)) -> Result(String, CodePointError)
 
 /// Returns the NFC-normalized form of `string`. NFC is the canonical
 /// choice for equivalence comparison.

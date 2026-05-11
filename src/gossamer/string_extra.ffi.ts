@@ -1,7 +1,7 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import * as $stringExtra from "$/gossamer/gossamer/string_extra.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 function toNormalizationForm(
   form: $stringExtra.NormalizationForm$,
@@ -12,11 +12,28 @@ function toNormalizationForm(
   return "NFKD";
 }
 
-export const from_code_point: typeof $stringExtra.from_code_point = (code) =>
-  toResult.fromThrows(() => String.fromCodePoint(code));
+function isValidCodePoint(code: number) {
+  return code >= 0 && code <= 0x10FFFF;
+}
 
-export const from_code_points: typeof $stringExtra.from_code_points = (codes) =>
-  toResult.fromThrows(() => String.fromCodePoint(...toArray(codes)));
+function invalidCodePoint(code: number) {
+  return Result$Error($stringExtra.CodePointError$InvalidCodePoint(code));
+}
+
+export const from_code_point: typeof $stringExtra.from_code_point = (code) => {
+  if (!isValidCodePoint(code)) return invalidCodePoint(code);
+  return Result$Ok(String.fromCodePoint(code));
+};
+
+export const from_code_points: typeof $stringExtra.from_code_points = (
+  codes,
+) => {
+  const array = toArray(codes);
+  for (const code of array) {
+    if (!isValidCodePoint(code)) return invalidCodePoint(code);
+  }
+  return Result$Ok(String.fromCodePoint(...array));
+};
 
 export const normalize: typeof $stringExtra.normalize = (string) =>
   string.normalize();
