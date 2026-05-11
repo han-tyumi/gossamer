@@ -9,7 +9,6 @@ import gleeunit/should
 import gossamer/abort_signal
 import gossamer/fetch_error
 import gossamer/fetch_extra
-import gossamer/response_type
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
 import runtime
@@ -135,7 +134,7 @@ pub fn is_response_redirected_test() {
 pub fn response_type_test() {
   use <- runtime.skip_on(runtime.Bun)
   use response <- promise.await(make_test_response())
-  fetch_extra.response_type(response) |> should.equal(response_type.Basic)
+  fetch_extra.response_type(response) |> should.equal(fetch_extra.ResponseBasic)
   promise.resolve(Nil)
 }
 
@@ -144,7 +143,8 @@ pub fn response_type_test() {
 pub fn response_type_bun_divergence_test() {
   use <- runtime.only_on(runtime.Bun)
   use response <- promise.await(make_test_response())
-  fetch_extra.response_type(response) |> should.equal(response_type.Default)
+  fetch_extra.response_type(response)
+  |> should.equal(fetch_extra.ResponseDefault)
   promise.resolve(Nil)
 }
 

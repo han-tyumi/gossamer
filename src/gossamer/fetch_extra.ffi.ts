@@ -12,31 +12,30 @@ import {
   to_fetch_request,
 } from "$/gleam_fetch/gleam/fetch.mjs";
 import { to_string as uri_to_string } from "$/gleam_stdlib/gleam/uri.mjs";
-import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
 function toCache(value: $fetchExtra.Cache$): RequestCache {
-  if ($fetchExtra.Cache$isForceCache(value)) return "force-cache";
-  if ($fetchExtra.Cache$isNoCache(value)) return "no-cache";
-  if ($fetchExtra.Cache$isNoStore(value)) return "no-store";
-  if ($fetchExtra.Cache$isOnlyIfCached(value)) return "only-if-cached";
-  if ($fetchExtra.Cache$isReload(value)) return "reload";
+  if ($fetchExtra.Cache$isCacheForceCache(value)) return "force-cache";
+  if ($fetchExtra.Cache$isCacheNoCache(value)) return "no-cache";
+  if ($fetchExtra.Cache$isCacheNoStore(value)) return "no-store";
+  if ($fetchExtra.Cache$isCacheOnlyIfCached(value)) return "only-if-cached";
+  if ($fetchExtra.Cache$isCacheReload(value)) return "reload";
   return "default";
 }
 
 function toCredentials(
   value: $fetchExtra.Credentials$,
 ): RequestCredentials {
-  if ($fetchExtra.Credentials$isInclude(value)) return "include";
-  if ($fetchExtra.Credentials$isOmit(value)) return "omit";
+  if ($fetchExtra.Credentials$isCredentialsInclude(value)) return "include";
+  if ($fetchExtra.Credentials$isCredentialsOmit(value)) return "omit";
   return "same-origin";
 }
 
 function toMode(value: $fetchExtra.Mode$): RequestMode {
-  if ($fetchExtra.Mode$isNavigate(value)) return "navigate";
-  if ($fetchExtra.Mode$isNoCors(value)) return "no-cors";
+  if ($fetchExtra.Mode$isModeNavigate(value)) return "navigate";
+  if ($fetchExtra.Mode$isModeNoCors(value)) return "no-cors";
   if ($fetchExtra.Mode$isModeSameOrigin(value)) return "same-origin";
   return "cors";
 }
@@ -52,25 +51,31 @@ function toPriority(
 function toRedirect(
   value: $fetchExtra.Redirect$,
 ): RequestRedirect {
-  if ($fetchExtra.Redirect$isError(value)) return "error";
-  if ($fetchExtra.Redirect$isManual(value)) return "manual";
+  if ($fetchExtra.Redirect$isRedirectError(value)) return "error";
+  if ($fetchExtra.Redirect$isRedirectManual(value)) return "manual";
   return "follow";
 }
 
 function toReferrerPolicy(value: $fetchExtra.ReferrerPolicy$): ReferrerPolicy {
-  if ($fetchExtra.ReferrerPolicy$isNoReferrer(value)) return "no-referrer";
-  if ($fetchExtra.ReferrerPolicy$isNoReferrerWhenDowngrade(value)) {
+  if ($fetchExtra.ReferrerPolicy$isReferrerNoReferrer(value)) {
+    return "no-referrer";
+  }
+  if ($fetchExtra.ReferrerPolicy$isReferrerNoReferrerWhenDowngrade(value)) {
     return "no-referrer-when-downgrade";
   }
-  if ($fetchExtra.ReferrerPolicy$isOrigin(value)) return "origin";
-  if ($fetchExtra.ReferrerPolicy$isOriginWhenCrossOrigin(value)) {
+  if ($fetchExtra.ReferrerPolicy$isReferrerOrigin(value)) return "origin";
+  if ($fetchExtra.ReferrerPolicy$isReferrerOriginWhenCrossOrigin(value)) {
     return "origin-when-cross-origin";
   }
   if ($fetchExtra.ReferrerPolicy$isReferrerSameOrigin(value)) {
     return "same-origin";
   }
-  if ($fetchExtra.ReferrerPolicy$isStrictOrigin(value)) return "strict-origin";
-  if ($fetchExtra.ReferrerPolicy$isUnsafeUrl(value)) return "unsafe-url";
+  if ($fetchExtra.ReferrerPolicy$isReferrerStrictOrigin(value)) {
+    return "strict-origin";
+  }
+  if ($fetchExtra.ReferrerPolicy$isReferrerUnsafeUrl(value)) {
+    return "unsafe-url";
+  }
   return "strict-origin-when-cross-origin";
 }
 
@@ -158,8 +163,27 @@ export const is_response_body_used: typeof $fetchExtra.is_response_body_used = (
   return jsResponseOf(response).bodyUsed;
 };
 
+function toResponseType(value: string): $fetchExtra.ResponseType$ {
+  switch (value) {
+    case "basic":
+      return $fetchExtra.ResponseType$ResponseBasic();
+    case "cors":
+      return $fetchExtra.ResponseType$ResponseCors();
+    case "error":
+      return $fetchExtra.ResponseType$ResponseError();
+    case "opaque":
+      return $fetchExtra.ResponseType$ResponseOpaque();
+    case "opaqueredirect":
+      return $fetchExtra.ResponseType$ResponseOpaqueRedirect();
+    case "default":
+      return $fetchExtra.ResponseType$ResponseDefault();
+    default:
+      return $fetchExtra.ResponseType$ResponseOther(value);
+  }
+}
+
 export const response_type: typeof $fetchExtra.response_type = (response) => {
-  return fromResponseType(jsResponseOf(response).type);
+  return toResponseType(jsResponseOf(response).type);
 };
 
 async function send_internal(jsRequest: Request, init: RequestInit) {

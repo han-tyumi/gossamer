@@ -39,8 +39,21 @@ import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/fetch_error.{type FetchError}
-import gossamer/response_type.{type ResponseType}
 import gossamer/stream/readable_stream.{type ReadableStream}
+
+/// The classification of a `Response`. Reflects how the response was
+/// obtained and what content the consumer can access (a `ResponseBasic`
+/// response exposes its body; a `ResponseOpaque` response does not).
+///
+pub type ResponseType {
+  ResponseBasic
+  ResponseCors
+  ResponseDefault
+  ResponseError
+  ResponseOpaque
+  ResponseOpaqueRedirect
+  ResponseOther(String)
+}
 
 /// A builder for fetch options. Construct with `options` and chain
 /// setters; pass to `send` (or its variants) via the `with` label.
@@ -67,20 +80,20 @@ pub type FetchOptions {
 /// HTTP cache.
 ///
 pub type Cache {
-  Default
-  ForceCache
-  NoCache
-  NoStore
-  OnlyIfCached
-  Reload
+  CacheDefault
+  CacheForceCache
+  CacheNoCache
+  CacheNoStore
+  CacheOnlyIfCached
+  CacheReload
 }
 
 /// Whether a `Request` includes credentials (cookies, HTTP auth) for
 /// cross-origin requests.
 ///
 pub type Credentials {
-  Include
-  Omit
+  CredentialsInclude
+  CredentialsOmit
   CredentialsSameOrigin
 }
 
@@ -88,9 +101,9 @@ pub type Credentials {
 /// are handled.
 ///
 pub type Mode {
-  Cors
-  Navigate
-  NoCors
+  ModeCors
+  ModeNavigate
+  ModeNoCors
   ModeSameOrigin
 }
 
@@ -106,23 +119,23 @@ pub type Priority {
 /// How a `Request` handles redirect responses.
 ///
 pub type Redirect {
-  Error
-  Follow
-  Manual
+  RedirectError
+  RedirectFollow
+  RedirectManual
 }
 
 /// The referrer policy for a `Request`, controlling what URL is sent in
 /// the `Referer` header.
 ///
 pub type ReferrerPolicy {
-  NoReferrer
-  NoReferrerWhenDowngrade
-  Origin
-  OriginWhenCrossOrigin
+  ReferrerNoReferrer
+  ReferrerNoReferrerWhenDowngrade
+  ReferrerOrigin
+  ReferrerOriginWhenCrossOrigin
   ReferrerSameOrigin
-  StrictOrigin
-  StrictOriginWhenCrossOrigin
-  UnsafeUrl
+  ReferrerStrictOrigin
+  ReferrerStrictOriginWhenCrossOrigin
+  ReferrerUnsafeUrl
 }
 
 /// A `FetchOptions` with no fields set. Pass directly to `send` to use
