@@ -1,4 +1,5 @@
 import gleam/order.{type Order}
+import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/iterator.{type Iterator}
 import gossamer/js_error.{type JsError}
@@ -31,21 +32,22 @@ pub fn from_list(list: List(Int)) -> Uint8Array
 pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> Int) -> Uint8Array
 
 /// Creates a `Uint8Array` view over the entirety of `buffer`. Returns
-/// an error if `buffer` is detached.
+/// `Detached` if `buffer` is detached.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Uint8Array, JsError)
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Uint8Array, BufferError)
 
 /// Creates a `Uint8Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns an error if
-/// the range is out of bounds or `buffer` is detached.
+/// `byte_offset` and spanning `length` elements. Returns `Detached`
+/// if `buffer` is detached, or `OutOfRange` if the range falls outside
+/// `buffer`.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
   buffer: ArrayBuffer,
   byte_offset byte_offset: Int,
   length length: Int,
-) -> Result(Uint8Array, JsError)
+) -> Result(Uint8Array, BufferError)
 
 /// Decodes a base64 string into a `Uint8Array`. Returns an error if
 /// `string` is not valid base64.
@@ -137,24 +139,25 @@ pub fn slice_range(
 @external(javascript, "./uint8_array.ffi.mjs", "subarray")
 pub fn subarray(array: Uint8Array, from begin: Int, to end: Int) -> Uint8Array
 
-/// Copies `values` into `array` starting at index `0`. Returns an error if
-/// `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at index `0`. Returns
+/// `OutOfRange` if `values` would extend past the end of `array`.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set")
 pub fn set(
   in array: Uint8Array,
   values values: Uint8Array,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
-/// Copies `values` into `array` starting at `offset`. Returns an error if
-/// `offset` is negative or the copy would extend past the end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Uint8Array,
   values values: Uint8Array,
   offset offset: Int,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
 @external(javascript, "./uint8_array.ffi.mjs", "copy_within")
 pub fn copy_within(
@@ -186,15 +189,15 @@ pub fn fill_range(
 pub fn reverse(array: Uint8Array) -> Uint8Array
 
 /// Returns a copy of the array with the byte at `index` replaced by
-/// `value`. Negative indices count from the end. Returns an error if
-/// `index` is out of bounds.
+/// `value`. Negative indices count from the end. Returns `OutOfRange`
+/// if `index` is out of bounds.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "with_")
 pub fn with(
   array: Uint8Array,
   at_index index: Int,
   value value: Int,
-) -> Result(Uint8Array, JsError)
+) -> Result(Uint8Array, BufferError)
 
 @external(javascript, "./uint8_array.ffi.mjs", "join")
 pub fn join(array: Uint8Array, with separator: String) -> String

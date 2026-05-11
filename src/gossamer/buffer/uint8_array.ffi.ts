@@ -1,10 +1,26 @@
 import type * as $uint8Array from "$/gossamer/gossamer/buffer/uint8_array.mjs";
+import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
-import { BitArray$BitArray } from "$/prelude.mjs";
+import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toUint8Array } from "~/utils/bit_array.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
+
+function checkArrayRange<T>(
+  array: Uint8Array,
+  index: number,
+  length: number,
+  op: () => T,
+) {
+  if ((array.buffer as ArrayBuffer).detached) {
+    return Result$Error($buffer.BufferError$Detached());
+  }
+  if (index < 0 || index + length > array.length) {
+    return Result$Error($buffer.BufferError$OutOfRange(index, array.length));
+  }
+  return Result$Ok(op());
+}
 
 export const new_: typeof $uint8Array.new$ = () => {
   return new Uint8Array();
@@ -25,14 +41,24 @@ export const from_list_mapped: typeof $uint8Array.from_list_mapped = (
   return Uint8Array.from(toArray(list), mapper);
 };
 
-export const from_buffer: typeof $uint8Array.from_buffer = (buffer) =>
-  toResult.fromThrows(() => new Uint8Array(buffer));
+export const from_buffer: typeof $uint8Array.from_buffer = (buffer) => {
+  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
+  return Result$Ok(new Uint8Array(buffer));
+};
 
 export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
   buffer,
   byteOffset,
   length,
-) => toResult.fromThrows(() => new Uint8Array(buffer, byteOffset, length));
+) => {
+  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
+  if (byteOffset < 0 || byteOffset + length > buffer.byteLength) {
+    return Result$Error(
+      $buffer.BufferError$OutOfRange(byteOffset + length, buffer.byteLength),
+    );
+  }
+  return Result$Ok(new Uint8Array(buffer, byteOffset, length));
+};
 
 export const buffer: typeof $uint8Array.buffer = (array) => {
   return array.buffer as ArrayBuffer;
@@ -113,23 +139,19 @@ export const subarray: typeof $uint8Array.subarray = (array, begin, end) => {
   return array.subarray(begin, end);
 };
 
-export const set: typeof $uint8Array.set = (array, values) => {
-  return toResult.fromThrows(() => {
+export const set: typeof $uint8Array.set = (array, values) =>
+  checkArrayRange(array, 0, values.length, () => {
     array.set(values);
-    return undefined;
   });
-};
 
 export const set_with_offset: typeof $uint8Array.set_with_offset = (
   array,
   values,
   offset,
-) => {
-  return toResult.fromThrows(() => {
+) =>
+  checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
-    return undefined;
   });
-};
 
 export const copy_within: typeof $uint8Array.copy_within = (
   array,
@@ -165,9 +187,13 @@ export const reverse: typeof $uint8Array.reverse = (array) => {
   return array.reverse();
 };
 
-export const with_: typeof $uint8Array.with$ = (array, index, value) => {
-  return toResult.fromThrows(() => array.with(index, value));
-};
+export const with_: typeof $uint8Array.with$ = (array, index, value) =>
+  checkArrayRange(
+    array,
+    index < 0 ? array.length + index : index,
+    1,
+    () => array.with(index, value),
+  );
 
 export const join: typeof $uint8Array.join = (array, separator) => {
   return array.join(separator);

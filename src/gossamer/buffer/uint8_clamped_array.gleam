@@ -1,6 +1,6 @@
+import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/buffer/uint8_array.{type Uint8Array}
-import gossamer/js_error.{type JsError}
 
 /// A typed array of 8-bit unsigned integers, clamped to `0`–`255` on
 /// write (rather than wrapped). Useful for image pixel data where
@@ -29,31 +29,35 @@ pub fn from_length(length: Int) -> Uint8ClampedArray
 pub fn from_list(list: List(Int)) -> Uint8ClampedArray
 
 /// Creates a `Uint8ClampedArray` view over the entirety of `buffer`.
-/// Returns an error if `buffer` is detached.
+/// Returns `Detached` if `buffer` is detached.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Uint8ClampedArray, JsError)
+pub fn from_buffer(
+  buffer: ArrayBuffer,
+) -> Result(Uint8ClampedArray, BufferError)
 
 /// Creates a `Uint8ClampedArray` view over a slice of `buffer` starting
-/// at `byte_offset` and spanning `length` elements. Returns an error if
-/// the range is out of bounds or `buffer` is detached.
+/// at `byte_offset` and spanning `length` elements. Returns `Detached`
+/// if `buffer` is detached, or `OutOfRange` if the range falls outside
+/// `buffer`.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
   buffer: ArrayBuffer,
   byte_offset byte_offset: Int,
   length length: Int,
-) -> Result(Uint8ClampedArray, JsError)
+) -> Result(Uint8ClampedArray, BufferError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "buffer")
 pub fn buffer(array: Uint8ClampedArray) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
-/// the underlying buffer. Returns an error if the underlying buffer
-/// has been detached or resized below the array's range.
+/// the underlying buffer. Returns `Detached` if the underlying buffer
+/// has been detached, or `OutOfRange` if it has been resized below the
+/// array's range.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "bytes")
-pub fn bytes(array: Uint8ClampedArray) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Uint8ClampedArray) -> Result(Uint8Array, BufferError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "byte_length")
 pub fn byte_length(array: Uint8ClampedArray) -> Int
@@ -71,15 +75,15 @@ pub fn length(array: Uint8ClampedArray) -> Int
 pub fn at(array: Uint8ClampedArray, index index: Int) -> Result(Int, Nil)
 
 /// Returns a copy of `array` with the value at `index` replaced.
-/// Negative indices count from the end. Returns an error if `index`
-/// is out of range.
+/// Negative indices count from the end. Returns `OutOfRange` if
+/// `index` is out of range.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "with_")
 pub fn with(
   array: Uint8ClampedArray,
   at_index index: Int,
   value value: Int,
-) -> Result(Uint8ClampedArray, JsError)
+) -> Result(Uint8ClampedArray, BufferError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "includes")
 pub fn includes(in array: Uint8ClampedArray, value value: Int) -> Bool
@@ -117,25 +121,25 @@ pub fn subarray(
   to end: Int,
 ) -> Uint8ClampedArray
 
-/// Copies `values` into `array` starting at index `0`. Returns an
-/// error if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at index `0`. Returns
+/// `OutOfRange` if `values` would extend past the end of `array`.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "set")
 pub fn set(
   in array: Uint8ClampedArray,
   values values: Uint8ClampedArray,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
-/// Copies `values` into `array` starting at `offset`. Returns an
-/// error if `offset` is negative or the copy would extend past the
-/// end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Uint8ClampedArray,
   values values: Uint8ClampedArray,
   offset offset: Int,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "fill")
 pub fn fill(array: Uint8ClampedArray, with value: Int) -> Uint8ClampedArray
