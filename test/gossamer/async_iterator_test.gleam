@@ -1,18 +1,15 @@
 import gleam/javascript/promise
 import gleam/option.{None, Some}
 import gleeunit/should
-import gossamer/async_iterator
-import gossamer/iterator_handler_outcome
-import gossamer/iterator_result
+import gossamer/iteration
+import gossamer/iteration/async_iterator
 
 pub fn new_and_next_test() {
   let iter =
-    async_iterator.new(fn(_next) {
-      promise.resolve(iterator_result.Return(Nil))
-    })
+    async_iterator.new(fn(_next) { promise.resolve(iteration.Return(Nil)) })
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -20,108 +17,95 @@ pub fn stateful_iterator_test() {
   let iter =
     async_iterator.new(fn(next) {
       case next {
-        None -> promise.resolve(iterator_result.Yield(0))
+        None -> promise.resolve(iteration.Yield(0))
         Some(value) ->
           case value < 2 {
-            True -> promise.resolve(iterator_result.Yield(value + 1))
-            False -> promise.resolve(iterator_result.Return(Nil))
+            True -> promise.resolve(iteration.Yield(value + 1))
+            False -> promise.resolve(iteration.Return(Nil))
           }
       }
     })
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Yield(0)))
+  should.equal(result, Ok(iteration.Yield(0)))
 
   use result <- promise.await(async_iterator.next_with(iter, 0))
-  should.equal(result, Ok(iterator_result.Yield(1)))
+  should.equal(result, Ok(iteration.Yield(1)))
 
   use result <- promise.await(async_iterator.next_with(iter, 1))
-  should.equal(result, Ok(iterator_result.Yield(2)))
+  should.equal(result, Ok(iteration.Yield(2)))
 
   use result <- promise.await(async_iterator.next_with(iter, 2))
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
 
 pub fn return_no_handler_test() {
-  let iter =
-    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+  let iter = async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
 
   use result <- promise.await(async_iterator.return(iter))
-  should.equal(result, Ok(iterator_handler_outcome.NoHandler))
+  should.equal(result, Ok(iteration.NoHandler))
   promise.resolve(Nil)
 }
 
 pub fn return_with_handler_test() {
   let iter =
-    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
     |> async_iterator.with_return(fn(_value) {
-      promise.resolve(iterator_result.Return(Nil))
+      promise.resolve(iteration.Return(Nil))
     })
 
   use result <- promise.await(async_iterator.return(iter))
-  should.equal(
-    result,
-    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
-  )
+  should.equal(result, Ok(iteration.Handled(iteration.Return(Nil))))
   promise.resolve(Nil)
 }
 
 pub fn return_with_value_test() {
   let iter =
-    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
     |> async_iterator.with_return(fn(value) {
       case value {
-        Some(val) -> promise.resolve(iterator_result.Return(val))
-        None -> promise.resolve(iterator_result.Return(99))
+        Some(val) -> promise.resolve(iteration.Return(val))
+        None -> promise.resolve(iteration.Return(99))
       }
     })
 
   use result <- promise.await(async_iterator.return_with(iter, 42))
-  should.equal(
-    result,
-    Ok(iterator_handler_outcome.Handled(iterator_result.Return(42))),
-  )
+  should.equal(result, Ok(iteration.Handled(iteration.Return(42))))
   promise.resolve(Nil)
 }
 
 pub fn throw_no_handler_test() {
-  let iter =
-    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+  let iter = async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
 
   use result <- promise.await(async_iterator.throw(iter, "error"))
-  should.equal(result, Ok(iterator_handler_outcome.NoHandler))
+  should.equal(result, Ok(iteration.NoHandler))
   promise.resolve(Nil)
 }
 
 pub fn throw_with_handler_test() {
   let iter =
-    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
     |> async_iterator.with_throw(fn(_err) {
-      promise.resolve(iterator_result.Return(Nil))
+      promise.resolve(iteration.Return(Nil))
     })
 
   use result <- promise.await(async_iterator.throw(iter, "error"))
-  should.equal(
-    result,
-    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
-  )
+  should.equal(result, Ok(iteration.Handled(iteration.Return(Nil))))
   promise.resolve(Nil)
 }
 
 pub fn throw_passes_reason_test() {
   let iter =
-    async_iterator.new(fn(_) { promise.resolve(iterator_result.Yield(1)) })
+    async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
     |> async_iterator.with_throw(fn(err) {
-      promise.resolve(iterator_result.Return(err))
+      promise.resolve(iteration.Return(err))
     })
 
   use result <- promise.await(async_iterator.throw(iter, "specific-reason"))
   should.equal(
     result,
-    Ok(
-      iterator_handler_outcome.Handled(iterator_result.Return("specific-reason")),
-    ),
+    Ok(iteration.Handled(iteration.Return("specific-reason"))),
   )
   promise.resolve(Nil)
 }
@@ -136,7 +120,7 @@ pub fn for_await_test() {
   should.equal(for_result, Ok(Nil))
 
   use next_result <- promise.await(async_iterator.next(iter))
-  should.equal(next_result, Ok(iterator_result.Return(Nil)))
+  should.equal(next_result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -144,16 +128,16 @@ pub fn from_list_test() {
   let iter = async_iterator.from_list([10, 20, 30])
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Yield(10)))
+  should.equal(result, Ok(iteration.Yield(10)))
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Yield(20)))
+  should.equal(result, Ok(iteration.Yield(20)))
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Yield(30)))
+  should.equal(result, Ok(iteration.Yield(30)))
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
 
@@ -161,7 +145,7 @@ pub fn from_list_empty_test() {
   let iter = async_iterator.from_list([])
 
   use result <- promise.await(async_iterator.next(iter))
-  should.equal(result, Ok(iterator_result.Return(Nil)))
+  should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
 

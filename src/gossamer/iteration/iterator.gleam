@@ -1,6 +1,5 @@
 import gleam/option.{type Option}
-import gossamer/iterator_handler_outcome.{type IteratorHandlerOutcome}
-import gossamer/iterator_result.{type IteratorResult}
+import gossamer/iteration.{type IteratorHandlerOutcome, type IteratorResult}
 import gossamer/js_error.{type JsError}
 
 /// A pull-based iterator that yields values one at a time. `a` is the

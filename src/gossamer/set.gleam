@@ -1,4 +1,4 @@
-import gossamer/iterator.{type Iterator}
+import gossamer/iteration/iterator.{type Iterator}
 
 /// A JS `Set` holding unique values of any type, preserving insertion
 /// order. Mutable — methods modify the set in place and return it for

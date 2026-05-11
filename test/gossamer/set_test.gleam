@@ -1,5 +1,5 @@
 import gleeunit/should
-import gossamer/iterator
+import gossamer/iteration/iterator
 import gossamer/set
 
 pub fn new_test() {

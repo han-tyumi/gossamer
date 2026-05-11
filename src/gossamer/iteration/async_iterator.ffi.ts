@@ -1,6 +1,6 @@
-import type * as $asyncIterator from "$/gossamer/gossamer/async_iterator.mjs";
+import type * as $asyncIterator from "$/gossamer/gossamer/iteration/async_iterator.mjs";
+import * as $iteration from "$/gossamer/gossamer/iteration.mjs";
 import type { List } from "$/prelude.mjs";
-import * as $iteratorHandlerOutcome from "$/gossamer/gossamer/iterator_handler_outcome.mjs";
 import {
   List$isNonEmpty,
   List$NonEmpty$first,
@@ -10,7 +10,7 @@ import {
 import {
   toGleamIteratorResult,
   toIteratorResult,
-} from "~/gossamer/iterator_result.ffi.ts";
+} from "~/gossamer/iteration.ffi.ts";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -136,12 +136,12 @@ export const return_: typeof $asyncIterator.return$ = <T, TReturn, TNext>(
 ) => {
   if (!iterator.return) {
     return Promise.resolve(
-      Result$Ok($iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()),
+      Result$Ok($iteration.IteratorHandlerOutcome$NoHandler()),
     );
   }
   return toResult.fromPromise(
     iterator.return().then((result) =>
-      $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+      $iteration.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
       )
     ),
@@ -158,12 +158,12 @@ export const return_with: typeof $asyncIterator.return_with = <
 ) => {
   if (!iterator.return) {
     return Promise.resolve(
-      Result$Ok($iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()),
+      Result$Ok($iteration.IteratorHandlerOutcome$NoHandler()),
     );
   }
   return toResult.fromPromise(
     iterator.return(value).then((result) =>
-      $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+      $iteration.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
       )
     ),
@@ -176,12 +176,12 @@ export const throw_: typeof $asyncIterator.throw$ = <T, TReturn, TNext>(
 ) => {
   if (!iterator.throw) {
     return Promise.resolve(
-      Result$Ok($iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler()),
+      Result$Ok($iteration.IteratorHandlerOutcome$NoHandler()),
     );
   }
   return toResult.fromPromise(
     iterator.throw(reason).then((result) =>
-      $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+      $iteration.IteratorHandlerOutcome$Handled(
         toGleamIteratorResult(result),
       )
     ),

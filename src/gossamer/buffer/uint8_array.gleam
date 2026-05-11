@@ -1,7 +1,7 @@
 import gleam/order.{type Order}
 import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/iterator.{type Iterator}
+import gossamer/iteration/iterator.{type Iterator}
 
 /// A typed array of 8-bit unsigned integers (bytes).
 ///

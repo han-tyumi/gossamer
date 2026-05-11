@@ -1,5 +1,5 @@
-import * as $iteratorHandlerOutcome from "$/gossamer/gossamer/iterator_handler_outcome.mjs";
-import type * as $iterator from "$/gossamer/gossamer/iterator.mjs";
+import * as $iteration from "$/gossamer/gossamer/iteration.mjs";
+import type * as $iterator from "$/gossamer/gossamer/iteration/iterator.mjs";
 import type { List } from "$/prelude.mjs";
 import {
   List$isNonEmpty,
@@ -10,7 +10,7 @@ import {
 import {
   toGleamIteratorResult,
   toIteratorResult,
-} from "~/gossamer/iterator_result.ffi.ts";
+} from "~/gossamer/iteration.ffi.ts";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
@@ -118,11 +118,11 @@ export const return_: typeof $iterator.return$ = <T, TReturn, TNext>(
   const returnFn = iterator.return;
   if (!returnFn) {
     return Result$Ok(
-      $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler(),
+      $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
   return toResult.fromThrows(() =>
-    $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+    $iteration.IteratorHandlerOutcome$Handled(
       toGleamIteratorResult(returnFn.call(iterator)),
     )
   );
@@ -135,11 +135,11 @@ export const return_with: typeof $iterator.return_with = <T, TReturn, TNext>(
   const returnFn = iterator.return;
   if (!returnFn) {
     return Result$Ok(
-      $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler(),
+      $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
   return toResult.fromThrows(() =>
-    $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+    $iteration.IteratorHandlerOutcome$Handled(
       toGleamIteratorResult(returnFn.call(iterator, value)),
     )
   );
@@ -152,11 +152,11 @@ export const throw_: typeof $iterator.throw$ = <T, TReturn, TNext>(
   const throwFn = iterator.throw;
   if (!throwFn) {
     return Result$Ok(
-      $iteratorHandlerOutcome.IteratorHandlerOutcome$NoHandler(),
+      $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
   return toResult.fromThrows(() =>
-    $iteratorHandlerOutcome.IteratorHandlerOutcome$Handled(
+    $iteration.IteratorHandlerOutcome$Handled(
       toGleamIteratorResult(throwFn.call(iterator, reason)),
     )
   );

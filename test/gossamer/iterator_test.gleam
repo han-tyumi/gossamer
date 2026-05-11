@@ -1,17 +1,16 @@
 import gleam/option.{None, Some}
 import gleeunit/should
-import gossamer/iterator
-import gossamer/iterator_handler_outcome
-import gossamer/iterator_result
+import gossamer/iteration
+import gossamer/iteration/iterator
 
 pub fn new_and_next_test() {
   // Cover both `IteratorResult` variants — the callback's return value
   // round-trips through `next` for each.
-  let yielded = iterator.new(fn(_next) { iterator_result.Yield(42) })
-  iterator.next(yielded) |> should.equal(iterator_result.Yield(42))
+  let yielded = iterator.new(fn(_next) { iteration.Yield(42) })
+  iterator.next(yielded) |> should.equal(iteration.Yield(42))
 
-  let returned = iterator.new(fn(_next) { iterator_result.Return("done") })
-  iterator.next(returned) |> should.equal(iterator_result.Return("done"))
+  let returned = iterator.new(fn(_next) { iteration.Return("done") })
+  iterator.next(returned) |> should.equal(iteration.Return("done"))
 }
 
 pub fn stateful_iterator_test() {
@@ -19,114 +18,104 @@ pub fn stateful_iterator_test() {
   let iter =
     iterator.new(fn(next) {
       case next {
-        None -> iterator_result.Yield(0)
+        None -> iteration.Yield(0)
         Some(value) ->
           case value < 3 {
-            True -> iterator_result.Yield(value + 1)
-            False -> iterator_result.Return(Nil)
+            True -> iteration.Yield(value + 1)
+            False -> iteration.Return(Nil)
           }
       }
     })
 
   let result = iterator.next(iter)
-  should.equal(result, iterator_result.Yield(0))
+  should.equal(result, iteration.Yield(0))
 
   let result = iterator.next_with(iter, 0)
-  should.equal(result, iterator_result.Yield(1))
+  should.equal(result, iteration.Yield(1))
 
   let result = iterator.next_with(iter, 1)
-  should.equal(result, iterator_result.Yield(2))
+  should.equal(result, iteration.Yield(2))
 
   let result = iterator.next_with(iter, 2)
-  should.equal(result, iterator_result.Yield(3))
+  should.equal(result, iteration.Yield(3))
 
   let result = iterator.next_with(iter, 3)
-  should.equal(result, iterator_result.Return(Nil))
+  should.equal(result, iteration.Return(Nil))
 }
 
 pub fn return_test() {
-  let iter = iterator.new(fn(_) { iterator_result.Yield(1) })
+  let iter = iterator.new(fn(_) { iteration.Yield(1) })
   iterator.return(iter)
-  |> should.equal(Ok(iterator_handler_outcome.NoHandler))
+  |> should.equal(Ok(iteration.NoHandler))
 }
 
 pub fn return_with_handler_test() {
   let iter =
-    iterator.new(fn(_) { iterator_result.Yield(1) })
-    |> iterator.with_return(fn(_value) { iterator_result.Return(Nil) })
+    iterator.new(fn(_) { iteration.Yield(1) })
+    |> iterator.with_return(fn(_value) { iteration.Return(Nil) })
 
   iterator.return(iter)
-  |> should.equal(
-    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
-  )
+  |> should.equal(Ok(iteration.Handled(iteration.Return(Nil))))
 }
 
 pub fn return_with_value_test() {
   let iter =
-    iterator.new(fn(_) { iterator_result.Yield(1) })
+    iterator.new(fn(_) { iteration.Yield(1) })
     |> iterator.with_return(fn(value) {
       case value {
-        Some(val) -> iterator_result.Return(val)
-        None -> iterator_result.Return(99)
+        Some(val) -> iteration.Return(val)
+        None -> iteration.Return(99)
       }
     })
 
   iterator.return_with(iter, 42)
-  |> should.equal(
-    Ok(iterator_handler_outcome.Handled(iterator_result.Return(42))),
-  )
+  |> should.equal(Ok(iteration.Handled(iteration.Return(42))))
 }
 
 pub fn throw_test() {
-  let iter = iterator.new(fn(_) { iterator_result.Yield(1) })
+  let iter = iterator.new(fn(_) { iteration.Yield(1) })
   iterator.throw(iter, "error")
-  |> should.equal(Ok(iterator_handler_outcome.NoHandler))
+  |> should.equal(Ok(iteration.NoHandler))
 }
 
 pub fn throw_with_handler_test() {
   let iter =
-    iterator.new(fn(_) { iterator_result.Yield(1) })
-    |> iterator.with_throw(fn(_err) { iterator_result.Return(Nil) })
+    iterator.new(fn(_) { iteration.Yield(1) })
+    |> iterator.with_throw(fn(_err) { iteration.Return(Nil) })
 
   iterator.throw(iter, "error")
-  |> should.equal(
-    Ok(iterator_handler_outcome.Handled(iterator_result.Return(Nil))),
-  )
+  |> should.equal(Ok(iteration.Handled(iteration.Return(Nil))))
 }
 
 pub fn throw_passes_reason_test() {
   let iter =
-    iterator.new(fn(_) { iterator_result.Yield(1) })
-    |> iterator.with_throw(fn(err) { iterator_result.Return(err) })
+    iterator.new(fn(_) { iteration.Yield(1) })
+    |> iterator.with_throw(fn(err) { iteration.Return(err) })
 
   iterator.throw(iter, "specific-reason")
-  |> should.equal(
-    Ok(
-      iterator_handler_outcome.Handled(iterator_result.Return("specific-reason")),
-    ),
-  )
+  |> should.equal(Ok(iteration.Handled(iteration.Return("specific-reason"))))
 }
 
 pub fn for_test() {
   // `for` consumes the iterator. After it runs, `next` must return Return.
   let iter = iterator.from_list([1, 2, 3])
   iterator.for(iter, fn(_value) { Nil })
-  iterator.next(iter) |> should.equal(iterator_result.Return(Nil))
+  iterator.next(iter) |> should.equal(iteration.Return(Nil))
 }
 
 pub fn from_list_test() {
   let iter = iterator.from_list([10, 20, 30])
 
-  iterator.next(iter) |> should.equal(iterator_result.Yield(10))
-  iterator.next(iter) |> should.equal(iterator_result.Yield(20))
-  iterator.next(iter) |> should.equal(iterator_result.Yield(30))
-  iterator.next(iter) |> should.equal(iterator_result.Return(Nil))
+  iterator.next(iter) |> should.equal(iteration.Yield(10))
+  iterator.next(iter) |> should.equal(iteration.Yield(20))
+  iterator.next(iter) |> should.equal(iteration.Yield(30))
+  iterator.next(iter) |> should.equal(iteration.Return(Nil))
 }
 
 pub fn from_list_empty_test() {
   let iter = iterator.from_list([])
 
-  iterator.next(iter) |> should.equal(iterator_result.Return(Nil))
+  iterator.next(iter) |> should.equal(iteration.Return(Nil))
 }
 
 pub fn to_list_test() {

@@ -1,4 +1,4 @@
-import gossamer/iterator.{type Iterator}
+import gossamer/iteration/iterator.{type Iterator}
 
 /// A JS `Map` holding key-value pairs. Supports any key type (unlike
 /// plain objects) and preserves insertion order. Mutable — methods modify
