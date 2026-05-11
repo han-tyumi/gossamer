@@ -12,6 +12,27 @@ pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
 }
 
+/// Errors raised by `subtle_crypto` operations.
+pub type CryptoError {
+  /// The key's `usages` don't include the capability required for this
+  /// operation (e.g., calling `encrypt` with a key whose usages don't
+  /// include `Encrypt`). The `usage` payload names the missing
+  /// capability.
+  KeyUsageMismatch(usage: KeyUsage)
+
+  /// The key's `extractable` flag is `False`, but the operation
+  /// (`export_key`, `export_key_jwk`, `wrap_key`, `wrap_key_jwk`)
+  /// requires it.
+  KeyNotExtractable
+
+  /// A runtime failure during the cryptographic operation. The
+  /// underlying error carries through as `JsError`; inspect its `name`
+  /// to distinguish causes such as `NotSupportedError` (unrecognized
+  /// algorithm), `OperationError` (e.g., malformed ciphertext), or
+  /// `DataError` (e.g., malformed imported key data).
+  OperationFailed(error: JsError)
+}
+
 /// The serialization format of a key imported or exported via
 /// `subtle_crypto`.
 ///
@@ -121,50 +142,57 @@ pub type WrapAlgorithm {
   WrapOther(String)
 }
 
-/// Computes a cryptographic hash of `data`. Returns an error if the algorithm is
-/// not supported or `data` cannot be processed.
+/// Computes a cryptographic hash of `data`. Returns
+/// `Error(OperationFailed(_))` if the algorithm is unsupported by the
+/// runtime.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "digest")
 pub fn digest(
   algorithm algorithm: HashAlgorithm,
   data data: BitArray,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
-/// Encrypts `data` with `key` using `algorithm`. Returns an error if the key's
-/// usage doesn't include `"encrypt"`, the key's algorithm doesn't match,
-/// or the data is invalid for the algorithm.
+/// Encrypts `data` with `key` using `algorithm`. Returns
+/// `Error(KeyUsageMismatch(Encrypt))` if `key.usages` doesn't include
+/// `Encrypt`, or `Error(OperationFailed(_))` if the algorithm doesn't
+/// match the key or the data is invalid for the algorithm.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "encrypt")
 pub fn encrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
   data data: BitArray,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
-/// Decrypts `data` with `key` using `algorithm`. Returns an error if the key's
-/// usage doesn't include `"decrypt"`, the key's algorithm doesn't match,
-/// or `data` is not valid ciphertext.
+/// Decrypts `data` with `key` using `algorithm`. Returns
+/// `Error(KeyUsageMismatch(Decrypt))` if `key.usages` doesn't include
+/// `Decrypt`, or `Error(OperationFailed(_))` if the algorithm doesn't
+/// match the key or `data` isn't valid ciphertext.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "decrypt")
 pub fn decrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
   data data: BitArray,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
-/// Produces a digital signature of `data` with `key`. Returns an error if the
-/// key's usage doesn't include `"sign"` or the key's algorithm doesn't
-/// match.
+/// Produces a digital signature of `data` with `key`. Returns
+/// `Error(KeyUsageMismatch(Sign))` if `key.usages` doesn't include
+/// `Sign`, or `Error(OperationFailed(_))` if the algorithm doesn't
+/// match the key.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "sign")
 pub fn sign(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
   data data: BitArray,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
-/// Verifies `signature` against `data` using `key`. Returns an error if the key's
-/// usage doesn't include `"verify"` or the key's algorithm doesn't match.
+/// Verifies `signature` against `data` using `key`. Returns
+/// `Error(KeyUsageMismatch(Verify))` if `key.usages` doesn't include
+/// `Verify`, or `Error(OperationFailed(_))` if the algorithm doesn't
+/// match the key. `Ok(False)` means the signature is well-formed but
+/// invalid for the data.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "verify")
 pub fn verify(
@@ -172,30 +200,32 @@ pub fn verify(
   key key: CryptoKey,
   signature signature: BitArray,
   data data: BitArray,
-) -> Promise(Result(Bool, JsError))
+) -> Promise(Result(Bool, CryptoError))
 
-/// Generates a new symmetric `CryptoKey`. Returns an error if the algorithm is
-/// unsupported or `usages` is empty.
+/// Generates a new symmetric `CryptoKey`. Returns
+/// `Error(OperationFailed(_))` if the algorithm is unsupported or
+/// `usages` is empty.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key")
 pub fn generate_key(
   algorithm algorithm: KeyGenAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKey, JsError))
+) -> Promise(Result(CryptoKey, CryptoError))
 
-/// Generates a new public/private key pair. Returns an error if the algorithm is
-/// unsupported or `usages` is empty.
+/// Generates a new public/private key pair. Returns
+/// `Error(OperationFailed(_))` if the algorithm is unsupported or
+/// `usages` is empty.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "generate_key_pair")
 pub fn generate_key_pair(
   algorithm algorithm: KeyPairGenAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKeyPair, JsError))
+) -> Promise(Result(CryptoKeyPair, CryptoError))
 
-/// Imports a raw key from `data`. Returns an error if `data` doesn't match `format`
-/// or the algorithm is unsupported.
+/// Imports a raw key from `data`. Returns `Error(OperationFailed(_))` if
+/// `data` doesn't match `format` or the algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
 pub fn import_key(
@@ -204,10 +234,10 @@ pub fn import_key(
   algorithm algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKey, JsError))
+) -> Promise(Result(CryptoKey, CryptoError))
 
-/// Imports a key from a JSON Web Key. Returns an error if `data` is malformed or
-/// the algorithm is unsupported.
+/// Imports a key from a JSON Web Key. Returns `Error(OperationFailed(_))`
+/// if `data` is malformed or the algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(
@@ -215,34 +245,43 @@ pub fn import_key_jwk(
   algorithm algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKey, JsError))
+) -> Promise(Result(CryptoKey, CryptoError))
 
-/// Exports `key` in the given `format`. Returns an error if the key is not
-/// extractable.
+/// Exports `key` in the given `format`. Returns
+/// `Error(KeyNotExtractable)` if `key.extractable` is `False`, or
+/// `Error(OperationFailed(_))` if `format` isn't supported for the
+/// key's algorithm.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
 pub fn export_key(
   format format: KeyFormat,
   key key: CryptoKey,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
-/// Exports `key` as a JSON Web Key. Returns an error if the key is not extractable.
+/// Exports `key` as a JSON Web Key. Returns `Error(KeyNotExtractable)`
+/// if `key.extractable` is `False`.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
-pub fn export_key_jwk(key: CryptoKey) -> Promise(Result(JsonWebKey, JsError))
+pub fn export_key_jwk(
+  key: CryptoKey,
+) -> Promise(Result(JsonWebKey, CryptoError))
 
-/// Derives bits of shared secret from a base key. Returns an error if the key's
-/// usage doesn't include `"deriveBits"` or the algorithm is unsupported.
+/// Derives bits of shared secret from a base key. Returns
+/// `Error(KeyUsageMismatch(DeriveBits))` if `base_key.usages` doesn't
+/// include `DeriveBits`, or `Error(OperationFailed(_))` if the
+/// algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_bits")
 pub fn derive_bits(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
   length length: Int,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
-/// Derives a new `CryptoKey` from a base key. Returns an error if the key's usage
-/// doesn't include `"deriveKey"` or the algorithm is unsupported.
+/// Derives a new `CryptoKey` from a base key. Returns
+/// `Error(KeyUsageMismatch(DeriveKey))` if `base_key.usages` doesn't
+/// include `DeriveKey`, or `Error(OperationFailed(_))` if the
+/// algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "derive_key")
 pub fn derive_key(
@@ -251,11 +290,13 @@ pub fn derive_key(
   derived_key_type type_: DerivedKeyType,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKey, JsError))
+) -> Promise(Result(CryptoKey, CryptoError))
 
-/// Exports `key` in raw form and encrypts it with `wrapping_key`. Returns
-/// an error if either key's usage doesn't allow the operation or the
-/// wrapping key's algorithm is unsupported.
+/// Exports `key` in raw form and encrypts it with `wrapping_key`.
+/// Returns `Error(KeyNotExtractable)` if `key.extractable` is `False`,
+/// `Error(KeyUsageMismatch(WrapKey))` if `wrapping_key.usages` doesn't
+/// include `WrapKey`, or `Error(OperationFailed(_))` if the wrapping
+/// algorithm is unsupported.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key")
 pub fn wrap_key(
@@ -263,7 +304,7 @@ pub fn wrap_key(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
   algorithm algorithm: WrapAlgorithm,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
 /// Like `wrap_key`, but exports `key` as a JSON Web Key before wrapping.
 ///
@@ -272,11 +313,13 @@ pub fn wrap_key_jwk(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
   algorithm algorithm: WrapAlgorithm,
-) -> Promise(Result(BitArray, JsError))
+) -> Promise(Result(BitArray, CryptoError))
 
 /// Decrypts `wrapped_key` with `unwrapping_key` and imports the result.
-/// Returns an error if the unwrapping fails or the imported key is invalid for the
-/// specified algorithm.
+/// Returns `Error(KeyUsageMismatch(UnwrapKey))` if `unwrapping_key.usages`
+/// doesn't include `UnwrapKey`, or `Error(OperationFailed(_))` if the
+/// unwrapping fails or the imported key is invalid for the specified
+/// algorithm.
 ///
 @external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
@@ -287,7 +330,7 @@ pub fn unwrap_key(
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKey, JsError))
+) -> Promise(Result(CryptoKey, CryptoError))
 
 /// Like `unwrap_key`, but imports the decrypted key as a JSON Web Key.
 ///
@@ -299,4 +342,4 @@ pub fn unwrap_key_jwk(
   unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
-) -> Promise(Result(CryptoKey, JsError))
+) -> Promise(Result(CryptoKey, CryptoError))

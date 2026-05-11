@@ -1,4 +1,6 @@
+import * as $cryptoKey from "$/gossamer/gossamer/crypto_key.mjs";
 import * as $subtleCrypto from "$/gossamer/gossamer/subtle_crypto.mjs";
+import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toAesAlgorithm } from "~/gossamer/aes_algorithm.ffi.ts";
 import {
   toHashAlgorithm,
@@ -8,14 +10,60 @@ import {
 import { toEcAlgorithm } from "~/gossamer/ec_algorithm.ffi.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/json_web_key.ffi.ts";
 import { toRsaAlgorithm } from "~/gossamer/rsa_algorithm.ffi.ts";
-import {
-  toBitArrayResult,
-  toBufferSource,
-  toUint8Array,
-} from "~/utils/bit_array.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+import { toBufferSource, toUint8Array } from "~/utils/bit_array.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
+
+function toCryptoError(value: unknown): $subtleCrypto.CryptoError$ {
+  const error = value instanceof Error
+    ? value
+    : new Error(String(value), { cause: value });
+  return $subtleCrypto.CryptoError$OperationFailed(error);
+}
+
+async function toCryptoResult<T>(thunk: () => Promise<T>) {
+  try {
+    return Result$Ok(await thunk());
+  } catch (error) {
+    return Result$Error(toCryptoError(error));
+  }
+}
+
+async function toCryptoBitArrayResult(thunk: () => Promise<ArrayBuffer>) {
+  try {
+    return Result$Ok(BitArray$BitArray(new Uint8Array(await thunk())));
+  } catch (error) {
+    return Result$Error(toCryptoError(error));
+  }
+}
+
+const keyUsageVariants: Record<KeyUsage, () => $cryptoKey.KeyUsage$> = {
+  encrypt: $cryptoKey.KeyUsage$Encrypt,
+  decrypt: $cryptoKey.KeyUsage$Decrypt,
+  sign: $cryptoKey.KeyUsage$Sign,
+  verify: $cryptoKey.KeyUsage$Verify,
+  deriveKey: $cryptoKey.KeyUsage$DeriveKey,
+  deriveBits: $cryptoKey.KeyUsage$DeriveBits,
+  wrapKey: $cryptoKey.KeyUsage$WrapKey,
+  unwrapKey: $cryptoKey.KeyUsage$UnwrapKey,
+};
+
+function usageMismatch(required: KeyUsage): $subtleCrypto.CryptoError$ {
+  return $subtleCrypto.CryptoError$KeyUsageMismatch(
+    keyUsageVariants[required](),
+  );
+}
+
+function checkUsage(
+  key: CryptoKey,
+  required: KeyUsage,
+): $subtleCrypto.CryptoError$ | null {
+  return key.usages.includes(required) ? null : usageMismatch(required);
+}
+
+function checkExtractable(key: CryptoKey): $subtleCrypto.CryptoError$ | null {
+  return key.extractable ? null : $subtleCrypto.CryptoError$KeyNotExtractable();
+}
 
 function toCryptoKeyPair(
   pair: CryptoKeyPair,
@@ -311,7 +359,7 @@ function toWrapAlgorithm(
 }
 
 export const digest: typeof $subtleCrypto.digest = (algorithm, data) => {
-  return toBitArrayResult(() =>
+  return toCryptoBitArrayResult(() =>
     subtle.digest(toHashAlgorithm(algorithm), toBufferSource(data))
   );
 };
@@ -321,7 +369,9 @@ export const encrypt: typeof $subtleCrypto.encrypt = (
   key,
   data,
 ) => {
-  return toBitArrayResult(() =>
+  const usageError = checkUsage(key, "encrypt");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoBitArrayResult(() =>
     subtle.encrypt(toEncryptAlgorithm(algorithm), key, toBufferSource(data))
   );
 };
@@ -331,13 +381,17 @@ export const decrypt: typeof $subtleCrypto.decrypt = (
   key,
   data,
 ) => {
-  return toBitArrayResult(() =>
+  const usageError = checkUsage(key, "decrypt");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoBitArrayResult(() =>
     subtle.decrypt(toEncryptAlgorithm(algorithm), key, toBufferSource(data))
   );
 };
 
 export const sign: typeof $subtleCrypto.sign = (algorithm, key, data) => {
-  return toBitArrayResult(() =>
+  const usageError = checkUsage(key, "sign");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoBitArrayResult(() =>
     subtle.sign(toSignAlgorithm(algorithm), key, toBufferSource(data))
   );
 };
@@ -348,7 +402,9 @@ export const verify: typeof $subtleCrypto.verify = (
   signature,
   data,
 ) => {
-  return toResult.fromAsync(() =>
+  const usageError = checkUsage(key, "verify");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoResult(() =>
     subtle.verify(
       toSignAlgorithm(algorithm),
       key,
@@ -363,12 +419,12 @@ export const generate_key: typeof $subtleCrypto.generate_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
+  return toCryptoResult(() =>
     subtle.generateKey(
       toKeyGenAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
-    ) as Promise<CryptoKey>,
+    ) as Promise<CryptoKey>
   );
 };
 
@@ -377,7 +433,7 @@ export const generate_key_pair: typeof $subtleCrypto.generate_key_pair = (
   extractable,
   usages,
 ) => {
-  return toResult.fromAsync(async () =>
+  return toCryptoResult(async () =>
     toCryptoKeyPair(
       await (subtle.generateKey(
         toKeyPairGenAlgorithm(algorithm),
@@ -395,7 +451,7 @@ export const import_key: typeof $subtleCrypto.import_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromAsync(() =>
+  return toCryptoResult(() =>
     subtle.importKey(
       toKeyFormat(format),
       toBufferSource(keyData),
@@ -412,26 +468,30 @@ export const import_key_jwk: typeof $subtleCrypto.import_key_jwk = (
   extractable,
   usages,
 ) => {
-  return toResult.fromPromise(
+  return toCryptoResult(() =>
     subtle.importKey(
       "jwk",
       toJsonWebKey(keyData),
       toImportAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
-    ),
+    )
   );
 };
 
 export const export_key: typeof $subtleCrypto.export_key = (format, key) => {
-  return toBitArrayResult(() =>
+  const extractableError = checkExtractable(key);
+  if (extractableError) return Promise.resolve(Result$Error(extractableError));
+  return toCryptoBitArrayResult(() =>
     subtle.exportKey(toKeyFormat(format), key) as Promise<ArrayBuffer>
   );
 };
 
 export const export_key_jwk: typeof $subtleCrypto.export_key_jwk = (key) => {
-  return toResult.fromPromise(
-    (subtle.exportKey("jwk", key) as Promise<JsonWebKey>).then(fromJsonWebKey),
+  const extractableError = checkExtractable(key);
+  if (extractableError) return Promise.resolve(Result$Error(extractableError));
+  return toCryptoResult(async () =>
+    fromJsonWebKey(await (subtle.exportKey("jwk", key) as Promise<JsonWebKey>))
   );
 };
 
@@ -440,7 +500,9 @@ export const derive_bits: typeof $subtleCrypto.derive_bits = (
   baseKey,
   length,
 ) => {
-  return toBitArrayResult(() =>
+  const usageError = checkUsage(baseKey, "deriveBits");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoBitArrayResult(() =>
     subtle.deriveBits(toDeriveAlgorithm(algorithm), baseKey, length)
   );
 };
@@ -452,7 +514,9 @@ export const derive_key: typeof $subtleCrypto.derive_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromAsync(() =>
+  const usageError = checkUsage(baseKey, "deriveKey");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoResult(() =>
     subtle.deriveKey(
       toDeriveAlgorithm(algorithm),
       baseKey,
@@ -469,7 +533,11 @@ export const wrap_key: typeof $subtleCrypto.wrap_key = (
   wrappingKey,
   algorithm,
 ) => {
-  return toBitArrayResult(() =>
+  const extractableError = checkExtractable(key);
+  if (extractableError) return Promise.resolve(Result$Error(extractableError));
+  const usageError = checkUsage(wrappingKey, "wrapKey");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoBitArrayResult(() =>
     subtle.wrapKey(
       toKeyFormat(format),
       key,
@@ -484,7 +552,11 @@ export const wrap_key_jwk: typeof $subtleCrypto.wrap_key_jwk = (
   wrappingKey,
   algorithm,
 ) => {
-  return toBitArrayResult(() =>
+  const extractableError = checkExtractable(key);
+  if (extractableError) return Promise.resolve(Result$Error(extractableError));
+  const usageError = checkUsage(wrappingKey, "wrapKey");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoBitArrayResult(() =>
     subtle.wrapKey("jwk", key, wrappingKey, toWrapAlgorithm(algorithm))
   );
 };
@@ -498,7 +570,9 @@ export const unwrap_key: typeof $subtleCrypto.unwrap_key = (
   extractable,
   usages,
 ) => {
-  return toResult.fromAsync(() =>
+  const usageError = checkUsage(unwrappingKey, "unwrapKey");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoResult(() =>
     subtle.unwrapKey(
       toKeyFormat(format),
       toBufferSource(wrappedKey),
@@ -519,7 +593,9 @@ export const unwrap_key_jwk: typeof $subtleCrypto.unwrap_key_jwk = (
   extractable,
   usages,
 ) => {
-  return toResult.fromAsync(() =>
+  const usageError = checkUsage(unwrappingKey, "unwrapKey");
+  if (usageError) return Promise.resolve(Result$Error(usageError));
+  return toCryptoResult(() =>
     subtle.unwrapKey(
       "jwk",
       toBufferSource(wrappedKey),

@@ -407,3 +407,51 @@ pub fn wrap_unwrap_key_jwk_test() {
   crypto_key.type_(unwrapped) |> should.equal(crypto_key.Secret)
   promise.resolve(Nil)
 }
+
+pub fn encrypt_key_usage_mismatch_test() {
+  use result <- promise.await(
+    subtle_crypto.generate_key(
+      subtle_crypto.Aes(aes_algorithm.AesGcm, 256),
+      True,
+      [crypto_key.Decrypt],
+    ),
+  )
+  let assert Ok(key) = result
+
+  use encrypt_result <- promise.await(
+    subtle_crypto.encrypt(subtle_crypto.AesGcm(crypto.random_bytes(12)), key, <<
+      1,
+      2,
+      3,
+    >>),
+  )
+  let assert Error(subtle_crypto.KeyUsageMismatch(crypto_key.Encrypt)) =
+    encrypt_result
+  promise.resolve(Nil)
+}
+
+pub fn export_key_not_extractable_test() {
+  use result <- promise.await(
+    subtle_crypto.generate_key(
+      subtle_crypto.Aes(aes_algorithm.AesGcm, 256),
+      False,
+      [crypto_key.Encrypt],
+    ),
+  )
+  let assert Ok(key) = result
+
+  use export_result <- promise.await(subtle_crypto.export_key(
+    subtle_crypto.Raw,
+    key,
+  ))
+  let assert Error(subtle_crypto.KeyNotExtractable) = export_result
+  promise.resolve(Nil)
+}
+
+pub fn digest_operation_failed_test() {
+  use result <- promise.await(
+    subtle_crypto.digest(crypto_key.HashOther("MADE-UP-HASH"), <<1, 2, 3>>),
+  )
+  let assert Error(subtle_crypto.OperationFailed(_)) = result
+  promise.resolve(Nil)
+}
