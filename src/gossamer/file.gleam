@@ -1,4 +1,5 @@
 import gleam/javascript/promise.{type Promise}
+import gleam/time/timestamp.{type Timestamp}
 import gossamer/blob.{type Blob}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/fetch_error.{type FetchError}
@@ -9,7 +10,7 @@ import gossamer/stream/readable_stream.{type ReadableStream}
 /// See [File](https://developer.mozilla.org/en-US/docs/Web/API/File) on MDN.
 ///
 pub type File {
-  File(blob: Blob, name: String, type_: String, last_modified: Int)
+  File(blob: Blob, name: String, type_: String, last_modified: Timestamp)
 }
 
 /// Creates a `File` whose contents are the concatenation of `parts`.
@@ -30,10 +31,10 @@ pub fn set_type(file: File, value: String) -> File {
   File(..file, type_: value)
 }
 
-/// Sets the last-modified timestamp in milliseconds since the Unix
-/// epoch. Returns a new `File` with the given timestamp.
+/// Sets the last-modified timestamp. Returns a new `File` with the
+/// given timestamp.
 ///
-pub fn set_last_modified(file: File, value: Int) -> File {
+pub fn set_last_modified(file: File, value: Timestamp) -> File {
   File(..file, last_modified: value)
 }
 

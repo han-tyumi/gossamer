@@ -1,6 +1,8 @@
 import gleam/bit_array
 import gleam/javascript/promise
+import gleam/order
 import gleam/string
+import gleam/time/timestamp
 import gleeunit/should
 import gossamer/blob
 import gossamer/buffer/array_buffer
@@ -29,7 +31,8 @@ pub fn file_from_blob_test() {
 
 pub fn file_last_modified_test() {
   let f = file.from_strings(["data"], "modified.txt")
-  should.be_true(f.last_modified > 0)
+  timestamp.compare(f.last_modified, timestamp.from_unix_seconds(0))
+  |> should.equal(order.Gt)
 }
 
 pub fn file_set_type_from_strings_test() {
@@ -47,9 +50,11 @@ pub fn file_set_type_from_blob_test() {
 }
 
 pub fn file_set_last_modified_test() {
+  let epoch = timestamp.from_unix_seconds(0)
   let f =
-    file.from_strings(["data"], "modified.txt") |> file.set_last_modified(0)
-  f.last_modified |> should.equal(0)
+    file.from_strings(["data"], "modified.txt")
+    |> file.set_last_modified(epoch)
+  f.last_modified |> should.equal(epoch)
 }
 
 pub fn file_size_test() {
