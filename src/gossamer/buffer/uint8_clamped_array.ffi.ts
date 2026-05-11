@@ -1,30 +1,12 @@
 import type * as $uint8ClampedArray from "$/gossamer/gossamer/buffer/uint8_clamped_array.mjs";
 import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import {
+  checkArrayDetached,
+  checkArrayRange,
+} from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
-
-function checkArrayDetached<T>(array: Uint8ClampedArray, op: () => T) {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
-  return Result$Ok(op());
-}
-
-function checkArrayRange<T>(
-  array: Uint8ClampedArray,
-  index: number,
-  length: number,
-  op: () => T,
-) {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
-  if (index < 0 || index + length > array.length) {
-    return Result$Error($buffer.BufferError$OutOfRange(index, array.length));
-  }
-  return Result$Ok(op());
-}
 
 export const new_: typeof $uint8ClampedArray.new$ = () =>
   new Uint8ClampedArray();

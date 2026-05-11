@@ -78,3 +78,27 @@ export function checkBufferRangeAligned<T>(
   }
   return Result$Ok(op());
 }
+
+export function checkViewDetached<T>(view: DataView, op: () => T) {
+  if ((view.buffer as ArrayBuffer).detached) {
+    return Result$Error($buffer.BufferError$Detached());
+  }
+  return Result$Ok(op());
+}
+
+export function checkViewRange<T>(
+  view: DataView,
+  offset: number,
+  size: number,
+  op: () => T,
+) {
+  if ((view.buffer as ArrayBuffer).detached) {
+    return Result$Error($buffer.BufferError$Detached());
+  }
+  if (offset < 0 || offset + size > view.byteLength) {
+    return Result$Error(
+      $buffer.BufferError$OutOfRange(offset, view.byteLength),
+    );
+  }
+  return Result$Ok(op());
+}

@@ -4,23 +4,9 @@ import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toUint8Array } from "~/utils/bit_array.ffi.ts";
+import { checkArrayRange } from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
-
-function checkArrayRange<T>(
-  array: Uint8Array,
-  index: number,
-  length: number,
-  op: () => T,
-) {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
-  if (index < 0 || index + length > array.length) {
-    return Result$Error($buffer.BufferError$OutOfRange(index, array.length));
-  }
-  return Result$Ok(op());
-}
 
 export const new_: typeof $uint8Array.new$ = () => {
   return new Uint8Array();
