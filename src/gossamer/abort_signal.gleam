@@ -1,5 +1,4 @@
 import gleam/dynamic.{type Dynamic}
-import gossamer/js_error.{type JsError}
 
 /// A signal that communicates when an operation should be aborted.
 /// Used with `fetch`, streams, and other cancellable operations.
@@ -31,11 +30,11 @@ pub fn is_aborted(signal: AbortSignal) -> Bool
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
 pub fn reason(for signal: AbortSignal) -> Result(Dynamic, Nil)
 
-/// Returns `Error` with the abort reason if the signal is aborted, or
+/// Returns `Error` carrying the abort reason if the signal is aborted, or
 /// `Ok(Nil)` otherwise.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "throw_if_aborted")
-pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, JsError)
+pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, Dynamic)
 
 @external(javascript, "./abort_signal.ffi.mjs", "on_abort")
 pub fn on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil

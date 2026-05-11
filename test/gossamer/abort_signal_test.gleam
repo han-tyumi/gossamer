@@ -33,7 +33,9 @@ pub fn reason_on_unaborted_signal_test() {
 
 pub fn throw_if_aborted_on_aborted_test() {
   let signal = abort_signal.abort("stopped")
-  abort_signal.throw_if_aborted(signal) |> should.be_error
+  let assert Error(reason) = abort_signal.throw_if_aborted(signal)
+  let assert Ok(value) = decode.run(reason, decode.string)
+  should.equal(value, "stopped")
 }
 
 pub fn throw_if_aborted_on_unaborted_test() {
