@@ -10,12 +10,13 @@ pub fn abort_creates_aborted_signal_test() {
 }
 
 pub fn timeout_creates_unaborted_signal_test() {
-  let assert Ok(signal) = abort_signal.timeout(10_000)
+  let signal = abort_signal.timeout(10_000)
   abort_signal.is_aborted(signal) |> should.be_false
 }
 
-pub fn timeout_negative_error_test() {
-  abort_signal.timeout(-1) |> should.be_error
+pub fn timeout_negative_clamps_to_zero_test() {
+  let signal = abort_signal.timeout(-1)
+  abort_signal.is_aborted(signal) |> should.be_false
 }
 
 pub fn reason_on_aborted_signal_test() {
@@ -26,7 +27,7 @@ pub fn reason_on_aborted_signal_test() {
 }
 
 pub fn reason_on_unaborted_signal_test() {
-  let assert Ok(signal) = abort_signal.timeout(10_000)
+  let signal = abort_signal.timeout(10_000)
   abort_signal.reason(signal) |> should.be_error
 }
 
@@ -36,7 +37,7 @@ pub fn throw_if_aborted_on_aborted_test() {
 }
 
 pub fn throw_if_aborted_on_unaborted_test() {
-  let assert Ok(signal) = abort_signal.timeout(10_000)
+  let signal = abort_signal.timeout(10_000)
   abort_signal.throw_if_aborted(signal) |> should.be_ok
 }
 
@@ -59,7 +60,7 @@ pub fn on_abort_test() {
 
 pub fn any_test() {
   let signal1 = abort_signal.abort("first")
-  let assert Ok(signal2) = abort_signal.timeout(10_000)
+  let signal2 = abort_signal.timeout(10_000)
   let combined = abort_signal.any([signal1, signal2])
   abort_signal.is_aborted(combined) |> should.be_true
 }
