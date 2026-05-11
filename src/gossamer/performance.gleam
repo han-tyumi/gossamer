@@ -1,6 +1,18 @@
 import gleam/dynamic.{type Dynamic}
-import gossamer/js_error.{type JsError}
 import gossamer/performance_entry.{type PerformanceEntry}
+
+/// Errors raised by `performance.mark` and `performance.measure`.
+pub type PerformanceError {
+  /// `name` collides with a read-only attribute on the legacy
+  /// `PerformanceTiming` interface. Only browsers (Window contexts)
+  /// produce this; Deno, Node, and Bun don't expose `PerformanceTiming`
+  /// and skip the check entirely.
+  ReservedName
+
+  /// One of the named marks doesn't exist on the performance timeline.
+  /// Only `measure` produces this.
+  MarkNotFound
+}
 
 /// Returns a high-resolution timestamp (in milliseconds) relative to the
 /// time origin.
@@ -14,22 +26,25 @@ pub fn now() -> Float
 @external(javascript, "./performance.ffi.mjs", "time_origin")
 pub fn time_origin() -> Float
 
-/// Records a performance mark with `name` at the current time. Returns an
-/// error if `name` collides with a built-in timing mark.
+/// Records a performance mark with `name` at the current time. Returns
+/// `ReservedName` in browser Window contexts when `name` collides with
+/// a `PerformanceTiming` read-only attribute; never fails on Deno,
+/// Node, or Bun.
 ///
 @external(javascript, "./performance.ffi.mjs", "mark")
-pub fn mark(name: String) -> Result(PerformanceEntry, JsError)
+pub fn mark(name: String) -> Result(PerformanceEntry, PerformanceError)
 
 /// Records a measurement between two previously-recorded marks. Returns
-/// an error if either mark does not exist or `name` collides with a
-/// built-in timing mark.
+/// `MarkNotFound` if either `start_mark` or `end_mark` doesn't exist,
+/// or `ReservedName` in browser Window contexts when `name` collides
+/// with a `PerformanceTiming` read-only attribute.
 ///
 @external(javascript, "./performance.ffi.mjs", "measure")
 pub fn measure(
   name: String,
   from start_mark: String,
   to end_mark: String,
-) -> Result(PerformanceEntry, JsError)
+) -> Result(PerformanceEntry, PerformanceError)
 
 @external(javascript, "./performance.ffi.mjs", "clear_marks")
 pub fn clear_marks() -> Nil
