@@ -1,10 +1,16 @@
 import * as $readableStream from "$/gossamer/gossamer/stream/readable_stream.mjs";
-import {
-  fromBitArrayReadable,
-  toBitArrayResult,
-} from "~/utils/bit_array.ffi.ts";
+import * as $stream from "$/gossamer/gossamer/stream.mjs";
+import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+
+function lockedError() {
+  return Result$Error($stream.StreamLifecycleError$Locked());
+}
+
+function erroredError(reason: unknown) {
+  return Result$Error($stream.StreamLifecycleError$Errored(reason));
+}
 
 function fromPipeOptions(
   options: $readableStream.PipeOptions$,
@@ -29,25 +35,15 @@ function fromPipeOptions(
 }
 
 export const build: typeof $readableStream.build = (builder) => {
-  return toResult.fromThrows(() => {
-    const source: UnderlyingDefaultSource = {};
-    setIfSome(
-      source,
-      "start",
-      $readableStream.Builder$Builder$start(builder),
-    );
-    setIfSome(
-      source,
-      "pull",
-      $readableStream.Builder$Builder$pull(builder),
-    );
-    setIfSome(
-      source,
-      "cancel",
-      $readableStream.Builder$Builder$cancel(builder),
-    );
-    return new ReadableStream(source);
-  });
+  const source: UnderlyingDefaultSource = {};
+  setIfSome(source, "start", $readableStream.Builder$Builder$start(builder));
+  setIfSome(source, "pull", $readableStream.Builder$Builder$pull(builder));
+  setIfSome(source, "cancel", $readableStream.Builder$Builder$cancel(builder));
+  try {
+    return Result$Ok(new ReadableStream(source));
+  } catch (err) {
+    return erroredError(err);
+  }
 };
 
 export const from_pull: typeof $readableStream.from_pull = (pull) => {
@@ -86,13 +82,21 @@ export const cancel: typeof $readableStream.cancel = (
   stream: ReadableStream,
   reason,
 ) => {
-  return toResult.fromPromise(stream.cancel(reason).then(() => undefined));
+  return stream.cancel(reason).then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const get_reader: typeof $readableStream.get_reader = (
   stream: ReadableStream,
 ) => {
-  return toResult.fromThrows(() => stream.getReader());
+  if (stream.locked) return lockedError();
+  try {
+    return Result$Ok(stream.getReader());
+  } catch (err) {
+    return erroredError(err);
+  }
 };
 
 export const pipe_through: typeof $readableStream.pipe_through = (
@@ -100,12 +104,14 @@ export const pipe_through: typeof $readableStream.pipe_through = (
   [readable, writable]: [ReadableStream, WritableStream],
   options,
 ) => {
-  return toResult.fromThrows(() =>
-    stream.pipeThrough(
-      { readable, writable },
-      fromPipeOptions(options),
-    )
-  );
+  if (stream.locked || writable.locked) return lockedError();
+  try {
+    return Result$Ok(
+      stream.pipeThrough({ readable, writable }, fromPipeOptions(options)),
+    );
+  } catch (err) {
+    return erroredError(err);
+  }
 };
 
 export const pipe_to: typeof $readableStream.pipe_to = (
@@ -113,18 +119,22 @@ export const pipe_to: typeof $readableStream.pipe_to = (
   destination: WritableStream,
   options,
 ) => {
-  return toResult.fromPromise(
-    stream.pipeTo(
-      destination,
-      fromPipeOptions(options),
-    ).then(() => undefined),
+  if (stream.locked || destination.locked) {
+    return Promise.resolve(lockedError());
+  }
+  return stream.pipeTo(destination, fromPipeOptions(options)).then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
   );
 };
 
-export const tee: typeof $readableStream.tee = (
-  stream: ReadableStream,
-) => {
-  return toResult.fromThrows(() => stream.tee());
+export const tee: typeof $readableStream.tee = (stream: ReadableStream) => {
+  if (stream.locked) return lockedError();
+  try {
+    return Result$Ok(stream.tee() as [ReadableStream, ReadableStream]);
+  } catch (err) {
+    return erroredError(err);
+  }
 };
 
 export const async_iterator: typeof $readableStream.async_iterator = <T>(
@@ -133,14 +143,22 @@ export const async_iterator: typeof $readableStream.async_iterator = <T>(
   return stream.values();
 };
 
-export const read_text: typeof $readableStream.read_text = (stream) => {
-  return toResult.fromAsync(() =>
-    new Response(fromBitArrayReadable(stream)).text()
-  );
+export const read_text: typeof $readableStream.read_text = async (stream) => {
+  if (stream.locked) return lockedError();
+  try {
+    return Result$Ok(await new Response(fromBitArrayReadable(stream)).text());
+  } catch (err) {
+    return erroredError(err);
+  }
 };
 
-export const read_bytes: typeof $readableStream.read_bytes = (stream) => {
-  return toBitArrayResult(() =>
-    new Response(fromBitArrayReadable(stream)).arrayBuffer()
-  );
+export const read_bytes: typeof $readableStream.read_bytes = async (stream) => {
+  if (stream.locked) return lockedError();
+  try {
+    const buffer = await new Response(fromBitArrayReadable(stream))
+      .arrayBuffer();
+    return Result$Ok(BitArray$BitArray(new Uint8Array(buffer)));
+  } catch (err) {
+    return erroredError(err);
+  }
 };

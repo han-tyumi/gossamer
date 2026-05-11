@@ -1,33 +1,51 @@
 import type * as $reader from "$/gossamer/gossamer/stream/readable_stream/reader.mjs";
+import * as $stream from "$/gossamer/gossamer/stream.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toReadResult } from "~/gossamer/stream/readable_stream/read_result.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+
+function erroredError(reason: unknown) {
+  return Result$Error($stream.StreamLifecycleError$Errored(reason));
+}
+
+function releasedError() {
+  return Result$Error($stream.StreamLifecycleError$Released());
+}
 
 export const closed: typeof $reader.closed = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  return toResult.fromPromise(reader.closed.then(() => undefined));
+  return reader.closed.then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const cancel: typeof $reader.cancel = (
   reader: ReadableStreamDefaultReader,
   reason,
 ) => {
-  return toResult.fromPromise(reader.cancel(reason).then(() => undefined));
+  return reader.cancel(reason).then(
+    () => Result$Ok(undefined),
+    (err) => erroredError(err),
+  );
 };
 
 export const read: typeof $reader.read = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  return toResult.fromPromise(
-    reader.read().then((result) => toReadResult(result)),
+  return reader.read().then(
+    (result) => Result$Ok(toReadResult(result)),
+    (err) => erroredError(err),
   );
 };
 
 export const release_lock: typeof $reader.release_lock = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  return toResult.fromThrows(() => {
+  try {
     reader.releaseLock();
-    return reader;
-  });
+    return Result$Ok(reader);
+  } catch {
+    return releasedError();
+  }
 };

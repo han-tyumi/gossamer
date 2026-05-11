@@ -1,4 +1,4 @@
-import gossamer/js_error.{type JsError}
+import gossamer/stream.{type StreamLifecycleError}
 
 /// A controller for a `ReadableStream`'s default source, passed to the
 /// `Start` and `Pull` callbacks. Used to enqueue chunks, close the stream,
@@ -15,26 +15,27 @@ pub type DefaultController(a)
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
 pub fn desired_size(of controller: DefaultController(a)) -> Result(Int, Nil)
 
-/// Closes the stream. Returns an error if the stream is already closed or
-/// errored.
+/// Closes the stream. Returns `Closed` if the stream is already closed.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "close")
-pub fn close(controller: DefaultController(a)) -> Result(Nil, JsError)
+pub fn close(
+  controller: DefaultController(a),
+) -> Result(Nil, StreamLifecycleError)
 
-/// Enqueues `chunk` into the stream's internal queue. Returns an error if
-/// the stream is closed or errored.
+/// Enqueues `chunk` into the stream's internal queue. Returns `Closed`
+/// if the stream is already closed.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "enqueue")
 pub fn enqueue(
   in controller: DefaultController(a),
   chunk chunk: a,
-) -> Result(Nil, JsError)
+) -> Result(Nil, StreamLifecycleError)
 
-/// Signals an error on the stream. Returns an error if the stream is
-/// already closed or errored.
+/// Signals an error on the stream. Returns `Closed` if the stream is
+/// already closed.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "error")
 pub fn error(
   controller: DefaultController(a),
   reason reason: b,
-) -> Result(Nil, JsError)
+) -> Result(Nil, StreamLifecycleError)
