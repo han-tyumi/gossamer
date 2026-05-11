@@ -1,12 +1,12 @@
-import gossamer/js_error.{type JsError}
+import gossamer/weak.{type WeakKeyError}
 
 /// A JS `WeakSet` whose values are weakly held — entries are eligible
 /// for GC once the value has no other references. Mutable.
 ///
 /// Values must be objects (records, lists, tuples) or non-registered
 /// symbols (those not in the global registry); `add` and `from_list`
-/// return an error otherwise. Has no `size`, iteration, or `clear`
-/// (those would expose GC timing).
+/// return `InvalidTarget` otherwise. Has no `size`, iteration, or
+/// `clear` (those would expose GC timing).
 ///
 /// Values are matched by JS reference identity, not value equality —
 /// two equal-by-value tuples constructed separately are distinct
@@ -20,21 +20,23 @@ pub type WeakSet(value)
 @external(javascript, "./weak_set.ffi.mjs", "new_")
 pub fn new() -> WeakSet(value)
 
-/// Returns an error if any value in `values` is invalid.
+/// Returns `InvalidTarget` if any value in `values` is not a valid
+/// weak key.
 ///
 @external(javascript, "./weak_set.ffi.mjs", "from_list")
-pub fn from_list(values: List(value)) -> Result(WeakSet(value), JsError)
+pub fn from_list(values: List(value)) -> Result(WeakSet(value), WeakKeyError)
 
 @external(javascript, "./weak_set.ffi.mjs", "has")
 pub fn has(in set: WeakSet(value), value value: value) -> Bool
 
-/// Mutates the set. Returns an error if `value` is invalid.
+/// Mutates the set. Returns `InvalidTarget` if `value` is not a valid
+/// weak key.
 ///
 @external(javascript, "./weak_set.ffi.mjs", "add")
 pub fn add(
   to set: WeakSet(value),
   value value: value,
-) -> Result(WeakSet(value), JsError)
+) -> Result(WeakSet(value), WeakKeyError)
 
 /// Mutates the set.
 ///

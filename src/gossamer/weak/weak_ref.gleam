@@ -1,11 +1,11 @@
-import gossamer/js_error.{type JsError}
+import gossamer/weak.{type WeakKeyError}
 
 /// A JS `WeakRef` whose target is weakly held — the target is eligible
 /// for GC once it has no other references.
 ///
 /// Targets must be objects (records, lists, tuples) or non-registered
-/// symbols (those not in the global registry); `new` returns an error
-/// otherwise.
+/// symbols (those not in the global registry); `new` returns
+/// `InvalidTarget` otherwise.
 ///
 /// `deref` may continue to return `Ok` for some time after all other
 /// references to the target are dropped — GC timing is non-deterministic.
@@ -15,10 +15,10 @@ import gossamer/js_error.{type JsError}
 @external(javascript, "./weak_ref.type.ts", "WeakRef$")
 pub type WeakRef(target)
 
-/// Returns an error if `target` is invalid.
+/// Returns `InvalidTarget` if `target` is not a valid weak key.
 ///
 @external(javascript, "./weak_ref.ffi.mjs", "new_")
-pub fn new(target: target) -> Result(WeakRef(target), JsError)
+pub fn new(target: target) -> Result(WeakRef(target), WeakKeyError)
 
 /// Returns the target, or an error if it has been collected.
 ///

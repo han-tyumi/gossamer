@@ -1,4 +1,4 @@
-import gossamer/js_error.{type JsError}
+import gossamer/weak.{type WeakKeyError}
 
 /// A JS `FinalizationRegistry` that fires cleanup callbacks after
 /// registered targets are garbage collected. Callback timing is
@@ -9,7 +9,7 @@ import gossamer/js_error.{type JsError}
 /// Targets and unregister tokens must be objects (records, lists,
 /// tuples) or non-registered symbols (those not in the global
 /// registry); `register`, `register_with_token`, and `unregister`
-/// return an error otherwise.
+/// return `InvalidTarget` otherwise.
 ///
 /// Unregister tokens are matched by JS reference identity — pass the
 /// same JS reference to `unregister` that was passed to
@@ -24,20 +24,20 @@ pub type FinalizationRegistry(held)
 pub fn new(callback: fn(held) -> a) -> FinalizationRegistry(held)
 
 /// Registers `target` for cleanup, passing `held` to the callback when
-/// it runs. Mutates the registry. Returns an error if `target` is
-/// invalid.
+/// it runs. Mutates the registry. Returns `InvalidTarget` if `target`
+/// is not a valid weak key.
 ///
 @external(javascript, "./finalization_registry.ffi.mjs", "register")
 pub fn register(
   in registry: FinalizationRegistry(held),
   target target: target,
   held held: held,
-) -> Result(FinalizationRegistry(held), JsError)
+) -> Result(FinalizationRegistry(held), WeakKeyError)
 
 /// Registers `target` for cleanup with an `unregister_token` that can
 /// later be passed to `unregister` to remove the registration. Mutates
-/// the registry. Returns an error if `target` or `unregister_token`
-/// is invalid.
+/// the registry. Returns `InvalidTarget` if `target` or
+/// `unregister_token` is not a valid weak key.
 ///
 @external(javascript, "./finalization_registry.ffi.mjs", "register_with_token")
 pub fn register_with_token(
@@ -45,14 +45,14 @@ pub fn register_with_token(
   target target: target,
   held held: held,
   unregister_token token: token,
-) -> Result(FinalizationRegistry(held), JsError)
+) -> Result(FinalizationRegistry(held), WeakKeyError)
 
 /// Removes all registrations associated with `unregister_token`.
-/// Mutates the registry. Returns an error if `unregister_token` is
-/// invalid.
+/// Mutates the registry. Returns `InvalidTarget` if `unregister_token`
+/// is not a valid weak key.
 ///
 @external(javascript, "./finalization_registry.ffi.mjs", "unregister")
 pub fn unregister(
   from registry: FinalizationRegistry(held),
   unregister_token token: token,
-) -> Result(FinalizationRegistry(held), JsError)
+) -> Result(FinalizationRegistry(held), WeakKeyError)

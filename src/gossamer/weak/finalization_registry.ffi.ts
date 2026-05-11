@@ -1,5 +1,10 @@
 import type * as $finalizationRegistry from "$/gossamer/gossamer/weak/finalization_registry.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $weak from "$/gossamer/gossamer/weak.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
+
+function invalidTarget() {
+  return Result$Error($weak.WeakKeyError$InvalidTarget());
+}
 
 export const new_: typeof $finalizationRegistry.new$ = (callback) => {
   return new FinalizationRegistry(callback);
@@ -10,10 +15,12 @@ export const register: typeof $finalizationRegistry.register = (
   target,
   held,
 ) => {
-  return toResult.fromThrows(() => {
+  try {
     registry.register(target, held);
-    return registry;
-  });
+    return Result$Ok(registry);
+  } catch {
+    return invalidTarget();
+  }
 };
 
 export const register_with_token:
@@ -23,18 +30,22 @@ export const register_with_token:
     held,
     token,
   ) => {
-    return toResult.fromThrows(() => {
+    try {
       registry.register(target, held, token);
-      return registry;
-    });
+      return Result$Ok(registry);
+    } catch {
+      return invalidTarget();
+    }
   };
 
 export const unregister: typeof $finalizationRegistry.unregister = (
   registry,
   token,
 ) => {
-  return toResult.fromThrows(() => {
+  try {
     registry.unregister(token);
-    return registry;
-  });
+    return Result$Ok(registry);
+  } catch {
+    return invalidTarget();
+  }
 };

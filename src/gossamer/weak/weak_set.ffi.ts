@@ -1,13 +1,22 @@
 import type * as $weakSet from "$/gossamer/gossamer/weak/weak_set.mjs";
+import * as $weak from "$/gossamer/gossamer/weak.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+
+function invalidTarget() {
+  return Result$Error($weak.WeakKeyError$InvalidTarget());
+}
 
 export const new_: typeof $weakSet.new$ = () => new WeakSet();
 
 export const from_list: typeof $weakSet.from_list = (values) => {
-  // @ts-expect-error: V is unconstrained Gleam-side; the constructor
-  // throws TypeError on invalid values, surfaced via toResult.fromThrows.
-  return toResult.fromThrows(() => new WeakSet(toArray(values)));
+  try {
+    // @ts-expect-error: V is unconstrained Gleam-side; the constructor
+    // validates values and throws TypeError on invalid ones.
+    return Result$Ok(new WeakSet(toArray(values)));
+  } catch {
+    return invalidTarget();
+  }
 };
 
 export const has: typeof $weakSet.has = (set, value) => {
@@ -17,12 +26,14 @@ export const has: typeof $weakSet.has = (set, value) => {
 };
 
 export const add: typeof $weakSet.add = (set, value) => {
-  return toResult.fromThrows(() => {
+  try {
     // @ts-expect-error: V is unconstrained Gleam-side; .add throws
-    // TypeError on invalid values, surfaced via toResult.fromThrows.
+    // TypeError on invalid values.
     set.add(value);
-    return set;
-  });
+    return Result$Ok(set);
+  } catch {
+    return invalidTarget();
+  }
 };
 
 export const delete_: typeof $weakSet.delete$ = (set, value) => {
