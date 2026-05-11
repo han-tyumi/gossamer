@@ -1,11 +1,13 @@
-import type * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 
 export const post_message: typeof $messagePort.post_message = (port, data) => {
-  return toResult.fromThrows(() => {
+  try {
     port.postMessage(data);
-    return undefined;
-  });
+    return Result$Ok(undefined);
+  } catch {
+    return Result$Error($messagePort.MessagePortError$NotCloneable());
+  }
 };
 
 export const start: typeof $messagePort.start = (port) => {

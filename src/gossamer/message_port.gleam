@@ -1,5 +1,4 @@
 import gleam/dynamic.{type Dynamic}
-import gossamer/js_error.{type JsError}
 
 /// One end of a `MessageChannel`, used to send and receive messages.
 ///
@@ -8,12 +7,22 @@ import gossamer/js_error.{type JsError}
 @external(javascript, "./message_port.type.ts", "MessagePort$")
 pub type MessagePort
 
-/// Sends `data` to the other end of the channel. Returns an error if
-/// `data` cannot be serialized for transfer (e.g., contains a function
-/// or non-cloneable object).
+/// Errors raised by `MessagePort` operations.
+pub type MessagePortError {
+  /// `data` cannot be serialized for transfer by the structured-clone
+  /// algorithm. Functions, symbols, and most class instances are not
+  /// cloneable.
+  NotCloneable
+}
+
+/// Sends `data` to the other end of the channel. Returns `NotCloneable`
+/// if `data` can't be serialized by the structured-clone algorithm.
 ///
 @external(javascript, "./message_port.ffi.mjs", "post_message")
-pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, JsError)
+pub fn post_message(
+  to port: MessagePort,
+  data data: a,
+) -> Result(Nil, MessagePortError)
 
 @external(javascript, "./message_port.ffi.mjs", "start")
 pub fn start(port: MessagePort) -> Nil
