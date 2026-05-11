@@ -1,7 +1,9 @@
 import gleam/dynamic/decode
 import gleeunit/should
-import gossamer
 import gossamer/js_error
+
+@external(javascript, "./js_error_test.ffi.mjs", "make_dom_exception")
+fn make_dom_exception(message: String, name: String) -> js_error.JsError
 
 pub fn new_test() {
   let err = js_error.new("something went wrong")
@@ -144,7 +146,7 @@ pub fn kind_other_for_plain_error_test() {
 }
 
 pub fn kind_dom_exception_test() {
-  let assert Error(err) = gossamer.atob("not valid base64!")
-  js_error.kind(err)
+  make_dom_exception("invalid", "InvalidCharacterError")
+  |> js_error.kind
   |> should.equal(js_error.DomException(name: "InvalidCharacterError"))
 }

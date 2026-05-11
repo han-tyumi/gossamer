@@ -1,16 +1,38 @@
-import type * as $gossamer from "$/gossamer/gossamer.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $gossamer from "$/gossamer/gossamer.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
+
+function errorMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
 
 export const structured_clone: typeof $gossamer.structured_clone = (value) => {
-  return toResult.fromThrows(() => globalThis.structuredClone(value));
+  try {
+    return Result$Ok(globalThis.structuredClone(value));
+  } catch (err) {
+    return Result$Error(
+      $gossamer.StructuredCloneError$NotCloneable(errorMessage(err)),
+    );
+  }
 };
 
 export const atob: typeof $gossamer.atob = (encoded) => {
-  return toResult.fromThrows(() => globalThis.atob(encoded));
+  try {
+    return Result$Ok(globalThis.atob(encoded));
+  } catch (err) {
+    return Result$Error(
+      $gossamer.Base64Error$InvalidEncoding(errorMessage(err)),
+    );
+  }
 };
 
 export const btoa: typeof $gossamer.btoa = (data) => {
-  return toResult.fromThrows(() => globalThis.btoa(data));
+  try {
+    return Result$Ok(globalThis.btoa(data));
+  } catch (err) {
+    return Result$Error(
+      $gossamer.Base64Error$InvalidEncoding(errorMessage(err)),
+    );
+  }
 };
 
 export const clear_interval: typeof $gossamer.clear_interval = (id) => {

@@ -3,27 +3,42 @@
 //// `gossamer/url`, `gossamer/stream/readable_stream`, `gossamer/fetch_extra`,
 //// etc.).
 
-import gossamer/js_error.{type JsError}
+/// Errors raised by `structured_clone`.
+pub type StructuredCloneError {
+  /// `value` contains a function, symbol, `DOM` node, or other
+  /// non-cloneable component. The `message` payload carries the
+  /// underlying JavaScript error description identifying the offending
+  /// component.
+  NotCloneable(message: String)
+}
+
+/// Errors raised by the base64 conversions `atob` and `btoa`.
+pub type Base64Error {
+  /// For `atob`, the input is not a valid base64 string. For `btoa`,
+  /// the input contains code points beyond `0xFF`. The `message`
+  /// payload carries the underlying JavaScript error description.
+  InvalidEncoding(message: String)
+}
 
 /// Creates a deep clone of `value` using the structured clone algorithm.
-/// Returns an error if `value` contains a function, symbol, or other
-/// non-cloneable value.
+/// Returns `NotCloneable` if `value` contains a function, symbol, or
+/// other non-cloneable component.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "structured_clone")
-pub fn structured_clone(value: a) -> Result(a, JsError)
+pub fn structured_clone(value: a) -> Result(a, StructuredCloneError)
 
-/// Decodes a base64-encoded string. Returns an error if the string is
-/// not valid base64.
+/// Decodes a base64-encoded string. Returns `InvalidEncoding` if the
+/// string is not valid base64.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "atob")
-pub fn atob(encoded: String) -> Result(String, JsError)
+pub fn atob(encoded: String) -> Result(String, Base64Error)
 
-/// Encodes a binary string as base64. Returns an error if `data` contains
-/// code points beyond `0xFF` (use `uint8_array.to_base64` for arbitrary
-/// bytes).
+/// Encodes a binary string as base64. Returns `InvalidEncoding` if
+/// `data` contains code points beyond `0xFF` (use
+/// `uint8_array.to_base64` for arbitrary bytes).
 ///
 @external(javascript, "./gossamer.ffi.mjs", "btoa")
-pub fn btoa(data: String) -> Result(String, JsError)
+pub fn btoa(data: String) -> Result(String, Base64Error)
 
 /// Cancels a repeating timer previously scheduled with `set_interval`.
 ///

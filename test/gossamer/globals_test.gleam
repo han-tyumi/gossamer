@@ -29,7 +29,16 @@ pub fn btoa_atob_roundtrip_test() {
 }
 
 pub fn atob_invalid_test() {
-  gossamer.atob("!!!invalid!!!") |> should.be_error
+  let assert Error(gossamer.InvalidEncoding(_)) = gossamer.atob("!!!invalid!!!")
+}
+
+pub fn btoa_non_latin1_test() {
+  let assert Error(gossamer.InvalidEncoding(_)) = gossamer.btoa("日本語")
+}
+
+pub fn structured_clone_function_test() {
+  let assert Error(gossamer.NotCloneable(_)) =
+    gossamer.structured_clone(fn() { Nil })
 }
 
 pub fn user_agent_test() {
