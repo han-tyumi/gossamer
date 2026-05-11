@@ -2,14 +2,16 @@
 //// iterators (`Map.entries`, `Set.values`, `ReadableStream.from`, etc.).
 //// The module is intentionally a transit-type binding: it exposes the
 //// type, construction primitives, the iterator protocol (`next`,
-//// `return`, `throw`), and bridges to/from `List`. For lazy
-//// transformation pipelines, convert via `to_list` and operate on a
-//// Gleam-native collection (`gleam/list` for eager, `gleam_yielder` for
-//// lazy).
+//// `return`, `throw`), and bridges to/from `gleam_yielder`'s
+//// `Yielder` — the canonical Gleam type for lazy iteration. Convert via
+//// `to_yielder` and operate on the Yielder (use `yielder.to_list` when
+//// you need an eager `List`).
 
 import gleam/option.{type Option}
+import gleam/yielder.{type Yielder}
 import gossamer/iteration.{
-  type IteratorError, type IteratorHandlerOutcome, type IteratorResult,
+  type IteratorError, type IteratorHandlerOutcome, type IteratorResult, Return,
+  Yield,
 }
 
 /// A pull-based iterator that yields values one at a time. `a` is the
@@ -29,15 +31,24 @@ pub fn new(
   next: fn(Option(next)) -> IteratorResult(a, return),
 ) -> Iterator(a, return, next)
 
-/// Creates an iterator from a Gleam list.
+/// Creates an iterator from a `Yielder`. The yielder is consumed
+/// lazily as values are pulled from the iterator.
 ///
-@external(javascript, "./iterator.ffi.mjs", "from_list")
-pub fn from_list(list: List(a)) -> Iterator(a, Nil, Nil)
+@external(javascript, "./iterator.ffi.mjs", "from_yielder")
+pub fn from_yielder(yielder: Yielder(a)) -> Iterator(a, Nil, Nil)
 
-/// Collects all values from an iterator into a list. Consumes the iterator.
+/// Wraps the iterator as a `Yielder`. The iterator is consumed lazily
+/// as values are pulled from the yielder; pair with `yielder.to_list`
+/// for eager materialization.
 ///
-@external(javascript, "./iterator.ffi.mjs", "to_list")
-pub fn to_list(iterator: Iterator(a, return, next)) -> List(a)
+pub fn to_yielder(iterator: Iterator(a, return, next)) -> Yielder(a) {
+  yielder.unfold(from: iterator, with: fn(iter) {
+    case next(iter) {
+      Yield(value) -> yielder.Next(element: value, accumulator: iter)
+      Return(_) -> yielder.Done
+    }
+  })
+}
 
 /// Adds a `return` handler to the iterator, called when the consumer
 /// ends iteration early. Used to release resources.

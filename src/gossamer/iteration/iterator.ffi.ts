@@ -1,18 +1,12 @@
+import * as $yielder from "$/gleam_yielder/gleam/yielder.mjs";
 import * as $iteration from "$/gossamer/gossamer/iteration.mjs";
 import type * as $iterator from "$/gossamer/gossamer/iteration/iterator.mjs";
-import type { List } from "$/prelude.mjs";
-import {
-  List$isNonEmpty,
-  List$NonEmpty$first,
-  List$NonEmpty$rest,
-  Result$Ok,
-} from "$/prelude.mjs";
+import { Result$Ok } from "$/prelude.mjs";
 import {
   toCallbackResult,
   toGleamIteratorResult,
   toIteratorResult,
 } from "~/gossamer/iteration.ffi.ts";
-import { fromArray } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 
 export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
@@ -27,38 +21,25 @@ export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
   return iterator;
 };
 
-export const from_list: typeof $iterator.from_list = <T>(list: List<T>) => {
-  let current = list;
+export const from_yielder: typeof $iterator.from_yielder = <T>(
+  yielder: $yielder.Yielder$<T>,
+) => {
+  let current = yielder;
   const iterator: IterableIterator<T, undefined, undefined> = {
     next() {
-      if (List$isNonEmpty(current)) {
-        // deno-lint-ignore no-non-null-assertion
-        const value = List$NonEmpty$first(current)!;
-        // deno-lint-ignore no-non-null-assertion
-        current = List$NonEmpty$rest(current)!;
-        return { done: false as const, value };
+      const step = $yielder.step(current);
+      if ($yielder.Step$isDone(step)) {
+        return { done: true as const, value: undefined };
       }
-      return { done: true as const, value: undefined };
+      const value = $yielder.Step$Next$element(step) as T;
+      current = $yielder.Step$Next$accumulator(step) as $yielder.Yielder$<T>;
+      return { done: false as const, value };
     },
     [Symbol.iterator]() {
       return this;
     },
   };
   return iterator;
-};
-
-export const to_list: typeof $iterator.to_list = <T>(
-  iterator: Iterator<T, unknown, unknown>,
-) => {
-  const values: T[] = [];
-  while (true) {
-    const result = iterator.next();
-    if (result.done) {
-      break;
-    }
-    values.push(result.value);
-  }
-  return fromArray(values);
 };
 
 export const with_return: typeof $iterator.with_return = <T, TReturn, TNext>(

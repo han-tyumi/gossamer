@@ -1,4 +1,5 @@
 import gleam/option.{None, Some}
+import gleam/yielder
 import gleeunit/should
 import gossamer/iteration
 import gossamer/iteration/iterator
@@ -106,13 +107,13 @@ pub fn return_callback_throws_test() {
 
 pub fn for_test() {
   // `for` consumes the iterator. After it runs, `next` must return Return.
-  let iter = iterator.from_list([1, 2, 3])
+  let iter = yielder.from_list([1, 2, 3]) |> iterator.from_yielder
   iterator.for(iter, fn(_value) { Nil })
   iterator.next(iter) |> should.equal(iteration.Return(Nil))
 }
 
-pub fn from_list_test() {
-  let iter = iterator.from_list([10, 20, 30])
+pub fn from_yielder_test() {
+  let iter = yielder.from_list([10, 20, 30]) |> iterator.from_yielder
 
   iterator.next(iter) |> should.equal(iteration.Yield(10))
   iterator.next(iter) |> should.equal(iteration.Yield(20))
@@ -120,28 +121,36 @@ pub fn from_list_test() {
   iterator.next(iter) |> should.equal(iteration.Return(Nil))
 }
 
-pub fn from_list_empty_test() {
-  let iter = iterator.from_list([])
+pub fn from_yielder_empty_test() {
+  let iter = yielder.from_list([]) |> iterator.from_yielder
 
   iterator.next(iter) |> should.equal(iteration.Return(Nil))
 }
 
-pub fn to_list_test() {
-  let iter = iterator.from_list([1, 2, 3])
+pub fn to_yielder_test() {
+  let iter = yielder.from_list([1, 2, 3]) |> iterator.from_yielder
 
-  iterator.to_list(iter) |> should.equal([1, 2, 3])
+  iter
+  |> iterator.to_yielder
+  |> yielder.to_list
+  |> should.equal([1, 2, 3])
 }
 
-pub fn to_list_empty_test() {
-  let iter = iterator.from_list([])
+pub fn to_yielder_empty_test() {
+  let iter = yielder.from_list([]) |> iterator.from_yielder
 
-  iterator.to_list(iter) |> should.equal([])
+  iter
+  |> iterator.to_yielder
+  |> yielder.to_list
+  |> should.equal([])
 }
 
-pub fn from_list_to_list_roundtrip_test() {
+pub fn yielder_roundtrip_test() {
   let original = [5, 10, 15, 20]
 
-  iterator.from_list(original)
-  |> iterator.to_list
+  yielder.from_list(original)
+  |> iterator.from_yielder
+  |> iterator.to_yielder
+  |> yielder.to_list
   |> should.equal(original)
 }
