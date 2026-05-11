@@ -1,5 +1,4 @@
 import gleam/order.{type Order}
-import gossamer/js_error.{type JsError}
 
 /// A JS `bigint` — an arbitrary-precision integer. Use when working
 /// with values outside the safe-integer range of Gleam `Int` (±2^53−1)
@@ -14,19 +13,28 @@ import gossamer/js_error.{type JsError}
 @external(javascript, "./big_int.type.ts", "BigInt$")
 pub type BigInt
 
+/// Errors raised by `BigInt` bindings.
+pub type BigIntError {
+  /// The input string could not be parsed as an integer.
+  InvalidInteger
+
+  /// The divisor was zero.
+  DivisionByZero
+}
+
 @external(javascript, "./big_int.ffi.mjs", "from_int")
 pub fn from_int(value: Int) -> BigInt
 
 /// Parses an integer string. Accepts decimal (`"42"`), hex
 /// (`"0x2a"`), octal (`"0o52"`), and binary (`"0b101010"`) literals
-/// with an optional sign and surrounding whitespace. Returns an
-/// error on malformed input — decimal floats like `"1.5"`,
-/// scientific notation like `"1e3"`, and the trailing-`n` literal
-/// suffix like `"42n"` are all rejected. The empty string returns
-/// `0`, matching JS `BigInt("")`.
+/// with an optional sign and surrounding whitespace. Returns
+/// `InvalidInteger` on malformed input — decimal floats like
+/// `"1.5"`, scientific notation like `"1e3"`, and the trailing-`n`
+/// literal suffix like `"42n"` are all rejected. The empty string
+/// returns `0`, matching JS `BigInt("")`.
 ///
 @external(javascript, "./big_int.ffi.mjs", "from_string")
-pub fn from_string(string: String) -> Result(BigInt, JsError)
+pub fn from_string(string: String) -> Result(BigInt, BigIntError)
 
 /// Converts a `BigInt` to a Gleam `Int`. Returns an error if the
 /// value is outside the safe-integer range (±2^53−1) and would lose
@@ -47,17 +55,17 @@ pub fn subtract(a: BigInt, b: BigInt) -> BigInt
 @external(javascript, "./big_int.ffi.mjs", "multiply")
 pub fn multiply(a: BigInt, b: BigInt) -> BigInt
 
-/// Truncating integer division. Returns an error if `divisor` is
-/// `0`.
+/// Truncating integer division. Returns `DivisionByZero` if `divisor`
+/// is `0`.
 ///
 @external(javascript, "./big_int.ffi.mjs", "divide")
-pub fn divide(a: BigInt, by divisor: BigInt) -> Result(BigInt, JsError)
+pub fn divide(a: BigInt, by divisor: BigInt) -> Result(BigInt, BigIntError)
 
-/// Returns the remainder of `a / divisor`. Returns an error if
-/// `divisor` is `0`.
+/// Returns the remainder of `a / divisor`. Returns `DivisionByZero`
+/// if `divisor` is `0`.
 ///
 @external(javascript, "./big_int.ffi.mjs", "remainder")
-pub fn remainder(a: BigInt, by divisor: BigInt) -> Result(BigInt, JsError)
+pub fn remainder(a: BigInt, by divisor: BigInt) -> Result(BigInt, BigIntError)
 
 @external(javascript, "./big_int.ffi.mjs", "negate")
 pub fn negate(value: BigInt) -> BigInt

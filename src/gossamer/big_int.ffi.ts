@@ -1,11 +1,17 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
-import type * as $bigInt from "$/gossamer/gossamer/big_int.mjs";
+import * as $bigInt from "$/gossamer/gossamer/big_int.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
 export const from_int: typeof $bigInt.from_int = (value) => BigInt(value);
 
-export const from_string: typeof $bigInt.from_string = (string) =>
-  toResult.fromThrows(() => BigInt(string));
+export const from_string: typeof $bigInt.from_string = (string) => {
+  try {
+    return Result$Ok(BigInt(string));
+  } catch {
+    return Result$Error($bigInt.BigIntError$InvalidInteger());
+  }
+};
 
 const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
 const MIN_SAFE = BigInt(Number.MIN_SAFE_INTEGER);
@@ -23,11 +29,15 @@ export const subtract: typeof $bigInt.subtract = (a, b) => a - b;
 
 export const multiply: typeof $bigInt.multiply = (a, b) => a * b;
 
-export const divide: typeof $bigInt.divide = (a, divisor) =>
-  toResult.fromThrows(() => a / divisor);
+export const divide: typeof $bigInt.divide = (a, divisor) => {
+  if (divisor === 0n) return Result$Error($bigInt.BigIntError$DivisionByZero());
+  return Result$Ok(a / divisor);
+};
 
-export const remainder: typeof $bigInt.remainder = (a, divisor) =>
-  toResult.fromThrows(() => a % divisor);
+export const remainder: typeof $bigInt.remainder = (a, divisor) => {
+  if (divisor === 0n) return Result$Error($bigInt.BigIntError$DivisionByZero());
+  return Result$Ok(a % divisor);
+};
 
 export const negate: typeof $bigInt.negate = (value) => -value;
 
