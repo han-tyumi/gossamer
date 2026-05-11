@@ -1,3 +1,4 @@
+import { fold as dict_fold } from "$/gleam_stdlib/gleam/dict.mjs";
 import type * as $map from "$/gossamer/gossamer/map.mjs";
 import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
@@ -13,6 +14,17 @@ export const from_list: typeof $map.from_list = <K, V>(
   return new Map<K, V>(toArray(entries));
 };
 
+export const from_dict: typeof $map.from_dict = <K, V>(
+  dict: Parameters<typeof $map.from_dict<K, V>>[0],
+) => {
+  const map = new Map<K, V>();
+  dict_fold(dict, undefined, (_acc: unknown, key: K, value: V) => {
+    map.set(key, value);
+    return undefined;
+  });
+  return map;
+};
+
 export const size: typeof $map.size = (map) => {
   return map.size;
 };
@@ -25,21 +37,6 @@ export const has: typeof $map.has = (map, key) => {
   return map.has(key);
 };
 
-export const set: typeof $map.set = (map, key, value) => {
-  map.set(key, value);
-  return map;
-};
-
-export const delete_: typeof $map.delete$ = (map, key) => {
-  map.delete(key);
-  return map;
-};
-
-export const clear: typeof $map.clear = (map) => {
-  map.clear();
-  return map;
-};
-
 export const keys: typeof $map.keys = (map) => {
   return jsIteratorAsYielder(map.keys());
 };
@@ -50,8 +47,4 @@ export const values: typeof $map.values = (map) => {
 
 export const entries: typeof $map.entries = (map) => {
   return jsIteratorAsYielder(map.entries());
-};
-
-export const for_each: typeof $map.for_each = (map, callback) => {
-  map.forEach((value, key) => callback(key, value));
 };
