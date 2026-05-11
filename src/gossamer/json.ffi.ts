@@ -1,9 +1,9 @@
 import * as $json from "$/gossamer/gossamer/json.mjs";
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toObjectWithMap } from "~/utils/dict.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { isIndexable } from "~/utils/object.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 type Json = null | boolean | number | string | Json[] | { [key: string]: Json };
 
@@ -30,7 +30,11 @@ function gleamJsonReviver(_key: string, value: unknown) {
 }
 
 export const parse: typeof $json.parse = (text) => {
-  return toResult.fromThrows(() => JSON.parse(text, gleamJsonReviver));
+  try {
+    return Result$Ok(JSON.parse(text, gleamJsonReviver));
+  } catch {
+    return Result$Error($json.JsonError$InvalidJson());
+  }
 };
 
 function jsonToObject(json: $json.Json$): Json {
