@@ -38,7 +38,6 @@ import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/js_error.{type JsError}
 import gossamer/response_type.{type ResponseType}
 import gossamer/stream/readable_stream.{type ReadableStream}
 
@@ -300,7 +299,7 @@ pub fn send_stream(
 @external(javascript, "./fetch_extra.ffi.mjs", "response_clone")
 pub fn response_clone(
   response: Response(FetchBody),
-) -> Result(Response(FetchBody), JsError)
+) -> Result(Response(FetchBody), FetchError)
 
 /// Builds a `Response(String)` carrying a JSON body. Sets status `200`
 /// and the `content-type: application/json` header. The caller is

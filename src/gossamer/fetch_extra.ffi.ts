@@ -7,6 +7,7 @@ import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   bitarray_request_to_fetch_request,
   FetchError$NetworkError,
+  FetchError$UnableToReadBody,
   form_data_to_fetch_request,
   from_fetch_response,
   to_fetch_request,
@@ -16,7 +17,6 @@ import { fromResponseType } from "~/gossamer/response_type.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 function toCache(value: $fetchExtra.Cache$): RequestCache {
   if ($fetchExtra.Cache$isForceCache(value)) return "force-cache";
@@ -206,7 +206,9 @@ export const send_stream: typeof $fetchExtra.send_stream = (
 };
 
 export const response_clone: typeof $fetchExtra.response_clone = (response) => {
-  return toResult.fromThrows(() =>
-    from_fetch_response(jsResponseOf(response).clone())
-  );
+  try {
+    return Result$Ok(from_fetch_response(jsResponseOf(response).clone()));
+  } catch {
+    return Result$Error(FetchError$UnableToReadBody());
+  }
 };
