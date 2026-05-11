@@ -3,6 +3,9 @@ import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
+import { ensureMethod } from "~/utils/runtime_gap.ffi.ts";
+
+const BUN_STREAM_FROM_ISSUE = "https://github.com/oven-sh/bun/issues/3700";
 
 function lockedError() {
   return Result$Error($stream.StreamLifecycleError$Locked());
@@ -53,22 +56,24 @@ export const from_pull: typeof $readableStream.from_pull = (pull) => {
 export const from_iterator: typeof $readableStream.from_iterator = (
   iterator,
 ) => {
-  if (typeof ReadableStream.from !== "function") {
-    throw new Error(
-      "readable_stream.from_iterator is unavailable on Bun - see https://github.com/oven-sh/bun/issues/3700",
-    );
-  }
+  ensureMethod(
+    ReadableStream,
+    "from",
+    "readable_stream.from_iterator",
+    BUN_STREAM_FROM_ISSUE,
+  );
   return ReadableStream.from(iterator);
 };
 
 export const from_async_iterator: typeof $readableStream.from_async_iterator = (
   iterator,
 ) => {
-  if (typeof ReadableStream.from !== "function") {
-    throw new Error(
-      "readable_stream.from_async_iterator is unavailable on Bun - see https://github.com/oven-sh/bun/issues/3700",
-    );
-  }
+  ensureMethod(
+    ReadableStream,
+    "from",
+    "readable_stream.from_async_iterator",
+    BUN_STREAM_FROM_ISSUE,
+  );
   return ReadableStream.from(iterator);
 };
 
