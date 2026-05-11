@@ -1,7 +1,7 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
-import gossamer/js_error.{type JsError}
+import gossamer/stream.{type StreamLifecycleError}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/transform_stream/default_controller.{
   type DefaultController,
@@ -81,13 +81,14 @@ pub fn on_cancel(
   Builder(..builder, cancel: Some(callback))
 }
 
-/// Creates a `TransformStream` from the configured `Builder`. Returns an
-/// error if the `start` callback throws synchronously.
+/// Creates a `TransformStream` from the configured `Builder`. Returns
+/// `Errored` if the `start` callback throws synchronously; the thrown
+/// value is the variant's reason.
 ///
 @external(javascript, "./transform_stream.ffi.mjs", "build")
 pub fn build(
   builder: Builder(input, output),
-) -> Result(TransformStream(input, output), JsError)
+) -> Result(TransformStream(input, output), StreamLifecycleError)
 
 /// Creates a `TransformStream` from only a `transform` callback — use
 /// when the transformer just maps input chunks to output chunks.
