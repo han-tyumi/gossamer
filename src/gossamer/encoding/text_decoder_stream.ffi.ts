@@ -1,5 +1,5 @@
 import type { BitArray } from "$/prelude.mjs";
-import * as $textDecoderStream from "$/gossamer/gossamer/text_decoder_stream.mjs";
+import * as $textDecoderStream from "$/gossamer/gossamer/encoding/text_decoder_stream.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { fromBitArrayStream } from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";

@@ -1,4 +1,4 @@
-import * as $textDecoder from "$/gossamer/gossamer/text_decoder.mjs";
+import * as $textDecoder from "$/gossamer/gossamer/encoding/text_decoder.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";

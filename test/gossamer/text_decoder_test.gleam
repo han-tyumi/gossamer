@@ -1,6 +1,6 @@
 import gleeunit/should
 import gossamer/encoding
-import gossamer/text_decoder
+import gossamer/encoding/text_decoder
 
 pub fn build_default_test() {
   let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build

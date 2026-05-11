@@ -2,12 +2,12 @@ import gleam/javascript/promise
 import gleam/option.{None}
 import gleeunit/should
 import gossamer/encoding
+import gossamer/encoding/text_decoder_stream
+import gossamer/encoding/text_encoder_stream
 import gossamer/readable_stream
 import gossamer/readable_stream/default_controller
 import gossamer/readable_stream/read_result
 import gossamer/readable_stream/reader
-import gossamer/text_decoder_stream
-import gossamer/text_encoder_stream
 
 pub fn text_encoder_stream_new_test() {
   let encoder = text_encoder_stream.new()
