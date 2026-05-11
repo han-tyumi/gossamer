@@ -1,8 +1,9 @@
 import gleam/bit_array
 import gleam/javascript/promise
 import gleeunit/should
-import gossamer/compression_stream
-import gossamer/decompression_stream
+import gossamer/compression
+import gossamer/compression/compression_stream
+import gossamer/compression/decompression_stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/read_result
@@ -18,9 +19,8 @@ pub fn gzip_round_trip_test() {
       Nil
     })
 
-  let assert Ok(compressor) = compression_stream.new(compression_stream.Gzip)
-  let assert Ok(decompressor) =
-    decompression_stream.new(compression_stream.Gzip)
+  let assert Ok(compressor) = compression_stream.new(compression.Gzip)
+  let assert Ok(decompressor) = decompression_stream.new(compression.Gzip)
 
   let assert Ok(first) =
     input

@@ -1,20 +1,19 @@
 import type { BitArray } from "$/prelude.mjs";
-import * as $compressionStream from "$/gossamer/gossamer/compression_stream.mjs";
+import * as $compression from "$/gossamer/gossamer/compression.mjs";
+import type * as $compressionStream from "$/gossamer/gossamer/compression/compression_stream.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromBitArrayStream, toBitArrayStream } from "~/utils/bit_array.ffi.ts";
 
 export function toCompressionFormat(
-  format: $compressionStream.CompressionFormat$,
+  format: $compression.CompressionFormat$,
 ): CompressionFormat {
-  if ($compressionStream.CompressionFormat$isDeflate(format)) return "deflate";
-  if ($compressionStream.CompressionFormat$isDeflateRaw(format)) {
+  if ($compression.CompressionFormat$isDeflate(format)) return "deflate";
+  if ($compression.CompressionFormat$isDeflateRaw(format)) {
     return "deflate-raw";
   }
-  if ($compressionStream.CompressionFormat$isGzip(format)) return "gzip";
-  if ($compressionStream.CompressionFormat$isOther(format)) {
-    return $compressionStream.CompressionFormat$Other$0(
-      format,
-    ) as CompressionFormat;
+  if ($compression.CompressionFormat$isGzip(format)) return "gzip";
+  if ($compression.CompressionFormat$isOther(format)) {
+    return $compression.CompressionFormat$Other$0(format) as CompressionFormat;
   }
   return "brotli";
 }
@@ -32,9 +31,7 @@ export const new_: typeof $compressionStream.new$ = (format) => {
   try {
     return Result$Ok(new CompressionStream(toCompressionFormat(format)));
   } catch {
-    return Result$Error(
-      $compressionStream.CompressionError$UnsupportedFormat(),
-    );
+    return Result$Error($compression.CompressionError$UnsupportedFormat());
   }
 };
 

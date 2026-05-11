@@ -1,3 +1,4 @@
+import gossamer/compression.{type CompressionError, type CompressionFormat}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/writable_stream.{type WritableStream}
 
@@ -8,7 +9,7 @@ import gossamer/stream/writable_stream.{type WritableStream}
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(compressor) = compression_stream.new(compression_stream.Gzip)
+/// let assert Ok(compressor) = compression_stream.new(compression.Gzip)
 ///
 /// stdin.readable()
 /// |> readable_stream.pipe_through(
@@ -23,26 +24,6 @@ import gossamer/stream/writable_stream.{type WritableStream}
 ///
 @external(javascript, "./compression_stream.type.ts", "CompressionStream$")
 pub type CompressionStream
-
-/// Compression algorithms supported by `CompressionStream` and
-/// `DecompressionStream`.
-///
-/// Unrecognized or non-standard formats use `Other(String)`.
-///
-pub type CompressionFormat {
-  Deflate
-  DeflateRaw
-  Gzip
-  Brotli
-  Other(String)
-}
-
-/// Errors raised by `CompressionStream` and `DecompressionStream`
-/// operations.
-pub type CompressionError {
-  /// The compression format is not supported by the current runtime.
-  UnsupportedFormat
-}
 
 /// Returns `UnsupportedFormat` if the format is not supported by the
 /// current runtime.
