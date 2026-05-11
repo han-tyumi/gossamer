@@ -1,7 +1,12 @@
 //// Numeric constants, type checks, parsing, and formatting that mirror
 //// JavaScript's `Number` object.
 
-import gossamer/js_error.{type JsError}
+/// Errors raised by numeric formatting bindings.
+pub type NumberError {
+  /// The supplied integer argument is outside the valid range for the
+  /// binding's parameter. The payload carries the offending value.
+  OutOfRange(value: Int)
+}
 
 /// The maximum safe integer in JavaScript (2^53 - 1).
 ///
@@ -49,36 +54,40 @@ pub fn is_integer(value: Float) -> Bool
 @external(javascript, "./number.ffi.mjs", "is_safe_integer")
 pub fn is_safe_integer(value: Float) -> Bool
 
-/// Formats a number using fixed-point notation with the specified number of
-/// decimal places. Returns an error if the digits are out of range (`0`–`100`).
+/// Formats a number using fixed-point notation with the specified
+/// number of decimal places. Returns `OutOfRange` if `digits` is
+/// outside `0`–`100`.
 ///
 @external(javascript, "./number.ffi.mjs", "to_fixed")
-pub fn to_fixed(value: Float, digits digits: Int) -> Result(String, JsError)
+pub fn to_fixed(value: Float, digits digits: Int) -> Result(String, NumberError)
 
-/// Formats a number to the specified number of significant digits. Returns
-/// an error if the precision is out of range (`1`–`100`).
+/// Formats a number to the specified number of significant digits.
+/// Returns `OutOfRange` if `digits` is outside `1`–`100`.
 ///
 @external(javascript, "./number.ffi.mjs", "to_precision")
-pub fn to_precision(value: Float, digits digits: Int) -> Result(String, JsError)
+pub fn to_precision(
+  value: Float,
+  digits digits: Int,
+) -> Result(String, NumberError)
 
-/// Formats a number in exponential (scientific) notation with the specified
-/// number of digits after the decimal point. Returns an error if the digits
-/// are out of range (`0`–`100`).
+/// Formats a number in exponential (scientific) notation with the
+/// specified number of digits after the decimal point. Returns
+/// `OutOfRange` if `digits` is outside `0`–`100`.
 ///
 @external(javascript, "./number.ffi.mjs", "to_exponential")
 pub fn to_exponential(
   value: Float,
   digits digits: Int,
-) -> Result(String, JsError)
+) -> Result(String, NumberError)
 
-/// Converts an integer to a string in the specified radix (base `2`–`36`).
-/// Returns an error if the radix is out of range.
+/// Converts an integer to a string in the specified radix (base
+/// `2`–`36`). Returns `OutOfRange` if `radix` is outside that range.
 ///
 @external(javascript, "./number.ffi.mjs", "to_string_with_radix")
 pub fn to_string_with_radix(
   value: Int,
   radix radix: Int,
-) -> Result(String, JsError)
+) -> Result(String, NumberError)
 
 /// Returns a locale-sensitive string representation of the number.
 ///
