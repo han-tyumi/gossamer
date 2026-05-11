@@ -1,3 +1,4 @@
+import gleam/string
 import gleam/uri
 import gleeunit/should
 import gossamer/blob
@@ -67,14 +68,14 @@ pub fn from_uri_parity_test() {
 pub fn send_string_while_connecting_test() {
   let assert Ok(ws) =
     web_socket.from_url_string("ws://localhost:1") |> web_socket.build
-  web_socket.send_string(ws, "hello") |> should.be_error
+  let assert Error(web_socket.NotOpen) = web_socket.send_string(ws, "hello")
   web_socket.close(ws)
 }
 
 pub fn send_bytes_while_connecting_test() {
   let assert Ok(ws) =
     web_socket.from_url_string("ws://localhost:1") |> web_socket.build
-  web_socket.send_bytes(ws, <<1, 2, 3>>) |> should.be_error
+  let assert Error(web_socket.NotOpen) = web_socket.send_bytes(ws, <<1, 2, 3>>)
   web_socket.close(ws)
 }
 
@@ -82,16 +83,42 @@ pub fn send_blob_while_connecting_test() {
   let assert Ok(ws) =
     web_socket.from_url_string("ws://localhost:1") |> web_socket.build
   let b = blob.from_string("hello")
-  web_socket.send_blob(ws, b) |> should.be_error
+  let assert Error(web_socket.NotOpen) = web_socket.send_blob(ws, b)
   web_socket.close(ws)
 }
 
-// Bun doesn't enforce the WebSocket close-code check (`InvalidAccessError`
-// for codes outside `1000` and `3000`–`4999`), so a portable invalid-code
-// error-path test isn't possible. The Result wrap is still exercised by the
-// `send_*` tests above on a Connecting socket.
+pub fn build_invalid_url_test() {
+  web_socket.from_url_string("http://example.com")
+  |> web_socket.build
+  |> should.equal(Error(web_socket.InvalidUrl))
+}
+
+pub fn build_invalid_protocols_test() {
+  web_socket.from_url_string("ws://localhost:1")
+  |> web_socket.with_protocols(["json", "json"])
+  |> web_socket.build
+  |> should.equal(Error(web_socket.InvalidProtocols))
+}
+
 pub fn close_with_valid_code_test() {
   let assert Ok(ws) =
     web_socket.from_url_string("ws://localhost:1") |> web_socket.build
   web_socket.close_with(ws, 1000, "bye") |> should.equal(Ok(Nil))
+}
+
+pub fn close_with_invalid_code_test() {
+  let assert Ok(ws) =
+    web_socket.from_url_string("ws://localhost:1") |> web_socket.build
+  web_socket.close_with(ws, 2000, "bye")
+  |> should.equal(Error(web_socket.InvalidCloseCode(2000)))
+  web_socket.close(ws)
+}
+
+pub fn close_with_reason_too_long_test() {
+  let assert Ok(ws) =
+    web_socket.from_url_string("ws://localhost:1") |> web_socket.build
+  let long_reason = string.repeat("x", 200)
+  web_socket.close_with(ws, 1000, long_reason)
+  |> should.equal(Error(web_socket.CloseReasonTooLong))
+  web_socket.close(ws)
 }

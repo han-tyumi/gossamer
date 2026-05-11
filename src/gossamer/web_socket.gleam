@@ -1,8 +1,29 @@
 import gleam/option.{type Option, None, Some}
 import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}
-import gossamer/js_error.{type JsError}
 import gossamer/message_event.{type MessageEvent}
+
+/// Errors raised by `WebSocket` operations.
+pub type WebSocketError {
+  /// The URL is not an absolute `ws:` or `wss:` URL, or includes a
+  /// fragment.
+  InvalidUrl
+
+  /// The protocols list contains duplicates or values that aren't valid
+  /// HTTP header field tokens (per RFC 7230).
+  InvalidProtocols
+
+  /// The close code is not `1000` and not in the range `3000`–`4999`.
+  InvalidCloseCode(code: Int)
+
+  /// The close reason exceeds `123` bytes when encoded as UTF-8.
+  CloseReasonTooLong
+
+  /// A `send_*` call was made while the socket is in the `Connecting`
+  /// state. Data sent on `Closing` or `Closed` sockets is silently
+  /// discarded per spec and does not produce this error.
+  NotOpen
+}
 
 // TODO: Happy-path coverage for `send_*` and listener delivery requires a
 // live WebSocket server, which can't be created cross-runtime from pure
@@ -147,12 +168,13 @@ pub fn on_close(builder: Builder, run handler: fn(CloseEvent) -> a) -> Builder {
   )
 }
 
-/// Opens the WebSocket connection from the configured `Builder`.
-/// Returns an error if the URL is not a valid `ws:` or `wss:` URL, or if
-/// `protocols` contains duplicates or invalid entries.
+/// Opens the WebSocket connection from the configured `Builder`. Returns
+/// `Error(InvalidUrl)` when the URL isn't an absolute `ws:`/`wss:` URL or
+/// contains a fragment, and `Error(InvalidProtocols)` when the protocols
+/// list has duplicates or non-token entries.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(WebSocket, JsError)
+pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError)
 
 /// The format binary messages arrive as on this socket.
 ///
@@ -197,40 +219,45 @@ pub fn url(socket: WebSocket) -> String
 @external(javascript, "./web_socket.ffi.mjs", "close")
 pub fn close(socket: WebSocket) -> Nil
 
-/// Closes the WebSocket connection with the given code and reason. Returns an
-/// error if the code is invalid (must be `1000` or `3000`–`4999`) or the
-/// reason exceeds `123` bytes.
+/// Closes the WebSocket connection with the given code and reason. Returns
+/// `Error(InvalidCloseCode(code))` when `code` is not `1000` and not in the
+/// range `3000`–`4999`, or `Error(CloseReasonTooLong)` when `reason`
+/// exceeds `123` bytes when encoded as UTF-8. Pre-checked at the FFI so
+/// the constraints are enforced uniformly across runtimes.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "close_with")
 pub fn close_with(
   socket: WebSocket,
   code code: Int,
   reason reason: String,
-) -> Result(Nil, JsError)
+) -> Result(Nil, WebSocketError)
 
-/// Sends a `Blob` through the WebSocket. Returns an error if the
-/// connection is still connecting. Data sent after the connection is
-/// closing or closed is silently discarded.
+/// Sends a `Blob` through the WebSocket. Returns `Error(NotOpen)` if the
+/// connection is still `Connecting`. Data sent after the connection is
+/// `Closing` or `Closed` is silently discarded per spec.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
-pub fn send_blob(to socket: WebSocket, data data: Blob) -> Result(Nil, JsError)
+pub fn send_blob(
+  to socket: WebSocket,
+  data data: Blob,
+) -> Result(Nil, WebSocketError)
 
-/// Sends binary data through the WebSocket. Returns an error if the
-/// connection is still connecting. Data sent after the connection is
-/// closing or closed is silently discarded.
+/// Sends binary data through the WebSocket. Returns `Error(NotOpen)` if
+/// the connection is still `Connecting`. Data sent after the connection
+/// is `Closing` or `Closed` is silently discarded per spec.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_bytes")
 pub fn send_bytes(
   to socket: WebSocket,
   data data: BitArray,
-) -> Result(Nil, JsError)
+) -> Result(Nil, WebSocketError)
 
-/// Sends a string through the WebSocket. Returns an error if the
-/// connection is still connecting. Data sent after the connection is
-/// closing or closed is silently discarded.
+/// Sends a string through the WebSocket. Returns `Error(NotOpen)` if the
+/// connection is still `Connecting`. Data sent after the connection is
+/// `Closing` or `Closed` is silently discarded per spec.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_string")
 pub fn send_string(
   to socket: WebSocket,
   data data: String,
-) -> Result(Nil, JsError)
+) -> Result(Nil, WebSocketError)

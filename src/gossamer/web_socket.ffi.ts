@@ -1,8 +1,20 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+
+function isValidWebSocketUrl(url: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  if (parsed.protocol !== "ws:" && parsed.protocol !== "wss:") return false;
+  if (parsed.hash !== "") return false;
+  return true;
+}
 
 function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
   return $webSocket.CloseEvent$CloseEvent(
@@ -47,50 +59,54 @@ function toReadyState(value: number): $webSocket.ReadyState$ {
 }
 
 export const build: typeof $webSocket.build = (builder) => {
-  return toResult.fromThrows(() => {
-    const url = $webSocket.Builder$Builder$url(builder);
-    const protocols = toArray(
-      $webSocket.Builder$Builder$protocols(builder),
-    );
-    const ws = new WebSocket(url, protocols);
+  const url = $webSocket.Builder$Builder$url(builder);
+  if (!isValidWebSocketUrl(url)) {
+    return Result$Error($webSocket.WebSocketError$InvalidUrl());
+  }
+  const protocols = toArray($webSocket.Builder$Builder$protocols(builder));
+  let ws: WebSocket;
+  try {
+    ws = new WebSocket(url, protocols);
+  } catch {
+    return Result$Error($webSocket.WebSocketError$InvalidProtocols());
+  }
 
-    mapIfSome(
-      ws,
-      "binaryType",
-      $webSocket.Builder$Builder$binary_type(builder),
-      fromBinaryType,
-    );
+  mapIfSome(
+    ws,
+    "binaryType",
+    $webSocket.Builder$Builder$binary_type(builder),
+    fromBinaryType,
+  );
 
-    mapIfSome(
-      ws,
-      "onopen",
-      $webSocket.Builder$Builder$on_open(builder),
-      (handler) => () => handler(),
-    );
+  mapIfSome(
+    ws,
+    "onopen",
+    $webSocket.Builder$Builder$on_open(builder),
+    (handler) => () => handler(),
+  );
 
-    mapIfSome(
-      ws,
-      "onmessage",
-      $webSocket.Builder$Builder$on_message(builder),
-      (handler) => (event) => handler(event),
-    );
+  mapIfSome(
+    ws,
+    "onmessage",
+    $webSocket.Builder$Builder$on_message(builder),
+    (handler) => (event) => handler(event),
+  );
 
-    mapIfSome(
-      ws,
-      "onerror",
-      $webSocket.Builder$Builder$on_error(builder),
-      (handler) => () => handler(),
-    );
+  mapIfSome(
+    ws,
+    "onerror",
+    $webSocket.Builder$Builder$on_error(builder),
+    (handler) => () => handler(),
+  );
 
-    mapIfSome(
-      ws,
-      "onclose",
-      $webSocket.Builder$Builder$on_close(builder),
-      (handler) => (event) => handler(toCloseEvent(event)),
-    );
+  mapIfSome(
+    ws,
+    "onclose",
+    $webSocket.Builder$Builder$on_close(builder),
+    (handler) => (event) => handler(toCloseEvent(event)),
+  );
 
-    return ws;
-  });
+  return Result$Ok(ws);
 };
 
 export const binary_type: typeof $webSocket.binary_type = (socket) => {
@@ -121,30 +137,41 @@ export const close: typeof $webSocket.close = (socket) => {
   socket.close();
 };
 
+const utf8 = new TextEncoder();
+
 export const close_with: typeof $webSocket.close_with = (
   socket,
   code,
   reason,
 ) => {
-  return toResult.fromThrows(() => {
-    socket.close(code, reason);
-  });
+  if (code !== 1000 && (code < 3000 || code > 4999)) {
+    return Result$Error($webSocket.WebSocketError$InvalidCloseCode(code));
+  }
+  if (utf8.encode(reason).length > 123) {
+    return Result$Error($webSocket.WebSocketError$CloseReasonTooLong());
+  }
+  socket.close(code, reason);
+  return Result$Ok(undefined);
 };
 
+function checkOpen() {
+  return Result$Error($webSocket.WebSocketError$NotOpen());
+}
+
 export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
+  if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
+  socket.send(data);
+  return Result$Ok(undefined);
 };
 
 export const send_bytes: typeof $webSocket.send_bytes = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(toBufferSource(data));
-  });
+  if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
+  socket.send(toBufferSource(data));
+  return Result$Ok(undefined);
 };
 
 export const send_string: typeof $webSocket.send_string = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
+  if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
+  socket.send(data);
+  return Result$Ok(undefined);
 };
