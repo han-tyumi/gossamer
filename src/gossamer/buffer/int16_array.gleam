@@ -1,6 +1,6 @@
+import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/buffer/uint8_array.{type Uint8Array}
-import gossamer/js_error.{type JsError}
 
 /// A typed array of 16-bit signed integers.
 ///
@@ -25,34 +25,36 @@ pub fn from_length(length: Int) -> Int16Array
 @external(javascript, "./int16_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Int16Array
 
-/// Creates an `Int16Array` view over `buffer`. Returns an error if
-/// `buffer.byteLength` is not a multiple of `2` (the element
-/// size).
+/// Creates an `Int16Array` view over `buffer`. Returns `Detached` if
+/// `buffer` is detached, or `MisalignedOffset` if `buffer.byteLength`
+/// is not a multiple of `2` (the element size).
 ///
 @external(javascript, "./int16_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int16Array, JsError)
+pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int16Array, BufferError)
 
 /// Creates an `Int16Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns an error if
-/// the range is out of bounds, `buffer` is detached, or `byte_offset`
-/// is not a multiple of `2`.
+/// `byte_offset` and spanning `length` elements. Returns `Detached`
+/// if `buffer` is detached, `MisalignedOffset` if `byte_offset` is
+/// not a multiple of `2`, or `OutOfRange` if the range falls outside
+/// `buffer`.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
   buffer: ArrayBuffer,
   byte_offset byte_offset: Int,
   length length: Int,
-) -> Result(Int16Array, JsError)
+) -> Result(Int16Array, BufferError)
 
 @external(javascript, "./int16_array.ffi.mjs", "buffer")
 pub fn buffer(array: Int16Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
-/// the underlying buffer. Returns an error if the underlying buffer
-/// has been detached or resized below the array's range.
+/// the underlying buffer. Returns `Detached` if the underlying buffer
+/// has been detached, or `OutOfRange` if it has been resized below the
+/// array's range.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "bytes")
-pub fn bytes(array: Int16Array) -> Result(Uint8Array, JsError)
+pub fn bytes(array: Int16Array) -> Result(Uint8Array, BufferError)
 
 @external(javascript, "./int16_array.ffi.mjs", "byte_length")
 pub fn byte_length(array: Int16Array) -> Int
@@ -70,15 +72,15 @@ pub fn length(array: Int16Array) -> Int
 pub fn at(array: Int16Array, index index: Int) -> Result(Int, Nil)
 
 /// Returns a copy of `array` with the value at `index` replaced.
-/// Negative indices count from the end. Returns an error if `index`
-/// is out of range.
+/// Negative indices count from the end. Returns `OutOfRange` if
+/// `index` is out of range.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "with_")
 pub fn with(
   array: Int16Array,
   at_index index: Int,
   value value: Int,
-) -> Result(Int16Array, JsError)
+) -> Result(Int16Array, BufferError)
 
 @external(javascript, "./int16_array.ffi.mjs", "includes")
 pub fn includes(in array: Int16Array, value value: Int) -> Bool
@@ -106,25 +108,25 @@ pub fn slice_range(
 @external(javascript, "./int16_array.ffi.mjs", "subarray")
 pub fn subarray(array: Int16Array, from begin: Int, to end: Int) -> Int16Array
 
-/// Copies `values` into `array` starting at index `0`. Returns an
-/// error if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at index `0`. Returns
+/// `OutOfRange` if `values` would extend past the end of `array`.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "set")
 pub fn set(
   in array: Int16Array,
   values values: Int16Array,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
-/// Copies `values` into `array` starting at `offset`. Returns an
-/// error if `offset` is negative or the copy would extend past the
-/// end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./int16_array.ffi.mjs", "set_with_offset")
 pub fn set_with_offset(
   in array: Int16Array,
   values values: Int16Array,
   offset offset: Int,
-) -> Result(Nil, JsError)
+) -> Result(Nil, BufferError)
 
 @external(javascript, "./int16_array.ffi.mjs", "fill")
 pub fn fill(array: Int16Array, with value: Int) -> Int16Array

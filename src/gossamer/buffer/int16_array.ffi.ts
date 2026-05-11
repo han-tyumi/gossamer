@@ -1,4 +1,10 @@
 import type * as $int16Array from "$/gossamer/gossamer/buffer/int16_array.mjs";
+import {
+  checkArrayDetached,
+  checkArrayRange,
+  checkBufferAligned,
+  checkBufferRangeAligned,
+} from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
@@ -11,20 +17,28 @@ export const from_list: typeof $int16Array.from_list = (list) =>
   new Int16Array(toArray(list));
 
 export const from_buffer: typeof $int16Array.from_buffer = (buffer) =>
-  toResult.fromThrows(() => new Int16Array(buffer));
+  checkBufferAligned(buffer, 2, () => new Int16Array(buffer));
 
 export const from_buffer_range: typeof $int16Array.from_buffer_range = (
   buffer,
   byteOffset,
   length,
-) => toResult.fromThrows(() => new Int16Array(buffer, byteOffset, length));
+) =>
+  checkBufferRangeAligned(
+    buffer,
+    byteOffset,
+    length,
+    2,
+    () => new Int16Array(buffer, byteOffset, length),
+  );
 
 export const buffer: typeof $int16Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $int16Array.bytes = (array) =>
-  toResult.fromThrows(() =>
-    new Uint8Array(array.buffer, array.byteOffset, array.byteLength)
+  checkArrayDetached(
+    array,
+    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
   );
 
 export const byte_length: typeof $int16Array.byte_length = (array) =>
@@ -39,7 +53,12 @@ export const at: typeof $int16Array.at = (array, index) =>
   toResult(array.at(index));
 
 export const with_: typeof $int16Array.with$ = (array, index, value) =>
-  toResult.fromThrows(() => array.with(index, value));
+  checkArrayRange(
+    array,
+    index < 0 ? array.length + index : index,
+    1,
+    () => array.with(index, value),
+  );
 
 export const includes: typeof $int16Array.includes = (array, value) =>
   array.includes(value);
@@ -62,9 +81,8 @@ export const subarray: typeof $int16Array.subarray = (array, begin, end) =>
   array.subarray(begin, end);
 
 export const set: typeof $int16Array.set = (array, values) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, 0, values.length, () => {
     array.set(values);
-    return undefined;
   });
 
 export const set_with_offset: typeof $int16Array.set_with_offset = (
@@ -72,9 +90,8 @@ export const set_with_offset: typeof $int16Array.set_with_offset = (
   values,
   offset,
 ) =>
-  toResult.fromThrows(() => {
+  checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
-    return undefined;
   });
 
 export const fill: typeof $int16Array.fill = (array, value) =>
