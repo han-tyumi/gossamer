@@ -1,6 +1,7 @@
 import * as $readableStream from "$/gossamer/gossamer/stream/readable_stream.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { yielderAsJsIterator } from "~/gossamer/iteration.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { ensureMethod } from "~/utils/runtime_gap.ffi.ts";
@@ -53,16 +54,14 @@ export const from_pull: typeof $readableStream.from_pull = (pull) => {
   return new ReadableStream({ pull });
 };
 
-export const from_iterator: typeof $readableStream.from_iterator = (
-  iterator,
-) => {
+export const from_yielder: typeof $readableStream.from_yielder = (yielder) => {
   ensureMethod(
     ReadableStream,
     "from",
-    "readable_stream.from_iterator",
+    "readable_stream.from_yielder",
     BUN_STREAM_FROM_ISSUE,
   );
-  return ReadableStream.from(iterator);
+  return ReadableStream.from(yielderAsJsIterator(yielder));
 };
 
 export const from_async_iterator: typeof $readableStream.from_async_iterator = (

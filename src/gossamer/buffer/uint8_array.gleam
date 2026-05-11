@@ -1,7 +1,7 @@
 import gleam/order.{type Order}
+import gleam/yielder.{type Yielder}
 import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
-import gossamer/iteration/iterator.{type Iterator}
 
 /// A typed array of 8-bit unsigned integers (bytes).
 ///
@@ -378,14 +378,17 @@ pub fn index_reduce_right(
   with callback: fn(a, Int, Int) -> a,
 ) -> a
 
+/// Returns the indices of the array, in order.
 @external(javascript, "./uint8_array.ffi.mjs", "keys")
-pub fn keys(array: Uint8Array) -> Iterator(Int, Nil, Nil)
+pub fn keys(array: Uint8Array) -> Yielder(Int)
 
+/// Returns the values of the array, in order.
 @external(javascript, "./uint8_array.ffi.mjs", "values")
-pub fn values(array: Uint8Array) -> Iterator(Int, Nil, Nil)
+pub fn values(array: Uint8Array) -> Yielder(Int)
 
+/// Returns the `#(index, value)` pairs of the array, in order.
 @external(javascript, "./uint8_array.ffi.mjs", "entries")
-pub fn entries(array: Uint8Array) -> Iterator(#(Int, Int), Nil, Nil)
+pub fn entries(array: Uint8Array) -> Yielder(#(Int, Int))
 
 @external(javascript, "./uint8_array.ffi.mjs", "to_list")
 pub fn to_list(array: Uint8Array) -> List(Int)

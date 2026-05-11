@@ -3,7 +3,6 @@ import gleam/yielder
 import gleeunit/should
 import gossamer/buffer/array_buffer
 import gossamer/buffer/uint8_array
-import gossamer/iteration/iterator
 
 pub fn new_test() {
   uint8_array.new()
@@ -520,7 +519,6 @@ pub fn last_index_of_from_test() {
 pub fn keys_test() {
   let array = uint8_array.from_list([10, 20, 30])
   uint8_array.keys(array)
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([0, 1, 2])
 }
@@ -528,7 +526,6 @@ pub fn keys_test() {
 pub fn values_test() {
   let array = uint8_array.from_list([10, 20, 30])
   uint8_array.values(array)
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([10, 20, 30])
 }
@@ -536,7 +533,6 @@ pub fn values_test() {
 pub fn entries_test() {
   let array = uint8_array.from_list([10, 20, 30])
   uint8_array.entries(array)
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([#(0, 10), #(1, 20), #(2, 30)])
 }
@@ -544,7 +540,6 @@ pub fn entries_test() {
 pub fn keys_empty_test() {
   uint8_array.new()
   |> uint8_array.keys()
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([])
 }
@@ -552,7 +547,6 @@ pub fn keys_empty_test() {
 pub fn values_empty_test() {
   uint8_array.new()
   |> uint8_array.values()
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([])
 }
@@ -560,7 +554,6 @@ pub fn values_empty_test() {
 pub fn entries_empty_test() {
   uint8_array.new()
   |> uint8_array.entries()
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([])
 }

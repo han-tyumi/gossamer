@@ -1,11 +1,12 @@
-import * as $yielder from "$/gleam_yielder/gleam/yielder.mjs";
 import * as $iteration from "$/gossamer/gossamer/iteration.mjs";
 import type * as $iterator from "$/gossamer/gossamer/iteration/iterator.mjs";
 import { Result$Ok } from "$/prelude.mjs";
 import {
+  jsIteratorAsYielder,
   toCallbackResult,
   toGleamIteratorResult,
   toIteratorResult,
+  yielderAsJsIterator,
 } from "~/gossamer/iteration.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 
@@ -21,26 +22,9 @@ export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
   return iterator;
 };
 
-export const from_yielder: typeof $iterator.from_yielder = <T>(
-  yielder: $yielder.Yielder$<T>,
-) => {
-  let current = yielder;
-  const iterator: IterableIterator<T, undefined, undefined> = {
-    next() {
-      const step = $yielder.step(current);
-      if ($yielder.Step$isDone(step)) {
-        return { done: true as const, value: undefined };
-      }
-      const value = $yielder.Step$Next$element(step) as T;
-      current = $yielder.Step$Next$accumulator(step) as $yielder.Yielder$<T>;
-      return { done: false as const, value };
-    },
-    [Symbol.iterator]() {
-      return this;
-    },
-  };
-  return iterator;
-};
+export const from_yielder: typeof $iterator.from_yielder = yielderAsJsIterator;
+
+export const to_yielder: typeof $iterator.to_yielder = jsIteratorAsYielder;
 
 export const with_return: typeof $iterator.with_return = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,

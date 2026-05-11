@@ -1,4 +1,4 @@
-import gossamer/iteration/iterator.{type Iterator}
+import gleam/yielder.{type Yielder}
 
 /// A JS `Map` holding key-value pairs. Supports any key type (unlike
 /// plain objects) and preserves insertion order. Mutable — methods modify
@@ -53,14 +53,17 @@ pub fn delete(from map: Map(key, value), key key: key) -> Map(key, value)
 @external(javascript, "./map.ffi.mjs", "clear")
 pub fn clear(map: Map(key, value)) -> Map(key, value)
 
+/// Returns the keys of the map in insertion order.
 @external(javascript, "./map.ffi.mjs", "keys")
-pub fn keys(of map: Map(key, value)) -> Iterator(key, Nil, Nil)
+pub fn keys(of map: Map(key, value)) -> Yielder(key)
 
+/// Returns the values of the map in insertion order.
 @external(javascript, "./map.ffi.mjs", "values")
-pub fn values(of map: Map(key, value)) -> Iterator(value, Nil, Nil)
+pub fn values(of map: Map(key, value)) -> Yielder(value)
 
+/// Returns the `#(key, value)` pairs of the map in insertion order.
 @external(javascript, "./map.ffi.mjs", "entries")
-pub fn entries(of map: Map(key, value)) -> Iterator(#(key, value), Nil, Nil)
+pub fn entries(of map: Map(key, value)) -> Yielder(#(key, value))
 
 @external(javascript, "./map.ffi.mjs", "for_each")
 pub fn for_each(

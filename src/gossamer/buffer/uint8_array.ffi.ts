@@ -3,6 +3,7 @@ import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { toUint8Array } from "~/utils/bit_array.ffi.ts";
 import { checkArrayRange } from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
@@ -346,15 +347,15 @@ export const index_reduce_right: typeof $uint8Array.index_reduce_right = (
 };
 
 export const keys: typeof $uint8Array.keys = (array) => {
-  return array.keys();
+  return jsIteratorAsYielder(array.keys());
 };
 
 export const values: typeof $uint8Array.values = (array) => {
-  return array.values();
+  return jsIteratorAsYielder(array.values());
 };
 
 export const entries: typeof $uint8Array.entries = (array) => {
-  return array.entries();
+  return jsIteratorAsYielder(array.entries());
 };
 
 export const to_list: typeof $uint8Array.to_list = (array) => {

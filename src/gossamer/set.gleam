@@ -1,4 +1,4 @@
-import gossamer/iteration/iterator.{type Iterator}
+import gleam/yielder.{type Yielder}
 
 /// A JS `Set` holding unique values of any type, preserving insertion
 /// order. Mutable — methods modify the set in place and return it for
@@ -44,11 +44,15 @@ pub fn delete(from set: Set(value), value value: value) -> Set(value)
 @external(javascript, "./set.ffi.mjs", "clear")
 pub fn clear(set: Set(value)) -> Set(value)
 
+/// Returns the values of the set in insertion order.
 @external(javascript, "./set.ffi.mjs", "values")
-pub fn values(of set: Set(value)) -> Iterator(value, Nil, Nil)
+pub fn values(of set: Set(value)) -> Yielder(value)
 
+/// Returns the `#(value, value)` pairs of the set in insertion order
+/// (each value appears with itself, mirroring the JS `Set.entries()`
+/// shape).
 @external(javascript, "./set.ffi.mjs", "entries")
-pub fn entries(of set: Set(value)) -> Iterator(#(value, value), Nil, Nil)
+pub fn entries(of set: Set(value)) -> Yielder(#(value, value))
 
 @external(javascript, "./set.ffi.mjs", "for_each")
 pub fn for_each(in set: Set(value), run callback: fn(value) -> a) -> Nil

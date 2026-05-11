@@ -10,8 +10,7 @@
 import gleam/option.{type Option}
 import gleam/yielder.{type Yielder}
 import gossamer/iteration.{
-  type IteratorError, type IteratorHandlerOutcome, type IteratorResult, Return,
-  Yield,
+  type IteratorError, type IteratorHandlerOutcome, type IteratorResult,
 }
 
 /// A pull-based iterator that yields values one at a time. `a` is the
@@ -41,14 +40,8 @@ pub fn from_yielder(yielder: Yielder(a)) -> Iterator(a, Nil, Nil)
 /// as values are pulled from the yielder; pair with `yielder.to_list`
 /// for eager materialization.
 ///
-pub fn to_yielder(iterator: Iterator(a, return, next)) -> Yielder(a) {
-  yielder.unfold(from: iterator, with: fn(iter) {
-    case next(iter) {
-      Yield(value) -> yielder.Next(element: value, accumulator: iter)
-      Return(_) -> yielder.Done
-    }
-  })
-}
+@external(javascript, "./iterator.ffi.mjs", "to_yielder")
+pub fn to_yielder(iterator: Iterator(a, return, next)) -> Yielder(a)
 
 /// Adds a `return` handler to the iterator, called when the consumer
 /// ends iteration early. Used to release resources.

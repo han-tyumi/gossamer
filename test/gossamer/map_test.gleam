@@ -1,6 +1,5 @@
 import gleam/yielder
 import gleeunit/should
-import gossamer/iteration/iterator
 import gossamer/map
 
 pub fn new_test() {
@@ -54,7 +53,6 @@ pub fn clear_test() {
 pub fn keys_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
   map.keys(m)
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal(["a", "b"])
 }
@@ -62,7 +60,6 @@ pub fn keys_test() {
 pub fn values_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
   map.values(m)
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([1, 2])
 }
@@ -70,7 +67,6 @@ pub fn values_test() {
 pub fn entries_test() {
   let m = map.from_list([#("a", 1), #("b", 2)])
   map.entries(m)
-  |> iterator.to_yielder
   |> yielder.to_list
   |> should.equal([#("a", 1), #("b", 2)])
 }

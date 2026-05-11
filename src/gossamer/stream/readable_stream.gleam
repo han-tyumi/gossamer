@@ -1,9 +1,9 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
+import gleam/yielder.{type Yielder}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/iteration/async_iterator.{type AsyncIterator}
-import gossamer/iteration/iterator.{type Iterator}
 import gossamer/stream.{type StreamLifecycleError}
 import gossamer/stream/readable_stream/default_controller.{
   type DefaultController,
@@ -149,13 +149,14 @@ pub fn from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
 ) -> ReadableStream(a)
 
-/// Creates a `ReadableStream` from an `Iterator`.
+/// Creates a `ReadableStream` from a `Yielder`. Values are pulled from
+/// the yielder as the stream is read.
 ///
 /// Note: Panics on Bun — `ReadableStream.from` is not implemented.
 /// See https://github.com/oven-sh/bun/issues/3700
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "from_iterator")
-pub fn from_iterator(iterator: Iterator(a, r, n)) -> ReadableStream(a)
+@external(javascript, "./readable_stream.ffi.mjs", "from_yielder")
+pub fn from_yielder(yielder: Yielder(a)) -> ReadableStream(a)
 
 /// Creates a `ReadableStream` from an `AsyncIterator`.
 ///

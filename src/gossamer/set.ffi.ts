@@ -1,4 +1,5 @@
 import type * as $set from "$/gossamer/gossamer/set.mjs";
+import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 
 export const new_: typeof $set.new$ = <T>() => {
@@ -35,11 +36,11 @@ export const clear: typeof $set.clear = (set) => {
 };
 
 export const values: typeof $set.values = (set) => {
-  return set.values();
+  return jsIteratorAsYielder(set.values());
 };
 
 export const entries: typeof $set.entries = (set) => {
-  return set.entries();
+  return jsIteratorAsYielder(set.entries());
 };
 
 export const for_each: typeof $set.for_each = (set, callback) => {

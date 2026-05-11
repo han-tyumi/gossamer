@@ -1,4 +1,5 @@
 import type * as $map from "$/gossamer/gossamer/map.mjs";
+import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
@@ -40,15 +41,15 @@ export const clear: typeof $map.clear = (map) => {
 };
 
 export const keys: typeof $map.keys = (map) => {
-  return map.keys();
+  return jsIteratorAsYielder(map.keys());
 };
 
 export const values: typeof $map.values = (map) => {
-  return map.values();
+  return jsIteratorAsYielder(map.values());
 };
 
 export const entries: typeof $map.entries = (map) => {
-  return map.entries();
+  return jsIteratorAsYielder(map.entries());
 };
 
 export const for_each: typeof $map.for_each = (map, callback) => {
