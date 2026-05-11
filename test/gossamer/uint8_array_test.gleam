@@ -365,6 +365,22 @@ pub fn set_from_hex_test() {
   written |> should.equal(5)
 }
 
+pub fn set_from_base64_detached_test() {
+  let buffer = array_buffer.new(8)
+  let assert Ok(array) = uint8_array.from_buffer(buffer)
+  let assert Ok(_) = array_buffer.transfer(buffer)
+  uint8_array.set_from_base64(array, "SGVsbG8=")
+  |> should.equal(Error(uint8_array.Detached))
+}
+
+pub fn set_from_hex_detached_test() {
+  let buffer = array_buffer.new(8)
+  let assert Ok(array) = uint8_array.from_buffer(buffer)
+  let assert Ok(_) = array_buffer.transfer(buffer)
+  uint8_array.set_from_hex(array, "48656c6c6f")
+  |> should.equal(Error(uint8_array.Detached))
+}
+
 pub fn from_list_mapped_test() {
   let array =
     uint8_array.from_list_mapped(["a", "bb", "ccc"], fn(str) {

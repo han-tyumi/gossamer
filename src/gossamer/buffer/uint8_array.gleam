@@ -2,7 +2,6 @@ import gleam/order.{type Order}
 import gossamer/buffer.{type BufferError}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/iterator.{type Iterator}
-import gossamer/js_error.{type JsError}
 
 /// A typed array of 8-bit unsigned integers (bytes).
 ///
@@ -10,6 +9,20 @@ import gossamer/js_error.{type JsError}
 ///
 @external(javascript, "./uint8_array.type.ts", "Uint8Array$")
 pub type Uint8Array
+
+/// Errors raised by the base64 and hex encoding bindings.
+pub type EncodingError {
+  /// The input string contains characters that are not valid for the
+  /// encoding alphabet, or the hex input has an odd length. The
+  /// `message` payload carries the underlying JavaScript error
+  /// description for diagnostics.
+  InvalidEncoding(message: String)
+
+  /// The underlying buffer was detached. Only `set_from_base64` and
+  /// `set_from_hex` can produce this — the static `from_base64` /
+  /// `from_hex` constructors never operate on an existing buffer.
+  Detached
+}
 
 @external(javascript, "./uint8_array.ffi.mjs", "new_")
 pub fn new() -> Uint8Array
@@ -49,17 +62,18 @@ pub fn from_buffer_range(
   length length: Int,
 ) -> Result(Uint8Array, BufferError)
 
-/// Decodes a base64 string into a `Uint8Array`. Returns an error if
-/// `string` is not valid base64.
+/// Decodes a base64 string into a `Uint8Array`. Returns
+/// `InvalidEncoding` if `string` contains characters outside the
+/// base64 alphabet.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_base64")
-pub fn from_base64(string: String) -> Result(Uint8Array, JsError)
+pub fn from_base64(string: String) -> Result(Uint8Array, EncodingError)
 
-/// Decodes a hex string into a `Uint8Array`. Returns an error if `string`
-/// is not valid hex (non-hex characters or odd length).
+/// Decodes a hex string into a `Uint8Array`. Returns `InvalidEncoding`
+/// if `string` contains non-hex characters or has an odd length.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_hex")
-pub fn from_hex(string: String) -> Result(Uint8Array, JsError)
+pub fn from_hex(string: String) -> Result(Uint8Array, EncodingError)
 
 /// Creates a `Uint8Array` from a `BitArray`. Un-aligned bit arrays are
 /// zero-padded to the next byte.
@@ -388,21 +402,23 @@ pub fn to_hex(array: Uint8Array) -> String
 pub fn to_bit_array(array: Uint8Array) -> BitArray
 
 /// Decodes `string` as base64 into `array` in place. Returns the number
-/// of characters read and bytes written. Returns an error if `string` is
+/// of characters read and bytes written. Returns `Detached` if `array`'s
+/// underlying buffer is detached, or `InvalidEncoding` if `string` is
 /// not valid base64.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_base64")
 pub fn set_from_base64(
   array: Uint8Array,
   string: String,
-) -> Result(#(Int, Int), JsError)
+) -> Result(#(Int, Int), EncodingError)
 
 /// Decodes `string` as hex into `array` in place. Returns the number of
-/// characters read and bytes written. Returns an error if `string` is not
-/// valid hex.
+/// characters read and bytes written. Returns `Detached` if `array`'s
+/// underlying buffer is detached, or `InvalidEncoding` if `string` is
+/// not valid hex.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_hex")
 pub fn set_from_hex(
   array: Uint8Array,
   string: String,
-) -> Result(#(Int, Int), JsError)
+) -> Result(#(Int, Int), EncodingError)

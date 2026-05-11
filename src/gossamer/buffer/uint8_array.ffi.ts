@@ -1,4 +1,4 @@
-import type * as $uint8Array from "$/gossamer/gossamer/buffer/uint8_array.mjs";
+import * as $uint8Array from "$/gossamer/gossamer/buffer/uint8_array.mjs";
 import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import type { Order$ } from "$/gleam_stdlib/gleam/order.mjs";
@@ -383,12 +383,25 @@ export const to_hex: typeof $uint8Array.to_hex = (array) => {
   return array.toHex();
 };
 
+function invalidEncoding(err: unknown) {
+  const message = err instanceof Error ? err.message : String(err);
+  return Result$Error($uint8Array.EncodingError$InvalidEncoding(message));
+}
+
 export const from_base64: typeof $uint8Array.from_base64 = (string) => {
-  return toResult.fromThrows(() => Uint8Array.fromBase64(string));
+  try {
+    return Result$Ok(Uint8Array.fromBase64(string));
+  } catch (err) {
+    return invalidEncoding(err);
+  }
 };
 
 export const from_hex: typeof $uint8Array.from_hex = (string) => {
-  return toResult.fromThrows(() => Uint8Array.fromHex(string));
+  try {
+    return Result$Ok(Uint8Array.fromHex(string));
+  } catch (err) {
+    return invalidEncoding(err);
+  }
 };
 
 export const from_bit_array: typeof $uint8Array.from_bit_array = toUint8Array;
@@ -401,18 +414,28 @@ export const set_from_base64: typeof $uint8Array.set_from_base64 = (
   array,
   string,
 ) => {
-  return toResult.fromThrows(() => {
+  if ((array.buffer as ArrayBuffer).detached) {
+    return Result$Error($uint8Array.EncodingError$Detached());
+  }
+  try {
     const result = array.setFromBase64(string);
-    return [result.read, result.written];
-  });
+    return Result$Ok([result.read, result.written]);
+  } catch (err) {
+    return invalidEncoding(err);
+  }
 };
 
 export const set_from_hex: typeof $uint8Array.set_from_hex = (
   array,
   string,
 ) => {
-  return toResult.fromThrows(() => {
+  if ((array.buffer as ArrayBuffer).detached) {
+    return Result$Error($uint8Array.EncodingError$Detached());
+  }
+  try {
     const result = array.setFromHex(string);
-    return [result.read, result.written];
-  });
+    return Result$Ok([result.read, result.written]);
+  } catch (err) {
+    return invalidEncoding(err);
+  }
 };
