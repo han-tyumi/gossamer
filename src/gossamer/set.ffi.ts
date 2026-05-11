@@ -1,3 +1,4 @@
+import { fold as gleam_set_fold } from "$/gleam_stdlib/gleam/set.mjs";
 import type * as $set from "$/gossamer/gossamer/set.mjs";
 import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
@@ -12,27 +13,23 @@ export const from_list: typeof $set.from_list = <T>(
   return new Set<T>(toArray(values));
 };
 
+export const from_set: typeof $set.from_set = <T>(
+  set: Parameters<typeof $set.from_set<T>>[0],
+) => {
+  const jsSet = new Set<T>();
+  gleam_set_fold(set, undefined, (_acc: unknown, value: T) => {
+    jsSet.add(value);
+    return undefined;
+  });
+  return jsSet;
+};
+
 export const size: typeof $set.size = (set) => {
   return set.size;
 };
 
-export const add: typeof $set.add = (set, value) => {
-  set.add(value);
-  return set;
-};
-
 export const has: typeof $set.has = (set, value) => {
   return set.has(value);
-};
-
-export const delete_: typeof $set.delete$ = (set, value) => {
-  set.delete(value);
-  return set;
-};
-
-export const clear: typeof $set.clear = (set) => {
-  set.clear();
-  return set;
 };
 
 export const values: typeof $set.values = (set) => {
@@ -41,39 +38,4 @@ export const values: typeof $set.values = (set) => {
 
 export const entries: typeof $set.entries = (set) => {
   return jsIteratorAsYielder(set.entries());
-};
-
-export const for_each: typeof $set.for_each = (set, callback) => {
-  set.forEach((value) => callback(value));
-};
-
-export const difference: typeof $set.difference = (set, other) => {
-  return set.difference(other);
-};
-
-export const intersection: typeof $set.intersection = (set, other) => {
-  return set.intersection(other);
-};
-
-export const union: typeof $set.union = (set, other) => {
-  return set.union(other);
-};
-
-export const symmetric_difference: typeof $set.symmetric_difference = (
-  set,
-  other,
-) => {
-  return set.symmetricDifference(other);
-};
-
-export const is_disjoint_from: typeof $set.is_disjoint_from = (set, other) => {
-  return set.isDisjointFrom(other);
-};
-
-export const is_subset_of: typeof $set.is_subset_of = (set, other) => {
-  return set.isSubsetOf(other);
-};
-
-export const is_superset_of: typeof $set.is_superset_of = (set, other) => {
-  return set.isSupersetOf(other);
 };
