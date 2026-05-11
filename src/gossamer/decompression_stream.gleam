@@ -1,5 +1,6 @@
-import gossamer/compression_stream.{type CompressionFormat}
-import gossamer/js_error.{type JsError}
+import gossamer/compression_stream.{
+  type CompressionError, type CompressionFormat,
+}
 import gossamer/readable_stream.{type ReadableStream}
 import gossamer/writable_stream.{type WritableStream}
 
@@ -31,10 +32,13 @@ import gossamer/writable_stream.{type WritableStream}
 @external(javascript, "./decompression_stream.type.ts", "DecompressionStream$")
 pub type DecompressionStream
 
-/// Returns an error if the format is not supported.
+/// Returns `UnsupportedFormat` if the format is not supported by the
+/// current runtime.
 ///
 @external(javascript, "./decompression_stream.ffi.mjs", "new_")
-pub fn new(format: CompressionFormat) -> Result(DecompressionStream, JsError)
+pub fn new(
+  format: CompressionFormat,
+) -> Result(DecompressionStream, CompressionError)
 
 @external(javascript, "./decompression_stream.ffi.mjs", "readable")
 pub fn readable(stream: DecompressionStream) -> ReadableStream(BitArray)

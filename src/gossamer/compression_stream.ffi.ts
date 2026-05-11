@@ -1,7 +1,7 @@
 import type { BitArray } from "$/prelude.mjs";
 import * as $compressionStream from "$/gossamer/gossamer/compression_stream.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromBitArrayStream, toBitArrayStream } from "~/utils/bit_array.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 export function toCompressionFormat(
   format: $compressionStream.CompressionFormat$,
@@ -29,9 +29,13 @@ const wrappedWritables = new WeakMap<
 >();
 
 export const new_: typeof $compressionStream.new$ = (format) => {
-  return toResult.fromThrows(() =>
-    new CompressionStream(toCompressionFormat(format))
-  );
+  try {
+    return Result$Ok(new CompressionStream(toCompressionFormat(format)));
+  } catch {
+    return Result$Error(
+      $compressionStream.CompressionError$UnsupportedFormat(),
+    );
+  }
 };
 
 export const readable: typeof $compressionStream.readable = (stream) => {
