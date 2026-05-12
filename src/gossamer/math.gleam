@@ -1,5 +1,6 @@
-//// Mathematical constants and functions mirroring JavaScript's `Math`
-//// object — trig, logs, exponentials, random, and more.
+//// JavaScript `Math` operations not covered by `gleam/float` —
+//// trigonometric and hyperbolic functions, special logarithms, and a
+//// handful of JS-specific helpers.
 
 /// The ratio of a circle's circumference to its diameter.
 ///
@@ -33,23 +34,6 @@ pub const sqrt2 = 1.4142135623730951
 ///
 pub const sqrt1_2 = 0.7071067811865476
 
-/// Returns a pseudo-random floating-point number between `0` (inclusive) and
-/// `1` (exclusive).
-///
-@external(javascript, "./math.ffi.mjs", "random")
-pub fn random() -> Float
-
-/// Returns the sign of a number: `-1.0`, `0.0`, or `1.0`.
-///
-@external(javascript, "./math.ffi.mjs", "sign")
-pub fn sign(value: Float) -> Float
-
-/// Returns the integer part of a number by removing any fractional digits,
-/// rounding toward zero.
-///
-@external(javascript, "./math.ffi.mjs", "trunc")
-pub fn trunc(value: Float) -> Float
-
 /// Returns the cube root of a number.
 ///
 @external(javascript, "./math.ffi.mjs", "cbrt")
@@ -60,12 +44,6 @@ pub fn cbrt(value: Float) -> Float
 ///
 @external(javascript, "./math.ffi.mjs", "hypot")
 pub fn hypot(x: Float, y: Float) -> Float
-
-/// Returns the natural logarithm (base e) of a number. Returns an error if
-/// the value is not positive.
-///
-@external(javascript, "./math.ffi.mjs", "log")
-pub fn log(value: Float) -> Result(Float, Nil)
 
 /// Returns the base-2 logarithm of a number. Returns an error if the value
 /// is not positive.
@@ -154,11 +132,6 @@ pub fn acosh(value: Float) -> Result(Float, Nil)
 ///
 @external(javascript, "./math.ffi.mjs", "atanh")
 pub fn atanh(value: Float) -> Result(Float, Nil)
-
-/// Returns e raised to the power of a number.
-///
-@external(javascript, "./math.ffi.mjs", "exp")
-pub fn exp(value: Float) -> Float
 
 /// Returns e raised to the power of a number minus `1`, precise for small
 /// values.

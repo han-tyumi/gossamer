@@ -1,23 +1,6 @@
 import gleeunit/should
 import gossamer/math
 
-pub fn random_test() {
-  let value = math.random()
-  should.be_true(value >=. 0.0 && value <. 1.0)
-}
-
-pub fn sign_test() {
-  math.sign(-5.0) |> should.equal(-1.0)
-  math.sign(0.0) |> should.equal(0.0)
-  math.sign(5.0) |> should.equal(1.0)
-}
-
-pub fn trunc_test() {
-  math.trunc(3.7) |> should.equal(3.0)
-  math.trunc(-3.7) |> should.equal(-3.0)
-  math.trunc(0.5) |> should.equal(0.0)
-}
-
 pub fn cbrt_test() {
   math.cbrt(27.0) |> should.equal(3.0)
   math.cbrt(8.0) |> should.equal(2.0)
@@ -25,20 +8,6 @@ pub fn cbrt_test() {
 
 pub fn hypot_test() {
   math.hypot(3.0, 4.0) |> should.equal(5.0)
-}
-
-pub fn log_test() {
-  math.log(1.0) |> should.equal(Ok(0.0))
-  let assert Ok(log_e) = math.log(math.e)
-  should.be_true(log_e >. 0.9999 && log_e <. 1.0001)
-}
-
-pub fn log_negative_test() {
-  math.log(-1.0) |> should.be_error()
-}
-
-pub fn log_zero_test() {
-  math.log(0.0) |> should.be_error()
 }
 
 pub fn log2_test() {
@@ -157,12 +126,6 @@ pub fn atanh_test() {
 
 pub fn atanh_out_of_range_test() {
   math.atanh(1.0) |> should.be_error()
-}
-
-pub fn exp_test() {
-  math.exp(0.0) |> should.equal(1.0)
-  let exp_1 = math.exp(1.0)
-  should.be_true(exp_1 >. math.e -. 0.0001 && exp_1 <. math.e +. 0.0001)
 }
 
 pub fn expm1_test() {

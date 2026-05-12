@@ -5,13 +5,9 @@ function toResult(value: number) {
   return Number.isFinite(value) ? Result$Ok(value) : Result$Error(undefined);
 }
 
-export const random: typeof $math.random = () => Math.random();
-export const sign: typeof $math.sign = (value) => Math.sign(value);
-export const trunc: typeof $math.trunc = (value) => Math.trunc(value);
 export const cbrt: typeof $math.cbrt = (value) => Math.cbrt(value);
 export const hypot: typeof $math.hypot = (x, y) => Math.hypot(x, y);
 
-export const log: typeof $math.log = (value) => toResult(Math.log(value));
 export const log2: typeof $math.log2 = (value) => toResult(Math.log2(value));
 export const log10: typeof $math.log10 = (value) => toResult(Math.log10(value));
 export const log1p: typeof $math.log1p = (value) => toResult(Math.log1p(value));
@@ -33,7 +29,6 @@ export const asinh: typeof $math.asinh = (value) => Math.asinh(value);
 export const acosh: typeof $math.acosh = (value) => toResult(Math.acosh(value));
 export const atanh: typeof $math.atanh = (value) => toResult(Math.atanh(value));
 
-export const exp: typeof $math.exp = (value) => Math.exp(value);
 export const expm1: typeof $math.expm1 = (value) => Math.expm1(value);
 
 export const clz32: typeof $math.clz32 = (value) => Math.clz32(value);
