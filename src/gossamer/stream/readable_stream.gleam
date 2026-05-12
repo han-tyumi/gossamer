@@ -150,18 +150,14 @@ pub fn from_pull(
 ) -> ReadableStream(a)
 
 /// Creates a `ReadableStream` from a `Yielder`. Values are pulled from
-/// the yielder as the stream is read.
-///
-/// Note: Panics on Bun — `ReadableStream.from` is not implemented.
-/// See https://github.com/oven-sh/bun/issues/3700
+/// the yielder as the stream is read. Panics on Bun — see
+/// https://github.com/oven-sh/bun/issues/3700.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_yielder")
 pub fn from_yielder(yielder: Yielder(a)) -> ReadableStream(a)
 
-/// Creates a `ReadableStream` from an `AsyncIterator`.
-///
-/// Note: Panics on Bun — `ReadableStream.from` is not implemented.
-/// See https://github.com/oven-sh/bun/issues/3700
+/// Creates a `ReadableStream` from an `AsyncIterator`. Panics on Bun —
+/// see https://github.com/oven-sh/bun/issues/3700.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_async_iterator")
 pub fn from_async_iterator(
