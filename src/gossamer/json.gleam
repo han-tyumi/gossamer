@@ -1,6 +1,10 @@
+//// A transparent `Json` ADT for inspecting or pattern-matching on JSON
+//// of unknown structure. For typed encode/decode pipelines, use
+//// `gleam_json`.
+
 import gleam/dict.{type Dict}
 
-/// A JSON value — one of null, boolean, number, string, array, or object.
+/// A JSON value.
 ///
 pub type Json {
   Null
