@@ -428,7 +428,7 @@ pub fn writable_controller_error_test() {
   let assert Ok(stream) =
     writable_stream.new()
     |> writable_stream.on_write(run: fn(_chunk, controller) {
-      let _ = writable_controller.error(controller, dynamic.string("fail"))
+      writable_controller.error(controller, dynamic.string("fail"))
       promise.resolve(Nil)
     })
     |> writable_stream.build
@@ -478,11 +478,7 @@ pub fn transform_controller_error_test() {
   let assert Ok(transform) =
     transform_stream.new()
     |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
-      let _ =
-        transform_controller.error(
-          controller,
-          dynamic.string("transform error"),
-        )
+      transform_controller.error(controller, dynamic.string("transform error"))
       promise.resolve(Nil)
     })
     |> transform_stream.build

@@ -26,19 +26,9 @@ export const enqueue: typeof $defaultController.enqueue = (
 };
 
 export const error: typeof $defaultController.error = (controller, reason) => {
-  try {
-    controller.error(reason);
-    return Result$Ok(undefined);
-  } catch {
-    return closedError();
-  }
+  controller.error(reason);
 };
 
 export const terminate: typeof $defaultController.terminate = (controller) => {
-  try {
-    controller.terminate();
-    return Result$Ok(undefined);
-  } catch {
-    return closedError();
-  }
+  controller.terminate();
 };

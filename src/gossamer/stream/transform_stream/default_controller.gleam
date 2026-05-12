@@ -23,19 +23,14 @@ pub fn enqueue(
   chunk chunk: a,
 ) -> Result(Nil, StreamLifecycleError)
 
-/// Signals an error on the stream. Returns `Closed` if the stream is
-/// already closed.
+/// Signals an error on the stream. A no-op if the stream is already
+/// closed or errored.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "error")
-pub fn error(
-  controller: DefaultController(a),
-  reason reason: b,
-) -> Result(Nil, StreamLifecycleError)
+pub fn error(controller: DefaultController(a), reason reason: b) -> Nil
 
 /// Closes the readable side and errors the writable side of the
-/// stream. Returns `Closed` if the stream is already closed.
+/// stream. A no-op if the stream is already closed or terminated.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "terminate")
-pub fn terminate(
-  controller: DefaultController(a),
-) -> Result(Nil, StreamLifecycleError)
+pub fn terminate(controller: DefaultController(a)) -> Nil
