@@ -29,8 +29,7 @@ export const from_list_mapped: typeof $uint8Array.from_list_mapped = (
 };
 
 export const from_buffer: typeof $uint8Array.from_buffer = (buffer) => {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
-  return Result$Ok(new Uint8Array(buffer));
+  return new Uint8Array(buffer);
 };
 
 export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
@@ -38,7 +37,6 @@ export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
   byteOffset,
   length,
 ) => {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
   if (byteOffset < 0 || byteOffset + length > buffer.byteLength) {
     return Result$Error(
       $buffer.BufferError$OutOfRange(byteOffset + length, buffer.byteLength),

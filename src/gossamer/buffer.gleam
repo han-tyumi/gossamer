@@ -10,10 +10,6 @@
 
 /// Errors raised by buffer or buffer-view operations.
 pub type BufferError {
-  /// The underlying buffer was detached (transferred, freed, or
-  /// otherwise invalidated). All views over it become unusable.
-  Detached
-
   /// The requested range falls outside the buffer's current byte length.
   OutOfRange(at: Int, length: Int)
 

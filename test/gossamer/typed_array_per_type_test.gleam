@@ -180,7 +180,7 @@ pub fn from_buffer_aligned_test() {
 pub fn from_buffer_int8_any_size_test() {
   // 1-byte alignment; any buffer size works for Int8Array.
   let buf = array_buffer.new(7)
-  let assert Ok(arr) = int8_array.from_buffer(buf)
+  let arr = int8_array.from_buffer(buf)
   int8_array.length(arr) |> should.equal(7)
 }
 
@@ -282,67 +282,67 @@ pub fn int32_from_buffer_range_out_of_bounds_test() {
 
 pub fn int8_bytes_test() {
   let arr = int8_array.from_list([1, 2, 3, 4])
-  let assert Ok(bytes) = int8_array.bytes(arr)
+  let bytes = int8_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(4)
 }
 
 pub fn uint8_clamped_bytes_test() {
   let arr = uint8_clamped_array.from_list([10, 20, 30])
-  let assert Ok(bytes) = uint8_clamped_array.bytes(arr)
+  let bytes = uint8_clamped_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(3)
 }
 
 pub fn int16_bytes_test() {
   let arr = int16_array.from_list([1, 2, 3])
-  let assert Ok(bytes) = int16_array.bytes(arr)
+  let bytes = int16_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(6)
 }
 
 pub fn uint16_bytes_test() {
   let arr = uint16_array.from_list([1, 2, 3])
-  let assert Ok(bytes) = uint16_array.bytes(arr)
+  let bytes = uint16_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(6)
 }
 
 pub fn int32_bytes_test() {
   let arr = int32_array.from_list([1, 2, 3])
-  let assert Ok(bytes) = int32_array.bytes(arr)
+  let bytes = int32_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(12)
 }
 
 pub fn uint32_bytes_test() {
   let arr = uint32_array.from_list([1, 2, 3])
-  let assert Ok(bytes) = uint32_array.bytes(arr)
+  let bytes = uint32_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(12)
 }
 
 pub fn float16_bytes_test() {
   let arr = float16_array.from_list([0.5, 0.25])
-  let assert Ok(bytes) = float16_array.bytes(arr)
+  let bytes = float16_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(4)
 }
 
 pub fn float32_bytes_test() {
   let arr = float32_array.from_list([1.5, 2.5])
-  let assert Ok(bytes) = float32_array.bytes(arr)
+  let bytes = float32_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(8)
 }
 
 pub fn float64_bytes_test() {
   let arr = float64_array.from_list([1.1, 2.2])
-  let assert Ok(bytes) = float64_array.bytes(arr)
+  let bytes = float64_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(16)
 }
 
 pub fn bigint64_bytes_test() {
   let arr = bigint64_array.from_list([big_int.from_int(1), big_int.from_int(2)])
-  let assert Ok(bytes) = bigint64_array.bytes(arr)
+  let bytes = bigint64_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(16)
 }
 
 pub fn biguint64_bytes_test() {
   let arr =
     biguint64_array.from_list([big_int.from_int(1), big_int.from_int(2)])
-  let assert Ok(bytes) = biguint64_array.bytes(arr)
+  let bytes = biguint64_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(16)
 }

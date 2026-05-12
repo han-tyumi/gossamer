@@ -22,18 +22,17 @@ pub fn from_length(length: Int) -> Float64Array
 @external(javascript, "./float64_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Float)) -> Float64Array
 
-/// Creates a `Float64Array` view over `buffer`. Returns `Detached` if
-/// `buffer` is detached, or `MisalignedOffset` if `buffer.byteLength`
-/// is not a multiple of `8` (the element size).
+/// Creates a `Float64Array` view over `buffer`. Returns
+/// `MisalignedOffset` if `buffer.byteLength` is not a multiple of `8`
+/// (the element size).
 ///
 @external(javascript, "./float64_array.ffi.mjs", "from_buffer")
 pub fn from_buffer(buffer: ArrayBuffer) -> Result(Float64Array, BufferError)
 
 /// Creates a `Float64Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns `Detached`
-/// if `buffer` is detached, `MisalignedOffset` if `byte_offset` is
-/// not a multiple of `8`, or `OutOfRange` if the range falls outside
-/// `buffer`.
+/// `byte_offset` and spanning `length` elements. Returns
+/// `MisalignedOffset` if `byte_offset` is not a multiple of `8`, or
+/// `OutOfRange` if the range falls outside `buffer`.
 ///
 @external(javascript, "./float64_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
@@ -46,12 +45,10 @@ pub fn from_buffer_range(
 pub fn buffer(array: Float64Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
-/// the underlying buffer. Returns `Detached` if the underlying buffer
-/// has been detached, or `OutOfRange` if it has been resized below the
-/// array's range.
+/// the underlying buffer.
 ///
 @external(javascript, "./float64_array.ffi.mjs", "bytes")
-pub fn bytes(array: Float64Array) -> Result(Uint8Array, BufferError)
+pub fn bytes(array: Float64Array) -> Uint8Array
 
 @external(javascript, "./float64_array.ffi.mjs", "byte_length")
 pub fn byte_length(array: Float64Array) -> Int

@@ -39,16 +39,14 @@ pub fn from_list(list: List(Int)) -> Uint8Array
 @external(javascript, "./uint8_array.ffi.mjs", "from_list_mapped")
 pub fn from_list_mapped(list: List(a), with mapper: fn(a) -> Int) -> Uint8Array
 
-/// Creates a `Uint8Array` view over the entirety of `buffer`. Returns
-/// `Detached` if `buffer` is detached.
+/// Creates a `Uint8Array` view over the entirety of `buffer`.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Uint8Array, BufferError)
+pub fn from_buffer(buffer: ArrayBuffer) -> Uint8Array
 
 /// Creates a `Uint8Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns `Detached`
-/// if `buffer` is detached, or `OutOfRange` if the range falls outside
-/// `buffer`.
+/// `byte_offset` and spanning `length` elements. Returns `OutOfRange`
+/// if the range falls outside `buffer`.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(

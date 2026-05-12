@@ -25,16 +25,14 @@ pub fn from_length(length: Int) -> Int8Array
 @external(javascript, "./int8_array.ffi.mjs", "from_list")
 pub fn from_list(list: List(Int)) -> Int8Array
 
-/// Creates an `Int8Array` view over the entirety of `buffer`. Returns
-/// `Detached` if `buffer` is detached.
+/// Creates an `Int8Array` view over the entirety of `buffer`.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "from_buffer")
-pub fn from_buffer(buffer: ArrayBuffer) -> Result(Int8Array, BufferError)
+pub fn from_buffer(buffer: ArrayBuffer) -> Int8Array
 
 /// Creates an `Int8Array` view over a slice of `buffer` starting at
-/// `byte_offset` and spanning `length` elements. Returns `Detached`
-/// if `buffer` is detached, or `OutOfRange` if the range falls outside
-/// `buffer`.
+/// `byte_offset` and spanning `length` elements. Returns `OutOfRange`
+/// if the range falls outside `buffer`.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "from_buffer_range")
 pub fn from_buffer_range(
@@ -47,12 +45,10 @@ pub fn from_buffer_range(
 pub fn buffer(array: Int8Array) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `array`, sharing memory with
-/// the underlying buffer. Returns `Detached` if the underlying buffer
-/// has been detached, or `OutOfRange` if it has been resized below the
-/// array's range.
+/// the underlying buffer.
 ///
 @external(javascript, "./int8_array.ffi.mjs", "bytes")
-pub fn bytes(array: Int8Array) -> Result(Uint8Array, BufferError)
+pub fn bytes(array: Int8Array) -> Uint8Array
 
 @external(javascript, "./int8_array.ffi.mjs", "byte_length")
 pub fn byte_length(array: Int8Array) -> Int

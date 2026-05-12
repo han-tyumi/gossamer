@@ -1,6 +1,5 @@
 import type * as $int32Array from "$/gossamer/gossamer/buffer/int32_array.mjs";
 import {
-  checkArrayDetached,
   checkArrayRange,
   checkBufferAligned,
   checkBufferRangeAligned,
@@ -36,10 +35,7 @@ export const buffer: typeof $int32Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $int32Array.bytes = (array) =>
-  checkArrayDetached(
-    array,
-    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
-  );
+  new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
 
 export const byte_length: typeof $int32Array.byte_length = (array) =>
   array.byteLength;

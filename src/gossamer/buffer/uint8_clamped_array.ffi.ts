@@ -1,10 +1,7 @@
 import type * as $uint8ClampedArray from "$/gossamer/gossamer/buffer/uint8_clamped_array.mjs";
 import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import {
-  checkArrayDetached,
-  checkArrayRange,
-} from "~/utils/buffer_check.ffi.ts";
+import { checkArrayRange } from "~/utils/buffer_check.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { indexToResult, toResult } from "~/utils/result.ffi.ts";
 
@@ -17,17 +14,14 @@ export const from_length: typeof $uint8ClampedArray.from_length = (length) =>
 export const from_list: typeof $uint8ClampedArray.from_list = (list) =>
   new Uint8ClampedArray(toArray(list));
 
-export const from_buffer: typeof $uint8ClampedArray.from_buffer = (buffer) => {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
-  return Result$Ok(new Uint8ClampedArray(buffer));
-};
+export const from_buffer: typeof $uint8ClampedArray.from_buffer = (buffer) =>
+  new Uint8ClampedArray(buffer);
 
 export const from_buffer_range: typeof $uint8ClampedArray.from_buffer_range = (
   buffer,
   byteOffset,
   length,
 ) => {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
   if (byteOffset < 0 || byteOffset + length > buffer.byteLength) {
     return Result$Error(
       $buffer.BufferError$OutOfRange(byteOffset + length, buffer.byteLength),
@@ -40,10 +34,7 @@ export const buffer: typeof $uint8ClampedArray.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $uint8ClampedArray.bytes = (array) =>
-  checkArrayDetached(
-    array,
-    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
-  );
+  new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
 
 export const byte_length: typeof $uint8ClampedArray.byte_length = (array) =>
   array.byteLength;

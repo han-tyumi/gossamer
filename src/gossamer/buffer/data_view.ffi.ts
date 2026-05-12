@@ -1,19 +1,15 @@
 import type * as $dataView from "$/gossamer/gossamer/buffer/data_view.mjs";
 import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { checkViewDetached, checkViewRange } from "~/utils/buffer_check.ffi.ts";
+import { checkViewRange } from "~/utils/buffer_check.ffi.ts";
 
-export const new_: typeof $dataView.new$ = (buffer) => {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
-  return Result$Ok(new DataView(buffer));
-};
+export const new_: typeof $dataView.new$ = (buffer) => new DataView(buffer);
 
 export const new_range: typeof $dataView.new_range = (
   buffer,
   byteOffset,
   byteLength,
 ) => {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
   if (byteOffset < 0 || byteOffset + byteLength > buffer.byteLength) {
     return Result$Error(
       $buffer.BufferError$OutOfRange(
@@ -29,16 +25,13 @@ export const buffer: typeof $dataView.buffer = (view) =>
   view.buffer as ArrayBuffer;
 
 export const bytes: typeof $dataView.bytes = (view) =>
-  checkViewDetached(
-    view,
-    () => new Uint8Array(view.buffer, view.byteOffset, view.byteLength),
-  );
+  new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
 
 export const byte_length: typeof $dataView.byte_length = (view) =>
-  checkViewDetached(view, () => view.byteLength);
+  view.byteLength;
 
 export const byte_offset: typeof $dataView.byte_offset = (view) =>
-  checkViewDetached(view, () => view.byteOffset);
+  view.byteOffset;
 
 export const get_int8: typeof $dataView.get_int8 = (view, offset) =>
   checkViewRange(view, offset, 1, () => view.getInt8(offset));

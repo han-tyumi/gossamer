@@ -1,6 +1,5 @@
 import type * as $float16Array from "$/gossamer/gossamer/buffer/float16_array.mjs";
 import {
-  checkArrayDetached,
   checkArrayRange,
   checkBufferAligned,
   checkBufferRangeAligned,
@@ -36,10 +35,7 @@ export const buffer: typeof $float16Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $float16Array.bytes = (array) =>
-  checkArrayDetached(
-    array,
-    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
-  );
+  new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
 
 export const byte_length: typeof $float16Array.byte_length = (array) =>
   array.byteLength;

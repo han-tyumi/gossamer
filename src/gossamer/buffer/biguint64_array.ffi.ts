@@ -1,6 +1,5 @@
 import type * as $bigUint64Array from "$/gossamer/gossamer/buffer/biguint64_array.mjs";
 import {
-  checkArrayDetached,
   checkArrayRange,
   checkBufferAligned,
   checkBufferRangeAligned,
@@ -36,10 +35,7 @@ export const buffer: typeof $bigUint64Array.buffer = (array) =>
   array.buffer as ArrayBuffer;
 
 export const bytes: typeof $bigUint64Array.bytes = (array) =>
-  checkArrayDetached(
-    array,
-    () => new Uint8Array(array.buffer, array.byteOffset, array.byteLength),
-  );
+  new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
 
 export const byte_length: typeof $bigUint64Array.byte_length = (array) =>
   array.byteLength;

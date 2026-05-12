@@ -11,16 +11,14 @@ import gossamer/buffer/uint8_array.{type Uint8Array}
 @external(javascript, "./data_view.type.ts", "DataView$")
 pub type DataView
 
-/// Creates a `DataView` over the entirety of `buffer`. Returns
-/// `Detached` if `buffer` is detached.
+/// Creates a `DataView` over the entirety of `buffer`.
 ///
 @external(javascript, "./data_view.ffi.mjs", "new_")
-pub fn new(buffer: ArrayBuffer) -> Result(DataView, BufferError)
+pub fn new(buffer: ArrayBuffer) -> DataView
 
 /// Creates a `DataView` over a slice of `buffer` starting at
-/// `byte_offset` and spanning `byte_length` bytes. Returns `Detached`
-/// if `buffer` is detached, or `OutOfRange` if the requested range
-/// falls outside `buffer`.
+/// `byte_offset` and spanning `byte_length` bytes. Returns `OutOfRange`
+/// if the requested range falls outside `buffer`.
 ///
 @external(javascript, "./data_view.ffi.mjs", "new_range")
 pub fn new_range(
@@ -33,30 +31,23 @@ pub fn new_range(
 pub fn buffer(of view: DataView) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `view`, sharing memory with
-/// the underlying buffer. Returns `Detached` if the underlying buffer
-/// has been detached, or `OutOfRange` if it has been resized below the
-/// view's range.
+/// the underlying buffer.
 ///
 @external(javascript, "./data_view.ffi.mjs", "bytes")
-pub fn bytes(of view: DataView) -> Result(Uint8Array, BufferError)
+pub fn bytes(of view: DataView) -> Uint8Array
 
-/// The number of bytes covered by the view. Returns `Detached` if the
-/// underlying buffer has been detached, or `OutOfRange` if it has been
-/// resized below the view's range.
+/// The number of bytes covered by the view.
 ///
 @external(javascript, "./data_view.ffi.mjs", "byte_length")
-pub fn byte_length(of view: DataView) -> Result(Int, BufferError)
+pub fn byte_length(of view: DataView) -> Int
 
 /// The offset, in bytes, from the start of the underlying buffer.
-/// Returns `Detached` if the underlying buffer has been detached, or
-/// `OutOfRange` if it has been resized below the view's range.
 ///
 @external(javascript, "./data_view.ffi.mjs", "byte_offset")
-pub fn byte_offset(of view: DataView) -> Result(Int, BufferError)
+pub fn byte_offset(of view: DataView) -> Int
 
 /// Reads a signed 8-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_int8")
 pub fn get_int8(
@@ -65,8 +56,7 @@ pub fn get_int8(
 ) -> Result(Int, BufferError)
 
 /// Reads an unsigned 8-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_uint8")
 pub fn get_uint8(
@@ -75,8 +65,7 @@ pub fn get_uint8(
 ) -> Result(Int, BufferError)
 
 /// Reads a signed 16-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_int16")
 pub fn get_int16(
@@ -86,8 +75,7 @@ pub fn get_int16(
 ) -> Result(Int, BufferError)
 
 /// Reads an unsigned 16-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_uint16")
 pub fn get_uint16(
@@ -97,8 +85,7 @@ pub fn get_uint16(
 ) -> Result(Int, BufferError)
 
 /// Reads a signed 32-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_int32")
 pub fn get_int32(
@@ -108,8 +95,7 @@ pub fn get_int32(
 ) -> Result(Int, BufferError)
 
 /// Reads an unsigned 32-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_uint32")
 pub fn get_uint32(
@@ -119,8 +105,7 @@ pub fn get_uint32(
 ) -> Result(Int, BufferError)
 
 /// Reads a 16-bit IEEE 754 float at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_float16")
 pub fn get_float16(
@@ -130,8 +115,7 @@ pub fn get_float16(
 ) -> Result(Float, BufferError)
 
 /// Reads a 32-bit IEEE 754 float at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_float32")
 pub fn get_float32(
@@ -141,8 +125,7 @@ pub fn get_float32(
 ) -> Result(Float, BufferError)
 
 /// Reads a 64-bit IEEE 754 float at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_float64")
 pub fn get_float64(
@@ -152,8 +135,7 @@ pub fn get_float64(
 ) -> Result(Float, BufferError)
 
 /// Reads a signed 64-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_bigint64")
 pub fn get_bigint64(
@@ -163,8 +145,7 @@ pub fn get_bigint64(
 ) -> Result(BigInt, BufferError)
 
 /// Reads an unsigned 64-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "get_biguint64")
 pub fn get_biguint64(
@@ -174,8 +155,7 @@ pub fn get_biguint64(
 ) -> Result(BigInt, BufferError)
 
 /// Writes a signed 8-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_int8")
 pub fn set_int8(
@@ -185,8 +165,7 @@ pub fn set_int8(
 ) -> Result(Nil, BufferError)
 
 /// Writes an unsigned 8-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_uint8")
 pub fn set_uint8(
@@ -196,8 +175,7 @@ pub fn set_uint8(
 ) -> Result(Nil, BufferError)
 
 /// Writes a signed 16-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_int16")
 pub fn set_int16(
@@ -208,8 +186,7 @@ pub fn set_int16(
 ) -> Result(Nil, BufferError)
 
 /// Writes an unsigned 16-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_uint16")
 pub fn set_uint16(
@@ -220,8 +197,7 @@ pub fn set_uint16(
 ) -> Result(Nil, BufferError)
 
 /// Writes a signed 32-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_int32")
 pub fn set_int32(
@@ -232,8 +208,7 @@ pub fn set_int32(
 ) -> Result(Nil, BufferError)
 
 /// Writes an unsigned 32-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_uint32")
 pub fn set_uint32(
@@ -244,8 +219,7 @@ pub fn set_uint32(
 ) -> Result(Nil, BufferError)
 
 /// Writes a 16-bit IEEE 754 float at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_float16")
 pub fn set_float16(
@@ -256,8 +230,7 @@ pub fn set_float16(
 ) -> Result(Nil, BufferError)
 
 /// Writes a 32-bit IEEE 754 float at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_float32")
 pub fn set_float32(
@@ -268,8 +241,7 @@ pub fn set_float32(
 ) -> Result(Nil, BufferError)
 
 /// Writes a 64-bit IEEE 754 float at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_float64")
 pub fn set_float64(
@@ -280,8 +252,7 @@ pub fn set_float64(
 ) -> Result(Nil, BufferError)
 
 /// Writes a signed 64-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_bigint64")
 pub fn set_bigint64(
@@ -292,8 +263,7 @@ pub fn set_bigint64(
 ) -> Result(Nil, BufferError)
 
 /// Writes an unsigned 64-bit integer at `offset`. Returns `OutOfRange`
-/// if `offset` is out of bounds, or `Detached` if the underlying buffer
-/// has been detached.
+/// if `offset` is out of bounds.
 ///
 @external(javascript, "./data_view.ffi.mjs", "set_biguint64")
 pub fn set_biguint64(

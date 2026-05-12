@@ -1,6 +1,5 @@
 import type * as $arrayBuffer from "$/gossamer/gossamer/buffer/array_buffer.mjs";
-import * as $buffer from "$/gossamer/gossamer/buffer.mjs";
-import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { BitArray$BitArray } from "$/prelude.mjs";
 
 export const new_: typeof $arrayBuffer.new$ = (byteLength) => {
   return new ArrayBuffer(Math.max(0, byteLength));
@@ -40,6 +39,5 @@ export const slice_range: typeof $arrayBuffer.slice_range = (
 export const to_bit_array: typeof $arrayBuffer.to_bit_array = (
   arrayBuffer: ArrayBuffer,
 ) => {
-  if (arrayBuffer.detached) return Result$Error($buffer.BufferError$Detached());
-  return Result$Ok(BitArray$BitArray(new Uint8Array(arrayBuffer)));
+  return BitArray$BitArray(new Uint8Array(arrayBuffer));
 };

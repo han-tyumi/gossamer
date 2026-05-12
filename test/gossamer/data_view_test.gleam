@@ -7,14 +7,13 @@ import gossamer/buffer/uint8_array
 
 fn fresh_view() -> data_view.DataView {
   let buffer = array_buffer.new(16)
-  let assert Ok(view) = data_view.new(buffer)
-  view
+  data_view.new(buffer)
 }
 
 pub fn new_test() {
   let view = fresh_view()
-  data_view.byte_length(view) |> should.equal(Ok(16))
-  data_view.byte_offset(view) |> should.equal(Ok(0))
+  data_view.byte_length(view) |> should.equal(16)
+  data_view.byte_offset(view) |> should.equal(0)
 }
 
 pub fn buffer_test() {
@@ -27,8 +26,8 @@ pub fn new_range_test() {
   let buffer = array_buffer.new(16)
   let assert Ok(view) =
     data_view.new_range(buffer, byte_offset: 4, byte_length: 8)
-  data_view.byte_length(view) |> should.equal(Ok(8))
-  data_view.byte_offset(view) |> should.equal(Ok(4))
+  data_view.byte_length(view) |> should.equal(8)
+  data_view.byte_offset(view) |> should.equal(4)
 }
 
 pub fn new_range_out_of_bounds_test() {
@@ -172,7 +171,7 @@ pub fn bytes_test() {
   let buffer = array_buffer.new(16)
   let assert Ok(view) =
     data_view.new_range(buffer, byte_offset: 4, byte_length: 8)
-  let assert Ok(bytes) = data_view.bytes(view)
+  let bytes = data_view.bytes(view)
   uint8_array.length(bytes) |> should.equal(8)
   uint8_array.byte_offset(bytes) |> should.equal(4)
 

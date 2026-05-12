@@ -15,25 +15,12 @@ type AnyTypedArray =
   | BigInt64Array
   | BigUint64Array;
 
-export function checkArrayDetached<A extends AnyTypedArray, T>(
-  array: A,
-  op: () => T,
-) {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
-  return Result$Ok(op());
-}
-
 export function checkArrayRange<A extends AnyTypedArray, T>(
   array: A,
   index: number,
   length: number,
   op: () => T,
 ) {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
   if (index < 0 || index + length > array.length) {
     return Result$Error($buffer.BufferError$OutOfRange(index, array.length));
   }
@@ -45,7 +32,6 @@ export function checkBufferAligned<T>(
   alignment: number,
   op: () => T,
 ) {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
   if (buffer.byteLength % alignment !== 0) {
     return Result$Error(
       $buffer.BufferError$MisalignedOffset(buffer.byteLength, alignment),
@@ -61,7 +47,6 @@ export function checkBufferRangeAligned<T>(
   alignment: number,
   op: () => T,
 ) {
-  if (buffer.detached) return Result$Error($buffer.BufferError$Detached());
   if (byteOffset % alignment !== 0) {
     return Result$Error(
       $buffer.BufferError$MisalignedOffset(byteOffset, alignment),
@@ -79,22 +64,12 @@ export function checkBufferRangeAligned<T>(
   return Result$Ok(op());
 }
 
-export function checkViewDetached<T>(view: DataView, op: () => T) {
-  if ((view.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
-  return Result$Ok(op());
-}
-
 export function checkViewRange<T>(
   view: DataView,
   offset: number,
   size: number,
   op: () => T,
 ) {
-  if ((view.buffer as ArrayBuffer).detached) {
-    return Result$Error($buffer.BufferError$Detached());
-  }
   if (offset < 0 || offset + size > view.byteLength) {
     return Result$Error(
       $buffer.BufferError$OutOfRange(offset, view.byteLength),
