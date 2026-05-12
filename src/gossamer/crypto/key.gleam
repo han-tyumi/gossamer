@@ -1,12 +1,12 @@
-/// A cryptographic key used with `subtle_crypto` operations (encryption,
+/// A cryptographic key used with `subtle` operations (encryption,
 /// signing, key derivation, etc.).
 ///
 /// See [CryptoKey](https://developer.mozilla.org/en-US/docs/Web/API/CryptoKey) on MDN.
 ///
-@external(javascript, "./crypto_key.type.ts", "CryptoKey$")
+@external(javascript, "./key.type.ts", "CryptoKey$")
 pub type CryptoKey
 
-/// AES cipher modes supported by `subtle_crypto`.
+/// AES cipher modes supported by `subtle`.
 ///
 /// Unrecognized or non-standard algorithms use `AesOther(String)`.
 ///
@@ -18,7 +18,7 @@ pub type AesAlgorithm {
   AesOther(String)
 }
 
-/// RSA algorithms supported by `subtle_crypto`.
+/// RSA algorithms supported by `subtle`.
 ///
 /// Unrecognized or non-standard algorithms use `RsaOther(String)`.
 ///
@@ -29,7 +29,7 @@ pub type RsaAlgorithm {
   RsaOther(String)
 }
 
-/// Elliptic curve algorithms supported by `subtle_crypto`.
+/// Elliptic curve algorithms supported by `subtle`.
 ///
 /// Unrecognized or non-standard algorithms use `EcOther(String)`.
 ///
@@ -39,7 +39,7 @@ pub type EcAlgorithm {
   EcOther(String)
 }
 
-/// Cryptographic hash algorithms supported by `subtle_crypto`.
+/// Cryptographic hash algorithms supported by `subtle`.
 ///
 /// Unrecognized or non-standard algorithms use `HashOther(String)`.
 ///
@@ -74,7 +74,7 @@ pub type KeyUsage {
 }
 
 /// A named elliptic curve used by ECDH and ECDSA operations in
-/// `subtle_crypto`.
+/// `subtle`.
 ///
 /// Unrecognized or non-standard curves use `NamedCurveOther(String)`.
 ///
@@ -97,14 +97,14 @@ pub type KeyAlgorithm {
   )
 }
 
-@external(javascript, "./crypto_key.ffi.mjs", "algorithm")
+@external(javascript, "./key.ffi.mjs", "algorithm")
 pub fn algorithm(key: CryptoKey) -> KeyAlgorithm
 
-@external(javascript, "./crypto_key.ffi.mjs", "is_extractable")
+@external(javascript, "./key.ffi.mjs", "is_extractable")
 pub fn is_extractable(key: CryptoKey) -> Bool
 
-@external(javascript, "./crypto_key.ffi.mjs", "type_")
+@external(javascript, "./key.ffi.mjs", "type_")
 pub fn type_(key: CryptoKey) -> KeyType
 
-@external(javascript, "./crypto_key.ffi.mjs", "usages")
+@external(javascript, "./key.ffi.mjs", "usages")
 pub fn usages(key: CryptoKey) -> List(KeyUsage)

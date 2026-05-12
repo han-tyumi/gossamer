@@ -1,15 +1,15 @@
 import gleam/javascript/promise.{type Promise}
-import gossamer/crypto_key.{
+import gossamer/crypto/jwk.{type JsonWebKey}
+import gossamer/crypto/key.{
   type AesAlgorithm, type CryptoKey, type EcAlgorithm, type HashAlgorithm,
   type KeyUsage, type NamedCurve, type RsaAlgorithm,
 }
-import gossamer/json_web_key.{type JsonWebKey}
 
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
 }
 
-/// Errors raised by `subtle_crypto` operations.
+/// Errors raised by `subtle` operations.
 pub type CryptoError {
   /// The key's `usages` don't include the capability required for this
   /// operation (e.g., calling `encrypt` with a key whose usages don't
@@ -54,7 +54,7 @@ pub type CryptoError {
 }
 
 /// The serialization format of a key imported or exported via
-/// `subtle_crypto`.
+/// `subtle`.
 ///
 pub type KeyFormat {
   Pkcs8
@@ -163,7 +163,7 @@ pub type WrapAlgorithm {
 /// `Error(OperationFailed(_))` if the algorithm is unsupported by the
 /// runtime.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "digest")
+@external(javascript, "./subtle.ffi.mjs", "digest")
 pub fn digest(
   algorithm algorithm: HashAlgorithm,
   data data: BitArray,
@@ -174,7 +174,7 @@ pub fn digest(
 /// `Encrypt`, or `Error(OperationFailed(_))` if the algorithm doesn't
 /// match the key or the data is invalid for the algorithm.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "encrypt")
+@external(javascript, "./subtle.ffi.mjs", "encrypt")
 pub fn encrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
@@ -186,7 +186,7 @@ pub fn encrypt(
 /// `Decrypt`, or `Error(OperationFailed(_))` if the algorithm doesn't
 /// match the key or `data` isn't valid ciphertext.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "decrypt")
+@external(javascript, "./subtle.ffi.mjs", "decrypt")
 pub fn decrypt(
   algorithm algorithm: EncryptAlgorithm,
   key key: CryptoKey,
@@ -198,7 +198,7 @@ pub fn decrypt(
 /// `Sign`, or `Error(OperationFailed(_))` if the algorithm doesn't
 /// match the key.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "sign")
+@external(javascript, "./subtle.ffi.mjs", "sign")
 pub fn sign(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
@@ -211,7 +211,7 @@ pub fn sign(
 /// match the key. `Ok(False)` means the signature is well-formed but
 /// invalid for the data.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "verify")
+@external(javascript, "./subtle.ffi.mjs", "verify")
 pub fn verify(
   algorithm algorithm: SignAlgorithm,
   key key: CryptoKey,
@@ -223,7 +223,7 @@ pub fn verify(
 /// `Error(OperationFailed(_))` if the algorithm is unsupported or
 /// `usages` is empty.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "generate_key")
+@external(javascript, "./subtle.ffi.mjs", "generate_key")
 pub fn generate_key(
   algorithm algorithm: KeyGenAlgorithm,
   extractable extractable: Bool,
@@ -234,7 +234,7 @@ pub fn generate_key(
 /// `Error(OperationFailed(_))` if the algorithm is unsupported or
 /// `usages` is empty.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "generate_key_pair")
+@external(javascript, "./subtle.ffi.mjs", "generate_key_pair")
 pub fn generate_key_pair(
   algorithm algorithm: KeyPairGenAlgorithm,
   extractable extractable: Bool,
@@ -244,7 +244,7 @@ pub fn generate_key_pair(
 /// Imports a raw key from `data`. Returns `Error(OperationFailed(_))` if
 /// `data` doesn't match `format` or the algorithm is unsupported.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "import_key")
+@external(javascript, "./subtle.ffi.mjs", "import_key")
 pub fn import_key(
   format format: KeyFormat,
   key_data data: BitArray,
@@ -256,7 +256,7 @@ pub fn import_key(
 /// Imports a key from a JSON Web Key. Returns `Error(OperationFailed(_))`
 /// if `data` is malformed or the algorithm is unsupported.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "import_key_jwk")
+@external(javascript, "./subtle.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(
   key_data data: JsonWebKey,
   algorithm algorithm: ImportAlgorithm,
@@ -269,7 +269,7 @@ pub fn import_key_jwk(
 /// `Error(OperationFailed(_))` if `format` isn't supported for the
 /// key's algorithm.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "export_key")
+@external(javascript, "./subtle.ffi.mjs", "export_key")
 pub fn export_key(
   format format: KeyFormat,
   key key: CryptoKey,
@@ -278,7 +278,7 @@ pub fn export_key(
 /// Exports `key` as a JSON Web Key. Returns `Error(KeyNotExtractable)`
 /// if `key.extractable` is `False`.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "export_key_jwk")
+@external(javascript, "./subtle.ffi.mjs", "export_key_jwk")
 pub fn export_key_jwk(
   key: CryptoKey,
 ) -> Promise(Result(JsonWebKey, CryptoError))
@@ -288,7 +288,7 @@ pub fn export_key_jwk(
 /// include `DeriveBits`, or `Error(OperationFailed(_))` if the
 /// algorithm is unsupported.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "derive_bits")
+@external(javascript, "./subtle.ffi.mjs", "derive_bits")
 pub fn derive_bits(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
@@ -300,7 +300,7 @@ pub fn derive_bits(
 /// include `DeriveKey`, or `Error(OperationFailed(_))` if the
 /// algorithm is unsupported.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "derive_key")
+@external(javascript, "./subtle.ffi.mjs", "derive_key")
 pub fn derive_key(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
@@ -315,7 +315,7 @@ pub fn derive_key(
 /// include `WrapKey`, or `Error(OperationFailed(_))` if the wrapping
 /// algorithm is unsupported.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key")
+@external(javascript, "./subtle.ffi.mjs", "wrap_key")
 pub fn wrap_key(
   format format: KeyFormat,
   key key: CryptoKey,
@@ -325,7 +325,7 @@ pub fn wrap_key(
 
 /// Like `wrap_key`, but exports `key` as a JSON Web Key before wrapping.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "wrap_key_jwk")
+@external(javascript, "./subtle.ffi.mjs", "wrap_key_jwk")
 pub fn wrap_key_jwk(
   key key: CryptoKey,
   wrapping_key wrapping_key: CryptoKey,
@@ -338,7 +338,7 @@ pub fn wrap_key_jwk(
 /// unwrapping fails or the imported key is invalid for the specified
 /// algorithm.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key")
+@external(javascript, "./subtle.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
   format format: KeyFormat,
   wrapped_key wrapped_key: BitArray,
@@ -351,7 +351,7 @@ pub fn unwrap_key(
 
 /// Like `unwrap_key`, but imports the decrypted key as a JSON Web Key.
 ///
-@external(javascript, "./subtle_crypto.ffi.mjs", "unwrap_key_jwk")
+@external(javascript, "./subtle.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
   wrapped_key wrapped_key: BitArray,
   unwrapping_key unwrapping_key: CryptoKey,

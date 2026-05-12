@@ -1,10 +1,10 @@
-import * as $jsonWebKey from "$/gossamer/gossamer/json_web_key.mjs";
+import * as $jwk from "$/gossamer/gossamer/crypto/jwk.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
-import { fromKeyUsage, toKeyUsageArray } from "~/gossamer/crypto_key.ffi.ts";
+import { fromKeyUsage, toKeyUsageArray } from "~/gossamer/crypto/key.ffi.ts";
 import { fromArrayMapped } from "~/utils/list.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
 
-type JWK = $jsonWebKey.JsonWebKey$;
+type JWK = $jwk.JsonWebKey$;
 
 function unwrap<T>(option: $option.Option$<T>): T | undefined {
   return $option.Option$isSome(option)
@@ -15,64 +15,64 @@ function unwrap<T>(option: $option.Option$<T>): T | undefined {
 export function toJsonWebKey(jwk: JWK): JsonWebKey {
   const result: JsonWebKey = {};
 
-  const kty = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$kty(jwk));
+  const kty = unwrap($jwk.JsonWebKey$JsonWebKey$kty(jwk));
   if (kty !== undefined) result.kty = kty;
 
-  const use_ = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$use_(jwk));
+  const use_ = unwrap($jwk.JsonWebKey$JsonWebKey$use_(jwk));
   if (use_ !== undefined) result.use = use_;
 
-  const keyOps = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$key_ops(jwk));
+  const keyOps = unwrap($jwk.JsonWebKey$JsonWebKey$key_ops(jwk));
   if (keyOps !== undefined) {
     result.key_ops = toKeyUsageArray(keyOps) as string[];
   }
 
-  const alg = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$alg(jwk));
+  const alg = unwrap($jwk.JsonWebKey$JsonWebKey$alg(jwk));
   if (alg !== undefined) result.alg = alg;
 
-  const ext = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$ext(jwk));
+  const ext = unwrap($jwk.JsonWebKey$JsonWebKey$ext(jwk));
   if (ext !== undefined) result.ext = ext;
 
-  const crv = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$crv(jwk));
+  const crv = unwrap($jwk.JsonWebKey$JsonWebKey$crv(jwk));
   if (crv !== undefined) result.crv = crv;
 
-  const x = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$x(jwk));
+  const x = unwrap($jwk.JsonWebKey$JsonWebKey$x(jwk));
   if (x !== undefined) result.x = x;
 
-  const y = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$y(jwk));
+  const y = unwrap($jwk.JsonWebKey$JsonWebKey$y(jwk));
   if (y !== undefined) result.y = y;
 
-  const d = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$d(jwk));
+  const d = unwrap($jwk.JsonWebKey$JsonWebKey$d(jwk));
   if (d !== undefined) result.d = d;
 
-  const n = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$n(jwk));
+  const n = unwrap($jwk.JsonWebKey$JsonWebKey$n(jwk));
   if (n !== undefined) result.n = n;
 
-  const e = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$e(jwk));
+  const e = unwrap($jwk.JsonWebKey$JsonWebKey$e(jwk));
   if (e !== undefined) result.e = e;
 
-  const p = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$p(jwk));
+  const p = unwrap($jwk.JsonWebKey$JsonWebKey$p(jwk));
   if (p !== undefined) result.p = p;
 
-  const q = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$q(jwk));
+  const q = unwrap($jwk.JsonWebKey$JsonWebKey$q(jwk));
   if (q !== undefined) result.q = q;
 
-  const dp = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$dp(jwk));
+  const dp = unwrap($jwk.JsonWebKey$JsonWebKey$dp(jwk));
   if (dp !== undefined) result.dp = dp;
 
-  const dq = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$dq(jwk));
+  const dq = unwrap($jwk.JsonWebKey$JsonWebKey$dq(jwk));
   if (dq !== undefined) result.dq = dq;
 
-  const qi = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$qi(jwk));
+  const qi = unwrap($jwk.JsonWebKey$JsonWebKey$qi(jwk));
   if (qi !== undefined) result.qi = qi;
 
-  const k = unwrap($jsonWebKey.JsonWebKey$JsonWebKey$k(jwk));
+  const k = unwrap($jwk.JsonWebKey$JsonWebKey$k(jwk));
   if (k !== undefined) result.k = k;
 
   return result;
 }
 
 export function fromJsonWebKey(jwk: JsonWebKey): JWK {
-  return $jsonWebKey.JsonWebKey$JsonWebKey(
+  return $jwk.JsonWebKey$JsonWebKey(
     toOption(jwk.kty),
     toOption(jwk.use),
     jwk.key_ops !== undefined
