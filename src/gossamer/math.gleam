@@ -57,8 +57,8 @@ pub fn log2(value: Float) -> Result(Float, Nil)
 @external(javascript, "./math.ffi.mjs", "log10")
 pub fn log10(value: Float) -> Result(Float, Nil)
 
-/// Returns the natural logarithm of 1 + x, precise for small values of x.
-/// Returns an error if x is less than or equal to `-1`.
+/// Returns the natural logarithm of `1 + value`, precise for small
+/// values. Returns an error if `value` is less than or equal to `-1`.
 ///
 @external(javascript, "./math.ffi.mjs", "log1p")
 pub fn log1p(value: Float) -> Result(Float, Nil)
