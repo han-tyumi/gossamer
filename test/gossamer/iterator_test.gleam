@@ -102,7 +102,7 @@ pub fn return_callback_throws_test() {
     iterator.new(fn(_) { iteration.Yield(1) })
     |> iterator.with_return(fn(_value) { panic as "handler boom" })
 
-  let assert Error(iteration.CallbackThrew(_)) = iterator.return(iter)
+  let assert Error(_) = iterator.return(iter)
 }
 
 pub fn for_test() {

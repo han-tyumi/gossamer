@@ -1,5 +1,4 @@
 import type { BitArray } from "$/prelude.mjs";
-import * as $compression from "$/gossamer/gossamer/compression.mjs";
 import type * as $decompressionStream from "$/gossamer/gossamer/compression/decompression_stream.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toCompressionFormat } from "~/gossamer/compression/compression_stream.ffi.ts";
@@ -18,7 +17,7 @@ export const new_: typeof $decompressionStream.new$ = (format) => {
   try {
     return Result$Ok(new DecompressionStream(toCompressionFormat(format)));
   } catch {
-    return Result$Error($compression.CompressionError$UnsupportedFormat());
+    return Result$Error(undefined);
   }
 };
 

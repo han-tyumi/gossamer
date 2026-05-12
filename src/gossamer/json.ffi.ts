@@ -33,7 +33,7 @@ export const parse: typeof $json.parse = (text) => {
   try {
     return Result$Ok(JSON.parse(text, gleamJsonReviver));
   } catch {
-    return Result$Error($json.JsonError$InvalidJson());
+    return Result$Error(undefined);
   }
 };
 

@@ -49,13 +49,6 @@ pub type Match {
   )
 }
 
-/// Errors raised by `UrlPattern` construction.
-pub type UrlPatternError {
-  /// At least one component pattern (or the base URL) is malformed and
-  /// can't be compiled.
-  InvalidPattern
-}
-
 /// Creates an empty `Builder`. Every component is unset, meaning a
 /// pattern built from this matches any URL.
 ///
@@ -128,9 +121,9 @@ pub fn with_base_url(builder: Builder, value: String) -> Builder {
 }
 
 /// Constructs a `UrlPattern` from the configured `Builder`. Returns
-/// `InvalidPattern` if any component pattern is malformed.
+/// an error if any component pattern is malformed.
 ///
-pub fn build(builder: Builder) -> Result(UrlPattern, UrlPatternError) {
+pub fn build(builder: Builder) -> Result(UrlPattern, Nil) {
   do_build(
     builder.protocol,
     builder.username,
@@ -156,23 +149,23 @@ pub fn do_build(
   search: Option(String),
   hash: Option(String),
   base_url: Option(String),
-) -> Result(UrlPattern, UrlPatternError)
+) -> Result(UrlPattern, Nil)
 
-/// Creates a `UrlPattern` from a single pattern string. Returns
-/// `InvalidPattern` if the pattern is malformed.
+/// Creates a `UrlPattern` from a single pattern string. Returns an
+/// error if the pattern is malformed.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string")
-pub fn from_string(pattern: String) -> Result(UrlPattern, UrlPatternError)
+pub fn from_string(pattern: String) -> Result(UrlPattern, Nil)
 
 /// Creates a `UrlPattern` from a pattern string resolved against a base
-/// URL. Returns `InvalidPattern` if the pattern is malformed or the
-/// base URL is invalid.
+/// URL. Returns an error if the pattern is malformed or the base URL
+/// is invalid.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string_with_base")
 pub fn from_string_with_base(
   pattern: String,
   relative_to base_url: String,
-) -> Result(UrlPattern, UrlPatternError)
+) -> Result(UrlPattern, Nil)
 
 /// Returns `True` if the pattern matches `input`.
 ///

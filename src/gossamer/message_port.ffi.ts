@@ -1,4 +1,4 @@
-import * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
+import type * as $messagePort from "$/gossamer/gossamer/message_port.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 
 export const post_message: typeof $messagePort.post_message = (port, data) => {
@@ -6,7 +6,7 @@ export const post_message: typeof $messagePort.post_message = (port, data) => {
     port.postMessage(data);
     return Result$Ok(undefined);
   } catch {
-    return Result$Error($messagePort.MessagePortError$NotCloneable());
+    return Result$Error(undefined);
   }
 };
 

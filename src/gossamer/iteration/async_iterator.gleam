@@ -1,8 +1,7 @@
+import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option}
-import gossamer/iteration.{
-  type IteratorError, type IteratorHandlerOutcome, type IteratorResult,
-}
+import gossamer/iteration.{type IteratorHandlerOutcome, type IteratorResult}
 
 /// A pull-based iterator that yields values asynchronously. Each call to
 /// `next` returns a promise. `a` is the yielded value type, `return` is
@@ -27,13 +26,14 @@ pub fn new(
 @external(javascript, "./async_iterator.ffi.mjs", "from_list")
 pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 
-/// Collects all values from an async iterator into a list. Consumes the
-/// iterator. Returns `Error(CallbackThrew(_))` if any `next` call rejects.
+/// Collects all values from an async iterator into a list. Consumes
+/// the iterator. Returns the rejection reason if any `next` call
+/// rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "to_list")
 pub fn to_list(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(List(a), IteratorError))
+) -> Promise(Result(List(a), Dynamic))
 
 /// Adds a `return` handler called when the consumer ends iteration early.
 ///
@@ -52,33 +52,33 @@ pub fn with_throw(
 ) -> AsyncIterator(a, return, next)
 
 /// Advances the iterator and returns a promise for the next result.
-/// Returns `Error(CallbackThrew(_))` if the underlying `next` callback
-/// throws or returns a rejecting promise.
+/// Returns the thrown value or rejection reason if the underlying
+/// `next` callback throws or returns a rejecting promise.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "next")
 pub fn next(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(IteratorResult(a, return), IteratorError))
+) -> Promise(Result(IteratorResult(a, return), Dynamic))
 
-/// Advances the iterator, passing `value` to its internal logic. Returns
-/// `Error(CallbackThrew(_))` if the underlying callback throws or returns
-/// a rejecting promise.
+/// Advances the iterator, passing `value` to its internal logic.
+/// Returns the thrown value or rejection reason if the underlying
+/// callback throws or returns a rejecting promise.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "next_with")
 pub fn next_with(
   iterator: AsyncIterator(a, return, next),
   value: next,
-) -> Promise(Result(IteratorResult(a, return), IteratorError))
+) -> Promise(Result(IteratorResult(a, return), Dynamic))
 
 /// Ends iteration early by invoking the iterator's optional `return`
 /// handler. `Ok(NoHandler)` if the iterator doesn't define one;
-/// `Ok(Handled)` carries the result the handler produced. Returns
-/// `Error(CallbackThrew(_))` if the handler rejects.
+/// `Ok(Handled)` carries the result the handler produced. Returns the
+/// rejection reason if the handler rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(IteratorHandlerOutcome(a, return), IteratorError))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), Dynamic))
 
 /// Like `return`, but passes `value` to the iterator's `return` handler.
 /// `value` is discarded if the iterator doesn't define one.
@@ -87,25 +87,26 @@ pub fn return(
 pub fn return_with(
   iterator: AsyncIterator(a, return, next),
   value: return,
-) -> Promise(Result(IteratorHandlerOutcome(a, return), IteratorError))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), Dynamic))
 
 /// Signals an error to the iterator by invoking its optional `throw`
-/// handler. `Ok(NoHandler)` if the iterator doesn't define one — `reason`
-/// is discarded; the caller must decide whether to propagate. `Ok(Handled)`
-/// carries the result the handler produced. Returns
-/// `Error(CallbackThrew(_))` if the handler itself rejects.
+/// handler. `Ok(NoHandler)` if the iterator doesn't define one —
+/// `reason` is discarded; the caller must decide whether to propagate.
+/// `Ok(Handled)` carries the result the handler produced. Returns the
+/// rejection reason if the handler itself rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: AsyncIterator(a, return, next),
   reason reason: e,
-) -> Promise(Result(IteratorHandlerOutcome(a, return), IteratorError))
+) -> Promise(Result(IteratorHandlerOutcome(a, return), Dynamic))
 
 /// Consumes the iterator, calling `fun` on each yielded value. Returns
-/// `Error(CallbackThrew(_))` if the iterator or `fun` throws or rejects.
+/// the thrown value or rejection reason if the iterator or `fun` throws
+/// or rejects.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "for_await")
 pub fn for_await(
   in iterator: AsyncIterator(a, return, next),
   run fun: fn(a) -> any,
-) -> Promise(Result(Nil, IteratorError))
+) -> Promise(Result(Nil, Dynamic))

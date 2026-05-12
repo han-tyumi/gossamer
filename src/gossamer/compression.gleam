@@ -1,6 +1,6 @@
 //// Parent module for the compression family — `CompressionStream`
-//// and `DecompressionStream`. Hosts `CompressionFormat` (the shared
-//// format enum) and `CompressionError` (the shared error type).
+//// and `DecompressionStream`. Hosts `CompressionFormat`, the shared
+//// format enum.
 
 /// Compression algorithms supported by `CompressionStream` and
 /// `DecompressionStream`.
@@ -13,11 +13,4 @@ pub type CompressionFormat {
   Gzip
   Brotli
   Other(String)
-}
-
-/// Errors raised by `CompressionStream` and `DecompressionStream`
-/// operations.
-pub type CompressionError {
-  /// The compression format is not supported by the current runtime.
-  UnsupportedFormat
 }

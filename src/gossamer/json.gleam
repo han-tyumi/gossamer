@@ -15,19 +15,13 @@ pub type Json {
   Object(Dict(String, Json))
 }
 
-/// Errors raised by JSON parsing.
-pub type JsonError {
-  /// The input string is not valid JSON per the
-  /// [ECMA-404](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/)
-  /// grammar.
-  InvalidJson
-}
-
-/// Parses a JSON string into a `Json` value. Returns `InvalidJson` if
-/// the string is not valid JSON.
+/// Parses a JSON string into a `Json` value. Returns an error if the
+/// string is not valid JSON per the
+/// [ECMA-404](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/)
+/// grammar.
 ///
 @external(javascript, "./json.ffi.mjs", "parse")
-pub fn parse(text: String) -> Result(Json, JsonError)
+pub fn parse(text: String) -> Result(Json, Nil)
 
 /// Serializes a `Json` value into a JSON string.
 ///

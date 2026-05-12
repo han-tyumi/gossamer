@@ -33,22 +33,18 @@ export function yielderAsJsIterator<T>(
   return iter;
 }
 
-function toIteratorError(value: unknown): $iteration.IteratorError$ {
-  return $iteration.IteratorError$CallbackThrew(value);
-}
-
 export function toCallbackResult<T>(thunk: () => T) {
   try {
     return Result$Ok(thunk());
   } catch (error) {
-    return Result$Error(toIteratorError(error));
+    return Result$Error(error);
   }
 }
 
 export function toCallbackResultPromise<T>(promise: Promise<T>) {
   return promise.then(
     (value) => Result$Ok(value),
-    (error) => Result$Error(toIteratorError(error)),
+    (error) => Result$Error(error),
   );
 }
 

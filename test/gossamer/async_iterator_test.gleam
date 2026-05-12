@@ -114,7 +114,7 @@ pub fn next_callback_throws_test() {
   let iter = async_iterator.new(fn(_) { panic as "next boom" })
 
   use result <- promise.await(async_iterator.next(iter))
-  let assert Error(iteration.CallbackThrew(_)) = result
+  let assert Error(_) = result
   promise.resolve(Nil)
 }
 

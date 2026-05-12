@@ -31,7 +31,7 @@ export const new_: typeof $compressionStream.new$ = (format) => {
   try {
     return Result$Ok(new CompressionStream(toCompressionFormat(format)));
   } catch {
-    return Result$Error($compression.CompressionError$UnsupportedFormat());
+    return Result$Error(undefined);
   }
 };
 

@@ -15,28 +15,18 @@ pub type NormalizationForm {
   Nfkd
 }
 
-/// Errors raised by code-point construction.
-pub type CodePointError {
-  /// The supplied integer is not a valid Unicode code point. Valid
-  /// values are `0`–`1_114_111` (`0x10FFFF`). The payload carries the
-  /// offending code; for `from_code_points`, it's the first invalid
-  /// code in the input list.
-  InvalidCodePoint(code: Int)
-}
-
-/// Constructs a string from a Unicode code point. Returns
-/// `InvalidCodePoint` if `code` is outside the valid range
-/// (`0`–`1_114_111`).
+/// Constructs a string from a Unicode code point. Returns an error
+/// carrying `code` if it's outside the valid range (`0`–`1_114_111`).
 ///
 @external(javascript, "./string_extra.ffi.mjs", "from_code_point")
-pub fn from_code_point(code: Int) -> Result(String, CodePointError)
+pub fn from_code_point(code: Int) -> Result(String, Int)
 
-/// Constructs a string from a list of Unicode code points. Returns
-/// `InvalidCodePoint` carrying the first invalid code if any element
-/// of `codes` is outside the valid range (`0`–`1_114_111`).
+/// Constructs a string from a list of Unicode code points. Returns an
+/// error carrying the first invalid code if any element of `codes` is
+/// outside the valid range (`0`–`1_114_111`).
 ///
 @external(javascript, "./string_extra.ffi.mjs", "from_code_points")
-pub fn from_code_points(codes: List(Int)) -> Result(String, CodePointError)
+pub fn from_code_points(codes: List(Int)) -> Result(String, Int)
 
 /// Returns the NFC-normalized form of `string`. NFC is the canonical
 /// choice for equivalence comparison.

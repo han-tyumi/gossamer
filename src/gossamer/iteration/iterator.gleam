@@ -8,11 +8,10 @@
 //// `to_yielder` and operate on the Yielder (use `yielder.to_list` when
 //// you need an eager `List`).
 
+import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}
 import gleam/yielder.{type Yielder}
-import gossamer/iteration.{
-  type IteratorError, type IteratorHandlerOutcome, type IteratorResult,
-}
+import gossamer/iteration.{type IteratorHandlerOutcome, type IteratorResult}
 
 /// A pull-based iterator that yields values one at a time. `a` is the
 /// yielded value type, `return` is the final return value, `next` is the
@@ -78,12 +77,12 @@ pub fn next_with(
 /// Ends iteration early by invoking the iterator's optional `return`
 /// handler. `Ok(NoHandler)` if the iterator doesn't define one;
 /// `Ok(Handled)` carries the result the handler produced. Returns
-/// `Error(CallbackThrew(_))` if the handler throws.
+/// an error carrying the thrown value if the handler throws.
 ///
 @external(javascript, "./iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: Iterator(a, return, next),
-) -> Result(IteratorHandlerOutcome(a, return), IteratorError)
+) -> Result(IteratorHandlerOutcome(a, return), Dynamic)
 
 /// Like `return`, but passes `value` to the iterator's `return` handler.
 /// `value` is discarded if the iterator doesn't define one.
@@ -92,19 +91,19 @@ pub fn return(
 pub fn return_with(
   iterator: Iterator(a, return, next),
   value: return,
-) -> Result(IteratorHandlerOutcome(a, return), IteratorError)
+) -> Result(IteratorHandlerOutcome(a, return), Dynamic)
 
 /// Signals an error to the iterator by invoking its optional `throw`
 /// handler. `Ok(NoHandler)` if the iterator doesn't define one — `reason`
 /// is discarded; the caller must decide whether to propagate. `Ok(Handled)`
-/// carries the result the handler produced. Returns
-/// `Error(CallbackThrew(_))` if the handler itself throws.
+/// carries the result the handler produced. Returns an error carrying the
+/// thrown value if the handler itself throws.
 ///
 @external(javascript, "./iterator.ffi.mjs", "throw_")
 pub fn throw(
   iterator: Iterator(a, return, next),
   reason reason: e,
-) -> Result(IteratorHandlerOutcome(a, return), IteratorError)
+) -> Result(IteratorHandlerOutcome(a, return), Dynamic)
 
 @external(javascript, "./iterator.ffi.mjs", "for_")
 pub fn for(in iterator: Iterator(a, return, next), run fun: fn(a) -> any) -> Nil

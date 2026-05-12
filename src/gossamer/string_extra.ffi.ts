@@ -17,7 +17,7 @@ function isValidCodePoint(code: number) {
 }
 
 function invalidCodePoint(code: number) {
-  return Result$Error($stringExtra.CodePointError$InvalidCodePoint(code));
+  return Result$Error(code);
 }
 
 export const from_code_point: typeof $stringExtra.from_code_point = (code) => {

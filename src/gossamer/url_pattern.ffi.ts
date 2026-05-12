@@ -6,7 +6,7 @@ import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 
 function invalidPattern() {
-  return Result$Error($urlPattern.UrlPatternError$InvalidPattern());
+  return Result$Error(undefined);
 }
 
 function toComponentResult(
