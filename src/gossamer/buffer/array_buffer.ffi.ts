@@ -15,27 +15,6 @@ export const is_view: typeof $arrayBuffer.is_view = (value) => {
   return ArrayBuffer.isView(value);
 };
 
-export const slice: typeof $arrayBuffer.slice = (
-  arrayBuffer: ArrayBuffer,
-) => {
-  return arrayBuffer.slice(0);
-};
-
-export const slice_from: typeof $arrayBuffer.slice_from = (
-  arrayBuffer: ArrayBuffer,
-  start,
-) => {
-  return arrayBuffer.slice(start);
-};
-
-export const slice_range: typeof $arrayBuffer.slice_range = (
-  arrayBuffer: ArrayBuffer,
-  start,
-  end,
-) => {
-  return arrayBuffer.slice(start, end);
-};
-
 export const to_bit_array: typeof $arrayBuffer.to_bit_array = (
   arrayBuffer: ArrayBuffer,
 ) => {

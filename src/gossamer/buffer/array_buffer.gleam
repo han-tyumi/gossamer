@@ -17,19 +17,6 @@ pub fn byte_length(array_buffer: ArrayBuffer) -> Int
 @external(javascript, "./array_buffer.ffi.mjs", "is_view")
 pub fn is_view(value: a) -> Bool
 
-@external(javascript, "./array_buffer.ffi.mjs", "slice")
-pub fn slice(array_buffer: ArrayBuffer) -> ArrayBuffer
-
-@external(javascript, "./array_buffer.ffi.mjs", "slice_from")
-pub fn slice_from(array_buffer: ArrayBuffer, start: Int) -> ArrayBuffer
-
-@external(javascript, "./array_buffer.ffi.mjs", "slice_range")
-pub fn slice_range(
-  array_buffer: ArrayBuffer,
-  from start: Int,
-  to end: Int,
-) -> ArrayBuffer
-
 /// Wraps the buffer's bytes as a `BitArray`.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "to_bit_array")
