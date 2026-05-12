@@ -1,5 +1,7 @@
-//// Numeric constants, type checks, parsing, and formatting that mirror
-//// JavaScript's `Number` object.
+//// JavaScript `Number` constants and formatting not covered by
+//// `gleam/int` or `gleam/float`. For parsing and base conversion, use
+//// `gleam/int.parse`, `gleam/int.base_parse`, `gleam/int.to_base_string`,
+//// and `gleam/float.parse`.
 
 /// Errors raised by numeric formatting bindings.
 pub type NumberError {
@@ -32,28 +34,6 @@ pub fn max_value() -> Float
 @external(javascript, "./number.ffi.mjs", "min_value")
 pub fn min_value() -> Float
 
-/// Returns whether the value is NaN (not a number).
-///
-@external(javascript, "./number.ffi.mjs", "is_nan")
-pub fn is_nan(value: Float) -> Bool
-
-/// Returns whether the value is a finite number (not NaN or Infinity).
-///
-@external(javascript, "./number.ffi.mjs", "is_finite")
-pub fn is_finite(value: Float) -> Bool
-
-/// Returns whether the value is an integer (has no fractional part).
-///
-@external(javascript, "./number.ffi.mjs", "is_integer")
-pub fn is_integer(value: Float) -> Bool
-
-/// Returns whether the value is a safe integer — an integer that can be
-/// exactly represented as an IEEE 754 double and has no other integer that
-/// rounds to the same representation.
-///
-@external(javascript, "./number.ffi.mjs", "is_safe_integer")
-pub fn is_safe_integer(value: Float) -> Bool
-
 /// Formats a number using fixed-point notation with the specified
 /// number of decimal places. Returns `OutOfRange` if `digits` is
 /// outside `0`–`100`.
@@ -80,25 +60,11 @@ pub fn to_exponential(
   digits digits: Int,
 ) -> Result(String, NumberError)
 
-/// Converts an integer to a string in the specified base (`2`–`36`).
-/// Returns `OutOfRange` if `base` is outside that range.
-///
-@external(javascript, "./number.ffi.mjs", "to_base_string")
-pub fn to_base_string(value: Int, base: Int) -> Result(String, NumberError)
-
-/// Returns a locale-sensitive string representation of the number.
+/// Returns a locale-sensitive string representation of the number,
+/// applying the runtime's locale for thousands separators, decimal
+/// marks, and digit shaping (e.g., `1234.5` becomes `"1,234.5"` in
+/// `en-US` and `"1 234,5"` in `fr-FR`). For plain formatting, use
+/// `gleam/float.to_string` or `gleam/int.to_string`.
 ///
 @external(javascript, "./number.ffi.mjs", "to_locale_string")
 pub fn to_locale_string(value: Float) -> String
-
-/// Parses a string as an integer in the specified radix (base `2`–`36`). Returns
-/// an error if the string cannot be parsed.
-///
-@external(javascript, "./number.ffi.mjs", "parse_int")
-pub fn parse_int(string: String, radix radix: Int) -> Result(Int, Nil)
-
-/// Parses a string as a floating-point number. Returns an error if the
-/// string cannot be parsed.
-///
-@external(javascript, "./number.ffi.mjs", "parse_float")
-pub fn parse_float(string: String) -> Result(Float, Nil)

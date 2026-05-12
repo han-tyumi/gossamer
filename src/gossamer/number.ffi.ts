@@ -5,17 +5,6 @@ export const epsilon: typeof $number.epsilon = () => Number.EPSILON;
 export const max_value: typeof $number.max_value = () => Number.MAX_VALUE;
 export const min_value: typeof $number.min_value = () => Number.MIN_VALUE;
 
-export const is_nan: typeof $number.is_nan = (value) => Number.isNaN(value);
-
-export const is_finite: typeof $number.is_finite = (value) =>
-  Number.isFinite(value);
-
-export const is_integer: typeof $number.is_integer = (value) =>
-  Number.isInteger(value);
-
-export const is_safe_integer: typeof $number.is_safe_integer = (value) =>
-  Number.isSafeInteger(value);
-
 function checkRange(value: number, low: number, high: number) {
   if (value < low || value > high) {
     return Result$Error($number.NumberError$OutOfRange(value));
@@ -38,19 +27,5 @@ export const to_exponential: typeof $number.to_exponential = (
   return checkRange(digits, 0, 100) ?? Result$Ok(value.toExponential(digits));
 };
 
-export const to_base_string: typeof $number.to_base_string = (value, base) => {
-  return checkRange(base, 2, 36) ?? Result$Ok(value.toString(base));
-};
-
 export const to_locale_string: typeof $number.to_locale_string = (value) =>
   value.toLocaleString();
-
-export const parse_int: typeof $number.parse_int = (string, radix) => {
-  const result = globalThis.parseInt(string, radix);
-  return Number.isNaN(result) ? Result$Error(undefined) : Result$Ok(result);
-};
-
-export const parse_float: typeof $number.parse_float = (string) => {
-  const result = globalThis.parseFloat(string);
-  return Number.isNaN(result) ? Result$Error(undefined) : Result$Ok(result);
-};

@@ -18,27 +18,6 @@ pub fn min_value_test() {
   should.be_true(min <. number.epsilon())
 }
 
-pub fn is_nan_test() {
-  number.is_nan(0.0) |> should.be_false()
-  number.is_nan(1.0) |> should.be_false()
-}
-
-pub fn is_finite_test() {
-  number.is_finite(1.0) |> should.be_true()
-  number.is_finite(0.0) |> should.be_true()
-}
-
-pub fn is_integer_test() {
-  number.is_integer(1.0) |> should.be_true()
-  number.is_integer(1.5) |> should.be_false()
-  number.is_integer(0.0) |> should.be_true()
-}
-
-pub fn is_safe_integer_test() {
-  number.is_safe_integer(1.0) |> should.be_true()
-  number.is_safe_integer(1.5) |> should.be_false()
-}
-
 pub fn to_fixed_test() {
   number.to_fixed(3.14159, digits: 2) |> should.equal(Ok("3.14"))
   number.to_fixed(1.0, digits: 0) |> should.equal(Ok("1"))
@@ -70,41 +49,7 @@ pub fn to_exponential_out_of_range_test() {
   number.to_exponential(1.0, digits: 101) |> should.be_error()
 }
 
-pub fn to_base_string_test() {
-  number.to_base_string(255, 16) |> should.equal(Ok("ff"))
-  number.to_base_string(10, 2) |> should.equal(Ok("1010"))
-  number.to_base_string(8, 8) |> should.equal(Ok("10"))
-}
-
-pub fn to_base_string_out_of_range_test() {
-  number.to_base_string(10, 1) |> should.be_error()
-  number.to_base_string(10, 37) |> should.be_error()
-}
-
 pub fn to_locale_string_test() {
   let result = number.to_locale_string(1234.5)
   should.be_true(result != "")
-}
-
-pub fn parse_int_test() {
-  number.parse_int("ff", radix: 16) |> should.equal(Ok(255))
-  number.parse_int("1010", radix: 2) |> should.equal(Ok(10))
-  number.parse_int("10", radix: 8) |> should.equal(Ok(8))
-  number.parse_int("42", radix: 10) |> should.equal(Ok(42))
-}
-
-pub fn parse_int_invalid_test() {
-  number.parse_int("xyz", radix: 10) |> should.be_error()
-  number.parse_int("", radix: 10) |> should.be_error()
-}
-
-pub fn parse_float_test() {
-  number.parse_float("3.14") |> should.equal(Ok(3.14))
-  number.parse_float("42") |> should.equal(Ok(42.0))
-  number.parse_float(".5") |> should.equal(Ok(0.5))
-}
-
-pub fn parse_float_invalid_test() {
-  number.parse_float("abc") |> should.be_error()
-  number.parse_float("") |> should.be_error()
 }
