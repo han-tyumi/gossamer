@@ -2,7 +2,9 @@ import gossamer/compression.{type CompressionError, type CompressionFormat}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/writable_stream.{type WritableStream}
 
-/// A transform stream that compresses its input.
+/// A transform stream that compresses its input. Write uncompressed
+/// bytes to `writable(stream)`; read compressed bytes from
+/// `readable(stream)`.
 ///
 /// See [CompressionStream](https://developer.mozilla.org/en-US/docs/Web/API/CompressionStream) on MDN.
 ///
@@ -10,16 +12,6 @@ import gossamer/stream/writable_stream.{type WritableStream}
 ///
 /// ```gleam
 /// let assert Ok(compressor) = compression_stream.new(compression.Gzip)
-///
-/// stdin.readable()
-/// |> readable_stream.pipe_through(
-///   #(
-///     compression_stream.readable(compressor),
-///     compression_stream.writable(compressor),
-///   ),
-///   readable_stream.pipe_options(),
-/// )
-/// |> readable_stream.pipe_to(stdout.writable(), readable_stream.pipe_options())
 /// ```
 ///
 @external(javascript, "./compression_stream.type.ts", "CompressionStream$")
