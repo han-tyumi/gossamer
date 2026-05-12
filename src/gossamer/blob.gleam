@@ -14,23 +14,17 @@ pub type Blob
 @external(javascript, "./blob.ffi.mjs", "new_")
 pub fn new() -> Blob
 
+/// Creates a `Blob` wrapping the given bytes. Pass `""` for
+/// `content_type` to leave the MIME type unset.
+///
 @external(javascript, "./blob.ffi.mjs", "from_bytes")
-pub fn from_bytes(bytes: BitArray) -> Blob
+pub fn from_bytes(bytes: BitArray, content_type content_type: String) -> Blob
 
-@external(javascript, "./blob.ffi.mjs", "from_bytes_with_type")
-pub fn from_bytes_with_type(
-  bytes: BitArray,
-  content_type content_type: String,
-) -> Blob
-
+/// Creates a `Blob` wrapping the given string. Pass `""` for
+/// `content_type` to leave the MIME type unset.
+///
 @external(javascript, "./blob.ffi.mjs", "from_string")
-pub fn from_string(content: String) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "from_string_with_type")
-pub fn from_string_with_type(
-  content: String,
-  content_type content_type: String,
-) -> Blob
+pub fn from_string(content: String, content_type content_type: String) -> Blob
 
 @external(javascript, "./blob.ffi.mjs", "size")
 pub fn size(blob: Blob) -> Int
@@ -50,11 +44,13 @@ pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, FetchError))
 @external(javascript, "./blob.ffi.mjs", "bytes")
 pub fn bytes(blob: Blob) -> Promise(Result(BitArray, FetchError))
 
+/// Returns a `Blob` containing the bytes between `start` (inclusive)
+/// and `end` (exclusive). Negative offsets count from the end. Pass `""`
+/// for `content_type` to leave the MIME type unset (the source blob's
+/// type is never inherited).
+///
 @external(javascript, "./blob.ffi.mjs", "slice")
-pub fn slice(blob: Blob, from start: Int, to end: Int) -> Blob
-
-@external(javascript, "./blob.ffi.mjs", "slice_with_type")
-pub fn slice_with_type(
+pub fn slice(
   blob: Blob,
   from start: Int,
   to end: Int,

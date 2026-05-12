@@ -109,7 +109,8 @@ pub fn with_out_of_range_test() {
 
 pub fn set_test() {
   let array = uint8_array.from_length(5)
-  let assert Ok(_) = uint8_array.set(array, uint8_array.from_list([10, 20]))
+  let assert Ok(_) =
+    uint8_array.set(array, uint8_array.from_list([10, 20]), at_offset: 0)
   uint8_array.at(array, 0) |> should.equal(Ok(10))
   uint8_array.at(array, 1) |> should.equal(Ok(20))
   uint8_array.at(array, 2) |> should.equal(Ok(0))
@@ -315,7 +316,7 @@ pub fn subarray_test() {
 pub fn set_with_offset_test() {
   let array = uint8_array.from_length(5)
   let assert Ok(_) =
-    uint8_array.set_with_offset(array, uint8_array.from_list([10, 20]), 2)
+    uint8_array.set(array, uint8_array.from_list([10, 20]), at_offset: 2)
   uint8_array.to_list(array) |> should.equal([0, 0, 10, 20, 0])
 }
 
@@ -323,7 +324,7 @@ pub fn set_with_offset_overflow_test() {
   let array = uint8_array.from_length(3)
   // Writing 3 bytes at offset 2 would extend past the end of a 3-byte
   // array, so set throws RangeError.
-  uint8_array.set_with_offset(array, uint8_array.from_list([1, 2, 3]), 2)
+  uint8_array.set(array, uint8_array.from_list([1, 2, 3]), at_offset: 2)
   |> should.be_error
 }
 

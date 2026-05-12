@@ -161,7 +161,8 @@ pub fn with_out_of_range_errors_test() {
 pub fn set_with_offset_overflow_errors_test() {
   let target = int32_array.from_list([0, 0, 0])
   let values = int32_array.from_list([1, 2, 3, 4])
-  let assert Error(_) = int32_array.set(in: target, values: values)
+  let assert Error(_) =
+    int32_array.set(in: target, values: values, at_offset: 0)
 }
 
 pub fn from_buffer_misaligned_errors_test() {

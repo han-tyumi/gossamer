@@ -108,24 +108,15 @@ pub fn slice_range(
 @external(javascript, "./uint16_array.ffi.mjs", "subarray")
 pub fn subarray(array: Uint16Array, from begin: Int, to end: Int) -> Uint16Array
 
-/// Copies `values` into `array` starting at index `0`. Returns
-/// `OutOfRange` if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./uint16_array.ffi.mjs", "set")
 pub fn set(
   in array: Uint16Array,
   values values: Uint16Array,
-) -> Result(Nil, BufferError)
-
-/// Copies `values` into `array` starting at `offset`. Returns
-/// `OutOfRange` if `offset` is negative or the copy would extend past
-/// the end of `array`.
-///
-@external(javascript, "./uint16_array.ffi.mjs", "set_with_offset")
-pub fn set_with_offset(
-  in array: Uint16Array,
-  values values: Uint16Array,
-  offset offset: Int,
+  at_offset offset: Int,
 ) -> Result(Nil, BufferError)
 
 @external(javascript, "./uint16_array.ffi.mjs", "fill")

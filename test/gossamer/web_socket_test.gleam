@@ -82,7 +82,7 @@ pub fn send_bytes_while_connecting_test() {
 pub fn send_blob_while_connecting_test() {
   let assert Ok(ws) =
     web_socket.from_url_string("ws://localhost:1") |> web_socket.build
-  let b = blob.from_string("hello")
+  let b = blob.from_string("hello", content_type: "")
   let assert Error(web_socket.NotOpen) = web_socket.send_blob(ws, b)
   web_socket.close(ws)
 }

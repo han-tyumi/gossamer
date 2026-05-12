@@ -14,26 +14,12 @@ export const new_: typeof $blob.new$ = () => {
   return new Blob();
 };
 
-export const from_bytes: typeof $blob.from_bytes = (bytes) => {
-  return new Blob([toBufferSource(bytes)]);
+export const from_bytes: typeof $blob.from_bytes = (bytes, contentType) => {
+  return new Blob([toBufferSource(bytes)], { type: contentType });
 };
 
-export const from_bytes_with_type: typeof $blob.from_bytes_with_type = (
-  bytes,
-  mimeType,
-) => {
-  return new Blob([toBufferSource(bytes)], { type: mimeType });
-};
-
-export const from_string: typeof $blob.from_string = (content) => {
-  return new Blob([content]);
-};
-
-export const from_string_with_type: typeof $blob.from_string_with_type = (
-  content,
-  mimeType,
-) => {
-  return new Blob([content], { type: mimeType });
+export const from_string: typeof $blob.from_string = (content, contentType) => {
+  return new Blob([content], { type: contentType });
 };
 
 export const size: typeof $blob.size = (blob) => {
@@ -52,16 +38,7 @@ export const bytes: typeof $blob.bytes = (blob) => {
   return readBody(blob.bytes().then(BitArray$BitArray));
 };
 
-export const slice: typeof $blob.slice = (blob, start, end) => {
-  return blob.slice(start, end);
-};
-
-export const slice_with_type: typeof $blob.slice_with_type = (
-  blob,
-  start,
-  end,
-  contentType,
-) => {
+export const slice: typeof $blob.slice = (blob, start, end, contentType) => {
   return blob.slice(start, end, contentType);
 };
 

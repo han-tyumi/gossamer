@@ -76,16 +76,7 @@ export const slice_range: typeof $int16Array.slice_range = (
 export const subarray: typeof $int16Array.subarray = (array, begin, end) =>
   array.subarray(begin, end);
 
-export const set: typeof $int16Array.set = (array, values) =>
-  checkArrayRange(array, 0, values.length, () => {
-    array.set(values);
-  });
-
-export const set_with_offset: typeof $int16Array.set_with_offset = (
-  array,
-  values,
-  offset,
-) =>
+export const set: typeof $int16Array.set = (array, values, offset) =>
   checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
   });

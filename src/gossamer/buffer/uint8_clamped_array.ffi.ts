@@ -80,16 +80,7 @@ export const subarray: typeof $uint8ClampedArray.subarray = (
   end,
 ) => array.subarray(begin, end);
 
-export const set: typeof $uint8ClampedArray.set = (array, values) =>
-  checkArrayRange(array, 0, values.length, () => {
-    array.set(values);
-  });
-
-export const set_with_offset: typeof $uint8ClampedArray.set_with_offset = (
-  array,
-  values,
-  offset,
-) =>
+export const set: typeof $uint8ClampedArray.set = (array, values, offset) =>
   checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
   });

@@ -74,16 +74,7 @@ export const slice_range: typeof $int8Array.slice_range = (
 export const subarray: typeof $int8Array.subarray = (array, begin, end) =>
   array.subarray(begin, end);
 
-export const set: typeof $int8Array.set = (array, values) =>
-  checkArrayRange(array, 0, values.length, () => {
-    array.set(values);
-  });
-
-export const set_with_offset: typeof $int8Array.set_with_offset = (
-  array,
-  values,
-  offset,
-) =>
+export const set: typeof $int8Array.set = (array, values, offset) =>
   checkArrayRange(array, offset, values.length, () => {
     array.set(values, offset);
   });

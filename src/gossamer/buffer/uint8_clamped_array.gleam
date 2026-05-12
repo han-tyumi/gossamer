@@ -115,24 +115,15 @@ pub fn subarray(
   to end: Int,
 ) -> Uint8ClampedArray
 
-/// Copies `values` into `array` starting at index `0`. Returns
-/// `OutOfRange` if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "set")
 pub fn set(
   in array: Uint8ClampedArray,
   values values: Uint8ClampedArray,
-) -> Result(Nil, BufferError)
-
-/// Copies `values` into `array` starting at `offset`. Returns
-/// `OutOfRange` if `offset` is negative or the copy would extend past
-/// the end of `array`.
-///
-@external(javascript, "./uint8_clamped_array.ffi.mjs", "set_with_offset")
-pub fn set_with_offset(
-  in array: Uint8ClampedArray,
-  values values: Uint8ClampedArray,
-  offset offset: Int,
+  at_offset offset: Int,
 ) -> Result(Nil, BufferError)
 
 @external(javascript, "./uint8_clamped_array.ffi.mjs", "fill")

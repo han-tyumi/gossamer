@@ -19,7 +19,7 @@ pub fn file_from_strings_test() {
 }
 
 pub fn file_from_blob_test() {
-  let b = blob.from_string("blob content")
+  let b = blob.from_string("blob content", content_type: "")
   let f = file.from_blob(b, "from_blob.txt")
   should.equal(f.name, "from_blob.txt")
 
@@ -43,7 +43,7 @@ pub fn file_set_type_from_strings_test() {
 }
 
 pub fn file_set_type_from_blob_test() {
-  let b = blob.from_string("blob data")
+  let b = blob.from_string("blob data", content_type: "")
   let f = file.from_blob(b, "blob.txt") |> file.set_type("text/plain")
   f.name |> should.equal("blob.txt")
   should.be_true(string.starts_with(f.type_, "text/plain"))
@@ -85,7 +85,7 @@ pub fn file_bytes_test() {
 
 pub fn file_slice_test() {
   let f = file.from_strings(["hello world"], "slice.txt")
-  let sliced = file.slice(f, 0, 5)
+  let sliced = file.slice(f, 0, 5, content_type: "")
   use text <- promise.await(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)
@@ -93,7 +93,7 @@ pub fn file_slice_test() {
 
 pub fn file_slice_with_type_test() {
   let f = file.from_strings(["hello world"], "slice-type.txt")
-  let sliced = file.slice_with_type(f, 0, 5, "text/plain")
+  let sliced = file.slice(f, 0, 5, content_type: "text/plain")
   should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
 }
 

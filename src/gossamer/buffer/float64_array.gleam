@@ -109,24 +109,15 @@ pub fn subarray(
   to end: Int,
 ) -> Float64Array
 
-/// Copies `values` into `array` starting at index `0`. Returns
-/// `OutOfRange` if `values` would extend past the end of `array`.
+/// Copies `values` into `array` starting at `offset`. Returns
+/// `OutOfRange` if `offset` is negative or the copy would extend past
+/// the end of `array`.
 ///
 @external(javascript, "./float64_array.ffi.mjs", "set")
 pub fn set(
   in array: Float64Array,
   values values: Float64Array,
-) -> Result(Nil, BufferError)
-
-/// Copies `values` into `array` starting at `offset`. Returns
-/// `OutOfRange` if `offset` is negative or the copy would extend past
-/// the end of `array`.
-///
-@external(javascript, "./float64_array.ffi.mjs", "set_with_offset")
-pub fn set_with_offset(
-  in array: Float64Array,
-  values values: Float64Array,
-  offset offset: Int,
+  at_offset offset: Int,
 ) -> Result(Nil, BufferError)
 
 @external(javascript, "./float64_array.ffi.mjs", "fill")

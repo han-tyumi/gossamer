@@ -59,21 +59,17 @@ pub fn bytes(file: File) -> Promise(Result(BitArray, FetchError)) {
 }
 
 /// Returns a `Blob` containing the bytes between `start` (inclusive)
-/// and `end` (exclusive). Negative offsets count from the end.
+/// and `end` (exclusive). Negative offsets count from the end. Pass `""`
+/// for `content_type` to leave the MIME type unset (the file's type is
+/// never inherited).
 ///
-pub fn slice(file: File, from start: Int, to end: Int) -> Blob {
-  blob.slice(file.blob, from: start, to: end)
-}
-
-/// Like `slice`, but the returned `Blob` carries the given MIME type.
-///
-pub fn slice_with_type(
+pub fn slice(
   file: File,
   from start: Int,
   to end: Int,
   content_type content_type: String,
 ) -> Blob {
-  blob.slice_with_type(file.blob, from: start, to: end, content_type:)
+  blob.slice(file.blob, from: start, to: end, content_type:)
 }
 
 /// Returns a `ReadableStream` that produces the file's bytes.
