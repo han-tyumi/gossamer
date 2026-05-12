@@ -21,7 +21,7 @@ pub fn any(signals: List(AbortSignal)) -> AbortSignal
 /// accept values up to `9_007_199_254_740_991`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
-pub fn timeout(after duration: Duration) -> AbortSignal
+pub fn timeout(duration: Duration) -> AbortSignal
 
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool
