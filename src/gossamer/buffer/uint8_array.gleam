@@ -17,11 +17,6 @@ pub type EncodingError {
   /// `message` payload carries the underlying JavaScript error
   /// description for diagnostics.
   InvalidEncoding(message: String)
-
-  /// The underlying buffer was detached. Only `set_from_base64` and
-  /// `set_from_hex` can produce this — the static `from_base64` /
-  /// `from_hex` constructors never operate on an existing buffer.
-  Detached
 }
 
 @external(javascript, "./uint8_array.ffi.mjs", "new_")
@@ -405,9 +400,8 @@ pub fn to_hex(array: Uint8Array) -> String
 pub fn to_bit_array(array: Uint8Array) -> BitArray
 
 /// Decodes `string` as base64 into `array` in place. Returns the number
-/// of characters read and bytes written. Returns `Detached` if `array`'s
-/// underlying buffer is detached, or `InvalidEncoding` if `string` is
-/// not valid base64.
+/// of characters read and bytes written. Returns `InvalidEncoding` if
+/// `string` is not valid base64.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_base64")
 pub fn set_from_base64(
@@ -416,9 +410,8 @@ pub fn set_from_base64(
 ) -> Result(#(Int, Int), EncodingError)
 
 /// Decodes `string` as hex into `array` in place. Returns the number of
-/// characters read and bytes written. Returns `Detached` if `array`'s
-/// underlying buffer is detached, or `InvalidEncoding` if `string` is
-/// not valid hex.
+/// characters read and bytes written. Returns `InvalidEncoding` if
+/// `string` is not valid hex.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "set_from_hex")
 pub fn set_from_hex(

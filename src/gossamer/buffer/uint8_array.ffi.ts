@@ -401,9 +401,6 @@ export const set_from_base64: typeof $uint8Array.set_from_base64 = (
   array,
   string,
 ) => {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($uint8Array.EncodingError$Detached());
-  }
   try {
     const result = array.setFromBase64(string);
     return Result$Ok([result.read, result.written]);
@@ -416,9 +413,6 @@ export const set_from_hex: typeof $uint8Array.set_from_hex = (
   array,
   string,
 ) => {
-  if ((array.buffer as ArrayBuffer).detached) {
-    return Result$Error($uint8Array.EncodingError$Detached());
-  }
   try {
     const result = array.setFromHex(string);
     return Result$Ok([result.read, result.written]);
