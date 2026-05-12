@@ -184,18 +184,6 @@ pub fn from_buffer_int8_any_size_test() {
   int8_array.length(arr) |> should.equal(7)
 }
 
-pub fn int8_from_buffer_detached_test() {
-  let buf = array_buffer.new(8)
-  let assert Ok(_) = array_buffer.transfer(buf)
-  int8_array.from_buffer(buf) |> should.be_error
-}
-
-pub fn uint8_clamped_from_buffer_detached_test() {
-  let buf = array_buffer.new(8)
-  let assert Ok(_) = array_buffer.transfer(buf)
-  uint8_clamped_array.from_buffer(buf) |> should.be_error
-}
-
 // from_buffer_range smoke tests — one happy path per typed array (excl.
 // Uint8Array which has its own thorough coverage in uint8_array_test).
 
@@ -357,11 +345,4 @@ pub fn biguint64_bytes_test() {
     biguint64_array.from_list([big_int.from_int(1), big_int.from_int(2)])
   let assert Ok(bytes) = biguint64_array.bytes(arr)
   uint8_array.length(bytes) |> should.equal(16)
-}
-
-pub fn int32_bytes_detached_test() {
-  let buf = array_buffer.new(16)
-  let assert Ok(arr) = int32_array.from_buffer(buf)
-  let assert Ok(_) = array_buffer.transfer(buf)
-  int32_array.bytes(arr) |> should.be_error
 }

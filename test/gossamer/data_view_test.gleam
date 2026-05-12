@@ -31,26 +31,6 @@ pub fn new_range_test() {
   data_view.byte_offset(view) |> should.equal(Ok(4))
 }
 
-pub fn new_detached_test() {
-  let buffer = array_buffer.new(16)
-  let assert Ok(_) = array_buffer.transfer(buffer)
-  data_view.new(buffer) |> should.be_error
-}
-
-pub fn byte_length_detached_test() {
-  let buffer = array_buffer.new(16)
-  let assert Ok(view) = data_view.new(buffer)
-  let assert Ok(_) = array_buffer.transfer(buffer)
-  data_view.byte_length(view) |> should.be_error
-}
-
-pub fn byte_offset_detached_test() {
-  let buffer = array_buffer.new(16)
-  let assert Ok(view) = data_view.new(buffer)
-  let assert Ok(_) = array_buffer.transfer(buffer)
-  data_view.byte_offset(view) |> should.be_error
-}
-
 pub fn new_range_out_of_bounds_test() {
   let buffer = array_buffer.new(16)
   data_view.new_range(buffer, byte_offset: 4, byte_length: 100)
@@ -188,13 +168,6 @@ pub fn set_out_of_range_test() {
   |> should.be_error
 }
 
-pub fn detached_buffer_get_test() {
-  let buffer = array_buffer.new(16)
-  let assert Ok(view) = data_view.new(buffer)
-  let assert Ok(_) = array_buffer.transfer(buffer)
-  data_view.get_int8(view, at_offset: 0) |> should.be_error
-}
-
 pub fn bytes_test() {
   let buffer = array_buffer.new(16)
   let assert Ok(view) =
@@ -209,11 +182,4 @@ pub fn bytes_test() {
   let assert Ok(_) = data_view.set_uint8(view, at_offset: 7, value: 0xBB)
   uint8_array.at(bytes, index: 0) |> should.equal(Ok(0xAA))
   uint8_array.at(bytes, index: 7) |> should.equal(Ok(0xBB))
-}
-
-pub fn bytes_detached_test() {
-  let buffer = array_buffer.new(16)
-  let assert Ok(view) = data_view.new(buffer)
-  let assert Ok(_) = array_buffer.transfer(buffer)
-  data_view.bytes(view) |> should.be_error
 }

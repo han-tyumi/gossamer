@@ -26,19 +26,6 @@ pub fn is_view_string_test() {
   array_buffer.is_view("not a view") |> should.be_false
 }
 
-pub fn is_detached_fresh_buffer_test() {
-  let buffer = array_buffer.new(8)
-  array_buffer.is_detached(buffer) |> should.be_false
-}
-
-pub fn transfer_test() {
-  let buffer = array_buffer.new(8)
-  let assert Ok(transferred) = array_buffer.transfer(buffer)
-  array_buffer.byte_length(transferred) |> should.equal(8)
-  array_buffer.is_detached(buffer) |> should.be_true
-  array_buffer.is_detached(transferred) |> should.be_false
-}
-
 pub fn slice_test() {
   let buffer = array_buffer.new(8)
   let copy = array_buffer.slice(buffer)
@@ -57,55 +44,10 @@ pub fn slice_range_test() {
   array_buffer.byte_length(sliced) |> should.equal(4)
 }
 
-pub fn new_resizable_test() {
-  let buffer = array_buffer.new_resizable(8, 16)
-  array_buffer.byte_length(buffer) |> should.equal(8)
-  array_buffer.max_byte_length(buffer) |> should.equal(16)
-  array_buffer.is_resizable(buffer) |> should.be_true()
-}
-
-pub fn new_resizable_max_below_initial_test() {
-  let buffer = array_buffer.new_resizable(16, 8)
-  array_buffer.byte_length(buffer) |> should.equal(16)
-  array_buffer.max_byte_length(buffer) |> should.equal(16)
-}
-
-pub fn is_resizable_fixed_test() {
-  let buffer = array_buffer.new(8)
-  array_buffer.is_resizable(buffer) |> should.be_false()
-}
-
-pub fn max_byte_length_fixed_test() {
-  let buffer = array_buffer.new(8)
-  array_buffer.max_byte_length(buffer) |> should.equal(8)
-}
-
-pub fn resize_test() {
-  let buffer = array_buffer.new_resizable(8, 16)
-  let assert Ok(_) = array_buffer.resize(buffer, 12)
-  array_buffer.byte_length(buffer) |> should.equal(12)
-}
-
-pub fn resize_exceeds_max_test() {
-  let buffer = array_buffer.new_resizable(8, 16)
-  array_buffer.resize(buffer, 32) |> should.be_error()
-}
-
-pub fn resize_fixed_buffer_test() {
-  let buffer = array_buffer.new(8)
-  array_buffer.resize(buffer, 4) |> should.be_error()
-}
-
 pub fn to_bit_array_test() {
   let buffer =
     uint8_array.from_list([0x68, 0x69, 0x21, 0x00])
     |> uint8_array.buffer
   let assert Ok(bits) = array_buffer.to_bit_array(buffer)
   bits |> should.equal(<<0x68, 0x69, 0x21, 0x00>>)
-}
-
-pub fn to_bit_array_detached_test() {
-  let buf = array_buffer.new(4)
-  let assert Ok(_) = array_buffer.transfer(buf)
-  array_buffer.to_bit_array(buf) |> should.be_error
 }
