@@ -100,35 +100,35 @@ function toDeriveAlgorithm(
   if ($subtle.DeriveAlgorithm$isDeriveOther(algorithm)) {
     return $subtle.DeriveAlgorithm$DeriveOther$0(algorithm);
   }
-  if ($subtle.DeriveAlgorithm$isHkdf(algorithm)) {
+  if ($subtle.DeriveAlgorithm$isDeriveHkdf(algorithm)) {
     return {
       name: "HKDF",
       hash: toHashAlgorithm(
-        $subtle.DeriveAlgorithm$Hkdf$hash(algorithm),
+        $subtle.DeriveAlgorithm$DeriveHkdf$hash(algorithm),
       ),
       info: toBufferSource(
-        $subtle.DeriveAlgorithm$Hkdf$info(algorithm),
+        $subtle.DeriveAlgorithm$DeriveHkdf$info(algorithm),
       ),
       salt: toBufferSource(
-        $subtle.DeriveAlgorithm$Hkdf$salt(algorithm),
+        $subtle.DeriveAlgorithm$DeriveHkdf$salt(algorithm),
       ),
     };
   }
-  if ($subtle.DeriveAlgorithm$isPbkdf2(algorithm)) {
+  if ($subtle.DeriveAlgorithm$isDerivePbkdf2(algorithm)) {
     return {
       name: "PBKDF2",
       hash: toHashAlgorithm(
-        $subtle.DeriveAlgorithm$Pbkdf2$hash(algorithm),
+        $subtle.DeriveAlgorithm$DerivePbkdf2$hash(algorithm),
       ),
-      iterations: $subtle.DeriveAlgorithm$Pbkdf2$iterations(algorithm),
+      iterations: $subtle.DeriveAlgorithm$DerivePbkdf2$iterations(algorithm),
       salt: toBufferSource(
-        $subtle.DeriveAlgorithm$Pbkdf2$salt(algorithm),
+        $subtle.DeriveAlgorithm$DerivePbkdf2$salt(algorithm),
       ),
     };
   }
   return {
     name: "ECDH",
-    public: $subtle.DeriveAlgorithm$EcDh$public(algorithm),
+    public: $subtle.DeriveAlgorithm$DeriveEcDh$public(algorithm),
   };
 }
 
@@ -138,18 +138,18 @@ function toDerivedKeyType(
   if ($subtle.DerivedKeyType$isDerivedKeyOther(derivedKeyType)) {
     return $subtle.DerivedKeyType$DerivedKeyOther$0(derivedKeyType);
   }
-  if ($subtle.DerivedKeyType$isAesDerived(derivedKeyType)) {
+  if ($subtle.DerivedKeyType$isDerivedKeyAes(derivedKeyType)) {
     return {
       name: toAesAlgorithm(
-        $subtle.DerivedKeyType$AesDerived$name(derivedKeyType),
+        $subtle.DerivedKeyType$DerivedKeyAes$name(derivedKeyType),
       ),
-      length: $subtle.DerivedKeyType$AesDerived$length(derivedKeyType),
+      length: $subtle.DerivedKeyType$DerivedKeyAes$length(derivedKeyType),
     };
   }
   return {
     name: "HMAC",
     hash: toHashAlgorithm(
-      $subtle.DerivedKeyType$HmacDerived$hash(derivedKeyType),
+      $subtle.DerivedKeyType$DerivedKeyHmac$hash(derivedKeyType),
     ),
   };
 }
@@ -173,22 +173,22 @@ function toEncryptAlgorithm(
       ),
     };
   }
-  if ($subtle.EncryptAlgorithm$isAesGcm(algorithm)) {
+  if ($subtle.EncryptAlgorithm$isEncryptAesGcm(algorithm)) {
     return {
       name: "AES-GCM",
-      iv: toBufferSource($subtle.EncryptAlgorithm$AesGcm$iv(algorithm)),
+      iv: toBufferSource($subtle.EncryptAlgorithm$EncryptAesGcm$iv(algorithm)),
     };
   }
-  if ($subtle.EncryptAlgorithm$isAesGcmWith(algorithm)) {
+  if ($subtle.EncryptAlgorithm$isEncryptAesGcmWith(algorithm)) {
     return {
       name: "AES-GCM",
       iv: toBufferSource(
-        $subtle.EncryptAlgorithm$AesGcmWith$iv(algorithm),
+        $subtle.EncryptAlgorithm$EncryptAesGcmWith$iv(algorithm),
       ),
       additionalData: toBufferSource(
-        $subtle.EncryptAlgorithm$AesGcmWith$additional_data(algorithm),
+        $subtle.EncryptAlgorithm$EncryptAesGcmWith$additional_data(algorithm),
       ),
-      tagLength: $subtle.EncryptAlgorithm$AesGcmWith$tag_length(
+      tagLength: $subtle.EncryptAlgorithm$EncryptAesGcmWith$tag_length(
         algorithm,
       ),
     };
@@ -223,30 +223,30 @@ function toImportAlgorithm(
   if ($subtle.ImportAlgorithm$isImportOther(algorithm)) {
     return $subtle.ImportAlgorithm$ImportOther$0(algorithm);
   }
-  if ($subtle.ImportAlgorithm$isHmacImport(algorithm)) {
+  if ($subtle.ImportAlgorithm$isImportHmac(algorithm)) {
     return {
       name: "HMAC",
       hash: toHashAlgorithm(
-        $subtle.ImportAlgorithm$HmacImport$hash(algorithm),
+        $subtle.ImportAlgorithm$ImportHmac$hash(algorithm),
       ),
     };
   }
-  if ($subtle.ImportAlgorithm$isRsaHashedImport(algorithm)) {
+  if ($subtle.ImportAlgorithm$isImportRsaHashed(algorithm)) {
     return {
       name: toRsaAlgorithm(
-        $subtle.ImportAlgorithm$RsaHashedImport$name(algorithm),
+        $subtle.ImportAlgorithm$ImportRsaHashed$name(algorithm),
       ),
       hash: toHashAlgorithm(
-        $subtle.ImportAlgorithm$RsaHashedImport$hash(algorithm),
+        $subtle.ImportAlgorithm$ImportRsaHashed$hash(algorithm),
       ),
     };
   }
   return {
     name: toEcAlgorithm(
-      $subtle.ImportAlgorithm$EcImport$name(algorithm),
+      $subtle.ImportAlgorithm$ImportEc$name(algorithm),
     ),
     namedCurve: toNamedCurve(
-      $subtle.ImportAlgorithm$EcImport$named_curve(algorithm),
+      $subtle.ImportAlgorithm$ImportEc$named_curve(algorithm),
     ),
   };
 }
@@ -257,16 +257,16 @@ function toKeyGenAlgorithm(
   if ($subtle.KeyGenAlgorithm$isKeyGenOther(algorithm)) {
     return $subtle.KeyGenAlgorithm$KeyGenOther$0(algorithm);
   }
-  if ($subtle.KeyGenAlgorithm$isAes(algorithm)) {
+  if ($subtle.KeyGenAlgorithm$isKeyGenAes(algorithm)) {
     return {
-      name: toAesAlgorithm($subtle.KeyGenAlgorithm$Aes$name(algorithm)),
-      length: $subtle.KeyGenAlgorithm$Aes$length(algorithm),
+      name: toAesAlgorithm($subtle.KeyGenAlgorithm$KeyGenAes$name(algorithm)),
+      length: $subtle.KeyGenAlgorithm$KeyGenAes$length(algorithm),
     };
   }
   return {
     name: "HMAC",
     hash: toHashAlgorithm(
-      $subtle.KeyGenAlgorithm$HmacGen$hash(algorithm),
+      $subtle.KeyGenAlgorithm$KeyGenHmac$hash(algorithm),
     ),
   };
 }
@@ -277,31 +277,35 @@ function toKeyPairGenAlgorithm(
   if ($subtle.KeyPairGenAlgorithm$isKeyPairGenOther(algorithm)) {
     return $subtle.KeyPairGenAlgorithm$KeyPairGenOther$0(algorithm);
   }
-  if ($subtle.KeyPairGenAlgorithm$isRsa(algorithm)) {
+  if ($subtle.KeyPairGenAlgorithm$isKeyPairGenRsa(algorithm)) {
     return {
       name: toRsaAlgorithm(
-        $subtle.KeyPairGenAlgorithm$Rsa$name(algorithm),
+        $subtle.KeyPairGenAlgorithm$KeyPairGenRsa$name(algorithm),
       ),
-      modulusLength: $subtle.KeyPairGenAlgorithm$Rsa$modulus_length(
+      modulusLength: $subtle.KeyPairGenAlgorithm$KeyPairGenRsa$modulus_length(
         algorithm,
       ),
       // @ts-expect-error denoland/deno#32063 (BigInteger)
       publicExponent: toUint8Array(
-        $subtle.KeyPairGenAlgorithm$Rsa$public_exponent(algorithm),
+        $subtle.KeyPairGenAlgorithm$KeyPairGenRsa$public_exponent(algorithm),
       ),
       hash: toHashAlgorithm(
-        $subtle.KeyPairGenAlgorithm$Rsa$hash(algorithm),
+        $subtle.KeyPairGenAlgorithm$KeyPairGenRsa$hash(algorithm),
       ),
     };
   }
-  if ($subtle.KeyPairGenAlgorithm$isEd25519(algorithm)) return "Ed25519";
-  if ($subtle.KeyPairGenAlgorithm$isX25519(algorithm)) return "X25519";
+  if ($subtle.KeyPairGenAlgorithm$isKeyPairGenEd25519(algorithm)) {
+    return "Ed25519";
+  }
+  if ($subtle.KeyPairGenAlgorithm$isKeyPairGenX25519(algorithm)) {
+    return "X25519";
+  }
   return {
     name: toEcAlgorithm(
-      $subtle.KeyPairGenAlgorithm$Ec$name(algorithm),
+      $subtle.KeyPairGenAlgorithm$KeyPairGenEc$name(algorithm),
     ),
     namedCurve: toNamedCurve(
-      $subtle.KeyPairGenAlgorithm$Ec$named_curve(algorithm),
+      $subtle.KeyPairGenAlgorithm$KeyPairGenEc$named_curve(algorithm),
     ),
   };
 }
@@ -312,20 +316,20 @@ function toSignAlgorithm(
   if ($subtle.SignAlgorithm$isSignOther(algorithm)) {
     return $subtle.SignAlgorithm$SignOther$0(algorithm);
   }
-  if ($subtle.SignAlgorithm$isHmac(algorithm)) return "HMAC";
-  if ($subtle.SignAlgorithm$isRsaSsaPkcs1V15(algorithm)) {
+  if ($subtle.SignAlgorithm$isSignHmac(algorithm)) return "HMAC";
+  if ($subtle.SignAlgorithm$isSignRsaSsaPkcs1V15(algorithm)) {
     return "RSASSA-PKCS1-v1_5";
   }
-  if ($subtle.SignAlgorithm$isRsaPss(algorithm)) {
+  if ($subtle.SignAlgorithm$isSignRsaPss(algorithm)) {
     return {
       name: "RSA-PSS",
-      saltLength: $subtle.SignAlgorithm$RsaPss$salt_length(algorithm),
+      saltLength: $subtle.SignAlgorithm$SignRsaPss$salt_length(algorithm),
     };
   }
   return {
     name: "ECDSA",
     hash: toHashAlgorithm(
-      $subtle.SignAlgorithm$EcDsa$hash(algorithm),
+      $subtle.SignAlgorithm$SignEcDsa$hash(algorithm),
     ),
   };
 }

@@ -24,9 +24,9 @@ pub type KeyFormat {
 /// Non-standard or unnamed algorithms use `DeriveOther(String)`.
 ///
 pub type DeriveAlgorithm {
-  Hkdf(hash: HashAlgorithm, info: BitArray, salt: BitArray)
-  Pbkdf2(hash: HashAlgorithm, iterations: Int, salt: BitArray)
-  EcDh(public: CryptoKey)
+  DeriveHkdf(hash: HashAlgorithm, info: BitArray, salt: BitArray)
+  DerivePbkdf2(hash: HashAlgorithm, iterations: Int, salt: BitArray)
+  DeriveEcDh(public: CryptoKey)
   DeriveOther(String)
 }
 
@@ -35,8 +35,8 @@ pub type DeriveAlgorithm {
 /// Non-standard or unnamed algorithms use `DerivedKeyOther(String)`.
 ///
 pub type DerivedKeyType {
-  AesDerived(name: AesAlgorithm, length: Int)
-  HmacDerived(hash: HashAlgorithm)
+  DerivedKeyAes(name: AesAlgorithm, length: Int)
+  DerivedKeyHmac(hash: HashAlgorithm)
   DerivedKeyOther(String)
 }
 
@@ -46,8 +46,8 @@ pub type DerivedKeyType {
 ///
 pub type EncryptAlgorithm {
   EncryptAesCbc(iv: BitArray)
-  AesGcm(iv: BitArray)
-  AesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+  EncryptAesGcm(iv: BitArray)
+  EncryptAesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
   EncryptAesCtr(counter: BitArray, length: Int)
   EncryptRsaOaep
   EncryptRsaOaepWith(label: BitArray)
@@ -59,9 +59,9 @@ pub type EncryptAlgorithm {
 /// Non-standard or unnamed algorithms use `ImportOther(String)`.
 ///
 pub type ImportAlgorithm {
-  HmacImport(hash: HashAlgorithm)
-  RsaHashedImport(name: RsaAlgorithm, hash: HashAlgorithm)
-  EcImport(name: EcAlgorithm, named_curve: NamedCurve)
+  ImportHmac(hash: HashAlgorithm)
+  ImportRsaHashed(name: RsaAlgorithm, hash: HashAlgorithm)
+  ImportEc(name: EcAlgorithm, named_curve: NamedCurve)
   ImportOther(String)
 }
 
@@ -70,8 +70,8 @@ pub type ImportAlgorithm {
 /// Non-standard or unnamed algorithms use `KeyGenOther(String)`.
 ///
 pub type KeyGenAlgorithm {
-  Aes(name: AesAlgorithm, length: Int)
-  HmacGen(hash: HashAlgorithm)
+  KeyGenAes(name: AesAlgorithm, length: Int)
+  KeyGenHmac(hash: HashAlgorithm)
   KeyGenOther(String)
 }
 
@@ -80,15 +80,15 @@ pub type KeyGenAlgorithm {
 /// Non-standard or unnamed algorithms use `KeyPairGenOther(String)`.
 ///
 pub type KeyPairGenAlgorithm {
-  Rsa(
+  KeyPairGenRsa(
     name: RsaAlgorithm,
     modulus_length: Int,
     public_exponent: BitArray,
     hash: HashAlgorithm,
   )
-  Ec(name: EcAlgorithm, named_curve: NamedCurve)
-  Ed25519
-  X25519
+  KeyPairGenEc(name: EcAlgorithm, named_curve: NamedCurve)
+  KeyPairGenEd25519
+  KeyPairGenX25519
   KeyPairGenOther(String)
 }
 
@@ -97,10 +97,10 @@ pub type KeyPairGenAlgorithm {
 /// Non-standard or unnamed algorithms use `SignOther(String)`.
 ///
 pub type SignAlgorithm {
-  Hmac
-  RsaSsaPkcs1V15
-  RsaPss(salt_length: Int)
-  EcDsa(hash: HashAlgorithm)
+  SignHmac
+  SignRsaSsaPkcs1V15
+  SignRsaPss(salt_length: Int)
+  SignEcDsa(hash: HashAlgorithm)
   SignOther(String)
 }
 
