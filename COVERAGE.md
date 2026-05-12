@@ -204,16 +204,12 @@ Gleam has conceptual equivalents for these, but they are not the native JS
 types. These bindings enable interop with JS APIs that return or accept native
 types, and expose functionality Gleam's stdlib doesn't cover.
 
-| Interface            | Status | Module                           |
-| -------------------- | ------ | -------------------------------- |
-| Map                  | ✅     | `gossamer/map`                   |
-| Set                  | ✅     | `gossamer/set`                   |
-| WeakMap              | ✅     | `gossamer/weak_map`              |
-| WeakSet              | ✅     | `gossamer/weak_set`              |
-| WeakRef              | ✅     | `gossamer/weak_ref`              |
-| FinalizationRegistry | ✅     | `gossamer/finalization_registry` |
-| String               | ✅     | `gossamer/string_extra`          |
-| Date                 | ✅     | `gossamer/time_extra`            |
+| Interface | Status | Module                  |
+| --------- | ------ | ----------------------- |
+| Map       | ✅     | `gossamer/map`          |
+| Set       | ✅     | `gossamer/set`          |
+| String    | ✅     | `gossamer/string_extra` |
+| Date      | ✅     | `gossamer/time_extra`   |
 
 `Array` is delegated to `gleam/javascript/array`, which exposes it as a transit
 type for JS interop (`from_list` / `to_list` / `size` / `map` / `fold` /
