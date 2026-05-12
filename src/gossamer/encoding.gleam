@@ -1,3 +1,8 @@
+//// Parent module for the text-encoding family — `TextDecoder`,
+//// `TextDecoderStream`, and `TextEncoderStream`. Hosts the shared
+//// `Encoding` enum and the `DecoderError` returned from
+//// decoder-side operations.
+
 /// A text encoding, used by `TextEncoder` and `TextDecoder`.
 ///
 /// Encodings other than UTF-8 use `Other(String)`.
