@@ -1,18 +1,18 @@
 import gleam/set
 import gleam/yielder.{type Yielder}
 
-/// A JS `Set` holding unique values of any type, preserving insertion
-/// order.
+/// A JavaScript `Set`, holding unique values of any type and preserving
+/// insertion order.
 ///
 /// For most Gleam use cases, prefer `gleam/set.Set`. This binding exists
-/// for JS interop where a JS `Set` is specifically required. Bridge
-/// with `to_set` / `from_set` and operate on the `Set` surface for
+/// for interop with JavaScript code that expects a `Set`; bridge with
+/// `to_set` / `from_set` and operate on the `gleam/set.Set` surface for
 /// transformations.
 ///
-/// Object values (records, lists, tuples) are matched by JS reference
-/// identity, not value equality — two equal-by-value tuples constructed
-/// separately are distinct values. Primitive values (`Int`, `Float`,
-/// `String`, `Bool`) use value equality.
+/// Object values (records, lists, tuples) are matched by JavaScript
+/// reference identity, not by Gleam value equality — two equal-by-value
+/// tuples constructed separately are distinct values. Primitive values
+/// (`Int`, `Float`, `String`, `Bool`) use value equality.
 ///
 /// See [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set) on MDN.
 ///
@@ -57,8 +57,8 @@ pub fn has(in set: Set(value), value value: value) -> Bool
 pub fn values(set: Set(value)) -> Yielder(value)
 
 /// Returns the `#(value, value)` pairs of the `Set` in insertion order.
-/// Each value appears with itself, mirroring the JS `Set.entries()`
-/// shape.
+/// Each value appears with itself, mirroring the shape of
+/// `Set.prototype.entries` in JavaScript.
 ///
 @external(javascript, "./set.ffi.mjs", "entries")
 pub fn entries(set: Set(value)) -> Yielder(#(value, value))

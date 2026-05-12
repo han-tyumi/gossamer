@@ -1,7 +1,7 @@
 import gossamer/weak.{type WeakKeyError}
 
-/// A JS `FinalizationRegistry` that fires cleanup callbacks after
-/// registered targets are garbage collected. Callback timing is
+/// A JavaScript `FinalizationRegistry` that fires cleanup callbacks
+/// after registered targets are garbage collected. Callback timing is
 /// non-deterministic — callbacks may fire late, or not at all if the
 /// program exits before GC runs. Errors thrown from the callback are
 /// reported to the runtime, not to surrounding code.
@@ -11,8 +11,8 @@ import gossamer/weak.{type WeakKeyError}
 /// registry); `register`, `register_with_token`, and `unregister`
 /// return `InvalidTarget` otherwise.
 ///
-/// Unregister tokens are matched by JS reference identity — pass the
-/// same JS reference to `unregister` that was passed to
+/// Unregister tokens are matched by JavaScript reference identity —
+/// pass the same reference to `unregister` that was passed to
 /// `register_with_token`.
 ///
 /// See [FinalizationRegistry](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry) on MDN.

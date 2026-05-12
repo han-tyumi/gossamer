@@ -1,18 +1,18 @@
 import gleam/dict.{type Dict}
 import gleam/yielder.{type Yielder}
 
-/// A JS `Map` holding key-value pairs. Supports any key type (unlike
-/// plain objects) and preserves insertion order.
+/// A JavaScript `Map`, holding key-value pairs and preserving insertion
+/// order. Supports any key type (unlike plain objects).
 ///
 /// For most Gleam use cases, prefer `gleam/dict.Dict`. This binding
-/// exists for JS interop where a JS `Map` is specifically required.
-/// Bridge with `to_dict` / `from_dict` and operate on the `Dict`
-/// surface for transformations.
+/// exists for interop with JavaScript code that expects a `Map`; bridge
+/// with `to_dict` / `from_dict` and operate on the `Dict` surface for
+/// transformations.
 ///
-/// Object keys (records, lists, tuples) are matched by JS reference
-/// identity, not value equality — two equal-by-value tuples constructed
-/// separately are distinct keys. Primitive keys (`Int`, `Float`,
-/// `String`, `Bool`) use value equality.
+/// Object keys (records, lists, tuples) are matched by JavaScript
+/// reference identity, not by Gleam value equality — two equal-by-value
+/// tuples constructed separately are distinct keys. Primitive keys
+/// (`Int`, `Float`, `String`, `Bool`) use value equality.
 ///
 /// See [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) on MDN.
 ///

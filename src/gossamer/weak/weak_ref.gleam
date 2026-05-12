@@ -1,7 +1,7 @@
 import gossamer/weak.{type WeakKeyError}
 
-/// A JS `WeakRef` whose target is weakly held — the target is eligible
-/// for GC once it has no other references.
+/// A JavaScript `WeakRef` whose target is weakly held — the target is
+/// eligible for GC once it has no other references.
 ///
 /// Targets must be objects (records, lists, tuples) or non-registered
 /// symbols (those not in the global registry); `new` returns

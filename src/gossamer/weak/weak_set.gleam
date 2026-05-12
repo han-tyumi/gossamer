@@ -1,16 +1,16 @@
 import gossamer/weak.{type WeakKeyError}
 
-/// A JS `WeakSet` whose values are weakly held — entries are eligible
-/// for GC once the value has no other references. Mutable.
+/// A JavaScript `WeakSet` whose values are weakly held — entries are
+/// eligible for GC once the value has no other references. Mutable.
 ///
 /// Values must be objects (records, lists, tuples) or non-registered
 /// symbols (those not in the global registry); `add` and `from_list`
 /// return `InvalidTarget` otherwise. Has no `size`, iteration, or
 /// `clear` (those would expose GC timing).
 ///
-/// Values are matched by JS reference identity, not value equality —
-/// two equal-by-value tuples constructed separately are distinct
-/// values.
+/// Values are matched by JavaScript reference identity, not by Gleam
+/// value equality — two equal-by-value tuples constructed separately
+/// are distinct values.
 ///
 /// See [WeakSet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet) on MDN.
 ///

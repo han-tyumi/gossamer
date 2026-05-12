@@ -1,15 +1,16 @@
 import gossamer/weak.{type WeakKeyError}
 
-/// A JS `WeakMap` whose keys are weakly held — entries are eligible for
-/// GC once the key has no other references. Mutable.
+/// A JavaScript `WeakMap` whose keys are weakly held — entries are
+/// eligible for GC once the key has no other references. Mutable.
 ///
 /// Keys must be objects (records, lists, tuples) or non-registered
 /// symbols (those not in the global registry); `set` and `from_list`
 /// return `InvalidTarget` otherwise. Has no `size`, iteration, or
 /// `clear` (those would expose GC timing).
 ///
-/// Keys are matched by JS reference identity, not value equality —
-/// two equal-by-value tuples constructed separately are distinct keys.
+/// Keys are matched by JavaScript reference identity, not by Gleam
+/// value equality — two equal-by-value tuples constructed separately
+/// are distinct keys.
 ///
 /// See [WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap) on MDN.
 ///
