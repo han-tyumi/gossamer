@@ -80,14 +80,11 @@ pub fn to_exponential(
   digits digits: Int,
 ) -> Result(String, NumberError)
 
-/// Converts an integer to a string in the specified radix (base
-/// `2`–`36`). Returns `OutOfRange` if `radix` is outside that range.
+/// Converts an integer to a string in the specified base (`2`–`36`).
+/// Returns `OutOfRange` if `base` is outside that range.
 ///
-@external(javascript, "./number.ffi.mjs", "to_string_with_radix")
-pub fn to_string_with_radix(
-  value: Int,
-  radix radix: Int,
-) -> Result(String, NumberError)
+@external(javascript, "./number.ffi.mjs", "to_base_string")
+pub fn to_base_string(value: Int, base: Int) -> Result(String, NumberError)
 
 /// Returns a locale-sensitive string representation of the number.
 ///

@@ -38,11 +38,8 @@ export const to_exponential: typeof $number.to_exponential = (
   return checkRange(digits, 0, 100) ?? Result$Ok(value.toExponential(digits));
 };
 
-export const to_string_with_radix: typeof $number.to_string_with_radix = (
-  value,
-  radix,
-) => {
-  return checkRange(radix, 2, 36) ?? Result$Ok(value.toString(radix));
+export const to_base_string: typeof $number.to_base_string = (value, base) => {
+  return checkRange(base, 2, 36) ?? Result$Ok(value.toString(base));
 };
 
 export const to_locale_string: typeof $number.to_locale_string = (value) =>

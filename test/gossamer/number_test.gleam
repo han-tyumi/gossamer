@@ -70,15 +70,15 @@ pub fn to_exponential_out_of_range_test() {
   number.to_exponential(1.0, digits: 101) |> should.be_error()
 }
 
-pub fn to_string_with_radix_test() {
-  number.to_string_with_radix(255, radix: 16) |> should.equal(Ok("ff"))
-  number.to_string_with_radix(10, radix: 2) |> should.equal(Ok("1010"))
-  number.to_string_with_radix(8, radix: 8) |> should.equal(Ok("10"))
+pub fn to_base_string_test() {
+  number.to_base_string(255, 16) |> should.equal(Ok("ff"))
+  number.to_base_string(10, 2) |> should.equal(Ok("1010"))
+  number.to_base_string(8, 8) |> should.equal(Ok("10"))
 }
 
-pub fn to_string_with_radix_out_of_range_test() {
-  number.to_string_with_radix(10, radix: 1) |> should.be_error()
-  number.to_string_with_radix(10, radix: 37) |> should.be_error()
+pub fn to_base_string_out_of_range_test() {
+  number.to_base_string(10, 1) |> should.be_error()
+  number.to_base_string(10, 37) |> should.be_error()
 }
 
 pub fn to_locale_string_test() {
