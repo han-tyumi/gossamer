@@ -13,7 +13,7 @@ pub type TextDecoderStream
 /// The configuration for a `TextDecoderStream`. Construct with `new`,
 /// refine with `with_fatal` and `with_ignore_bom`, then call `build`.
 ///
-pub type Builder {
+pub opaque type Builder {
   Builder(label: String, fatal: Bool, ignore_bom: Bool)
 }
 
@@ -42,8 +42,17 @@ pub fn with_ignore_bom(builder: Builder, value: Bool) -> Builder {
 /// Returns `UnsupportedEncoding` if the label isn't a recognized
 /// encoding.
 ///
+pub fn build(builder: Builder) -> Result(TextDecoderStream, DecoderError) {
+  do_build(builder.label, builder.fatal, builder.ignore_bom)
+}
+
 @external(javascript, "./text_decoder_stream.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(TextDecoderStream, DecoderError)
+@internal
+pub fn do_build(
+  label: String,
+  fatal: Bool,
+  ignore_bom: Bool,
+) -> Result(TextDecoderStream, DecoderError)
 
 /// The readable side of the decoder, yielding decoded strings.
 ///

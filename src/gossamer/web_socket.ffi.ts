@@ -49,12 +49,19 @@ function toReadyState(value: number): $webSocket.ReadyState$ {
   }
 }
 
-export const build: typeof $webSocket.build = (builder) => {
-  const url = $webSocket.Builder$Builder$url(builder);
+export const build: typeof $webSocket.do_build = (
+  url,
+  protocolsList,
+  binary_type,
+  on_open,
+  on_message,
+  on_error,
+  on_close,
+) => {
   if (!isValidWebSocketUrl(url)) {
     return Result$Error($webSocket.WebSocketError$InvalidUrl());
   }
-  const protocols = toArray($webSocket.Builder$Builder$protocols(builder));
+  const protocols = toArray(protocolsList);
   let ws: WebSocket;
   try {
     ws = new WebSocket(url, protocols);
@@ -62,38 +69,19 @@ export const build: typeof $webSocket.build = (builder) => {
     return Result$Error($webSocket.WebSocketError$InvalidProtocols());
   }
 
-  mapIfSome(
-    ws,
-    "binaryType",
-    $webSocket.Builder$Builder$binary_type(builder),
-    fromBinaryType,
-  );
-
-  mapIfSome(
-    ws,
-    "onopen",
-    $webSocket.Builder$Builder$on_open(builder),
-    (handler) => () => handler(),
-  );
-
+  mapIfSome(ws, "binaryType", binary_type, fromBinaryType);
+  mapIfSome(ws, "onopen", on_open, (handler) => () => handler());
   mapIfSome(
     ws,
     "onmessage",
-    $webSocket.Builder$Builder$on_message(builder),
+    on_message,
     (handler) => (event) => handler(event),
   );
-
-  mapIfSome(
-    ws,
-    "onerror",
-    $webSocket.Builder$Builder$on_error(builder),
-    (handler) => () => handler(),
-  );
-
+  mapIfSome(ws, "onerror", on_error, (handler) => () => handler());
   mapIfSome(
     ws,
     "onclose",
-    $webSocket.Builder$Builder$on_close(builder),
+    on_close,
     (handler) => (event) => handler(toCloseEvent(event)),
   );
 

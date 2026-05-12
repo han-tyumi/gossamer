@@ -22,7 +22,7 @@ pub type ReadableStream(a)
 /// refine with `with_start`, `with_pull`, `with_cancel`, and
 /// `with_queuing_strategy`, then call `build` to create the stream.
 ///
-pub type Builder(a) {
+pub opaque type Builder(a) {
   Builder(
     start: Option(fn(DefaultController(a)) -> Nil),
     pull: Option(fn(DefaultController(a)) -> Promise(Nil)),
@@ -92,15 +92,9 @@ pub fn new() -> Builder(a) {
 ///
 pub fn with_start(
   builder: Builder(a),
-  run callback: fn(DefaultController(a)) -> b,
+  run callback: fn(DefaultController(a)) -> Nil,
 ) -> Builder(a) {
-  Builder(
-    ..builder,
-    start: Some(fn(controller) {
-      callback(controller)
-      Nil
-    }),
-  )
+  Builder(..builder, start: Some(callback))
 }
 
 /// Registers the `pull` callback that runs whenever the consumer requests
@@ -138,9 +132,24 @@ pub fn with_queuing_strategy(
 /// `Errored` if the `start` callback throws synchronously; the
 /// thrown value is the variant's reason.
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "build")
 pub fn build(
   builder: Builder(a),
+) -> Result(ReadableStream(a), StreamLifecycleError) {
+  do_build(
+    builder.start,
+    builder.pull,
+    builder.cancel,
+    builder.queuing_strategy,
+  )
+}
+
+@external(javascript, "./readable_stream.ffi.mjs", "build")
+@internal
+pub fn do_build(
+  start: Option(fn(DefaultController(a)) -> Nil),
+  pull: Option(fn(DefaultController(a)) -> Promise(Nil)),
+  cancel: Option(fn(Dynamic) -> Promise(Nil)),
+  queuing_strategy: Option(QueuingStrategy),
 ) -> Result(ReadableStream(a), StreamLifecycleError)
 
 /// Creates a `ReadableStream` from only a `start` callback — use when all

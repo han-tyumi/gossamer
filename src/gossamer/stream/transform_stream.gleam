@@ -21,7 +21,7 @@ pub type TransformStream(input, output)
 /// `with_writable_strategy`, and `with_readable_strategy`, then call
 /// `build` to create the stream.
 ///
-pub type Builder(input, output) {
+pub opaque type Builder(input, output) {
   Builder(
     start: Option(fn(DefaultController(output)) -> Nil),
     transform: Option(fn(input, DefaultController(output)) -> Promise(Nil)),
@@ -118,9 +118,28 @@ pub fn with_readable_strategy(
 /// `Errored` if the `start` callback throws synchronously; the thrown
 /// value is the variant's reason.
 ///
-@external(javascript, "./transform_stream.ffi.mjs", "build")
 pub fn build(
   builder: Builder(input, output),
+) -> Result(TransformStream(input, output), StreamLifecycleError) {
+  do_build(
+    builder.start,
+    builder.transform,
+    builder.flush,
+    builder.cancel,
+    builder.writable_strategy,
+    builder.readable_strategy,
+  )
+}
+
+@external(javascript, "./transform_stream.ffi.mjs", "build")
+@internal
+pub fn do_build(
+  start: Option(fn(DefaultController(output)) -> Nil),
+  transform: Option(fn(input, DefaultController(output)) -> Promise(Nil)),
+  flush: Option(fn(DefaultController(output)) -> Promise(Nil)),
+  cancel: Option(fn(Dynamic) -> Promise(Nil)),
+  writable_strategy: Option(QueuingStrategy),
+  readable_strategy: Option(QueuingStrategy),
 ) -> Result(TransformStream(input, output), StreamLifecycleError)
 
 /// Creates a `TransformStream` from only a `transform` callback — use

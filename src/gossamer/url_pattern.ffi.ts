@@ -9,20 +9,6 @@ function invalidPattern() {
   return Result$Error($urlPattern.UrlPatternError$InvalidPattern());
 }
 
-function fromBuilder(builder: $urlPattern.Builder$): URLPatternInit {
-  const result: URLPatternInit = {};
-  setIfSome(result, "protocol", $urlPattern.Builder$Builder$protocol(builder));
-  setIfSome(result, "username", $urlPattern.Builder$Builder$username(builder));
-  setIfSome(result, "password", $urlPattern.Builder$Builder$password(builder));
-  setIfSome(result, "hostname", $urlPattern.Builder$Builder$hostname(builder));
-  setIfSome(result, "port", $urlPattern.Builder$Builder$port(builder));
-  setIfSome(result, "pathname", $urlPattern.Builder$Builder$pathname(builder));
-  setIfSome(result, "search", $urlPattern.Builder$Builder$search(builder));
-  setIfSome(result, "hash", $urlPattern.Builder$Builder$hash(builder));
-  setIfSome(result, "baseURL", $urlPattern.Builder$Builder$base_url(builder));
-  return result;
-}
-
 function toComponentResult(
   component: URLPatternComponentResult,
 ): $urlPattern.ComponentMatch$ {
@@ -48,9 +34,29 @@ function toMatch(result: URLPatternResult): $urlPattern.Match$ {
   );
 }
 
-export const build: typeof $urlPattern.build = (builder) => {
+export const build: typeof $urlPattern.do_build = (
+  protocol,
+  username,
+  password,
+  hostname,
+  port,
+  pathname,
+  search,
+  hash,
+  base_url,
+) => {
+  const init: URLPatternInit = {};
+  setIfSome(init, "protocol", protocol);
+  setIfSome(init, "username", username);
+  setIfSome(init, "password", password);
+  setIfSome(init, "hostname", hostname);
+  setIfSome(init, "port", port);
+  setIfSome(init, "pathname", pathname);
+  setIfSome(init, "search", search);
+  setIfSome(init, "hash", hash);
+  setIfSome(init, "baseURL", base_url);
   try {
-    return Result$Ok(new URLPattern(fromBuilder(builder)));
+    return Result$Ok(new URLPattern(init));
   } catch {
     return invalidPattern();
   }

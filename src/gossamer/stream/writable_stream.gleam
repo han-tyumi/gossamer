@@ -18,7 +18,7 @@ pub type WritableStream(a)
 /// refine with `with_start`, `with_write`, `with_close`, `with_abort`, and
 /// `with_queuing_strategy`, then call `build` to create the stream.
 ///
-pub type Builder(a) {
+pub opaque type Builder(a) {
   Builder(
     start: Option(fn(DefaultController) -> Nil),
     write: Option(fn(a, DefaultController) -> Promise(Nil)),
@@ -101,9 +101,26 @@ pub fn with_queuing_strategy(
 /// `Errored` if the `start` callback throws synchronously; the thrown
 /// value is the variant's reason.
 ///
-@external(javascript, "./writable_stream.ffi.mjs", "build")
 pub fn build(
   builder: Builder(a),
+) -> Result(WritableStream(a), StreamLifecycleError) {
+  do_build(
+    builder.start,
+    builder.write,
+    builder.close,
+    builder.abort,
+    builder.queuing_strategy,
+  )
+}
+
+@external(javascript, "./writable_stream.ffi.mjs", "build")
+@internal
+pub fn do_build(
+  start: Option(fn(DefaultController) -> Nil),
+  write: Option(fn(a, DefaultController) -> Promise(Nil)),
+  close: Option(fn() -> Promise(Nil)),
+  abort: Option(fn(Dynamic) -> Promise(Nil)),
+  queuing_strategy: Option(QueuingStrategy),
 ) -> Result(WritableStream(a), StreamLifecycleError)
 
 /// Creates a `WritableStream` from only a `write` callback — use when the

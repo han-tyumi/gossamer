@@ -40,17 +40,19 @@ function fromPipeOptions(
   return result;
 }
 
-export const build: typeof $readableStream.build = (builder) => {
+export const build: typeof $readableStream.do_build = (
+  start,
+  pull,
+  cancel,
+  queuing_strategy,
+) => {
   const source: UnderlyingDefaultSource = {};
-  setIfSome(source, "start", $readableStream.Builder$Builder$start(builder));
-  setIfSome(source, "pull", $readableStream.Builder$Builder$pull(builder));
-  setIfSome(source, "cancel", $readableStream.Builder$Builder$cancel(builder));
-  const strategyOption = $readableStream.Builder$Builder$queuing_strategy(
-    builder,
-  );
-  const strategy = $option.Option$isNone(strategyOption)
+  setIfSome(source, "start", start);
+  setIfSome(source, "pull", pull);
+  setIfSome(source, "cancel", cancel);
+  const strategy = $option.Option$isNone(queuing_strategy)
     ? undefined
-    : fromQueuingStrategy($option.Option$Some$0(strategyOption));
+    : fromQueuingStrategy($option.Option$Some$0(queuing_strategy));
   try {
     return Result$Ok(new ReadableStream(source, strategy));
   } catch (err) {

@@ -12,7 +12,7 @@ pub type TextDecoder
 /// with `with_fatal` and `with_ignore_bom`, then call `build` (or
 /// `decode` for one-shot use).
 ///
-pub type Builder {
+pub opaque type Builder {
   Builder(label: String, fatal: Bool, ignore_bom: Bool)
 }
 
@@ -40,8 +40,17 @@ pub fn with_ignore_bom(builder: Builder, value: Bool) -> Builder {
 /// Constructs a `TextDecoder` from the configured `Builder`. Returns
 /// `UnsupportedEncoding` if the label isn't a recognized encoding.
 ///
+pub fn build(builder: Builder) -> Result(TextDecoder, DecoderError) {
+  do_build(builder.label, builder.fatal, builder.ignore_bom)
+}
+
 @external(javascript, "./text_decoder.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(TextDecoder, DecoderError)
+@internal
+pub fn do_build(
+  label: String,
+  fatal: Bool,
+  ignore_bom: Bool,
+) -> Result(TextDecoder, DecoderError)
 
 /// The decoder's resolved encoding.
 ///
@@ -84,8 +93,18 @@ pub fn flush(decoder: TextDecoder) -> Result(String, DecoderError)
 /// bytes that don't form a valid sequence. For default UTF-8 decoding,
 /// use `gleam/bit_array.to_string`.
 ///
-@external(javascript, "./text_decoder.ffi.mjs", "decode")
 pub fn decode(
   input: BitArray,
   with builder: Builder,
+) -> Result(String, DecoderError) {
+  do_decode(input, builder.label, builder.fatal, builder.ignore_bom)
+}
+
+@external(javascript, "./text_decoder.ffi.mjs", "decode")
+@internal
+pub fn do_decode(
+  input: BitArray,
+  label: String,
+  fatal: Bool,
+  ignore_bom: Bool,
 ) -> Result(String, DecoderError)

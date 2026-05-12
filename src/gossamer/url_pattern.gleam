@@ -13,7 +13,7 @@ pub type UrlPattern
 /// `new`, refine with the `with_X` setters, then call `build`. Unset
 /// components match any value.
 ///
-pub type Builder {
+pub opaque type Builder {
   Builder(
     protocol: Option(String),
     username: Option(String),
@@ -130,8 +130,33 @@ pub fn with_base_url(builder: Builder, value: String) -> Builder {
 /// Constructs a `UrlPattern` from the configured `Builder`. Returns
 /// `InvalidPattern` if any component pattern is malformed.
 ///
+pub fn build(builder: Builder) -> Result(UrlPattern, UrlPatternError) {
+  do_build(
+    builder.protocol,
+    builder.username,
+    builder.password,
+    builder.hostname,
+    builder.port,
+    builder.pathname,
+    builder.search,
+    builder.hash,
+    builder.base_url,
+  )
+}
+
 @external(javascript, "./url_pattern.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(UrlPattern, UrlPatternError)
+@internal
+pub fn do_build(
+  protocol: Option(String),
+  username: Option(String),
+  password: Option(String),
+  hostname: Option(String),
+  port: Option(String),
+  pathname: Option(String),
+  search: Option(String),
+  hash: Option(String),
+  base_url: Option(String),
+) -> Result(UrlPattern, UrlPatternError)
 
 /// Creates a `UrlPattern` from a single pattern string. Returns
 /// `InvalidPattern` if the pattern is malformed.

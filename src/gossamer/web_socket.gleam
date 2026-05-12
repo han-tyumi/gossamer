@@ -64,7 +64,7 @@ pub type WebSocket
 /// listener setters (`with_open`, `with_message`, `with_error`, `with_close`),
 /// then call `build` to open the connection.
 ///
-pub type Builder {
+pub opaque type Builder {
   Builder(
     url: String,
     protocols: List(String),
@@ -170,8 +170,29 @@ pub fn with_close(builder: Builder, run handler: fn(CloseEvent) -> a) -> Builder
 /// contains a fragment, and `Error(InvalidProtocols)` when the protocols
 /// list has duplicates or non-token entries.
 ///
+pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError) {
+  do_build(
+    builder.url,
+    builder.protocols,
+    builder.binary_type,
+    builder.on_open,
+    builder.on_message,
+    builder.on_error,
+    builder.on_close,
+  )
+}
+
 @external(javascript, "./web_socket.ffi.mjs", "build")
-pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError)
+@internal
+pub fn do_build(
+  url: String,
+  protocols: List(String),
+  binary_type: Option(BinaryType),
+  on_open: Option(fn() -> Nil),
+  on_message: Option(fn(MessageEvent) -> Nil),
+  on_error: Option(fn() -> Nil),
+  on_close: Option(fn(CloseEvent) -> Nil),
+) -> Result(WebSocket, WebSocketError)
 
 /// The format binary messages arrive as on this socket.
 ///

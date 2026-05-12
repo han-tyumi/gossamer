@@ -1,4 +1,4 @@
-import * as $writableStream from "$/gossamer/gossamer/stream/writable_stream.mjs";
+import type * as $writableStream from "$/gossamer/gossamer/stream/writable_stream.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
@@ -13,18 +13,21 @@ function erroredError(reason: unknown) {
   return Result$Error($stream.StreamLifecycleError$Errored(reason));
 }
 
-export const build: typeof $writableStream.build = (builder) => {
+export const build: typeof $writableStream.do_build = (
+  start,
+  write,
+  close,
+  abort,
+  queuing_strategy,
+) => {
   const sink: UnderlyingSink = {};
-  setIfSome(sink, "start", $writableStream.Builder$Builder$start(builder));
-  setIfSome(sink, "write", $writableStream.Builder$Builder$write(builder));
-  setIfSome(sink, "close", $writableStream.Builder$Builder$close(builder));
-  setIfSome(sink, "abort", $writableStream.Builder$Builder$abort(builder));
-  const strategyOption = $writableStream.Builder$Builder$queuing_strategy(
-    builder,
-  );
-  const strategy = $option.Option$isNone(strategyOption)
+  setIfSome(sink, "start", start);
+  setIfSome(sink, "write", write);
+  setIfSome(sink, "close", close);
+  setIfSome(sink, "abort", abort);
+  const strategy = $option.Option$isNone(queuing_strategy)
     ? undefined
-    : fromQueuingStrategy($option.Option$Some$0(strategyOption));
+    : fromQueuingStrategy($option.Option$Some$0(queuing_strategy));
   try {
     return Result$Ok(new WritableStream(sink, strategy));
   } catch (err) {

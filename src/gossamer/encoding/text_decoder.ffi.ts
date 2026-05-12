@@ -1,21 +1,8 @@
 import * as $encoding from "$/gossamer/gossamer/encoding.mjs";
-import * as $textDecoder from "$/gossamer/gossamer/encoding/text_decoder.mjs";
+import type * as $textDecoder from "$/gossamer/gossamer/encoding/text_decoder.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
-
-function fromBuilder(builder: $textDecoder.Builder$): {
-  label: string;
-  options: TextDecoderOptions;
-} {
-  return {
-    label: $textDecoder.Builder$Builder$label(builder),
-    options: {
-      fatal: $textDecoder.Builder$Builder$fatal(builder),
-      ignoreBOM: $textDecoder.Builder$Builder$ignore_bom(builder),
-    },
-  };
-}
 
 function constructDecoder(label: string, options: TextDecoderOptions) {
   try {
@@ -37,9 +24,12 @@ function decodeBytes(
   }
 }
 
-export const build: typeof $textDecoder.build = (builder) => {
-  const { label, options } = fromBuilder(builder);
-  return constructDecoder(label, options);
+export const build: typeof $textDecoder.do_build = (
+  label,
+  fatal,
+  ignore_bom,
+) => {
+  return constructDecoder(label, { fatal, ignoreBOM: ignore_bom });
 };
 
 export const encoding: typeof $textDecoder.encoding = (decoder) => {
@@ -60,11 +50,15 @@ export const decode_chunk: typeof $textDecoder.decode_chunk = (
 export const flush: typeof $textDecoder.flush = (decoder) =>
   decodeBytes(decoder);
 
-export const decode: typeof $textDecoder.decode = (input, builder) => {
-  const { label, options } = fromBuilder(builder);
+export const decode: typeof $textDecoder.do_decode = (
+  input,
+  label,
+  fatal,
+  ignore_bom,
+) => {
   let decoder;
   try {
-    decoder = new TextDecoder(label, options);
+    decoder = new TextDecoder(label, { fatal, ignoreBOM: ignore_bom });
   } catch {
     return Result$Error($encoding.DecoderError$UnsupportedEncoding(label));
   }

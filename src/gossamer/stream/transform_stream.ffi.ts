@@ -1,4 +1,4 @@
-import * as $transformStream from "$/gossamer/gossamer/stream/transform_stream.mjs";
+import type * as $transformStream from "$/gossamer/gossamer/stream/transform_stream.mjs";
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
@@ -11,34 +11,21 @@ function strategyOf(opt: $option.Option$<$stream.QueuingStrategy$>) {
     : fromQueuingStrategy($option.Option$Some$0(opt));
 }
 
-export const build: typeof $transformStream.build = (builder) => {
+export const build: typeof $transformStream.do_build = (
+  start,
+  transform,
+  flush,
+  cancel,
+  writable_strategy,
+  readable_strategy,
+) => {
   const transformer: Transformer = {};
-  setIfSome(
-    transformer,
-    "start",
-    $transformStream.Builder$Builder$start(builder),
-  );
-  setIfSome(
-    transformer,
-    "transform",
-    $transformStream.Builder$Builder$transform(builder),
-  );
-  setIfSome(
-    transformer,
-    "flush",
-    $transformStream.Builder$Builder$flush(builder),
-  );
-  setIfSome(
-    transformer,
-    "cancel",
-    $transformStream.Builder$Builder$cancel(builder),
-  );
-  const writableStrategy = strategyOf(
-    $transformStream.Builder$Builder$writable_strategy(builder),
-  );
-  const readableStrategy = strategyOf(
-    $transformStream.Builder$Builder$readable_strategy(builder),
-  );
+  setIfSome(transformer, "start", start);
+  setIfSome(transformer, "transform", transform);
+  setIfSome(transformer, "flush", flush);
+  setIfSome(transformer, "cancel", cancel);
+  const writableStrategy = strategyOf(writable_strategy);
+  const readableStrategy = strategyOf(readable_strategy);
   try {
     return Result$Ok(
       new TransformStream(transformer, writableStrategy, readableStrategy),
