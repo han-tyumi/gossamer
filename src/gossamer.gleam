@@ -39,7 +39,7 @@ pub fn decode_base64(encoded: String) -> Result(String, Base64Error)
 
 /// Encodes a binary string as base64. Returns `InvalidEncoding` if
 /// `data` contains code points beyond `0xFF` (use
-/// `uint8_array.to_base64` for arbitrary bytes).
+/// `gleam/bit_array.base64_encode` for arbitrary bytes).
 ///
 @external(javascript, "./gossamer.ffi.mjs", "encode_base64")
 pub fn encode_base64(data: String) -> Result(String, Base64Error)
