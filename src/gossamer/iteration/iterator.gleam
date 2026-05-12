@@ -1,5 +1,6 @@
-//// JS `Iterator` binding for interop with APIs that produce or consume
-//// iterators (`Map.entries`, `Set.values`, `ReadableStream.from`, etc.).
+//// JavaScript `Iterator` binding for interop with APIs that produce or
+//// consume iterators (`Map.entries`, `Set.values`, `ReadableStream.from`,
+//// etc.).
 //// The module is intentionally a transit-type binding: it exposes the
 //// type, construction primitives, the iterator protocol (`next`,
 //// `return`, `throw`), and bridges to/from `gleam_yielder`'s
