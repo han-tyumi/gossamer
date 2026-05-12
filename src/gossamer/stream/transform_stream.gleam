@@ -103,12 +103,10 @@ pub fn from_transform(
 ///
 @external(javascript, "./transform_stream.ffi.mjs", "readable")
 pub fn readable(
-  of stream: TransformStream(input, output),
+  stream: TransformStream(input, output),
 ) -> ReadableStream(output)
 
 /// The writable side of the stream, accepting the input chunks.
 ///
 @external(javascript, "./transform_stream.ffi.mjs", "writable")
-pub fn writable(
-  of stream: TransformStream(input, output),
-) -> WritableStream(input)
+pub fn writable(stream: TransformStream(input, output)) -> WritableStream(input)

@@ -44,7 +44,7 @@ pub fn to_set(set: Set(value)) -> set.Set(value) {
 /// The number of values in the `Set`.
 ///
 @external(javascript, "./set.ffi.mjs", "size")
-pub fn size(of set: Set(value)) -> Int
+pub fn size(set: Set(value)) -> Int
 
 /// Returns whether the `Set` contains the given value.
 ///
@@ -54,11 +54,11 @@ pub fn has(in set: Set(value), value value: value) -> Bool
 /// Returns the values of the `Set` in insertion order.
 ///
 @external(javascript, "./set.ffi.mjs", "values")
-pub fn values(of set: Set(value)) -> Yielder(value)
+pub fn values(set: Set(value)) -> Yielder(value)
 
 /// Returns the `#(value, value)` pairs of the `Set` in insertion order.
 /// Each value appears with itself, mirroring the JS `Set.entries()`
 /// shape.
 ///
 @external(javascript, "./set.ffi.mjs", "entries")
-pub fn entries(of set: Set(value)) -> Yielder(#(value, value))
+pub fn entries(set: Set(value)) -> Yielder(#(value, value))

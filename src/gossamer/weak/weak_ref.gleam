@@ -23,4 +23,4 @@ pub fn new(target: target) -> Result(WeakRef(target), WeakKeyError)
 /// Returns the target, or an error if it has been collected.
 ///
 @external(javascript, "./weak_ref.ffi.mjs", "deref")
-pub fn deref(of ref: WeakRef(target)) -> Result(target, Nil)
+pub fn deref(ref: WeakRef(target)) -> Result(target, Nil)

@@ -30,7 +30,7 @@ pub fn is_aborted(signal: AbortSignal) -> Bool
 /// is not aborted.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
-pub fn reason(for signal: AbortSignal) -> Result(Dynamic, Nil)
+pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 
 /// Returns `Error` carrying the abort reason if the signal is aborted, or
 /// `Ok(Nil)` otherwise.

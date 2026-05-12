@@ -13,9 +13,7 @@ pub type Reader(a)
 /// enters an errored state; the reason is the variant's payload.
 ///
 @external(javascript, "./reader.ffi.mjs", "closed")
-pub fn closed(
-  of reader: Reader(a),
-) -> Promise(Result(Nil, StreamLifecycleError))
+pub fn closed(reader: Reader(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
 /// Cancels the stream and releases the reader's lock. Returns `Errored`
 /// if the underlying source's cancel callback throws or rejects.

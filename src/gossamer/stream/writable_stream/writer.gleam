@@ -13,22 +13,20 @@ pub type Writer(a)
 /// holds the lock.
 ///
 @external(javascript, "./writer.ffi.mjs", "closed")
-pub fn closed(
-  of writer: Writer(a),
-) -> Promise(Result(Nil, StreamLifecycleError))
+pub fn closed(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
 /// The desired size to fill the stream's internal queue. Returns an error
 /// if the stream has been closed or errored.
 ///
 @external(javascript, "./writer.ffi.mjs", "desired_size")
-pub fn desired_size(of writer: Writer(a)) -> Result(Int, Nil)
+pub fn desired_size(writer: Writer(a)) -> Result(Int, Nil)
 
 /// Resolves when the stream is ready to accept more writes
 /// (backpressure has cleared). Returns `Errored` if the stream enters
 /// an errored state.
 ///
 @external(javascript, "./writer.ffi.mjs", "ready")
-pub fn ready(of writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
+pub fn ready(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
 /// Aborts the stream. Returns `Errored` if the underlying sink's
 /// abort callback throws or returns a rejecting promise.

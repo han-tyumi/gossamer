@@ -49,7 +49,7 @@ pub fn to_dict(map: Map(key, value)) -> Dict(key, value) {
 /// The number of entries in the `Map`.
 ///
 @external(javascript, "./map.ffi.mjs", "size")
-pub fn size(of map: Map(key, value)) -> Int
+pub fn size(map: Map(key, value)) -> Int
 
 /// Returns the value associated with the given key, or `Error(Nil)` if
 /// the key is absent.
@@ -65,14 +65,14 @@ pub fn has(in map: Map(key, value), key key: key) -> Bool
 /// Returns the keys of the `Map` in insertion order.
 ///
 @external(javascript, "./map.ffi.mjs", "keys")
-pub fn keys(of map: Map(key, value)) -> Yielder(key)
+pub fn keys(map: Map(key, value)) -> Yielder(key)
 
 /// Returns the values of the `Map` in insertion order.
 ///
 @external(javascript, "./map.ffi.mjs", "values")
-pub fn values(of map: Map(key, value)) -> Yielder(value)
+pub fn values(map: Map(key, value)) -> Yielder(value)
 
 /// Returns the `#(key, value)` pairs of the `Map` in insertion order.
 ///
 @external(javascript, "./map.ffi.mjs", "entries")
-pub fn entries(of map: Map(key, value)) -> Yielder(#(key, value))
+pub fn entries(map: Map(key, value)) -> Yielder(#(key, value))

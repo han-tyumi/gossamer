@@ -28,23 +28,23 @@ pub fn new_range(
 ) -> Result(DataView, BufferError)
 
 @external(javascript, "./data_view.ffi.mjs", "buffer")
-pub fn buffer(of view: DataView) -> ArrayBuffer
+pub fn buffer(view: DataView) -> ArrayBuffer
 
 /// A `Uint8Array` over the same bytes as `view`, sharing memory with
 /// the underlying buffer.
 ///
 @external(javascript, "./data_view.ffi.mjs", "bytes")
-pub fn bytes(of view: DataView) -> Uint8Array
+pub fn bytes(view: DataView) -> Uint8Array
 
 /// The number of bytes covered by the view.
 ///
 @external(javascript, "./data_view.ffi.mjs", "byte_length")
-pub fn byte_length(of view: DataView) -> Int
+pub fn byte_length(view: DataView) -> Int
 
 /// The offset, in bytes, from the start of the underlying buffer.
 ///
 @external(javascript, "./data_view.ffi.mjs", "byte_offset")
-pub fn byte_offset(of view: DataView) -> Int
+pub fn byte_offset(view: DataView) -> Int
 
 /// Reads a signed 8-bit integer at `offset`. Returns `OutOfRange`
 /// if `offset` is out of bounds.

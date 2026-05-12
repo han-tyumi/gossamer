@@ -13,7 +13,7 @@ pub type DefaultController(a)
 /// if the stream has been closed or errored.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
-pub fn desired_size(of controller: DefaultController(a)) -> Result(Int, Nil)
+pub fn desired_size(controller: DefaultController(a)) -> Result(Int, Nil)
 
 /// Closes the stream. Returns `Closed` if the stream is already closed.
 ///

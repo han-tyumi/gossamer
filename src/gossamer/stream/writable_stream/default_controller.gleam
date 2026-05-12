@@ -10,7 +10,7 @@ import gossamer/abort_signal.{type AbortSignal}
 pub type DefaultController
 
 @external(javascript, "./default_controller.ffi.mjs", "signal")
-pub fn signal(of controller: DefaultController) -> AbortSignal
+pub fn signal(controller: DefaultController) -> AbortSignal
 
 /// Signals an error on the stream. A no-op if the stream is already
 /// closed or errored.
