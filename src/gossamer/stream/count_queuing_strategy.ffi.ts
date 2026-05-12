@@ -1,4 +1,4 @@
-import * as $countQueuingStrategy from "$/gossamer/gossamer/count_queuing_strategy.mjs";
+import * as $countQueuingStrategy from "$/gossamer/gossamer/stream/count_queuing_strategy.mjs";
 
 export const new_: typeof $countQueuingStrategy.new$ = (highWaterMark) => {
   const value = $countQueuingStrategy.HighWaterMark$isUnlimited(highWaterMark)

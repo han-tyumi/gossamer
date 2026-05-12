@@ -1,4 +1,4 @@
-import * as $byteLengthQueuingStrategy from "$/gossamer/gossamer/byte_length_queuing_strategy.mjs";
+import * as $byteLengthQueuingStrategy from "$/gossamer/gossamer/stream/byte_length_queuing_strategy.mjs";
 
 export const new_: typeof $byteLengthQueuingStrategy.new$ = (highWaterMark) => {
   const value = $byteLengthQueuingStrategy.HighWaterMark$isUnlimited(

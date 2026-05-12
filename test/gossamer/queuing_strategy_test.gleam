@@ -1,6 +1,6 @@
 import gleeunit/should
-import gossamer/byte_length_queuing_strategy as bytes_strategy
-import gossamer/count_queuing_strategy as count_strategy
+import gossamer/stream/byte_length_queuing_strategy as bytes_strategy
+import gossamer/stream/count_queuing_strategy as count_strategy
 
 pub fn byte_length_new_test() {
   let strategy = bytes_strategy.new(bytes_strategy.Bytes(1024))
