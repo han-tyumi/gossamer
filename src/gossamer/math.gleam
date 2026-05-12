@@ -1,6 +1,6 @@
 //// JavaScript `Math` operations not covered by `gleam/float` —
 //// trigonometric and hyperbolic functions, special logarithms, and a
-//// handful of JS-specific helpers.
+//// handful of JavaScript-specific helpers.
 
 /// The ratio of a circle's circumference to its diameter.
 ///
