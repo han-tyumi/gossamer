@@ -52,12 +52,12 @@ pub fn clear_interval(id: Int) -> Nil
 @external(javascript, "./gossamer.ffi.mjs", "clear_timeout")
 pub fn clear_timeout(id: Int) -> Nil
 
-/// A microtask is a short function which is executed after the function or
-/// module which created it exits and only if the JavaScript execution stack is
-/// empty, but before returning control to the event loop.
+/// Schedules `callback` to run as a microtask — after the current
+/// execution stack empties but before returning control to the event
+/// loop.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "queue_microtask")
-pub fn queue_microtask(run func: fn() -> a) -> Nil
+pub fn queue_microtask(callback: fn() -> a) -> Nil
 
 /// Schedules `callback` to run repeatedly every `delay`. Returns an id
 /// that can be passed to `clear_interval` to cancel. Negative durations
