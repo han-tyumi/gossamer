@@ -25,21 +25,12 @@ function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
 }
 
 function toBinaryType(value: BinaryType | string): $webSocket.BinaryType$ {
-  switch (value) {
-    case "arraybuffer":
-      return $webSocket.BinaryType$ArrayBuffer();
-    case "blob":
-      return $webSocket.BinaryType$Blob();
-    default:
-      return $webSocket.BinaryType$Other(value);
-  }
+  if (value === "arraybuffer") return $webSocket.BinaryType$ArrayBuffer();
+  return $webSocket.BinaryType$Blob();
 }
 
 function fromBinaryType(value: $webSocket.BinaryType$): BinaryType {
   if ($webSocket.BinaryType$isArrayBuffer(value)) return "arraybuffer";
-  if ($webSocket.BinaryType$isOther(value)) {
-    return $webSocket.BinaryType$Other$0(value) as BinaryType;
-  }
   return "blob";
 }
 
