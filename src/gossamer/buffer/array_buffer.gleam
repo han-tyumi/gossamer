@@ -1,9 +1,9 @@
 /// A generic raw binary data buffer.
 ///
-/// `ArrayBuffer` is a transit type — it exists for interop with JS APIs
-/// that specifically require an `ArrayBuffer` (typed-array views,
-/// `DataView`). For byte data in Gleam, prefer `BitArray`. Bridge with
-/// `from_bit_array` / `to_bit_array`.
+/// `ArrayBuffer` is a transit type — it exists for interop with
+/// JavaScript APIs that specifically require an `ArrayBuffer`
+/// (typed-array views, `DataView`). For byte data in Gleam, prefer
+/// `BitArray`. Bridge with `from_bit_array` / `to_bit_array`.
 ///
 /// See [ArrayBuffer](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) on MDN.
 ///
