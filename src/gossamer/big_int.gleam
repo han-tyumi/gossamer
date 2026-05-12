@@ -2,7 +2,7 @@ import gleam/order.{type Order}
 
 /// A JavaScript `BigInt` — an arbitrary-precision integer. Use when
 /// working with values outside the safe-integer range of Gleam `Int`
-/// (±2^53−1) or interoperating with `BigInt64Array`/`BigUint64Array`.
+/// (±2^53−1).
 ///
 /// See [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) on MDN.
 ///
