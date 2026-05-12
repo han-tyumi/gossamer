@@ -21,25 +21,26 @@ pub fn structured_clone_tuple_test() {
 }
 
 pub fn btoa_test() {
-  gossamer.btoa("Hello") |> should.equal(Ok("SGVsbG8="))
+  gossamer.encode_base64("Hello") |> should.equal(Ok("SGVsbG8="))
 }
 
 pub fn atob_test() {
-  gossamer.atob("SGVsbG8=") |> should.equal(Ok("Hello"))
+  gossamer.decode_base64("SGVsbG8=") |> should.equal(Ok("Hello"))
 }
 
 pub fn btoa_atob_roundtrip_test() {
-  let assert Ok(encoded) = gossamer.btoa("roundtrip test")
-  let assert Ok(decoded) = gossamer.atob(encoded)
+  let assert Ok(encoded) = gossamer.encode_base64("roundtrip test")
+  let assert Ok(decoded) = gossamer.decode_base64(encoded)
   should.equal(decoded, "roundtrip test")
 }
 
 pub fn atob_invalid_test() {
-  let assert Error(gossamer.InvalidEncoding(_)) = gossamer.atob("!!!invalid!!!")
+  let assert Error(gossamer.InvalidEncoding(_)) =
+    gossamer.decode_base64("!!!invalid!!!")
 }
 
 pub fn btoa_non_latin1_test() {
-  let assert Error(gossamer.InvalidEncoding(_)) = gossamer.btoa("日本語")
+  let assert Error(gossamer.InvalidEncoding(_)) = gossamer.encode_base64("日本語")
 }
 
 pub fn structured_clone_function_test() {

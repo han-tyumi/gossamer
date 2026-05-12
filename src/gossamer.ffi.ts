@@ -16,7 +16,7 @@ export const structured_clone: typeof $gossamer.structured_clone = (value) => {
   }
 };
 
-export const atob: typeof $gossamer.atob = (encoded) => {
+export const decode_base64: typeof $gossamer.decode_base64 = (encoded) => {
   try {
     return Result$Ok(globalThis.atob(encoded));
   } catch (err) {
@@ -26,7 +26,7 @@ export const atob: typeof $gossamer.atob = (encoded) => {
   }
 };
 
-export const btoa: typeof $gossamer.btoa = (data) => {
+export const encode_base64: typeof $gossamer.encode_base64 = (data) => {
   try {
     return Result$Ok(globalThis.btoa(data));
   } catch (err) {

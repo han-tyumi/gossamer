@@ -14,11 +14,13 @@ pub type StructuredCloneError {
   NotCloneable(message: String)
 }
 
-/// Errors raised by the base64 conversions `atob` and `btoa`.
+/// Errors raised by the base64 conversions `decode_base64` and
+/// `encode_base64`.
 pub type Base64Error {
-  /// For `atob`, the input is not a valid base64 string. For `btoa`,
-  /// the input contains code points beyond `0xFF`. The `message`
-  /// payload carries the underlying JavaScript error description.
+  /// For `decode_base64`, the input is not a valid base64 string. For
+  /// `encode_base64`, the input contains code points beyond `0xFF`. The
+  /// `message` payload carries the underlying JavaScript error
+  /// description.
   InvalidEncoding(message: String)
 }
 
@@ -32,15 +34,15 @@ pub fn structured_clone(value: a) -> Result(a, StructuredCloneError)
 /// Decodes a base64-encoded string. Returns `InvalidEncoding` if the
 /// string is not valid base64.
 ///
-@external(javascript, "./gossamer.ffi.mjs", "atob")
-pub fn atob(encoded: String) -> Result(String, Base64Error)
+@external(javascript, "./gossamer.ffi.mjs", "decode_base64")
+pub fn decode_base64(encoded: String) -> Result(String, Base64Error)
 
 /// Encodes a binary string as base64. Returns `InvalidEncoding` if
 /// `data` contains code points beyond `0xFF` (use
 /// `uint8_array.to_base64` for arbitrary bytes).
 ///
-@external(javascript, "./gossamer.ffi.mjs", "btoa")
-pub fn btoa(data: String) -> Result(String, Base64Error)
+@external(javascript, "./gossamer.ffi.mjs", "encode_base64")
+pub fn encode_base64(data: String) -> Result(String, Base64Error)
 
 /// Cancels a repeating timer previously scheduled with `set_interval`.
 ///
