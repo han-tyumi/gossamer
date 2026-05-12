@@ -1,12 +1,8 @@
 import gleam/order.{type Order}
 
-/// A JS `bigint` — an arbitrary-precision integer. Use when working
-/// with values outside the safe-integer range of Gleam `Int` (±2^53−1)
-/// or interoperating with `BigInt64Array`/`BigUint64Array`.
-///
-/// Mixed-type arithmetic (`bigint + number`) throws `TypeError` in
-/// JS, but Gleam's type system makes that unreachable — every
-/// arithmetic function here takes two `BigInt` operands.
+/// A JavaScript `BigInt` — an arbitrary-precision integer. Use when
+/// working with values outside the safe-integer range of Gleam `Int`
+/// (±2^53−1) or interoperating with `BigInt64Array`/`BigUint64Array`.
 ///
 /// See [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt) on MDN.
 ///
@@ -31,7 +27,7 @@ pub fn from_int(value: Int) -> BigInt
 /// `InvalidInteger` on malformed input — decimal floats like
 /// `"1.5"`, scientific notation like `"1e3"`, and the trailing-`n`
 /// literal suffix like `"42n"` are all rejected. The empty string
-/// returns `0`, matching JS `BigInt("")`.
+/// parses as `0`.
 ///
 @external(javascript, "./big_int.ffi.mjs", "from_string")
 pub fn from_string(string: String) -> Result(BigInt, BigIntError)
