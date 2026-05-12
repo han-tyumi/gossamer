@@ -18,35 +18,36 @@ pub fn min_value_test() {
   should.be_true(min <. number.epsilon())
 }
 
-pub fn to_fixed_test() {
-  number.to_fixed(3.14159, digits: 2) |> should.equal(Ok("3.14"))
-  number.to_fixed(1.0, digits: 0) |> should.equal(Ok("1"))
-  number.to_fixed(1.005, digits: 2) |> should.equal(Ok("1.00"))
+pub fn to_fixed_string_test() {
+  number.to_fixed_string(3.14159, digits: 2) |> should.equal(Ok("3.14"))
+  number.to_fixed_string(1.0, digits: 0) |> should.equal(Ok("1"))
+  number.to_fixed_string(1.005, digits: 2) |> should.equal(Ok("1.00"))
 }
 
-pub fn to_fixed_out_of_range_test() {
-  number.to_fixed(1.0, digits: -1) |> should.be_error()
-  number.to_fixed(1.0, digits: 101) |> should.be_error()
+pub fn to_fixed_string_out_of_range_test() {
+  number.to_fixed_string(1.0, digits: -1) |> should.be_error()
+  number.to_fixed_string(1.0, digits: 101) |> should.be_error()
 }
 
-pub fn to_precision_test() {
-  number.to_precision(123.456, digits: 4) |> should.equal(Ok("123.5"))
-  number.to_precision(0.00123, digits: 2) |> should.equal(Ok("0.0012"))
+pub fn to_precision_string_test() {
+  number.to_precision_string(123.456, digits: 4) |> should.equal(Ok("123.5"))
+  number.to_precision_string(0.00123, digits: 2) |> should.equal(Ok("0.0012"))
 }
 
-pub fn to_precision_out_of_range_test() {
-  number.to_precision(1.0, digits: 0) |> should.be_error()
-  number.to_precision(1.0, digits: 101) |> should.be_error()
+pub fn to_precision_string_out_of_range_test() {
+  number.to_precision_string(1.0, digits: 0) |> should.be_error()
+  number.to_precision_string(1.0, digits: 101) |> should.be_error()
 }
 
-pub fn to_exponential_test() {
-  number.to_exponential(123_456.0, digits: 2) |> should.equal(Ok("1.23e+5"))
-  number.to_exponential(0.0, digits: 0) |> should.equal(Ok("0e+0"))
+pub fn to_exponential_string_test() {
+  number.to_exponential_string(123_456.0, digits: 2)
+  |> should.equal(Ok("1.23e+5"))
+  number.to_exponential_string(0.0, digits: 0) |> should.equal(Ok("0e+0"))
 }
 
-pub fn to_exponential_out_of_range_test() {
-  number.to_exponential(1.0, digits: -1) |> should.be_error()
-  number.to_exponential(1.0, digits: 101) |> should.be_error()
+pub fn to_exponential_string_out_of_range_test() {
+  number.to_exponential_string(1.0, digits: -1) |> should.be_error()
+  number.to_exponential_string(1.0, digits: 101) |> should.be_error()
 }
 
 pub fn to_locale_string_test() {

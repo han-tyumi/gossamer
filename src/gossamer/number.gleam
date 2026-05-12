@@ -38,14 +38,17 @@ pub fn min_value() -> Float
 /// number of decimal places. Returns `OutOfRange` if `digits` is
 /// outside `0`–`100`.
 ///
-@external(javascript, "./number.ffi.mjs", "to_fixed")
-pub fn to_fixed(value: Float, digits digits: Int) -> Result(String, NumberError)
+@external(javascript, "./number.ffi.mjs", "to_fixed_string")
+pub fn to_fixed_string(
+  value: Float,
+  digits digits: Int,
+) -> Result(String, NumberError)
 
 /// Formats a number to the specified number of significant digits.
 /// Returns `OutOfRange` if `digits` is outside `1`–`100`.
 ///
-@external(javascript, "./number.ffi.mjs", "to_precision")
-pub fn to_precision(
+@external(javascript, "./number.ffi.mjs", "to_precision_string")
+pub fn to_precision_string(
   value: Float,
   digits digits: Int,
 ) -> Result(String, NumberError)
@@ -54,8 +57,8 @@ pub fn to_precision(
 /// specified number of digits after the decimal point. Returns
 /// `OutOfRange` if `digits` is outside `0`–`100`.
 ///
-@external(javascript, "./number.ffi.mjs", "to_exponential")
-pub fn to_exponential(
+@external(javascript, "./number.ffi.mjs", "to_exponential_string")
+pub fn to_exponential_string(
   value: Float,
   digits digits: Int,
 ) -> Result(String, NumberError)

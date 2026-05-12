@@ -12,15 +12,21 @@ function checkRange(value: number, low: number, high: number) {
   return undefined;
 }
 
-export const to_fixed: typeof $number.to_fixed = (value, digits) => {
+export const to_fixed_string: typeof $number.to_fixed_string = (
+  value,
+  digits,
+) => {
   return checkRange(digits, 0, 100) ?? Result$Ok(value.toFixed(digits));
 };
 
-export const to_precision: typeof $number.to_precision = (value, digits) => {
+export const to_precision_string: typeof $number.to_precision_string = (
+  value,
+  digits,
+) => {
   return checkRange(digits, 1, 100) ?? Result$Ok(value.toPrecision(digits));
 };
 
-export const to_exponential: typeof $number.to_exponential = (
+export const to_exponential_string: typeof $number.to_exponential_string = (
   value,
   digits,
 ) => {
