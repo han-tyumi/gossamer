@@ -56,13 +56,10 @@ pub type CryptoError {
 /// The serialization format of a key imported or exported via
 /// `subtle_crypto`.
 ///
-/// Unrecognized values use `KeyFormatOther(String)`.
-///
 pub type KeyFormat {
   Pkcs8
   Raw
   Spki
-  KeyFormatOther(String)
 }
 
 /// Algorithm parameters for `derive_bits` and `derive_key`.

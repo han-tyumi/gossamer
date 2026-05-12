@@ -116,7 +116,7 @@ export function fromHashAlgorithm(value: string): $cryptoKey.HashAlgorithm$ {
   }
 }
 
-export function toKeyType(value: KeyType | string): $cryptoKey.KeyType$ {
+export function toKeyType(value: KeyType): $cryptoKey.KeyType$ {
   switch (value) {
     case "private":
       return $cryptoKey.KeyType$Private();
@@ -125,7 +125,9 @@ export function toKeyType(value: KeyType | string): $cryptoKey.KeyType$ {
     case "secret":
       return $cryptoKey.KeyType$Secret();
     default:
-      return $cryptoKey.KeyType$KeyTypeOther(value);
+      throw new Error(
+        `gossamer.crypto_key.type_: runtime returned unexpected CryptoKey.type: ${value}`,
+      );
   }
 }
 
@@ -137,13 +139,10 @@ export function toKeyUsage(value: $cryptoKey.KeyUsage$): KeyUsage {
   if ($cryptoKey.KeyUsage$isSign(value)) return "sign";
   if ($cryptoKey.KeyUsage$isUnwrapKey(value)) return "unwrapKey";
   if ($cryptoKey.KeyUsage$isVerify(value)) return "verify";
-  if ($cryptoKey.KeyUsage$isKeyUsageOther(value)) {
-    return $cryptoKey.KeyUsage$KeyUsageOther$0(value) as KeyUsage;
-  }
   return "wrapKey";
 }
 
-export function fromKeyUsage(value: KeyUsage | string): $cryptoKey.KeyUsage$ {
+export function fromKeyUsage(value: KeyUsage): $cryptoKey.KeyUsage$ {
   switch (value) {
     case "decrypt":
       return $cryptoKey.KeyUsage$Decrypt();
@@ -162,7 +161,9 @@ export function fromKeyUsage(value: KeyUsage | string): $cryptoKey.KeyUsage$ {
     case "wrapKey":
       return $cryptoKey.KeyUsage$WrapKey();
     default:
-      return $cryptoKey.KeyUsage$KeyUsageOther(value);
+      throw new Error(
+        `gossamer.crypto_key.usages: runtime returned unexpected KeyUsage: ${value}`,
+      );
   }
 }
 

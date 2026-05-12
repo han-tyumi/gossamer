@@ -91,12 +91,6 @@ function toKeyFormat(
 ): Exclude<KeyFormat, "jwk"> {
   if ($subtleCrypto.KeyFormat$isPkcs8(value)) return "pkcs8";
   if ($subtleCrypto.KeyFormat$isRaw(value)) return "raw";
-  if ($subtleCrypto.KeyFormat$isKeyFormatOther(value)) {
-    return $subtleCrypto.KeyFormat$KeyFormatOther$0(value) as Exclude<
-      KeyFormat,
-      "jwk"
-    >;
-  }
   return "spki";
 }
 

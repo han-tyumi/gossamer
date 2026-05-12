@@ -53,19 +53,14 @@ pub type HashAlgorithm {
 
 /// Whether a `CryptoKey` is public, private, or secret (symmetric).
 ///
-/// Unrecognized values use `KeyTypeOther(String)`.
-///
 pub type KeyType {
   Private
   Public
   Secret
-  KeyTypeOther(String)
 }
 
 /// An allowed use for a `CryptoKey`. A key can only be used with operations
 /// matching one of its declared usages.
-///
-/// Unrecognized values use `KeyUsageOther(String)`.
 ///
 pub type KeyUsage {
   Decrypt
@@ -76,7 +71,6 @@ pub type KeyUsage {
   UnwrapKey
   Verify
   WrapKey
-  KeyUsageOther(String)
 }
 
 /// A named elliptic curve used by ECDH and ECDSA operations in
