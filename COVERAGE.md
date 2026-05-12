@@ -166,31 +166,19 @@ and `gossamer/fetch_options`. Plain `FormData` string and `BitArray` values use
 
 ## ECMAScript Built-ins (no Gleam equivalent)
 
-| Interface         | Status | Module                                |
-| ----------------- | ------ | ------------------------------------- |
-| ArrayBuffer       | ✅     | `gossamer/buffer/array_buffer`        |
-| Int8Array         | ✅     | `gossamer/buffer/int8_array`          |
-| Uint8Array        | ✅     | `gossamer/buffer/uint8_array`         |
-| Uint8ClampedArray | ✅     | `gossamer/buffer/uint8_clamped_array` |
-| Int16Array        | ✅     | `gossamer/buffer/int16_array`         |
-| Uint16Array       | ✅     | `gossamer/buffer/uint16_array`        |
-| Int32Array        | ✅     | `gossamer/buffer/int32_array`         |
-| Uint32Array       | ✅     | `gossamer/buffer/uint32_array`        |
-| Float16Array      | ✅     | `gossamer/buffer/float16_array`       |
-| Float32Array      | ✅     | `gossamer/buffer/float32_array`       |
-| Float64Array      | ✅     | `gossamer/buffer/float64_array`       |
-| BigInt64Array     | ✅     | `gossamer/buffer/bigint64_array`      |
-| BigUint64Array    | ✅     | `gossamer/buffer/biguint64_array`     |
-| DataView          | ✅     | `gossamer/buffer/data_view`           |
-| Iterator          | ✅     | `gossamer/iterator`                   |
-| AsyncIterator     | ✅     | `gossamer/async_iterator`             |
-| JSON              | ✅     | `gossamer/json`                       |
-| RegExp            | ✅     | `gossamer/regexp_extra`               |
-| Symbol            | ✅     | `gossamer/symbol_extra`               |
-| Number            | ✅     | `gossamer/number`                     |
-| BigInt            | 🚧     | `gossamer/big_int`                    |
-| Math              | ✅     | `gossamer/math`                       |
-| Error types       | ✅     | `gossamer/js_error`                   |
+| Interface     | Status | Module                         |
+| ------------- | ------ | ------------------------------ |
+| ArrayBuffer   | ✅     | `gossamer/buffer/array_buffer` |
+| Uint8Array    | ✅     | `gossamer/buffer/uint8_array`  |
+| Iterator      | ✅     | `gossamer/iterator`            |
+| AsyncIterator | ✅     | `gossamer/async_iterator`      |
+| JSON          | ✅     | `gossamer/json`                |
+| RegExp        | ✅     | `gossamer/regexp_extra`        |
+| Symbol        | ✅     | `gossamer/symbol_extra`        |
+| Number        | ✅     | `gossamer/number`              |
+| BigInt        | 🚧     | `gossamer/big_int`             |
+| Math          | ✅     | `gossamer/math`                |
+| Error types   | ✅     | `gossamer/js_error`            |
 
 `Promise` is delegated to `gleam/javascript/promise`. Gossamer's
 auto-Result-wrap discipline at the FFI boundary means user-facing promises don't
