@@ -2,9 +2,20 @@
 //// `WritableStream`, `TransformStream`, and their readers, writers,
 //// and controllers. Hosts `StreamLifecycleError`, the shared error
 //// type returned by stream operations that fail because of the
-//// stream's current state.
+//// stream's current state, and `QueuingStrategy`, the shared
+//// backpressure-tuning enum applied via stream builders.
 
 import gleam/dynamic.{type Dynamic}
+
+/// The backpressure threshold applied to a stream's internal queue.
+/// `ByCount` measures by chunk count, `ByByteLength` by byte size of
+/// each chunk; `Unlimited` disables backpressure signaling entirely.
+///
+pub type QueuingStrategy {
+  ByCount(high_water_mark: Int)
+  ByByteLength(high_water_mark: Int)
+  Unlimited
+}
 
 /// Errors raised by stream lifecycle operations.
 pub type StreamLifecycleError {

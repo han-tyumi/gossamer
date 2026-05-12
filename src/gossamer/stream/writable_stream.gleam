@@ -1,7 +1,7 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
-import gossamer/stream.{type StreamLifecycleError}
+import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
 import gossamer/stream/writable_stream/default_controller.{
   type DefaultController,
 }
@@ -15,8 +15,8 @@ import gossamer/stream/writable_stream/writer.{type Writer}
 pub type WritableStream(a)
 
 /// The configuration for a `WritableStream`. Construct with `new` and
-/// refine with `on_start`, `on_write`, `on_close`, and `on_abort`, then
-/// call `build` to create the stream.
+/// refine with `with_start`, `with_write`, `with_close`, `with_abort`, and
+/// `with_queuing_strategy`, then call `build` to create the stream.
 ///
 pub type Builder(a) {
   Builder(
@@ -24,19 +24,26 @@ pub type Builder(a) {
     write: Option(fn(a, DefaultController) -> Promise(Nil)),
     close: Option(fn() -> Promise(Nil)),
     abort: Option(fn(Dynamic) -> Promise(Nil)),
+    queuing_strategy: Option(QueuingStrategy),
   )
 }
 
 /// Creates a `Builder` with no underlying-sink callbacks set.
 ///
 pub fn new() -> Builder(a) {
-  Builder(start: None, write: None, close: None, abort: None)
+  Builder(
+    start: None,
+    write: None,
+    close: None,
+    abort: None,
+    queuing_strategy: None,
+  )
 }
 
 /// Registers the `start` callback that runs once at construction. Use to
 /// acquire resources or set up state.
 ///
-pub fn on_start(
+pub fn with_start(
   builder: Builder(a),
   run callback: fn(DefaultController) -> b,
 ) -> Builder(a) {
@@ -52,7 +59,7 @@ pub fn on_start(
 /// Registers the `write` callback that runs for each chunk written to the
 /// sink.
 ///
-pub fn on_write(
+pub fn with_write(
   builder: Builder(a),
   run callback: fn(a, DefaultController) -> Promise(Nil),
 ) -> Builder(a) {
@@ -62,7 +69,7 @@ pub fn on_write(
 /// Registers the `close` callback that runs once after all writes
 /// complete.
 ///
-pub fn on_close(
+pub fn with_close(
   builder: Builder(a),
   run callback: fn() -> Promise(Nil),
 ) -> Builder(a) {
@@ -72,11 +79,22 @@ pub fn on_close(
 /// Registers the `abort` callback that runs if the stream is aborted.
 /// Receives the abort reason.
 ///
-pub fn on_abort(
+pub fn with_abort(
   builder: Builder(a),
   run callback: fn(Dynamic) -> Promise(Nil),
 ) -> Builder(a) {
   Builder(..builder, abort: Some(callback))
+}
+
+/// Sets the queuing strategy controlling backpressure on the stream's
+/// internal queue. Without this, the stream uses the default strategy
+/// (chunk count, high water mark of `1`).
+///
+pub fn with_queuing_strategy(
+  builder: Builder(a),
+  strategy: QueuingStrategy,
+) -> Builder(a) {
+  Builder(..builder, queuing_strategy: Some(strategy))
 }
 
 /// Creates a `WritableStream` from the configured `Builder`. Returns

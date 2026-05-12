@@ -1,7 +1,9 @@
 import * as $writableStream from "$/gossamer/gossamer/stream/writable_stream.mjs";
+import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { setIfSome } from "~/utils/option.ffi.ts";
+import { fromQueuingStrategy } from "~/utils/queuing_strategy.ffi.ts";
 
 function lockedError() {
   return Result$Error($stream.StreamLifecycleError$Locked());
@@ -17,8 +19,14 @@ export const build: typeof $writableStream.build = (builder) => {
   setIfSome(sink, "write", $writableStream.Builder$Builder$write(builder));
   setIfSome(sink, "close", $writableStream.Builder$Builder$close(builder));
   setIfSome(sink, "abort", $writableStream.Builder$Builder$abort(builder));
+  const strategyOption = $writableStream.Builder$Builder$queuing_strategy(
+    builder,
+  );
+  const strategy = $option.Option$isNone(strategyOption)
+    ? undefined
+    : fromQueuingStrategy($option.Option$Some$0(strategyOption));
   try {
-    return Result$Ok(new WritableStream(sink));
+    return Result$Ok(new WritableStream(sink, strategy));
   } catch (err) {
     return erroredError(err);
   }

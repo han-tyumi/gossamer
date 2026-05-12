@@ -1,7 +1,7 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
-import gossamer/stream.{type StreamLifecycleError}
+import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/transform_stream/default_controller.{
   type DefaultController,
@@ -17,8 +17,9 @@ import gossamer/stream/writable_stream.{type WritableStream}
 pub type TransformStream(input, output)
 
 /// The configuration for a `TransformStream`. Construct with `new` and
-/// refine with `on_start`, `on_transform`, `on_flush`, and `on_cancel`,
-/// then call `build` to create the stream.
+/// refine with `with_start`, `with_transform`, `with_flush`, `with_cancel`,
+/// `with_writable_strategy`, and `with_readable_strategy`, then call
+/// `build` to create the stream.
 ///
 pub type Builder(input, output) {
   Builder(
@@ -26,19 +27,28 @@ pub type Builder(input, output) {
     transform: Option(fn(input, DefaultController(output)) -> Promise(Nil)),
     flush: Option(fn(DefaultController(output)) -> Promise(Nil)),
     cancel: Option(fn(Dynamic) -> Promise(Nil)),
+    writable_strategy: Option(QueuingStrategy),
+    readable_strategy: Option(QueuingStrategy),
   )
 }
 
 /// Creates a `Builder` with no transformer callbacks set.
 ///
 pub fn new() -> Builder(input, output) {
-  Builder(start: None, transform: None, flush: None, cancel: None)
+  Builder(
+    start: None,
+    transform: None,
+    flush: None,
+    cancel: None,
+    writable_strategy: None,
+    readable_strategy: None,
+  )
 }
 
 /// Registers the `start` callback that runs once at construction. Use to
 /// enqueue initial chunks or set up state.
 ///
-pub fn on_start(
+pub fn with_start(
   builder: Builder(input, output),
   run callback: fn(DefaultController(output)) -> a,
 ) -> Builder(input, output) {
@@ -54,7 +64,7 @@ pub fn on_start(
 /// Registers the `transform` callback that runs for each input chunk. Use
 /// to map input chunks to output chunks.
 ///
-pub fn on_transform(
+pub fn with_transform(
   builder: Builder(input, output),
   run callback: fn(input, DefaultController(output)) -> Promise(Nil),
 ) -> Builder(input, output) {
@@ -64,7 +74,7 @@ pub fn on_transform(
 /// Registers the `flush` callback that runs once after the writable side
 /// closes. Use to emit any buffered output.
 ///
-pub fn on_flush(
+pub fn with_flush(
   builder: Builder(input, output),
   run callback: fn(DefaultController(output)) -> Promise(Nil),
 ) -> Builder(input, output) {
@@ -74,11 +84,34 @@ pub fn on_flush(
 /// Registers the `cancel` callback that runs when either side is aborted.
 /// Receives the cancellation reason.
 ///
-pub fn on_cancel(
+pub fn with_cancel(
   builder: Builder(input, output),
   run callback: fn(Dynamic) -> Promise(Nil),
 ) -> Builder(input, output) {
   Builder(..builder, cancel: Some(callback))
+}
+
+/// Sets the queuing strategy for the writable side of the transform.
+/// Without this, the writable side uses the default strategy
+/// (chunk count, high water mark of `1`).
+///
+pub fn with_writable_strategy(
+  builder: Builder(input, output),
+  strategy: QueuingStrategy,
+) -> Builder(input, output) {
+  Builder(..builder, writable_strategy: Some(strategy))
+}
+
+/// Sets the queuing strategy for the readable side of the transform.
+/// Without this, the readable side uses the default strategy
+/// (chunk count, high water mark of `0` — which buffers nothing
+/// downstream until the consumer pulls).
+///
+pub fn with_readable_strategy(
+  builder: Builder(input, output),
+  strategy: QueuingStrategy,
+) -> Builder(input, output) {
+  Builder(..builder, readable_strategy: Some(strategy))
 }
 
 /// Creates a `TransformStream` from the configured `Builder`. Returns

@@ -1,9 +1,11 @@
 import * as $readableStream from "$/gossamer/gossamer/stream/readable_stream.mjs";
+import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { yielderAsJsIterator } from "~/gossamer/iteration.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
+import { fromQueuingStrategy } from "~/utils/queuing_strategy.ffi.ts";
 import { ensureMethod } from "~/utils/runtime_gap.ffi.ts";
 
 const BUN_STREAM_FROM_ISSUE = "https://github.com/oven-sh/bun/issues/3700";
@@ -43,8 +45,14 @@ export const build: typeof $readableStream.build = (builder) => {
   setIfSome(source, "start", $readableStream.Builder$Builder$start(builder));
   setIfSome(source, "pull", $readableStream.Builder$Builder$pull(builder));
   setIfSome(source, "cancel", $readableStream.Builder$Builder$cancel(builder));
+  const strategyOption = $readableStream.Builder$Builder$queuing_strategy(
+    builder,
+  );
+  const strategy = $option.Option$isNone(strategyOption)
+    ? undefined
+    : fromQueuingStrategy($option.Option$Some$0(strategyOption));
   try {
-    return Result$Ok(new ReadableStream(source));
+    return Result$Ok(new ReadableStream(source, strategy));
   } catch (err) {
     return erroredError(err);
   }

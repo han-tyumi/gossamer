@@ -4,7 +4,7 @@ import gleam/option.{type Option, None, Some}
 import gleam/yielder.{type Yielder}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/iteration/async_iterator.{type AsyncIterator}
-import gossamer/stream.{type StreamLifecycleError}
+import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
 import gossamer/stream/readable_stream/default_controller.{
   type DefaultController,
 }
@@ -19,14 +19,15 @@ import gossamer/stream/writable_stream.{type WritableStream}
 pub type ReadableStream(a)
 
 /// The configuration for a `ReadableStream`. Construct with `new` and
-/// refine with `on_start`, `on_pull`, and `on_cancel`, then call `build`
-/// to create the stream.
+/// refine with `with_start`, `with_pull`, `with_cancel`, and
+/// `with_queuing_strategy`, then call `build` to create the stream.
 ///
 pub type Builder(a) {
   Builder(
     start: Option(fn(DefaultController(a)) -> Nil),
     pull: Option(fn(DefaultController(a)) -> Promise(Nil)),
     cancel: Option(fn(Dynamic) -> Promise(Nil)),
+    queuing_strategy: Option(QueuingStrategy),
   )
 }
 
@@ -83,13 +84,13 @@ pub fn set_signal(opts: PipeOptions, value: AbortSignal) -> PipeOptions {
 /// Creates a `Builder` with no underlying-source callbacks set.
 ///
 pub fn new() -> Builder(a) {
-  Builder(start: None, pull: None, cancel: None)
+  Builder(start: None, pull: None, cancel: None, queuing_strategy: None)
 }
 
 /// Registers the `start` callback that runs once at construction. Use to
 /// enqueue initial chunks or set up state.
 ///
-pub fn on_start(
+pub fn with_start(
   builder: Builder(a),
   run callback: fn(DefaultController(a)) -> b,
 ) -> Builder(a) {
@@ -105,7 +106,7 @@ pub fn on_start(
 /// Registers the `pull` callback that runs whenever the consumer requests
 /// more chunks.
 ///
-pub fn on_pull(
+pub fn with_pull(
   builder: Builder(a),
   run callback: fn(DefaultController(a)) -> Promise(Nil),
 ) -> Builder(a) {
@@ -115,11 +116,22 @@ pub fn on_pull(
 /// Registers the `cancel` callback that runs when the consumer aborts.
 /// Receives the cancellation reason.
 ///
-pub fn on_cancel(
+pub fn with_cancel(
   builder: Builder(a),
   run callback: fn(Dynamic) -> Promise(Nil),
 ) -> Builder(a) {
   Builder(..builder, cancel: Some(callback))
+}
+
+/// Sets the queuing strategy controlling backpressure on the stream's
+/// internal queue. Without this, the stream uses the default strategy
+/// (chunk count, high water mark of `1`).
+///
+pub fn with_queuing_strategy(
+  builder: Builder(a),
+  strategy: QueuingStrategy,
+) -> Builder(a) {
+  Builder(..builder, queuing_strategy: Some(strategy))
 }
 
 /// Creates a `ReadableStream` from the configured `Builder`. Returns
@@ -138,7 +150,7 @@ pub fn build(
 pub fn from_start(
   start: fn(DefaultController(a)) -> Nil,
 ) -> Result(ReadableStream(a), StreamLifecycleError) {
-  new() |> on_start(run: start) |> build
+  new() |> with_start(run: start) |> build
 }
 
 /// Creates a `ReadableStream` from only a `pull` callback — use when chunks

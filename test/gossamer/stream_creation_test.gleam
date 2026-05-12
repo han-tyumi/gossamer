@@ -19,21 +19,21 @@ import gossamer/stream/writable_stream/writer
 
 pub fn readable_stream_new_start_throws_test() {
   readable_stream.new()
-  |> readable_stream.on_start(run: fn(_controller) { panic as "boom" })
+  |> readable_stream.with_start(run: fn(_controller) { panic as "boom" })
   |> readable_stream.build
   |> should.be_error
 }
 
 pub fn writable_stream_new_start_throws_test() {
   writable_stream.new()
-  |> writable_stream.on_start(run: fn(_controller) { panic as "boom" })
+  |> writable_stream.with_start(run: fn(_controller) { panic as "boom" })
   |> writable_stream.build
   |> should.be_error
 }
 
 pub fn transform_stream_new_start_throws_test() {
   transform_stream.new()
-  |> transform_stream.on_start(run: fn(_controller) { panic as "boom" })
+  |> transform_stream.with_start(run: fn(_controller) { panic as "boom" })
   |> transform_stream.build
   |> should.be_error
 }
@@ -67,7 +67,7 @@ pub fn readable_stream_from_start_test() {
 pub fn readable_stream_build_test() {
   let assert Ok(stream) =
     readable_stream.new()
-    |> readable_stream.on_start(run: fn(controller) {
+    |> readable_stream.with_start(run: fn(controller) {
       let _ = default_controller.enqueue(controller, 42)
       let _ = default_controller.close(controller)
       Nil
@@ -97,7 +97,7 @@ pub fn writable_stream_from_write_test() {
 pub fn writable_stream_build_test() {
   let assert Ok(stream) =
     writable_stream.new()
-    |> writable_stream.on_write(run: fn(chunk, _controller) {
+    |> writable_stream.with_write(run: fn(chunk, _controller) {
       should.equal(chunk, "test")
       promise.resolve(Nil)
     })
@@ -347,7 +347,7 @@ pub fn reader_cancel_test() {
 pub fn readable_controller_desired_size_test() {
   let assert Ok(stream) =
     readable_stream.new()
-    |> readable_stream.on_start(run: fn(controller) {
+    |> readable_stream.with_start(run: fn(controller) {
       let assert Ok(size) = default_controller.desired_size(controller)
       should.be_true(size >= 0)
       let _ = default_controller.close(controller)
@@ -411,7 +411,7 @@ pub fn writer_abort_test() {
 pub fn writable_controller_signal_test() {
   let assert Ok(stream) =
     writable_stream.new()
-    |> writable_stream.on_write(run: fn(_chunk, controller) {
+    |> writable_stream.with_write(run: fn(_chunk, controller) {
       let _signal = writable_controller.signal(controller)
       promise.resolve(Nil)
     })
@@ -427,7 +427,7 @@ pub fn writable_controller_signal_test() {
 pub fn writable_controller_error_test() {
   let assert Ok(stream) =
     writable_stream.new()
-    |> writable_stream.on_write(run: fn(_chunk, controller) {
+    |> writable_stream.with_write(run: fn(_chunk, controller) {
       writable_controller.error(controller, dynamic.string("fail"))
       promise.resolve(Nil)
     })
@@ -444,7 +444,7 @@ pub fn writable_controller_error_test() {
 pub fn transform_controller_desired_size_test() {
   let assert Ok(transform) =
     transform_stream.new()
-    |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
+    |> transform_stream.with_transform(run: fn(_chunk: String, controller) {
       let _size = transform_controller.desired_size(controller)
       let _ = transform_controller.enqueue(controller, "out")
       promise.resolve(Nil)
@@ -477,7 +477,7 @@ pub fn transform_controller_desired_size_test() {
 pub fn transform_controller_error_test() {
   let assert Ok(transform) =
     transform_stream.new()
-    |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
+    |> transform_stream.with_transform(run: fn(_chunk: String, controller) {
       transform_controller.error(controller, dynamic.string("transform error"))
       promise.resolve(Nil)
     })
@@ -512,7 +512,7 @@ pub fn transform_controller_error_test() {
 pub fn transform_controller_terminate_test() {
   let assert Ok(transform) =
     transform_stream.new()
-    |> transform_stream.on_transform(run: fn(_chunk: String, controller) {
+    |> transform_stream.with_transform(run: fn(_chunk: String, controller) {
       let _ = transform_controller.terminate(controller)
       promise.resolve(Nil)
     })

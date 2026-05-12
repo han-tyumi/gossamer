@@ -61,7 +61,7 @@ pub type WebSocket
 
 /// The configuration for a `WebSocket`. Construct with `from_url_string`
 /// or `from_uri`, refine with `with_protocols` / `with_binary_type` and
-/// listener setters (`on_open`, `on_message`, `on_error`, `on_close`),
+/// listener setters (`with_open`, `with_message`, `with_error`, `with_close`),
 /// then call `build` to open the connection.
 ///
 pub type Builder {
@@ -116,7 +116,7 @@ pub fn with_binary_type(builder: Builder, value: BinaryType) -> Builder {
 
 /// Registers a handler invoked when the connection opens.
 ///
-pub fn on_open(builder: Builder, run handler: fn() -> a) -> Builder {
+pub fn with_open(builder: Builder, run handler: fn() -> a) -> Builder {
   Builder(
     ..builder,
     on_open: Some(fn() {
@@ -128,7 +128,7 @@ pub fn on_open(builder: Builder, run handler: fn() -> a) -> Builder {
 
 /// Registers a handler invoked for each incoming message.
 ///
-pub fn on_message(
+pub fn with_message(
   builder: Builder,
   run handler: fn(MessageEvent) -> a,
 ) -> Builder {
@@ -143,7 +143,7 @@ pub fn on_message(
 
 /// Registers a handler invoked when the connection encounters an error.
 ///
-pub fn on_error(builder: Builder, run handler: fn() -> a) -> Builder {
+pub fn with_error(builder: Builder, run handler: fn() -> a) -> Builder {
   Builder(
     ..builder,
     on_error: Some(fn() {
@@ -155,7 +155,7 @@ pub fn on_error(builder: Builder, run handler: fn() -> a) -> Builder {
 
 /// Registers a handler invoked when the connection closes.
 ///
-pub fn on_close(builder: Builder, run handler: fn(CloseEvent) -> a) -> Builder {
+pub fn with_close(builder: Builder, run handler: fn(CloseEvent) -> a) -> Builder {
   Builder(
     ..builder,
     on_close: Some(fn(event) {
