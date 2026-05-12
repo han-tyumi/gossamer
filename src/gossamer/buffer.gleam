@@ -19,8 +19,4 @@ pub type BufferError {
   /// views require a multiple of 4; and the 64-bit views require a
   /// multiple of 8.
   MisalignedOffset(at: Int, alignment: Int)
-
-  /// Allocation was requested for too many bytes. The exact limit depends
-  /// on the runtime and the available memory.
-  AllocationTooLarge(requested: Int)
 }
