@@ -1,70 +1,71 @@
-import * as $key from "$/gossamer/gossamer/crypto/key.mjs";
+import * as $crypto from "$/gossamer/gossamer/crypto.mjs";
+import type * as $key from "$/gossamer/gossamer/crypto/key.mjs";
 import { BitArray$BitArray } from "$/prelude.mjs";
 import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 
-export function toAesAlgorithm(value: $key.AesAlgorithm$): string {
-  if ($key.AesAlgorithm$isAesCbc(value)) return "AES-CBC";
-  if ($key.AesAlgorithm$isAesCtr(value)) return "AES-CTR";
-  if ($key.AesAlgorithm$isAesKw(value)) return "AES-KW";
-  if ($key.AesAlgorithm$isAesOther(value)) {
-    return $key.AesAlgorithm$AesOther$0(value);
+export function toAesAlgorithm(value: $crypto.AesAlgorithm$): string {
+  if ($crypto.AesAlgorithm$isAesCbc(value)) return "AES-CBC";
+  if ($crypto.AesAlgorithm$isAesCtr(value)) return "AES-CTR";
+  if ($crypto.AesAlgorithm$isAesKw(value)) return "AES-KW";
+  if ($crypto.AesAlgorithm$isAesOther(value)) {
+    return $crypto.AesAlgorithm$AesOther$0(value);
   }
   return "AES-GCM";
 }
 
-export function fromAesAlgorithm(value: string): $key.AesAlgorithm$ {
+export function fromAesAlgorithm(value: string): $crypto.AesAlgorithm$ {
   switch (value) {
     case "AES-CBC":
-      return $key.AesAlgorithm$AesCbc();
+      return $crypto.AesAlgorithm$AesCbc();
     case "AES-CTR":
-      return $key.AesAlgorithm$AesCtr();
+      return $crypto.AesAlgorithm$AesCtr();
     case "AES-GCM":
-      return $key.AesAlgorithm$AesGcm();
+      return $crypto.AesAlgorithm$AesGcm();
     case "AES-KW":
-      return $key.AesAlgorithm$AesKw();
+      return $crypto.AesAlgorithm$AesKw();
     default:
-      return $key.AesAlgorithm$AesOther(value);
+      return $crypto.AesAlgorithm$AesOther(value);
   }
 }
 
-export function toRsaAlgorithm(value: $key.RsaAlgorithm$): string {
-  if ($key.RsaAlgorithm$isRsaOaep(value)) return "RSA-OAEP";
-  if ($key.RsaAlgorithm$isRsaPss(value)) return "RSA-PSS";
-  if ($key.RsaAlgorithm$isRsaOther(value)) {
-    return $key.RsaAlgorithm$RsaOther$0(value);
+export function toRsaAlgorithm(value: $crypto.RsaAlgorithm$): string {
+  if ($crypto.RsaAlgorithm$isRsaOaep(value)) return "RSA-OAEP";
+  if ($crypto.RsaAlgorithm$isRsaPss(value)) return "RSA-PSS";
+  if ($crypto.RsaAlgorithm$isRsaOther(value)) {
+    return $crypto.RsaAlgorithm$RsaOther$0(value);
   }
   return "RSASSA-PKCS1-v1_5";
 }
 
-export function fromRsaAlgorithm(value: string): $key.RsaAlgorithm$ {
+export function fromRsaAlgorithm(value: string): $crypto.RsaAlgorithm$ {
   switch (value) {
     case "RSA-OAEP":
-      return $key.RsaAlgorithm$RsaOaep();
+      return $crypto.RsaAlgorithm$RsaOaep();
     case "RSA-PSS":
-      return $key.RsaAlgorithm$RsaPss();
+      return $crypto.RsaAlgorithm$RsaPss();
     case "RSASSA-PKCS1-v1_5":
-      return $key.RsaAlgorithm$RsaSsaPkcs1V15();
+      return $crypto.RsaAlgorithm$RsaSsaPkcs1V15();
     default:
-      return $key.RsaAlgorithm$RsaOther(value);
+      return $crypto.RsaAlgorithm$RsaOther(value);
   }
 }
 
-export function toEcAlgorithm(value: $key.EcAlgorithm$): string {
-  if ($key.EcAlgorithm$isEcDh(value)) return "ECDH";
-  if ($key.EcAlgorithm$isEcOther(value)) {
-    return $key.EcAlgorithm$EcOther$0(value);
+export function toEcAlgorithm(value: $crypto.EcAlgorithm$): string {
+  if ($crypto.EcAlgorithm$isEcDh(value)) return "ECDH";
+  if ($crypto.EcAlgorithm$isEcOther(value)) {
+    return $crypto.EcAlgorithm$EcOther$0(value);
   }
   return "ECDSA";
 }
 
-export function fromEcAlgorithm(value: string): $key.EcAlgorithm$ {
+export function fromEcAlgorithm(value: string): $crypto.EcAlgorithm$ {
   switch (value) {
     case "ECDH":
-      return $key.EcAlgorithm$EcDh();
+      return $crypto.EcAlgorithm$EcDh();
     case "ECDSA":
-      return $key.EcAlgorithm$EcDsa();
+      return $crypto.EcAlgorithm$EcDsa();
     default:
-      return $key.EcAlgorithm$EcOther(value);
+      return $crypto.EcAlgorithm$EcOther(value);
   }
 }
 
@@ -91,39 +92,39 @@ function hashName(hash: AlgorithmIdentifier): string {
   return typeof hash === "string" ? hash : hash.name;
 }
 
-export function toHashAlgorithm(value: $key.HashAlgorithm$): string {
-  if ($key.HashAlgorithm$isSha1(value)) return "SHA-1";
-  if ($key.HashAlgorithm$isSha256(value)) return "SHA-256";
-  if ($key.HashAlgorithm$isSha384(value)) return "SHA-384";
-  if ($key.HashAlgorithm$isHashOther(value)) {
-    return $key.HashAlgorithm$HashOther$0(value);
+export function toHashAlgorithm(value: $crypto.HashAlgorithm$): string {
+  if ($crypto.HashAlgorithm$isSha1(value)) return "SHA-1";
+  if ($crypto.HashAlgorithm$isSha256(value)) return "SHA-256";
+  if ($crypto.HashAlgorithm$isSha384(value)) return "SHA-384";
+  if ($crypto.HashAlgorithm$isHashOther(value)) {
+    return $crypto.HashAlgorithm$HashOther$0(value);
   }
   return "SHA-512";
 }
 
-export function fromHashAlgorithm(value: string): $key.HashAlgorithm$ {
+export function fromHashAlgorithm(value: string): $crypto.HashAlgorithm$ {
   switch (value) {
     case "SHA-1":
-      return $key.HashAlgorithm$Sha1();
+      return $crypto.HashAlgorithm$Sha1();
     case "SHA-256":
-      return $key.HashAlgorithm$Sha256();
+      return $crypto.HashAlgorithm$Sha256();
     case "SHA-384":
-      return $key.HashAlgorithm$Sha384();
+      return $crypto.HashAlgorithm$Sha384();
     case "SHA-512":
-      return $key.HashAlgorithm$Sha512();
+      return $crypto.HashAlgorithm$Sha512();
     default:
-      return $key.HashAlgorithm$HashOther(value);
+      return $crypto.HashAlgorithm$HashOther(value);
   }
 }
 
-export function toKeyType(value: KeyType): $key.KeyType$ {
+export function toKeyType(value: KeyType): $crypto.KeyType$ {
   switch (value) {
     case "private":
-      return $key.KeyType$Private();
+      return $crypto.KeyType$Private();
     case "public":
-      return $key.KeyType$Public();
+      return $crypto.KeyType$Public();
     case "secret":
-      return $key.KeyType$Secret();
+      return $crypto.KeyType$Secret();
     default:
       throw new Error(
         `gossamer.crypto.key.type_: runtime returned unexpected CryptoKey.type: ${value}`,
@@ -131,35 +132,35 @@ export function toKeyType(value: KeyType): $key.KeyType$ {
   }
 }
 
-export function toKeyUsage(value: $key.KeyUsage$): KeyUsage {
-  if ($key.KeyUsage$isDecrypt(value)) return "decrypt";
-  if ($key.KeyUsage$isDeriveBits(value)) return "deriveBits";
-  if ($key.KeyUsage$isDeriveKey(value)) return "deriveKey";
-  if ($key.KeyUsage$isEncrypt(value)) return "encrypt";
-  if ($key.KeyUsage$isSign(value)) return "sign";
-  if ($key.KeyUsage$isUnwrapKey(value)) return "unwrapKey";
-  if ($key.KeyUsage$isVerify(value)) return "verify";
+export function toKeyUsage(value: $crypto.KeyUsage$): KeyUsage {
+  if ($crypto.KeyUsage$isDecrypt(value)) return "decrypt";
+  if ($crypto.KeyUsage$isDeriveBits(value)) return "deriveBits";
+  if ($crypto.KeyUsage$isDeriveKey(value)) return "deriveKey";
+  if ($crypto.KeyUsage$isEncrypt(value)) return "encrypt";
+  if ($crypto.KeyUsage$isSign(value)) return "sign";
+  if ($crypto.KeyUsage$isUnwrapKey(value)) return "unwrapKey";
+  if ($crypto.KeyUsage$isVerify(value)) return "verify";
   return "wrapKey";
 }
 
-export function fromKeyUsage(value: KeyUsage): $key.KeyUsage$ {
+export function fromKeyUsage(value: KeyUsage): $crypto.KeyUsage$ {
   switch (value) {
     case "decrypt":
-      return $key.KeyUsage$Decrypt();
+      return $crypto.KeyUsage$Decrypt();
     case "deriveBits":
-      return $key.KeyUsage$DeriveBits();
+      return $crypto.KeyUsage$DeriveBits();
     case "deriveKey":
-      return $key.KeyUsage$DeriveKey();
+      return $crypto.KeyUsage$DeriveKey();
     case "encrypt":
-      return $key.KeyUsage$Encrypt();
+      return $crypto.KeyUsage$Encrypt();
     case "sign":
-      return $key.KeyUsage$Sign();
+      return $crypto.KeyUsage$Sign();
     case "unwrapKey":
-      return $key.KeyUsage$UnwrapKey();
+      return $crypto.KeyUsage$UnwrapKey();
     case "verify":
-      return $key.KeyUsage$Verify();
+      return $crypto.KeyUsage$Verify();
     case "wrapKey":
-      return $key.KeyUsage$WrapKey();
+      return $crypto.KeyUsage$WrapKey();
     default:
       throw new Error(
         `gossamer.crypto.key.usages: runtime returned unexpected KeyUsage: ${value}`,
@@ -170,38 +171,38 @@ export function fromKeyUsage(value: KeyUsage): $key.KeyUsage$ {
 export function toKeyUsageArray(
   usages: Parameters<typeof toArray>[0],
 ): KeyUsage[] {
-  return (toArray(usages) as $key.KeyUsage$[]).map(toKeyUsage);
+  return (toArray(usages) as $crypto.KeyUsage$[]).map(toKeyUsage);
 }
 
-export function toNamedCurve(value: $key.NamedCurve$): string {
-  if ($key.NamedCurve$isP256(value)) return "P-256";
-  if ($key.NamedCurve$isP384(value)) return "P-384";
-  if ($key.NamedCurve$isNamedCurveOther(value)) {
-    return $key.NamedCurve$NamedCurveOther$0(value);
+export function toNamedCurve(value: $crypto.NamedCurve$): string {
+  if ($crypto.NamedCurve$isP256(value)) return "P-256";
+  if ($crypto.NamedCurve$isP384(value)) return "P-384";
+  if ($crypto.NamedCurve$isNamedCurveOther(value)) {
+    return $crypto.NamedCurve$NamedCurveOther$0(value);
   }
   return "P-521";
 }
 
-export function fromNamedCurve(value: string): $key.NamedCurve$ {
+export function fromNamedCurve(value: string): $crypto.NamedCurve$ {
   switch (value) {
     case "P-256":
-      return $key.NamedCurve$P256();
+      return $crypto.NamedCurve$P256();
     case "P-384":
-      return $key.NamedCurve$P384();
+      return $crypto.NamedCurve$P384();
     case "P-521":
-      return $key.NamedCurve$P521();
+      return $crypto.NamedCurve$P521();
     default:
-      return $key.NamedCurve$NamedCurveOther(value);
+      return $crypto.NamedCurve$NamedCurveOther(value);
   }
 }
 
 export function toKeyAlgorithm(
   algorithm: KeyAlgorithm,
-): $key.KeyAlgorithm$ {
+): $crypto.KeyAlgorithm$ {
   const name = algorithm.name;
 
   if ("namedCurve" in algorithm) {
-    return $key.KeyAlgorithm$Ec(
+    return $crypto.KeyAlgorithm$Ec(
       fromEcAlgorithm(name),
       fromNamedCurve((algorithm as EcKeyAlgorithmShape).namedCurve),
     );
@@ -209,7 +210,7 @@ export function toKeyAlgorithm(
 
   if ("modulusLength" in algorithm) {
     const rsa = algorithm as RsaKeyAlgorithmShape;
-    return $key.KeyAlgorithm$Rsa(
+    return $crypto.KeyAlgorithm$Rsa(
       fromRsaAlgorithm(name),
       rsa.modulusLength,
       BitArray$BitArray(new Uint8Array(rsa.publicExponent)),
@@ -219,13 +220,13 @@ export function toKeyAlgorithm(
 
   if ("hash" in algorithm) {
     const hmac = algorithm as HmacKeyAlgorithmShape;
-    return $key.KeyAlgorithm$Hmac(
+    return $crypto.KeyAlgorithm$Hmac(
       fromHashAlgorithm(hashName(hmac.hash)),
       hmac.length,
     );
   }
 
-  return $key.KeyAlgorithm$Aes(
+  return $crypto.KeyAlgorithm$Aes(
     fromAesAlgorithm(name),
     (algorithm as AesKeyAlgorithmShape).length,
   );

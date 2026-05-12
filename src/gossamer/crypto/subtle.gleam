@@ -1,56 +1,13 @@
 import gleam/javascript/promise.{type Promise}
-import gossamer/crypto/jwk.{type JsonWebKey}
-import gossamer/crypto/key.{
-  type AesAlgorithm, type CryptoKey, type EcAlgorithm, type HashAlgorithm,
+import gossamer/crypto.{
+  type AesAlgorithm, type CryptoError, type EcAlgorithm, type HashAlgorithm,
   type KeyUsage, type NamedCurve, type RsaAlgorithm,
 }
+import gossamer/crypto/jwk.{type JsonWebKey}
+import gossamer/crypto/key.{type CryptoKey}
 
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
-}
-
-/// Errors raised by `subtle` operations.
-pub type CryptoError {
-  /// The key's `usages` don't include the capability required for this
-  /// operation (e.g., calling `encrypt` with a key whose usages don't
-  /// include `Encrypt`). The `usage` payload names the missing
-  /// capability.
-  KeyUsageMismatch(usage: KeyUsage)
-
-  /// The key's `extractable` flag is `False`, but the operation
-  /// (`export_key`, `export_key_jwk`, `wrap_key`, `wrap_key_jwk`)
-  /// requires it.
-  KeyNotExtractable
-
-  /// The runtime does not support the requested algorithm or
-  /// algorithm/operation combination. Corresponds to the
-  /// `NotSupportedError` DOMException.
-  AlgorithmNotSupported
-
-  /// The key is not appropriate for the requested operation (e.g.,
-  /// using an asymmetric key in a symmetric operation). Corresponds to
-  /// the `InvalidAccessError` DOMException.
-  InvalidAccess
-
-  /// The cryptographic operation failed for an operation-specific
-  /// reason — authenticated decryption failed, signature verification
-  /// produced an invalid result, etc. Corresponds to the
-  /// `OperationError` DOMException.
-  OperationFailed
-
-  /// The input data is malformed for the operation (e.g., an imported
-  /// key has the wrong structure). Corresponds to the `DataError`
-  /// DOMException.
-  DataMalformed
-
-  /// The input exceeds runtime-imposed size limits. Corresponds to the
-  /// `QuotaExceededError` DOMException.
-  QuotaExceeded
-
-  /// A failure that doesn't match any of the above DOMException names.
-  /// The `message` payload carries the underlying JavaScript error
-  /// description.
-  OtherError(message: String)
 }
 
 /// The serialization format of a key imported or exported via

@@ -1,5 +1,5 @@
 import gleam/option.{type Option, None, Some}
-import gossamer/crypto/key.{type KeyUsage}
+import gossamer/crypto.{type KeyUsage}
 
 /// Represents a JSON Web Key (JWK) as defined by RFC 7517. Used with
 /// `subtle.import_key_jwk` and `subtle.export_key_jwk`.

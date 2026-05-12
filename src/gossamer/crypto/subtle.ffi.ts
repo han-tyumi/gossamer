@@ -1,4 +1,4 @@
-import * as $key from "$/gossamer/gossamer/crypto/key.mjs";
+import * as $crypto from "$/gossamer/gossamer/crypto.mjs";
 import * as $subtle from "$/gossamer/gossamer/crypto/subtle.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
@@ -14,23 +14,23 @@ import { toBufferSource, toUint8Array } from "~/utils/bit_array.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
 
-function toCryptoError(value: unknown): $subtle.CryptoError$ {
+function toCryptoError(value: unknown): $crypto.CryptoError$ {
   if (value instanceof Error) {
     switch (value.name) {
       case "NotSupportedError":
-        return $subtle.CryptoError$AlgorithmNotSupported();
+        return $crypto.CryptoError$AlgorithmNotSupported();
       case "InvalidAccessError":
-        return $subtle.CryptoError$InvalidAccess();
+        return $crypto.CryptoError$InvalidAccess();
       case "OperationError":
-        return $subtle.CryptoError$OperationFailed();
+        return $crypto.CryptoError$OperationFailed();
       case "DataError":
-        return $subtle.CryptoError$DataMalformed();
+        return $crypto.CryptoError$DataMalformed();
       case "QuotaExceededError":
-        return $subtle.CryptoError$QuotaExceeded();
+        return $crypto.CryptoError$QuotaExceeded();
     }
-    return $subtle.CryptoError$OtherError(value.message);
+    return $crypto.CryptoError$OtherError(value.message);
   }
-  return $subtle.CryptoError$OtherError(String(value));
+  return $crypto.CryptoError$OtherError(String(value));
 }
 
 async function toCryptoResult<T>(thunk: () => Promise<T>) {
@@ -49,19 +49,19 @@ async function toCryptoBitArrayResult(thunk: () => Promise<ArrayBuffer>) {
   }
 }
 
-const keyUsageVariants: Record<KeyUsage, () => $key.KeyUsage$> = {
-  encrypt: $key.KeyUsage$Encrypt,
-  decrypt: $key.KeyUsage$Decrypt,
-  sign: $key.KeyUsage$Sign,
-  verify: $key.KeyUsage$Verify,
-  deriveKey: $key.KeyUsage$DeriveKey,
-  deriveBits: $key.KeyUsage$DeriveBits,
-  wrapKey: $key.KeyUsage$WrapKey,
-  unwrapKey: $key.KeyUsage$UnwrapKey,
+const keyUsageVariants: Record<KeyUsage, () => $crypto.KeyUsage$> = {
+  encrypt: $crypto.KeyUsage$Encrypt,
+  decrypt: $crypto.KeyUsage$Decrypt,
+  sign: $crypto.KeyUsage$Sign,
+  verify: $crypto.KeyUsage$Verify,
+  deriveKey: $crypto.KeyUsage$DeriveKey,
+  deriveBits: $crypto.KeyUsage$DeriveBits,
+  wrapKey: $crypto.KeyUsage$WrapKey,
+  unwrapKey: $crypto.KeyUsage$UnwrapKey,
 };
 
-function usageMismatch(required: KeyUsage): $subtle.CryptoError$ {
-  return $subtle.CryptoError$KeyUsageMismatch(
+function usageMismatch(required: KeyUsage): $crypto.CryptoError$ {
+  return $crypto.CryptoError$KeyUsageMismatch(
     keyUsageVariants[required](),
   );
 }
@@ -69,12 +69,12 @@ function usageMismatch(required: KeyUsage): $subtle.CryptoError$ {
 function checkUsage(
   key: CryptoKey,
   required: KeyUsage,
-): $subtle.CryptoError$ | null {
+): $crypto.CryptoError$ | null {
   return key.usages.includes(required) ? null : usageMismatch(required);
 }
 
-function checkExtractable(key: CryptoKey): $subtle.CryptoError$ | null {
-  return key.extractable ? null : $subtle.CryptoError$KeyNotExtractable();
+function checkExtractable(key: CryptoKey): $crypto.CryptoError$ | null {
+  return key.extractable ? null : $crypto.CryptoError$KeyNotExtractable();
 }
 
 function toCryptoKeyPair(
