@@ -20,7 +20,8 @@ pub type DefaultController(a)
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
 pub fn desired_size(controller: DefaultController(a)) -> Result(Int, Nil)
 
-/// Closes the stream. Returns `Closed` if the stream is already closed.
+/// Closes the stream. Returns `Closed` if the stream is already
+/// closed or errored.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "close")
 pub fn close(
@@ -28,7 +29,7 @@ pub fn close(
 ) -> Result(Nil, StreamLifecycleError)
 
 /// Enqueues `chunk` into the stream's internal queue. Returns `Closed`
-/// if the stream is already closed.
+/// if the stream is already closed or errored.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "enqueue")
 pub fn enqueue(

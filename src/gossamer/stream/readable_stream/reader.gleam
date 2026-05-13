@@ -30,9 +30,9 @@ pub fn cancel(
   reason reason: r,
 ) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Reads the next chunk from the stream. Returns `Released` if the
-/// reader no longer holds the lock, or `Errored` if the stream enters
-/// an errored state.
+/// Reads the next chunk from the stream. Returns `Errored` if the
+/// stream enters an errored state, or if the reader no longer holds
+/// the lock; the reason payload distinguishes the two.
 ///
 @external(javascript, "./reader.ffi.mjs", "read")
 pub fn read(

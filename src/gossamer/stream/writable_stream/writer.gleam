@@ -15,8 +15,8 @@ import gossamer/stream.{type StreamLifecycleError}
 pub type Writer(a)
 
 /// Resolves when the stream closes. Returns `Errored` if the stream
-/// enters an errored state, or `Released` if the writer no longer
-/// holds the lock.
+/// enters an errored state, or if the writer no longer holds the lock;
+/// the reason payload distinguishes the two.
 ///
 @external(javascript, "./writer.ffi.mjs", "closed")
 pub fn closed(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
@@ -57,8 +57,8 @@ pub fn close(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 pub fn release_lock(writer: Writer(a)) -> Result(Nil, StreamLifecycleError)
 
 /// Writes `chunk` to the stream. Returns `Errored` if the stream
-/// enters an errored state, or `Closed` if the stream was already
-/// closed when write was called.
+/// enters an errored state, or if the stream was already closed when
+/// write was called; the reason payload distinguishes the two.
 ///
 @external(javascript, "./writer.ffi.mjs", "write")
 pub fn write(

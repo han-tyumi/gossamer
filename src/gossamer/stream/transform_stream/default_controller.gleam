@@ -21,7 +21,7 @@ pub type DefaultController(a)
 pub fn desired_size(controller: DefaultController(a)) -> Result(Int, Nil)
 
 /// Enqueues `chunk` into the readable side's internal queue. Returns
-/// `Closed` if the stream is already closed.
+/// `Closed` if the stream is already closed or errored.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "enqueue")
 pub fn enqueue(

@@ -25,7 +25,7 @@
 ////
 //// let opts =
 ////   fetch_extra.options()
-////   |> fetch_extra.set_cache(fetch_extra.NoCache)
+////   |> fetch_extra.set_cache(fetch_extra.CacheNoCache)
 ////   |> fetch_extra.set_keepalive(True)
 ////
 //// fetch_extra.send(request, with: opts)
@@ -336,8 +336,10 @@ pub fn is_response_body_used(response: Response(FetchBody)) -> Bool
 pub fn response_type(response: Response(FetchBody)) -> ResponseType
 
 /// Sends a `Request(String)` with the given options. Returns
-/// an error if the network request fails (`NetworkError`); a non-`2xx`
-/// status is still a successful send.
+/// `Error(NetworkError(_))` if the network request fails, or
+/// `Error(Aborted(_))` if the options carry an `AbortSignal` that
+/// fires before the response arrives. A non-`2xx` status is still a
+/// successful send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send")
 pub fn send(
@@ -346,8 +348,10 @@ pub fn send(
 ) -> Promise(Result(Response(FetchBody), FetchError))
 
 /// Sends a `Request(BitArray)` with the given options. Returns
-/// an error if the network request fails (`NetworkError`); a non-`2xx`
-/// status is still a successful send.
+/// `Error(NetworkError(_))` if the network request fails, or
+/// `Error(Aborted(_))` if the options carry an `AbortSignal` that
+/// fires before the response arrives. A non-`2xx` status is still a
+/// successful send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_bits")
 pub fn send_bits(
@@ -355,10 +359,11 @@ pub fn send_bits(
   with options: FetchOptions,
 ) -> Promise(Result(Response(FetchBody), FetchError))
 
-/// Sends a `Request(FormData)` with the given options. The
-/// body is encoded as `multipart/form-data`. Returns an error if the
-/// network request fails (`NetworkError`); a non-`2xx` status is still a
-/// successful send.
+/// Sends a `Request(FormData)` with the given options. The body is
+/// encoded as `multipart/form-data`. Returns `Error(NetworkError(_))`
+/// if the network request fails, or `Error(Aborted(_))` if the options
+/// carry an `AbortSignal` that fires before the response arrives. A
+/// non-`2xx` status is still a successful send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_form_data")
 pub fn send_form_data(
@@ -370,8 +375,10 @@ pub fn send_form_data(
 /// The body is streamed as the request is sent (the Fetch spec requires
 /// `duplex: "half"`, which gossamer sets automatically). Returns
 /// `Error(UnableToReadBody)` if the body stream is already locked to a
-/// reader, or `Error(NetworkError(_))` if the network request fails. A
-/// non-`2xx` status is still a successful send.
+/// reader, `Error(NetworkError(_))` if the network request fails, or
+/// `Error(Aborted(_))` if the options carry an `AbortSignal` that fires
+/// before the response arrives. A non-`2xx` status is still a successful
+/// send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_stream")
 pub fn send_stream(
