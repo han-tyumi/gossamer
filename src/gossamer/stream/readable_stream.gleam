@@ -98,9 +98,15 @@ pub fn new() -> Builder(a) {
 ///
 pub fn with_start(
   builder: Builder(a),
-  run callback: fn(DefaultController(a)) -> Nil,
+  run callback: fn(DefaultController(a)) -> b,
 ) -> Builder(a) {
-  Builder(..builder, start: Some(callback))
+  Builder(
+    ..builder,
+    start: Some(fn(controller) {
+      callback(controller)
+      Nil
+    }),
+  )
 }
 
 /// Registers the `pull` callback that runs whenever the consumer requests
