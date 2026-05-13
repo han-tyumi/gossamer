@@ -25,7 +25,7 @@ pub fn closed(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 /// if the stream has been closed or errored.
 ///
 @external(javascript, "./writer.ffi.mjs", "desired_size")
-pub fn desired_size(writer: Writer(a)) -> Result(Int, Nil)
+pub fn desired_size(writer: Writer(a)) -> Result(Float, Nil)
 
 /// Resolves when the stream is ready to accept more writes
 /// (backpressure has cleared). Returns `Errored` if the stream enters

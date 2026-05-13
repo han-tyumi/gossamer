@@ -18,7 +18,7 @@ pub type DefaultController(a)
 /// an error if the stream has been closed or errored.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
-pub fn desired_size(controller: DefaultController(a)) -> Result(Int, Nil)
+pub fn desired_size(controller: DefaultController(a)) -> Result(Float, Nil)
 
 /// Enqueues `chunk` into the readable side's internal queue. Returns
 /// `Closed` if the stream is already closed or errored.

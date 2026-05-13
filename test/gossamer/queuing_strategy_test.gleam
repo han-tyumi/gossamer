@@ -38,7 +38,7 @@ pub fn readable_strategy_applied_to_desired_size_test() {
     })
     |> readable_stream.build
   use size <- promise.map(p)
-  should.equal(size, 5)
+  should.equal(size, 5.0)
 }
 
 pub fn writable_with_count_strategy_test() {
