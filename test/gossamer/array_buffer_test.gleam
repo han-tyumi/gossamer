@@ -14,7 +14,7 @@ pub fn new_negative_test() {
 
 pub fn to_bit_array_test() {
   let buffer =
-    uint8_array.from_list([0x68, 0x69, 0x21, 0x00])
+    uint8_array.from_bit_array(<<0x68, 0x69, 0x21, 0x00>>)
     |> uint8_array.buffer
   array_buffer.to_bit_array(buffer)
   |> should.equal(<<0x68, 0x69, 0x21, 0x00>>)
