@@ -384,12 +384,8 @@ pub fn send_stream(
 
 /// Clones a `Response`. The cloned response has its own independent body
 /// stream, so the original and clone can each be consumed once. Returns
-/// an error if the body has already been read or is locked to a reader.
-///
-/// **Note**: on Bun, this returns `Ok` when the body has already been
-/// read; the Fetch spec (and Deno and Node) say it should throw. The
-/// cloned body reads as empty rather than carrying the original
-/// content.
+/// `Error(UnableToReadBody)` if the body has already been read or is
+/// locked to a reader.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "response_clone")
 pub fn response_clone(

@@ -194,24 +194,9 @@ pub fn response_clone_independent_bodies_test() {
 }
 
 pub fn response_clone_after_consumed_test() {
-  use <- runtime.skip_on(runtime.Bun)
   use original <- promise.await(make_test_response())
   use _ <- promise.await(fetch.read_text_body(original))
   fetch_extra.response_clone(original) |> should.be_error
-  promise.resolve(Nil)
-}
-
-/// Bun's `Response.clone()` succeeds on a consumed body where the Fetch
-/// spec (and Deno and Node) say it should throw, and the cloned body
-/// reads as empty rather than carrying the original content.
-pub fn response_clone_after_consumed_bun_divergence_test() {
-  use <- runtime.only_on(runtime.Bun)
-  use original <- promise.await(make_test_response())
-  use _ <- promise.await(fetch.read_text_body(original))
-  let assert Ok(cloned) = fetch_extra.response_clone(original)
-  use cloned_text <- promise.await(fetch.read_text_body(cloned))
-  let assert Ok(cloned_response) = cloned_text
-  should.equal(cloned_response.body, "")
   promise.resolve(Nil)
 }
 

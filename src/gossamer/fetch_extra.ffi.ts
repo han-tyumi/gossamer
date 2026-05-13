@@ -240,9 +240,9 @@ export const send_stream: typeof $fetchExtra.send_stream = (
 };
 
 export const response_clone: typeof $fetchExtra.response_clone = (response) => {
-  try {
-    return Result$Ok(from_fetch_response(jsResponseOf(response).clone()));
-  } catch {
+  const jsResponse = jsResponseOf(response);
+  if (jsResponse.bodyUsed || jsResponse.body?.locked) {
     return Result$Error($fetchError.FetchError$UnableToReadBody());
   }
+  return Result$Ok(from_fetch_response(jsResponse.clone()));
 };
