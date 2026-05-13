@@ -1,3 +1,9 @@
+//// A single entry on the performance timeline — a mark, a measure, or
+//// another runtime-recorded metric. Returned by
+//// [`gossamer/performance.mark`](../performance.html#mark),
+//// [`measure`](../performance.html#measure), and the various
+//// `get_entries_*` queries.
+
 import gleam/dynamic.{type Dynamic}
 import gleam/time/duration.{type Duration}
 
@@ -8,9 +14,15 @@ import gleam/time/duration.{type Duration}
 @external(javascript, "./performance_entry.type.ts", "PerformanceEntry$")
 pub type PerformanceEntry
 
+/// The entry's name (the `name` argument passed to `mark` or
+/// `measure`).
+///
 @external(javascript, "./performance_entry.ffi.mjs", "name")
 pub fn name(entry: PerformanceEntry) -> String
 
+/// The entry's type as a string (e.g., `"mark"`, `"measure"`,
+/// `"resource"`).
+///
 @external(javascript, "./performance_entry.ffi.mjs", "entry_type")
 pub fn entry_type(entry: PerformanceEntry) -> String
 
@@ -33,5 +45,8 @@ pub fn duration(entry: PerformanceEntry) -> Duration
 @external(javascript, "./performance_entry.ffi.mjs", "detail")
 pub fn detail(entry: PerformanceEntry) -> Result(Dynamic, Nil)
 
+/// Returns a JSON-serializable snapshot of the entry. Decode with
+/// `gleam/dynamic/decode` to extract specific fields.
+///
 @external(javascript, "./performance_entry.ffi.mjs", "to_json")
 pub fn to_json(entry: PerformanceEntry) -> Dynamic
