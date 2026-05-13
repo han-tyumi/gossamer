@@ -4,68 +4,65 @@ import { BitArray$BitArray } from "$/prelude.mjs";
 import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 
 export function toAesAlgorithm(value: $crypto.AesAlgorithm$): string {
-  if ($crypto.AesAlgorithm$isAesCbc(value)) return "AES-CBC";
-  if ($crypto.AesAlgorithm$isAesCtr(value)) return "AES-CTR";
-  if ($crypto.AesAlgorithm$isAesKw(value)) return "AES-KW";
-  if ($crypto.AesAlgorithm$isAesOther(value)) {
-    return $crypto.AesAlgorithm$AesOther$0(value);
-  }
+  if ($crypto.AesAlgorithm$isCbc(value)) return "AES-CBC";
+  if ($crypto.AesAlgorithm$isCtr(value)) return "AES-CTR";
+  if ($crypto.AesAlgorithm$isKw(value)) return "AES-KW";
   return "AES-GCM";
 }
 
 export function fromAesAlgorithm(value: string): $crypto.AesAlgorithm$ {
   switch (value) {
     case "AES-CBC":
-      return $crypto.AesAlgorithm$AesCbc();
+      return $crypto.AesAlgorithm$Cbc();
     case "AES-CTR":
-      return $crypto.AesAlgorithm$AesCtr();
+      return $crypto.AesAlgorithm$Ctr();
     case "AES-GCM":
-      return $crypto.AesAlgorithm$AesGcm();
+      return $crypto.AesAlgorithm$Gcm();
     case "AES-KW":
-      return $crypto.AesAlgorithm$AesKw();
+      return $crypto.AesAlgorithm$Kw();
     default:
-      return $crypto.AesAlgorithm$AesOther(value);
+      throw new Error(
+        `gossamer.crypto: runtime returned unexpected AES algorithm: ${value}`,
+      );
   }
 }
 
 export function toRsaAlgorithm(value: $crypto.RsaAlgorithm$): string {
-  if ($crypto.RsaAlgorithm$isRsaOaep(value)) return "RSA-OAEP";
-  if ($crypto.RsaAlgorithm$isRsaPss(value)) return "RSA-PSS";
-  if ($crypto.RsaAlgorithm$isRsaOther(value)) {
-    return $crypto.RsaAlgorithm$RsaOther$0(value);
-  }
+  if ($crypto.RsaAlgorithm$isOaep(value)) return "RSA-OAEP";
+  if ($crypto.RsaAlgorithm$isPss(value)) return "RSA-PSS";
   return "RSASSA-PKCS1-v1_5";
 }
 
 export function fromRsaAlgorithm(value: string): $crypto.RsaAlgorithm$ {
   switch (value) {
     case "RSA-OAEP":
-      return $crypto.RsaAlgorithm$RsaOaep();
+      return $crypto.RsaAlgorithm$Oaep();
     case "RSA-PSS":
-      return $crypto.RsaAlgorithm$RsaPss();
+      return $crypto.RsaAlgorithm$Pss();
     case "RSASSA-PKCS1-v1_5":
-      return $crypto.RsaAlgorithm$RsaSsaPkcs1V15();
+      return $crypto.RsaAlgorithm$SsaPkcs1V15();
     default:
-      return $crypto.RsaAlgorithm$RsaOther(value);
+      throw new Error(
+        `gossamer.crypto: runtime returned unexpected RSA algorithm: ${value}`,
+      );
   }
 }
 
 export function toEcAlgorithm(value: $crypto.EcAlgorithm$): string {
-  if ($crypto.EcAlgorithm$isEcDh(value)) return "ECDH";
-  if ($crypto.EcAlgorithm$isEcOther(value)) {
-    return $crypto.EcAlgorithm$EcOther$0(value);
-  }
+  if ($crypto.EcAlgorithm$isDh(value)) return "ECDH";
   return "ECDSA";
 }
 
 export function fromEcAlgorithm(value: string): $crypto.EcAlgorithm$ {
   switch (value) {
     case "ECDH":
-      return $crypto.EcAlgorithm$EcDh();
+      return $crypto.EcAlgorithm$Dh();
     case "ECDSA":
-      return $crypto.EcAlgorithm$EcDsa();
+      return $crypto.EcAlgorithm$Dsa();
     default:
-      return $crypto.EcAlgorithm$EcOther(value);
+      throw new Error(
+        `gossamer.crypto: runtime returned unexpected EC algorithm: ${value}`,
+      );
   }
 }
 
@@ -96,9 +93,6 @@ export function toHashAlgorithm(value: $crypto.HashAlgorithm$): string {
   if ($crypto.HashAlgorithm$isSha1(value)) return "SHA-1";
   if ($crypto.HashAlgorithm$isSha256(value)) return "SHA-256";
   if ($crypto.HashAlgorithm$isSha384(value)) return "SHA-384";
-  if ($crypto.HashAlgorithm$isHashOther(value)) {
-    return $crypto.HashAlgorithm$HashOther$0(value);
-  }
   return "SHA-512";
 }
 
@@ -113,7 +107,9 @@ export function fromHashAlgorithm(value: string): $crypto.HashAlgorithm$ {
     case "SHA-512":
       return $crypto.HashAlgorithm$Sha512();
     default:
-      return $crypto.HashAlgorithm$HashOther(value);
+      throw new Error(
+        `gossamer.crypto: runtime returned unexpected hash algorithm: ${value}`,
+      );
   }
 }
 
@@ -177,9 +173,6 @@ export function toKeyUsageArray(
 export function toNamedCurve(value: $crypto.NamedCurve$): string {
   if ($crypto.NamedCurve$isP256(value)) return "P-256";
   if ($crypto.NamedCurve$isP384(value)) return "P-384";
-  if ($crypto.NamedCurve$isNamedCurveOther(value)) {
-    return $crypto.NamedCurve$NamedCurveOther$0(value);
-  }
   return "P-521";
 }
 
@@ -192,7 +185,9 @@ export function fromNamedCurve(value: string): $crypto.NamedCurve$ {
     case "P-521":
       return $crypto.NamedCurve$P521();
     default:
-      return $crypto.NamedCurve$NamedCurveOther(value);
+      throw new Error(
+        `gossamer.crypto: runtime returned unexpected named curve: ${value}`,
+      );
   }
 }
 

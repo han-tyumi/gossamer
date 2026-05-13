@@ -74,65 +74,45 @@ pub type CryptoError {
 
 /// AES cipher modes supported by `subtle`.
 ///
-/// Unrecognized or non-standard algorithms use `AesOther(String)`.
-///
 pub type AesAlgorithm {
   /// AES with Cipher Block Chaining — symmetric encryption.
-  AesCbc
+  Cbc
 
   /// AES with Counter mode — symmetric encryption.
-  AesCtr
+  Ctr
 
   /// AES with Galois/Counter Mode — authenticated symmetric encryption.
-  AesGcm
+  Gcm
 
   /// AES Key Wrap — symmetric encryption of another key.
-  AesKw
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  AesOther(String)
+  Kw
 }
 
 /// RSA algorithms supported by `subtle`.
 ///
-/// Unrecognized or non-standard algorithms use `RsaOther(String)`.
-///
 pub type RsaAlgorithm {
   /// RSA with Optimal Asymmetric Encryption Padding — asymmetric
   /// encryption.
-  RsaOaep
+  Oaep
 
   /// RSA with Probabilistic Signature Scheme — asymmetric signing.
-  RsaPss
+  Pss
 
   /// RSA with PKCS #1 v1.5 padding — legacy asymmetric signing.
-  RsaSsaPkcs1V15
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  RsaOther(String)
+  SsaPkcs1V15
 }
 
 /// Elliptic curve algorithms supported by `subtle`.
 ///
-/// Unrecognized or non-standard algorithms use `EcOther(String)`.
-///
 pub type EcAlgorithm {
   /// Elliptic Curve Diffie-Hellman — key agreement.
-  EcDh
+  Dh
 
   /// Elliptic Curve Digital Signature Algorithm — signing.
-  EcDsa
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  EcOther(String)
+  Dsa
 }
 
 /// Cryptographic hash algorithms supported by `subtle`.
-///
-/// Unrecognized or non-standard algorithms use `HashOther(String)`.
 ///
 pub type HashAlgorithm {
   /// SHA-1 — included for legacy compatibility; avoid for new
@@ -147,16 +127,10 @@ pub type HashAlgorithm {
 
   /// SHA-2 with 512-bit output.
   Sha512
-
-  /// Any hash name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  HashOther(String)
 }
 
 /// A named elliptic curve used by ECDH and ECDSA operations in
 /// `subtle`.
-///
-/// Unrecognized or non-standard curves use `NamedCurveOther(String)`.
 ///
 pub type NamedCurve {
   /// NIST P-256 (secp256r1).
@@ -167,10 +141,6 @@ pub type NamedCurve {
 
   /// NIST P-521 (secp521r1).
   P521
-
-  /// Any curve name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  NamedCurveOther(String)
 }
 
 /// Whether a `CryptoKey` is public, private, or secret (symmetric).
