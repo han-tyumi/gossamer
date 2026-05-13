@@ -118,6 +118,29 @@ pub fn send_stream_aborted_signal_yields_aborted_test() {
   promise.resolve(Nil)
 }
 
+pub fn send_stream_locked_body_yields_unable_to_read_body_test() {
+  let assert Ok(stream) =
+    readable_stream.from_start(fn(controller) {
+      let assert Ok(_) = default_controller.enqueue(controller, <<"payload">>)
+      let assert Ok(_) = default_controller.close(controller)
+      Nil
+    })
+  let assert Ok(_reader) = readable_stream.get_reader(stream)
+  let req =
+    request.new()
+    |> request.set_method(http.Post)
+    |> request.set_host("example.com")
+    |> request.set_path("/")
+    |> request.set_body(stream)
+
+  use result <- promise.await(fetch_extra.send_stream(
+    req,
+    with: fetch_extra.options(),
+  ))
+  let assert Error(fetch_error.UnableToReadBody) = result
+  promise.resolve(Nil)
+}
+
 pub fn response_url_test() {
   use response <- promise.await(make_test_response())
   fetch_extra.response_url(response)

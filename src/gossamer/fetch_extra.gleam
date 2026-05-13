@@ -314,8 +314,8 @@ pub fn is_response_ok(response: Response(body)) -> Bool {
   response.status >= 200 && response.status < 300
 }
 
-/// The final URL after redirects. Returns `""` when the underlying
-/// runtime doesn't expose a URL (e.g., synthetic responses).
+/// The final URL after redirects. `""` for synthetic responses with no
+/// URL.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "response_url")
 pub fn response_url(response: Response(FetchBody)) -> String
@@ -368,9 +368,10 @@ pub fn send_form_data(
 
 /// Sends a `Request(ReadableStream(BitArray))` with the given options.
 /// The body is streamed as the request is sent (the Fetch spec requires
-/// `duplex: "half"`, which gossamer sets automatically). Returns an
-/// error if the network request fails (`NetworkError`); a non-`2xx`
-/// status is still a successful send.
+/// `duplex: "half"`, which gossamer sets automatically). Returns
+/// `Error(UnableToReadBody)` if the body stream is already locked to a
+/// reader, or `Error(NetworkError(_))` if the network request fails. A
+/// non-`2xx` status is still a successful send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_stream")
 pub fn send_stream(

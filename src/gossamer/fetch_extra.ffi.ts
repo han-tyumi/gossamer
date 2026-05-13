@@ -225,7 +225,13 @@ export const send_stream: typeof $fetchExtra.send_stream = (
   }
   const init: RequestInit = { headers, method };
   if (method !== "GET" && method !== "HEAD") {
-    init.body = fromBitArrayReadable($request.Request$Request$body(request));
+    const body = $request.Request$Request$body(request);
+    if (body.locked) {
+      return Promise.resolve(
+        Result$Error($fetchError.FetchError$UnableToReadBody()),
+      );
+    }
+    init.body = fromBitArrayReadable(body);
     init.duplex = "half";
   }
   return send_internal(new Request(url, init), buildInit(options));
