@@ -84,7 +84,7 @@ pub fn is_ignore_bom(decoder: TextDecoder) -> Bool
 @external(javascript, "./text_decoder.ffi.mjs", "decode_chunk")
 pub fn decode_chunk(
   decoder: TextDecoder,
-  input: BitArray,
+  of input: BitArray,
 ) -> Result(String, DecoderError)
 
 /// Emits any remaining bytes buffered from prior `decode_chunk` calls.

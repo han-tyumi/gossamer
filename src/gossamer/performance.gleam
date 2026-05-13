@@ -66,8 +66,10 @@ pub fn get_entries_by_name(name: String) -> List(PerformanceEntry)
 @external(javascript, "./performance.ffi.mjs", "get_entries_by_type")
 pub fn get_entries_by_type(entry_type: String) -> List(PerformanceEntry)
 
-/// Returns a JSON-serializable snapshot of the performance object.
-/// Decode with `gleam/dynamic/decode` to extract specific fields.
+/// Returns a JSON-serializable snapshot of the performance object as
+/// a `Dynamic`. Pass to `gleam/json.encode_dynamic` (or any
+/// dynamic-aware serializer) to produce a JSON string, or decode with
+/// `gleam/dynamic/decode` to extract specific fields.
 ///
 @external(javascript, "./performance.ffi.mjs", "to_json")
 pub fn to_json() -> Dynamic

@@ -45,7 +45,9 @@ pub fn duration(entry: PerformanceEntry) -> Duration
 @external(javascript, "./performance_entry.ffi.mjs", "detail")
 pub fn detail(entry: PerformanceEntry) -> Result(Dynamic, Nil)
 
-/// Returns a JSON-serializable snapshot of the entry. Decode with
+/// Returns a JSON-serializable snapshot of the entry as a `Dynamic`.
+/// Pass to `gleam/json.encode_dynamic` (or any dynamic-aware
+/// serializer) to produce a JSON string, or decode with
 /// `gleam/dynamic/decode` to extract specific fields.
 ///
 @external(javascript, "./performance_entry.ffi.mjs", "to_json")
