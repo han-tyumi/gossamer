@@ -3,9 +3,12 @@
 //// [`gleam/set.Set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html)
 //// via [`to_set`](#to_set) and operate on the canonical Gleam surface
 //// for transformations, then [`from_set`](#from_set) back when handing
-//// off to JavaScript.
+//// off to JavaScript. The non-mutating reads ([`size`](#size),
+//// [`has`](#has), [`values`](#values)) stay for one-shot interop
+//// without round-tripping through `gleam/set.Set`.
 
 import gleam/set
+import gleam/yielder.{type Yielder}
 
 /// A JavaScript `Set`, holding unique values of any type and preserving
 /// insertion order.
@@ -45,3 +48,18 @@ pub fn from_set(set: set.Set(value)) -> Set(value)
 ///
 @external(javascript, "./set.ffi.mjs", "to_set")
 pub fn to_set(set: Set(value)) -> set.Set(value)
+
+/// The number of values in the `Set`.
+///
+@external(javascript, "./set.ffi.mjs", "size")
+pub fn size(set: Set(value)) -> Int
+
+/// Returns whether the `Set` contains the given value.
+///
+@external(javascript, "./set.ffi.mjs", "has")
+pub fn has(in set: Set(value), value value: value) -> Bool
+
+/// Returns the values of the `Set` in insertion order.
+///
+@external(javascript, "./set.ffi.mjs", "values")
+pub fn values(set: Set(value)) -> Yielder(value)

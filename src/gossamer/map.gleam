@@ -3,9 +3,13 @@
 //// [`gleam/dict.Dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html)
 //// via [`to_dict`](#to_dict) and operate on the canonical Gleam
 //// surface for transformations, then [`from_dict`](#from_dict) back
-//// when handing off to JavaScript.
+//// when handing off to JavaScript. The non-mutating reads
+//// ([`size`](#size), [`get`](#get), [`has`](#has),
+//// [`keys`](#keys), [`values`](#values), [`entries`](#entries)) stay
+//// for one-shot interop without round-tripping through `Dict`.
 
 import gleam/dict.{type Dict}
+import gleam/yielder.{type Yielder}
 
 /// A JavaScript `Map`, holding key-value pairs and preserving insertion
 /// order. Supports any key type (unlike plain objects).
@@ -47,3 +51,34 @@ pub fn from_dict(dict: Dict(key, value)) -> Map(key, value)
 ///
 @external(javascript, "./map.ffi.mjs", "to_dict")
 pub fn to_dict(map: Map(key, value)) -> Dict(key, value)
+
+/// The number of entries in the `Map`.
+///
+@external(javascript, "./map.ffi.mjs", "size")
+pub fn size(map: Map(key, value)) -> Int
+
+/// Returns the value associated with the given key, or `Error(Nil)` if
+/// the key is absent.
+///
+@external(javascript, "./map.ffi.mjs", "get")
+pub fn get(from map: Map(key, value), key key: key) -> Result(value, Nil)
+
+/// Returns whether the `Map` contains the given key.
+///
+@external(javascript, "./map.ffi.mjs", "has")
+pub fn has(in map: Map(key, value), key key: key) -> Bool
+
+/// Returns the keys of the `Map` in insertion order.
+///
+@external(javascript, "./map.ffi.mjs", "keys")
+pub fn keys(map: Map(key, value)) -> Yielder(key)
+
+/// Returns the values of the `Map` in insertion order.
+///
+@external(javascript, "./map.ffi.mjs", "values")
+pub fn values(map: Map(key, value)) -> Yielder(value)
+
+/// Returns the `#(key, value)` pairs of the `Map` in insertion order.
+///
+@external(javascript, "./map.ffi.mjs", "entries")
+pub fn entries(map: Map(key, value)) -> Yielder(#(key, value))
