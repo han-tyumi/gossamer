@@ -1,3 +1,8 @@
+//// A transform stream that decompresses its input. Pipe compressed
+//// bytes through to recover the original byte stream. Pair with
+//// [`gossamer/compression/compression_stream`](./compression_stream.html)
+//// for the inverse.
+
 import gossamer/compression.{type CompressionFormat}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/writable_stream.{type WritableStream}
@@ -23,8 +28,12 @@ pub type DecompressionStream
 @external(javascript, "./decompression_stream.ffi.mjs", "new_")
 pub fn new(format: CompressionFormat) -> Result(DecompressionStream, Nil)
 
+/// The readable side of the stream — produces uncompressed bytes.
+///
 @external(javascript, "./decompression_stream.ffi.mjs", "readable")
 pub fn readable(stream: DecompressionStream) -> ReadableStream(BitArray)
 
+/// The writable side of the stream — accepts compressed byte chunks.
+///
 @external(javascript, "./decompression_stream.ffi.mjs", "writable")
 pub fn writable(stream: DecompressionStream) -> WritableStream(BitArray)
