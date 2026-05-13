@@ -26,12 +26,6 @@ pub fn new(byte_length: Int) -> ArrayBuffer
 @external(javascript, "./array_buffer.ffi.mjs", "byte_length")
 pub fn byte_length(array_buffer: ArrayBuffer) -> Int
 
-/// `True` if `value` is a typed-array view backed by an `ArrayBuffer`
-/// (e.g., `Uint8Array`).
-///
-@external(javascript, "./array_buffer.ffi.mjs", "is_view")
-pub fn is_view(value: a) -> Bool
-
 /// Creates an `ArrayBuffer` containing the bytes of `bit_array`.
 /// Un-aligned bit arrays are zero-padded to the next byte.
 ///

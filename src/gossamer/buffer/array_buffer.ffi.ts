@@ -12,10 +12,6 @@ export const byte_length: typeof $arrayBuffer.byte_length = (
   return arrayBuffer.byteLength;
 };
 
-export const is_view: typeof $arrayBuffer.is_view = (value) => {
-  return ArrayBuffer.isView(value);
-};
-
 export const from_bit_array: typeof $arrayBuffer.from_bit_array = (
   bitArray,
 ) => {

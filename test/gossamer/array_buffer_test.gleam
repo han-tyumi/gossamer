@@ -12,20 +12,6 @@ pub fn new_negative_test() {
   array_buffer.byte_length(buffer) |> should.equal(0)
 }
 
-pub fn is_view_uint8array_test() {
-  let view = uint8_array.from_list([1, 2, 3])
-  array_buffer.is_view(view) |> should.be_true
-}
-
-pub fn is_view_buffer_test() {
-  let buffer = array_buffer.new(8)
-  array_buffer.is_view(buffer) |> should.be_false
-}
-
-pub fn is_view_string_test() {
-  array_buffer.is_view("not a view") |> should.be_false
-}
-
 pub fn to_bit_array_test() {
   let buffer =
     uint8_array.from_list([0x68, 0x69, 0x21, 0x00])
