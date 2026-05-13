@@ -1,3 +1,8 @@
+//// The event delivered to `on_message` handlers across message
+//// channels, message ports, workers, and WebSockets. Read the
+//// payload via [`data`](#data) and origin metadata via
+//// [`origin`](#origin) / [`last_event_id`](#last_event_id).
+
 import gleam/dynamic.{type Dynamic}
 
 /// An event received from a message channel, port, worker, or WebSocket.
@@ -14,8 +19,15 @@ pub type MessageEvent
 @external(javascript, "./message_event.ffi.mjs", "data")
 pub fn data(event: MessageEvent) -> Dynamic
 
+/// The origin of the sender, populated for cross-document messages
+/// and server-sent events. Empty for `MessageChannel` and
+/// `MessagePort` events.
+///
 @external(javascript, "./message_event.ffi.mjs", "origin")
 pub fn origin(event: MessageEvent) -> String
 
+/// The event id from the last server-sent event. Empty for
+/// non-server-sent events.
+///
 @external(javascript, "./message_event.ffi.mjs", "last_event_id")
 pub fn last_event_id(event: MessageEvent) -> String
