@@ -169,7 +169,7 @@ pub fn do_build(
 /// synchronously.
 ///
 pub fn from_start(
-  start: fn(DefaultController(a)) -> Nil,
+  start: fn(DefaultController(a)) -> b,
 ) -> Result(ReadableStream(a), StreamLifecycleError) {
   new() |> with_start(run: start) |> build
 }
