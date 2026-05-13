@@ -16,8 +16,13 @@ pub type CryptoKeyPair {
 /// `subtle`.
 ///
 pub type KeyFormat {
+  /// PKCS #8 — encoded private-key format.
   Pkcs8
+
+  /// Raw byte material — used for symmetric keys.
   Raw
+
+  /// SubjectPublicKeyInfo — encoded public-key format.
   Spki
 }
 
@@ -26,9 +31,20 @@ pub type KeyFormat {
 /// Non-standard or unnamed algorithms use `DeriveOther(String)`.
 ///
 pub type DeriveAlgorithm {
+  /// HMAC-based Key Derivation Function with the given `hash`,
+  /// context-binding `info`, and `salt`.
   DeriveHkdf(hash: HashAlgorithm, info: BitArray, salt: BitArray)
+
+  /// Password-Based Key Derivation Function 2 with the given `hash`,
+  /// `iterations`, and `salt`.
   DerivePbkdf2(hash: HashAlgorithm, iterations: Int, salt: BitArray)
+
+  /// Elliptic Curve Diffie-Hellman key agreement with the given peer
+  /// `public` key.
   DeriveEcDh(public: CryptoKey)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   DeriveOther(String)
 }
 
@@ -37,8 +53,14 @@ pub type DeriveAlgorithm {
 /// Non-standard or unnamed algorithms use `DerivedKeyOther(String)`.
 ///
 pub type DerivedKeyKind {
+  /// Derive an AES key of `length` bits.
   DerivedKeyAes(name: AesAlgorithm, length: Int)
+
+  /// Derive an HMAC key bound to `hash`.
   DerivedKeyHmac(hash: HashAlgorithm)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   DerivedKeyOther(String)
 }
 
@@ -47,12 +69,29 @@ pub type DerivedKeyKind {
 /// Non-standard or unnamed algorithms use `EncryptOther(String)`.
 ///
 pub type EncryptAlgorithm {
+  /// AES-CBC with the given initialization vector.
   EncryptAesCbc(iv: BitArray)
+
+  /// AES-GCM with the given initialization vector and default
+  /// authentication tag length.
   EncryptAesGcm(iv: BitArray)
+
+  /// AES-GCM with the given initialization vector, additional
+  /// authenticated data, and explicit `tag_length` in bits.
   EncryptAesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+
+  /// AES-CTR with the given `counter` block and counter `length` in
+  /// bits.
   EncryptAesCtr(counter: BitArray, length: Int)
+
+  /// RSA-OAEP without a label.
   EncryptRsaOaep
+
+  /// RSA-OAEP with the given `label`.
   EncryptRsaOaepWith(label: BitArray)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   EncryptOther(String)
 }
 
@@ -61,9 +100,18 @@ pub type EncryptAlgorithm {
 /// Non-standard or unnamed algorithms use `ImportOther(String)`.
 ///
 pub type ImportAlgorithm {
+  /// Import an HMAC key with the given `hash`.
   ImportHmac(hash: HashAlgorithm)
+
+  /// Import an RSA key with the given algorithm and `hash`.
   ImportRsaHashed(name: RsaAlgorithm, hash: HashAlgorithm)
+
+  /// Import an elliptic-curve key with the given algorithm and
+  /// `named_curve`.
   ImportEc(name: EcAlgorithm, named_curve: NamedCurve)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   ImportOther(String)
 }
 
@@ -72,8 +120,14 @@ pub type ImportAlgorithm {
 /// Non-standard or unnamed algorithms use `KeyGenOther(String)`.
 ///
 pub type KeyGenAlgorithm {
+  /// Generate an AES key of `length` bits.
   KeyGenAes(name: AesAlgorithm, length: Int)
+
+  /// Generate an HMAC key bound to `hash`.
   KeyGenHmac(hash: HashAlgorithm)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   KeyGenOther(String)
 }
 
@@ -82,15 +136,26 @@ pub type KeyGenAlgorithm {
 /// Non-standard or unnamed algorithms use `KeyPairGenOther(String)`.
 ///
 pub type KeyPairGenAlgorithm {
+  /// Generate an RSA key pair with `modulus_length` bits, the given
+  /// `public_exponent` bytes, and `hash`.
   KeyPairGenRsa(
     name: RsaAlgorithm,
     modulus_length: Int,
     public_exponent: BitArray,
     hash: HashAlgorithm,
   )
+
+  /// Generate an elliptic-curve key pair on `named_curve`.
   KeyPairGenEc(name: EcAlgorithm, named_curve: NamedCurve)
+
+  /// Generate an Ed25519 signing key pair.
   KeyPairGenEd25519
+
+  /// Generate an X25519 key-agreement key pair.
   KeyPairGenX25519
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   KeyPairGenOther(String)
 }
 
@@ -99,10 +164,20 @@ pub type KeyPairGenAlgorithm {
 /// Non-standard or unnamed algorithms use `SignOther(String)`.
 ///
 pub type SignAlgorithm {
+  /// Sign or verify with an HMAC key.
   SignHmac
+
+  /// Sign or verify with RSA-SSA-PKCS1-v1_5.
   SignRsaSsaPkcs1V15
+
+  /// Sign or verify with RSA-PSS using `salt_length` bytes of salt.
   SignRsaPss(salt_length: Int)
+
+  /// Sign or verify with ECDSA using the given `hash`.
   SignEcDsa(hash: HashAlgorithm)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   SignOther(String)
 }
 
@@ -111,10 +186,21 @@ pub type SignAlgorithm {
 /// Non-standard or unnamed algorithms use `WrapOther(String)`.
 ///
 pub type WrapAlgorithm {
+  /// Wrap or unwrap with AES-CBC and the given initialization vector.
   WrapAesCbc(iv: BitArray)
+
+  /// Wrap or unwrap with AES-CTR using the given `counter` block and
+  /// counter `length` in bits.
   WrapAesCtr(counter: BitArray, length: Int)
+
+  /// Wrap or unwrap with RSA-OAEP without a label.
   WrapRsaOaep
+
+  /// Wrap or unwrap with RSA-OAEP and the given `label`.
   WrapRsaOaepWith(label: BitArray)
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   WrapOther(String)
 }
 
