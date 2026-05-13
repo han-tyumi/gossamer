@@ -6,7 +6,6 @@
 //// off to JavaScript.
 
 import gleam/set
-import gleam/yielder.{type Yielder}
 
 /// A JavaScript `Set`, holding unique values of any type and preserving
 /// insertion order.
@@ -44,28 +43,5 @@ pub fn from_set(set: set.Set(value)) -> Set(value)
 /// Converts the `Set` to a `gleam/set.Set`. Insertion order is
 /// preserved as `gleam/set.Set` insertion order.
 ///
-pub fn to_set(set: Set(value)) -> set.Set(value) {
-  yielder.fold(values(set), set.new(), fn(acc, value) { set.insert(acc, value) })
-}
-
-/// The number of values in the `Set`.
-///
-@external(javascript, "./set.ffi.mjs", "size")
-pub fn size(set: Set(value)) -> Int
-
-/// Returns whether the `Set` contains the given value.
-///
-@external(javascript, "./set.ffi.mjs", "has")
-pub fn has(in set: Set(value), value value: value) -> Bool
-
-/// Returns the values of the `Set` in insertion order.
-///
-@external(javascript, "./set.ffi.mjs", "values")
-pub fn values(set: Set(value)) -> Yielder(value)
-
-/// Returns the `#(value, value)` pairs of the `Set` in insertion order.
-/// Each value appears with itself, mirroring the shape of
-/// `Set.prototype.entries` in JavaScript.
-///
-@external(javascript, "./set.ffi.mjs", "entries")
-pub fn entries(set: Set(value)) -> Yielder(#(value, value))
+@external(javascript, "./set.ffi.mjs", "to_set")
+pub fn to_set(set: Set(value)) -> set.Set(value)

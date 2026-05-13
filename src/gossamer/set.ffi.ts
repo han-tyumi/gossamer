@@ -1,7 +1,9 @@
-import { fold as gleam_set_fold } from "$/gleam_stdlib/gleam/set.mjs";
+import {
+  fold as gleam_set_fold,
+  from_list as gleam_set_from_list,
+} from "$/gleam_stdlib/gleam/set.mjs";
 import type * as $set from "$/gossamer/gossamer/set.mjs";
-import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
-import { toArray } from "~/utils/list.ffi.ts";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
 
 export const new_: typeof $set.new$ = <T>() => {
   return new Set<T>();
@@ -24,18 +26,6 @@ export const from_set: typeof $set.from_set = <T>(
   return jsSet;
 };
 
-export const size: typeof $set.size = (set) => {
-  return set.size;
-};
-
-export const has: typeof $set.has = (set, value) => {
-  return set.has(value);
-};
-
-export const values: typeof $set.values = (set) => {
-  return jsIteratorAsYielder(set.values());
-};
-
-export const entries: typeof $set.entries = (set) => {
-  return jsIteratorAsYielder(set.entries());
+export const to_set: typeof $set.to_set = (set) => {
+  return gleam_set_from_list(fromArray(Array.from(set.values())));
 };
