@@ -4,7 +4,6 @@ import gleam/javascript/promise
 import gleam/option.{None}
 import gleeunit/should
 import gossamer/abort_signal
-import gossamer/iteration
 import gossamer/iteration/async_iterator
 import gossamer/stream
 import gossamer/stream/readable_stream
@@ -555,14 +554,8 @@ pub fn readable_stream_async_iterator_test() {
 
   let iter = readable_stream.async_iterator(stream)
 
-  use result <- promise.await(async_iterator.next(iter, value: None))
-  should.equal(result, Ok(iteration.Yield(1)))
-
-  use result <- promise.await(async_iterator.next(iter, value: None))
-  should.equal(result, Ok(iteration.Yield(2)))
-
-  use result <- promise.await(async_iterator.next(iter, value: None))
-  should.equal(result, Ok(iteration.Return(Nil)))
+  use result <- promise.await(async_iterator.to_list(iter))
+  should.equal(result, Ok([1, 2]))
   promise.resolve(Nil)
 }
 

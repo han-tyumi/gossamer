@@ -1,7 +1,6 @@
 //// Shared types used by both [`iterator`](./iteration/iterator.html)
 //// and [`async_iterator`](./iteration/async_iterator.html) — the
-//// per-step result variants and the outcome of invoking a `return` or
-//// `throw` handler.
+//// per-step result variants returned from a `next` callback.
 
 /// The result of advancing an iterator. `Yield` carries a value produced
 /// by the iterator; `Return` signals iteration has ended, carrying any
@@ -10,13 +9,4 @@
 pub type IteratorResult(a, result) {
   Yield(value: a)
   Return(value: result)
-}
-
-/// The outcome of invoking an iterator's optional `return` or `throw`
-/// handler. `NoHandler` indicates the iterator doesn't define the
-/// handler. `Handled` carries the `IteratorResult` the handler produced.
-///
-pub type IteratorHandlerOutcome(a, result) {
-  NoHandler
-  Handled(result: IteratorResult(a, result))
 }

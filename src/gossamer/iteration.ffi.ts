@@ -33,14 +33,6 @@ export function yielderAsJsIterator<T>(
   return iter;
 }
 
-export function toCallbackResult<T>(thunk: () => T) {
-  try {
-    return Result$Ok(thunk());
-  } catch (error) {
-    return Result$Error(error);
-  }
-}
-
 export function toCallbackResultPromise<T>(promise: Promise<T>) {
   return promise.then(
     (value) => Result$Ok(value),
@@ -61,13 +53,4 @@ export function toIteratorResult<T, TReturn>(
     done: false,
     value: $iteration.IteratorResult$Yield$value(result),
   };
-}
-
-export function toGleamIteratorResult<T, TReturn>(
-  result: IteratorResult<T, TReturn>,
-): $iteration.IteratorResult$<T, TReturn> {
-  if (result.done) {
-    return $iteration.IteratorResult$Return(result.value);
-  }
-  return $iteration.IteratorResult$Yield(result.value);
 }

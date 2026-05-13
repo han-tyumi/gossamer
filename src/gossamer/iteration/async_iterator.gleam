@@ -1,12 +1,15 @@
 //// JavaScript `AsyncIterator` binding for interop with APIs that
-//// produce or consume async iterators. Construct from a callback or
-//// from a Gleam list, consume with [`for_await`](#for_await) or pull
-//// chunks via [`next`](#next).
+//// produce or consume async iterators. Treated as a transit type:
+//// pass an async iterator across the FFI boundary and consume from
+//// Gleam via [`for_await`](#for_await) or [`to_list`](#to_list). The
+//// iterator protocol (`next`, `return`, `throw`) is intentionally not
+//// exposed publicly — observable mutation lives on the JavaScript
+//// side.
 
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option}
-import gossamer/iteration.{type IteratorHandlerOutcome, type IteratorResult}
+import gossamer/iteration.{type IteratorResult}
 
 /// A pull-based iterator that yields values asynchronously. Each call
 /// to [`next`](#next) returns a promise. `a` is the yielded value type,
@@ -39,62 +42,6 @@ pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 pub fn to_list(
   iterator: AsyncIterator(a, return, next),
 ) -> Promise(Result(List(a), Dynamic))
-
-/// Sets the iterator's optional `return` handler, called when the
-/// consumer ends iteration early.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "set_return")
-pub fn set_return(
-  iterator: AsyncIterator(a, return, next),
-  return: fn(Option(return)) -> Promise(IteratorResult(a, return)),
-) -> AsyncIterator(a, return, next)
-
-/// Sets the iterator's optional `throw` handler, called when the
-/// consumer signals an error.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "set_throw")
-pub fn set_throw(
-  iterator: AsyncIterator(a, return, next),
-  throw: fn(e) -> Promise(IteratorResult(a, return)),
-) -> AsyncIterator(a, return, next)
-
-/// Advances the iterator and returns a promise for the next result.
-/// Pass `Some(value)` to send a value into the iterator's internal
-/// logic; pass `None` for a plain advance. Returns the thrown value
-/// or rejection reason if the underlying `next` callback throws or
-/// returns a rejecting promise.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "next")
-pub fn next(
-  iterator: AsyncIterator(a, return, next),
-  value value: Option(next),
-) -> Promise(Result(IteratorResult(a, return), Dynamic))
-
-/// Ends iteration early by invoking the iterator's optional `return`
-/// handler. `Ok(NoHandler)` if the iterator doesn't define one;
-/// `Ok(Handled)` carries the result the handler produced. Returns the
-/// rejection reason if the handler rejects.
-///
-/// Pass `Some(value)` to forward a value to the handler; pass `None`
-/// when the handler is no-arg or you have nothing to forward.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "return_")
-pub fn return(
-  iterator: AsyncIterator(a, return, next),
-  value value: Option(return),
-) -> Promise(Result(IteratorHandlerOutcome(a, return), Dynamic))
-
-/// Signals an error to the iterator by invoking its optional `throw`
-/// handler. `Ok(NoHandler)` if the iterator doesn't define one —
-/// `reason` is discarded; the caller must decide whether to propagate.
-/// `Ok(Handled)` carries the result the handler produced. Returns the
-/// rejection reason if the handler itself rejects.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "throw_")
-pub fn throw(
-  iterator: AsyncIterator(a, return, next),
-  reason reason: e,
-) -> Promise(Result(IteratorHandlerOutcome(a, return), Dynamic))
 
 /// Consumes the iterator, calling `fun` on each yielded value. Returns
 /// the thrown value or rejection reason if the iterator or `fun` throws
