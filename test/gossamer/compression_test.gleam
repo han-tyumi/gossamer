@@ -9,6 +9,16 @@ import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/read_result
 import gossamer/stream/readable_stream/reader
 
+pub fn compression_stream_unsupported_format_test() {
+  compression_stream.new(compression.Other("zstd-unsupported-everywhere"))
+  |> should.be_error
+}
+
+pub fn decompression_stream_unsupported_format_test() {
+  decompression_stream.new(compression.Other("zstd-unsupported-everywhere"))
+  |> should.be_error
+}
+
 pub fn gzip_round_trip_test() {
   let data = <<"Hello, compression!":utf8>>
 
