@@ -19,11 +19,14 @@ export const close: typeof $messagePort.close = (port) => {
   port.close();
 };
 
-export const on_message: typeof $messagePort.on_message = (port, handler) => {
+export const set_on_message: typeof $messagePort.set_on_message = (
+  port,
+  handler,
+) => {
   port.onmessage = (event) => handler(wrapBinary(event.data));
 };
 
-export const on_message_error: typeof $messagePort.on_message_error = (
+export const set_on_message_error: typeof $messagePort.set_on_message_error = (
   port,
   handler,
 ) => {

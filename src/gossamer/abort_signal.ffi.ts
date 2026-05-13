@@ -23,6 +23,9 @@ export const reason: typeof $abortSignal.reason = (signal) => {
   return toResult(signal.reason);
 };
 
-export const on_abort: typeof $abortSignal.on_abort = (signal, handler) => {
+export const set_on_abort: typeof $abortSignal.set_on_abort = (
+  signal,
+  handler,
+) => {
   signal.onabort = () => handler();
 };

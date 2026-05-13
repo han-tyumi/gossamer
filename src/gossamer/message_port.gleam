@@ -37,10 +37,11 @@ pub fn close(port: MessagePort) -> Nil
 /// Registers a handler invoked with each message's data payload. Decode the
 /// payload with `gleam/dynamic/decode`.
 ///
-@external(javascript, "./message_port.ffi.mjs", "on_message")
-pub fn on_message(port: MessagePort, run handler: fn(Dynamic) -> a) -> Nil
+@external(javascript, "./message_port.ffi.mjs", "set_on_message")
+pub fn set_on_message(port: MessagePort, run handler: fn(Dynamic) -> a) -> Nil
 
-/// Registers a handler invoked when an incoming message cannot be deserialized.
+/// Registers a handler invoked when an incoming message cannot be
+/// deserialized.
 ///
-@external(javascript, "./message_port.ffi.mjs", "on_message_error")
-pub fn on_message_error(port: MessagePort, run handler: fn() -> a) -> Nil
+@external(javascript, "./message_port.ffi.mjs", "set_on_message_error")
+pub fn set_on_message_error(port: MessagePort, run handler: fn() -> a) -> Nil

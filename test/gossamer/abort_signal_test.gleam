@@ -32,13 +32,13 @@ pub fn reason_on_unaborted_signal_test() {
   abort_signal.reason(signal) |> should.be_error
 }
 
-pub fn on_abort_test() {
+pub fn set_on_abort_test() {
   let controller = abort_controller.new()
   let signal = abort_controller.signal(controller)
 
   let #(p, resolve) = promise.start()
 
-  abort_signal.on_abort(signal, fn() {
+  abort_signal.set_on_abort(signal, fn() {
     resolve("aborted")
     Nil
   })

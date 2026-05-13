@@ -51,5 +51,5 @@ pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 /// Registers `handler` to run when the signal aborts. If the signal is
 /// already aborted, `handler` is not called.
 ///
-@external(javascript, "./abort_signal.ffi.mjs", "on_abort")
-pub fn on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil
+@external(javascript, "./abort_signal.ffi.mjs", "set_on_abort")
+pub fn set_on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil
