@@ -165,7 +165,7 @@ classifier (symmetric vs asymmetric public/private).
 | navigator.userAgent | ✅     | `gossamer`                   |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
-no idiomatic use; rethrow or log via `console.error` instead.
+no idiomatic use; log via `console.error` instead.
 
 ## Cross-Runtime Web APIs (beyond WinterTC minimum)
 
@@ -197,9 +197,12 @@ per-binding typed errors (e.g., `FetchError`, `CryptoError`,
 
 ## ECMAScript Built-ins (complements Gleam equivalents)
 
-Gleam has conceptual equivalents for these, but they are not the native JS
-types. These bindings enable interop with JS APIs that return or accept native
-types, and expose functionality Gleam's stdlib doesn't cover.
+These bindings fall into two patterns. `Map` and `Set` are transit types — the
+JS native types, exposed for interop with JS APIs that return them while
+`gleam/dict` and `gleam/set` remain canonical for everyday use. The `*_extra`
+modules layer JS-specific capabilities on top of Gleam's canonical types
+(`gleam/string`, `gleam/int`, `gleam/float`, `gleam/time`), which already are
+the JS primitives under the hood.
 
 | Name          | Status | Module                                       |
 | ------------- | ------ | -------------------------------------------- |
@@ -209,12 +212,9 @@ types, and expose functionality Gleam's stdlib doesn't cover.
 | Number / Math | ✅     | `gossamer/int_extra`, `gossamer/float_extra` |
 | Date          | ✅     | `gossamer/time_extra`                        |
 
-`Map` and `Set` are transit types — exposed for interop with JS APIs that return
-them, but `gleam/dict` and `gleam/set` are the canonical Gleam types for
-everyday use. `Array` is delegated to `gleam/javascript/array`, which exposes it
-as a transit type for JS interop. For collection operations beyond `array.size`
-/ `map` / `fold` / `get`, convert to `List` via `array.to_list` and use
-`gleam/list`.
+`Array` is delegated to `gleam/javascript/array`, which exposes it as a transit
+type for JS interop. For collection operations beyond `array.size` / `map` /
+`fold` / `get`, convert to `List` via `array.to_list` and use `gleam/list`.
 
 `Number` and `Math` split across two modules mirroring Gleam's stdlib —
 `int_extra` for integer-relevant members (`max_safe_integer`, `clz32`, `imul`,
