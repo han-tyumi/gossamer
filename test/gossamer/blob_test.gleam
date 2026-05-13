@@ -8,14 +8,14 @@ import gossamer/buffer/array_buffer
 pub fn blob_from_string_test() {
   let b = blob.from_string("hello", content_type: "")
   should.equal(blob.size(b), 5)
-  should.equal(blob.type_(b), "")
+  should.equal(blob.mime_type(b), "")
 }
 
 pub fn blob_from_string_with_type_test() {
   let b = blob.from_string("hello", content_type: "text/plain")
   should.equal(blob.size(b), 5)
   // Bun may append charset info (e.g., "text/plain;charset=utf-8").
-  should.be_true(string.starts_with(blob.type_(b), "text/plain"))
+  should.be_true(string.starts_with(blob.mime_type(b), "text/plain"))
 }
 
 pub fn blob_from_bytes_test() {
@@ -66,14 +66,14 @@ pub fn blob_from_bytes_with_type_test() {
       content_type: "application/octet-stream",
     )
   should.equal(blob.size(b), 5)
-  should.equal(blob.type_(b), "application/octet-stream")
+  should.equal(blob.mime_type(b), "application/octet-stream")
 }
 
 pub fn blob_slice_with_type_test() {
   let b = blob.from_string("hello world", content_type: "")
   let sliced = blob.slice(b, 0, 5, content_type: "text/plain")
   should.equal(blob.size(sliced), 5)
-  should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
+  should.be_true(string.starts_with(blob.mime_type(sliced), "text/plain"))
   use text <- promise.await(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)

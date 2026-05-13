@@ -53,7 +53,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   let assert Ok(key) = result
 
   should.equal(key.is_extractable(key), True)
-  should.equal(key.type_(key), crypto.Secret)
+  should.equal(key.kind(key), crypto.Secret)
 
   let iv = crypto.random_bytes(12)
   let plaintext = <<"Hello":utf8>>
@@ -90,8 +90,8 @@ pub fn generate_key_pair_sign_verify_test() {
   let assert Ok(pair) = result
 
   let subtle.CryptoKeyPair(public_key:, private_key:) = pair
-  should.equal(key.type_(public_key), crypto.Public)
-  should.equal(key.type_(private_key), crypto.Private)
+  should.equal(key.kind(public_key), crypto.Public)
+  should.equal(key.kind(private_key), crypto.Private)
 
   let data = <<1, 2, 3>>
 
@@ -129,8 +129,8 @@ pub fn generate_rsa_key_pair_test() {
   )
   let assert Ok(pair) = result
   let subtle.CryptoKeyPair(public_key:, private_key:) = pair
-  should.equal(key.type_(public_key), crypto.Public)
-  should.equal(key.type_(private_key), crypto.Private)
+  should.equal(key.kind(public_key), crypto.Public)
+  should.equal(key.kind(private_key), crypto.Private)
   let algo = key.algorithm(private_key)
   let assert crypto.Rsa(name:, modulus_length:, ..) = algo
   should.equal(name, crypto.RsaSsaPkcs1V15)
@@ -222,7 +222,7 @@ pub fn import_key_jwk_test() {
     ]),
   )
   let assert Ok(imported) = result
-  key.type_(imported) |> should.equal(crypto.Secret)
+  key.kind(imported) |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -276,7 +276,7 @@ pub fn derive_key_test() {
     ),
   )
   let assert Ok(derived) = result
-  key.type_(derived) |> should.equal(crypto.Secret)
+  key.kind(derived) |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -319,7 +319,7 @@ pub fn wrap_unwrap_key_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  key.type_(unwrapped) |> should.equal(crypto.Secret)
+  key.kind(unwrapped) |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -360,7 +360,7 @@ pub fn wrap_unwrap_key_jwk_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  key.type_(unwrapped) |> should.equal(crypto.Secret)
+  key.kind(unwrapped) |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 

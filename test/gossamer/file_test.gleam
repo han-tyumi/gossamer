@@ -35,18 +35,19 @@ pub fn file_last_modified_test() {
   |> should.equal(order.Gt)
 }
 
-pub fn file_set_type_from_strings_test() {
+pub fn file_set_mime_type_from_strings_test() {
   let f =
-    file.from_strings(["hello"], "typed.txt") |> file.set_type("text/plain")
+    file.from_strings(["hello"], "typed.txt")
+    |> file.set_mime_type("text/plain")
   f.name |> should.equal("typed.txt")
-  should.be_true(string.starts_with(f.type_, "text/plain"))
+  should.be_true(string.starts_with(f.mime_type, "text/plain"))
 }
 
-pub fn file_set_type_from_blob_test() {
+pub fn file_set_mime_type_from_blob_test() {
   let b = blob.from_string("blob data", content_type: "")
-  let f = file.from_blob(b, "blob.txt") |> file.set_type("text/plain")
+  let f = file.from_blob(b, "blob.txt") |> file.set_mime_type("text/plain")
   f.name |> should.equal("blob.txt")
-  should.be_true(string.starts_with(f.type_, "text/plain"))
+  should.be_true(string.starts_with(f.mime_type, "text/plain"))
 }
 
 pub fn file_set_last_modified_test() {
@@ -64,7 +65,7 @@ pub fn file_size_test() {
 
 pub fn file_type_test() {
   let f = file.from_strings(["data"], "no-type.txt")
-  f.type_ |> should.equal("")
+  f.mime_type |> should.equal("")
 }
 
 pub fn file_array_buffer_test() {
@@ -94,7 +95,7 @@ pub fn file_slice_test() {
 pub fn file_slice_with_type_test() {
   let f = file.from_strings(["hello world"], "slice-type.txt")
   let sliced = file.slice(f, 0, 5, content_type: "text/plain")
-  should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
+  should.be_true(string.starts_with(blob.mime_type(sliced), "text/plain"))
 }
 
 pub fn file_stream_test() {

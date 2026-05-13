@@ -34,7 +34,7 @@ pub type DeriveAlgorithm {
 ///
 /// Non-standard or unnamed algorithms use `DerivedKeyOther(String)`.
 ///
-pub type DerivedKeyType {
+pub type DerivedKeyKind {
   DerivedKeyAes(name: AesAlgorithm, length: Int)
   DerivedKeyHmac(hash: HashAlgorithm)
   DerivedKeyOther(String)
@@ -261,7 +261,7 @@ pub fn derive_bits(
 pub fn derive_key(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
-  derived_key_type type_: DerivedKeyType,
+  derived_key_type kind: DerivedKeyKind,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))

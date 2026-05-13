@@ -136,24 +136,24 @@ function toDeriveAlgorithm(
   };
 }
 
-function toDerivedKeyType(
-  derivedKeyType: $subtle.DerivedKeyType$,
+function toDerivedKeyKind(
+  derivedKeyKind: $subtle.DerivedKeyKind$,
 ): AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams {
-  if ($subtle.DerivedKeyType$isDerivedKeyOther(derivedKeyType)) {
-    return $subtle.DerivedKeyType$DerivedKeyOther$0(derivedKeyType);
+  if ($subtle.DerivedKeyKind$isDerivedKeyOther(derivedKeyKind)) {
+    return $subtle.DerivedKeyKind$DerivedKeyOther$0(derivedKeyKind);
   }
-  if ($subtle.DerivedKeyType$isDerivedKeyAes(derivedKeyType)) {
+  if ($subtle.DerivedKeyKind$isDerivedKeyAes(derivedKeyKind)) {
     return {
       name: toAesAlgorithm(
-        $subtle.DerivedKeyType$DerivedKeyAes$name(derivedKeyType),
+        $subtle.DerivedKeyKind$DerivedKeyAes$name(derivedKeyKind),
       ),
-      length: $subtle.DerivedKeyType$DerivedKeyAes$length(derivedKeyType),
+      length: $subtle.DerivedKeyKind$DerivedKeyAes$length(derivedKeyKind),
     };
   }
   return {
     name: "HMAC",
     hash: toHashAlgorithm(
-      $subtle.DerivedKeyType$DerivedKeyHmac$hash(derivedKeyType),
+      $subtle.DerivedKeyKind$DerivedKeyHmac$hash(derivedKeyKind),
     ),
   };
 }
@@ -524,7 +524,7 @@ export const derive_bits: typeof $subtle.derive_bits = (
 export const derive_key: typeof $subtle.derive_key = (
   algorithm,
   baseKey,
-  derivedKeyType,
+  derivedKeyKind,
   extractable,
   usages,
 ) => {
@@ -534,7 +534,7 @@ export const derive_key: typeof $subtle.derive_key = (
     subtle.deriveKey(
       toDeriveAlgorithm(algorithm),
       baseKey,
-      toDerivedKeyType(derivedKeyType),
+      toDerivedKeyKind(derivedKeyKind),
       extractable,
       toKeyUsageArray(usages),
     )

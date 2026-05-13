@@ -26,7 +26,7 @@ export const size: typeof $blob.size = (blob) => {
   return blob.size;
 };
 
-export const type_: typeof $blob.type_ = (blob) => {
+export const mime_type: typeof $blob.mime_type = (blob) => {
   return blob.type;
 };
 

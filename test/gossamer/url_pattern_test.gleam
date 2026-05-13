@@ -1,4 +1,5 @@
 import gleam/dict
+import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer/url_pattern
 
@@ -11,51 +12,68 @@ pub fn build_test() {
 }
 
 pub fn from_string_test() {
-  let assert Ok(pattern) = url_pattern.from_string("https://example.com/*")
+  let assert Ok(pattern) =
+    url_pattern.from_string("https://example.com/*", relative_to: None)
   url_pattern.protocol(pattern) |> should.equal("https")
   url_pattern.hostname(pattern) |> should.equal("example.com")
 }
 
 pub fn from_string_with_base_test() {
   let assert Ok(pattern) =
-    url_pattern.from_string_with_base("/foo/*", "https://example.com")
+    url_pattern.from_string("/foo/*", relative_to: Some("https://example.com"))
   url_pattern.hostname(pattern) |> should.equal("example.com")
   url_pattern.pathname(pattern) |> should.equal("/foo/*")
 }
 
-pub fn test_match_test() {
+pub fn matches_test() {
   let assert Ok(pattern) =
     url_pattern.new()
     |> url_pattern.with_pathname("/users/:id")
     |> url_pattern.build
-  url_pattern.test_(pattern, "https://example.com/users/123")
+  url_pattern.matches(
+    pattern,
+    against: "https://example.com/users/123",
+    relative_to: None,
+  )
   |> should.be_true
 }
 
-pub fn test_no_match_test() {
+pub fn matches_no_match_test() {
   let assert Ok(pattern) =
     url_pattern.new()
     |> url_pattern.with_pathname("/users/:id")
     |> url_pattern.build
-  url_pattern.test_(pattern, "https://example.com/posts/123")
+  url_pattern.matches(
+    pattern,
+    against: "https://example.com/posts/123",
+    relative_to: None,
+  )
   |> should.be_false
 }
 
-pub fn test_with_base_test() {
+pub fn matches_with_base_test() {
   let assert Ok(pattern) =
     url_pattern.new()
     |> url_pattern.with_pathname("/api/*")
     |> url_pattern.build
-  url_pattern.test_with_base(pattern, "/api/data", "https://example.com")
+  url_pattern.matches(
+    pattern,
+    against: "/api/data",
+    relative_to: Some("https://example.com"),
+  )
   |> should.be_true
 }
 
-pub fn test_with_base_invalid_test() {
+pub fn matches_with_base_invalid_test() {
   let assert Ok(pattern) =
     url_pattern.new()
     |> url_pattern.with_pathname("/api/*")
     |> url_pattern.build
-  url_pattern.test_with_base(pattern, "/api/data", "not a url")
+  url_pattern.matches(
+    pattern,
+    against: "/api/data",
+    relative_to: Some("not a url"),
+  )
   |> should.be_false
 }
 
@@ -65,7 +83,11 @@ pub fn exec_test() {
     |> url_pattern.with_pathname("/users/:id")
     |> url_pattern.build
   let assert Ok(result) =
-    url_pattern.exec(pattern, "https://example.com/users/42")
+    url_pattern.exec(
+      pattern,
+      against: "https://example.com/users/42",
+      relative_to: None,
+    )
   let pathname = result.pathname
   pathname.input |> should.equal("/users/42")
   dict.get(pathname.groups, "id") |> should.equal(Ok("42"))
@@ -76,7 +98,11 @@ pub fn exec_no_match_test() {
     url_pattern.new()
     |> url_pattern.with_pathname("/users/:id")
     |> url_pattern.build
-  url_pattern.exec(pattern, "https://example.com/posts/42")
+  url_pattern.exec(
+    pattern,
+    against: "https://example.com/posts/42",
+    relative_to: None,
+  )
   |> should.be_error
 }
 
@@ -86,7 +112,11 @@ pub fn exec_with_base_test() {
     |> url_pattern.with_pathname("/items/:name")
     |> url_pattern.build
   let assert Ok(result) =
-    url_pattern.exec_with_base(pattern, "/items/widget", "https://example.com")
+    url_pattern.exec(
+      pattern,
+      against: "/items/widget",
+      relative_to: Some("https://example.com"),
+    )
   let pathname = result.pathname
   dict.get(pathname.groups, "name") |> should.equal(Ok("widget"))
 }
@@ -96,7 +126,11 @@ pub fn exec_with_base_no_match_test() {
     url_pattern.new()
     |> url_pattern.with_pathname("/items/:name")
     |> url_pattern.build
-  url_pattern.exec_with_base(pattern, "/other/path", "https://example.com")
+  url_pattern.exec(
+    pattern,
+    against: "/other/path",
+    relative_to: Some("https://example.com"),
+  )
   |> should.be_error
 }
 
@@ -105,7 +139,11 @@ pub fn exec_with_base_invalid_test() {
     url_pattern.new()
     |> url_pattern.with_pathname("/items/:name")
     |> url_pattern.build
-  url_pattern.exec_with_base(pattern, "/items/widget", "not a url")
+  url_pattern.exec(
+    pattern,
+    against: "/items/widget",
+    relative_to: Some("not a url"),
+  )
   |> should.be_error
 }
 
@@ -151,7 +189,11 @@ pub fn match_fields_test() {
     |> url_pattern.with_pathname("/users/:id")
     |> url_pattern.build
   let assert Ok(result) =
-    url_pattern.exec(pattern, "https://example.com/users/99")
+    url_pattern.exec(
+      pattern,
+      against: "https://example.com/users/99",
+      relative_to: None,
+    )
   let url_pattern.Match(
     protocol:,
     username:,

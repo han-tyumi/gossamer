@@ -29,8 +29,8 @@ pub fn from_string(content: String, content_type content_type: String) -> Blob
 @external(javascript, "./blob.ffi.mjs", "size")
 pub fn size(blob: Blob) -> Int
 
-@external(javascript, "./blob.ffi.mjs", "type_")
-pub fn type_(blob: Blob) -> String
+@external(javascript, "./blob.ffi.mjs", "mime_type")
+pub fn mime_type(blob: Blob) -> String
 
 /// Reads the blob's contents as an `ArrayBuffer`. Returns
 /// `UnableToReadBody` if the blob's source can't be read.

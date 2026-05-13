@@ -10,7 +10,7 @@ import gossamer/stream/readable_stream.{type ReadableStream}
 /// See [File](https://developer.mozilla.org/en-US/docs/Web/API/File) on MDN.
 ///
 pub type File {
-  File(blob: Blob, name: String, type_: String, last_modified: Timestamp)
+  File(blob: Blob, name: String, mime_type: String, last_modified: Timestamp)
 }
 
 /// Creates a `File` whose contents are the concatenation of `parts`.
@@ -19,16 +19,16 @@ pub type File {
 @external(javascript, "./file.ffi.mjs", "from_strings")
 pub fn from_strings(parts: List(String), named name: String) -> File
 
-/// Creates a `File` wrapping `blob`. The file's `type_` is taken from
-/// `blob.type_`; `last_modified` is set to the current time.
+/// Creates a `File` wrapping `blob`. The file's `mime_type` is taken
+/// from `blob.mime_type`; `last_modified` is set to the current time.
 ///
 @external(javascript, "./file.ffi.mjs", "from_blob")
 pub fn from_blob(blob: Blob, named name: String) -> File
 
 /// Sets the MIME type. Returns a new `File` with the given type.
 ///
-pub fn set_type(file: File, value: String) -> File {
-  File(..file, type_: value)
+pub fn set_mime_type(file: File, value: String) -> File {
+  File(..file, mime_type: value)
 }
 
 /// Sets the last-modified timestamp. Returns a new `File` with the

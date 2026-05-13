@@ -6,8 +6,8 @@
 /// Logs `data` as an error if `condition` is `False`. A no-op when the
 /// condition holds.
 ///
-@external(javascript, "./console.ffi.mjs", "assert_")
-pub fn assert_(that condition: Bool, log data: a) -> Nil
+@external(javascript, "./console.ffi.mjs", "log_if_false")
+pub fn log_if_false(that condition: Bool, log data: a) -> Nil
 
 /// Clears the console if the runtime allows it.
 ///

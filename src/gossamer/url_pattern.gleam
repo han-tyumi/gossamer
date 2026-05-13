@@ -151,53 +151,38 @@ pub fn do_build(
   base_url: Option(String),
 ) -> Result(UrlPattern, Nil)
 
-/// Creates a `UrlPattern` from a single pattern string. Returns an
-/// error if the pattern is malformed.
+/// Creates a `UrlPattern` from a pattern string. Pass `Some(base_url)`
+/// to resolve relative components against a base URL. Returns an
+/// error if the pattern is malformed or the base URL is invalid.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "from_string")
-pub fn from_string(pattern: String) -> Result(UrlPattern, Nil)
-
-/// Creates a `UrlPattern` from a pattern string resolved against a base
-/// URL. Returns an error if the pattern is malformed or the base URL
-/// is invalid.
-///
-@external(javascript, "./url_pattern.ffi.mjs", "from_string_with_base")
-pub fn from_string_with_base(
+pub fn from_string(
   pattern: String,
-  relative_to base_url: String,
+  relative_to base_url: Option(String),
 ) -> Result(UrlPattern, Nil)
 
-/// Returns `True` if the pattern matches `input`.
+/// Returns `True` if the pattern matches `input`. Pass `Some(base_url)`
+/// to resolve `input` against a base URL before matching. Returns
+/// `False` if `base_url` is `Some` but isn't a valid URL.
 ///
-@external(javascript, "./url_pattern.ffi.mjs", "test_")
-pub fn test_(pattern: UrlPattern, against input: String) -> Bool
-
-/// Like `test`, but resolves `input` against `base_url` before matching.
-/// Returns `False` if `base_url` is not a valid URL (the match algorithm
-/// returns null rather than throwing).
-///
-@external(javascript, "./url_pattern.ffi.mjs", "test_with_base")
-pub fn test_with_base(
+@external(javascript, "./url_pattern.ffi.mjs", "matches")
+pub fn matches(
   pattern: UrlPattern,
   against input: String,
-  relative_to base_url: String,
+  relative_to base_url: Option(String),
 ) -> Bool
 
 /// Matches `input` against the pattern and returns the captured
-/// components, or `Error(Nil)` if there is no match.
+/// components, or `Error(Nil)` if there's no match. Pass
+/// `Some(base_url)` to resolve `input` against a base URL before
+/// matching. Returns `Error(Nil)` if `base_url` is `Some` but isn't a
+/// valid URL.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "exec")
-pub fn exec(pattern: UrlPattern, against input: String) -> Result(Match, Nil)
-
-/// Like `exec`, but resolves `input` against `base_url` before matching.
-/// Returns `Error(Nil)` if there is no match or `base_url` is not a valid
-/// URL.
-///
-@external(javascript, "./url_pattern.ffi.mjs", "exec_with_base")
-pub fn exec_with_base(
+pub fn exec(
   pattern: UrlPattern,
   against input: String,
-  relative_to base_url: String,
+  relative_to base_url: Option(String),
 ) -> Result(Match, Nil)
 
 /// The compiled protocol pattern.

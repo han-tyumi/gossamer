@@ -20,7 +20,7 @@ export function toJsFile(file: $file.File$): File {
     [$file.File$File$blob(file)],
     $file.File$File$name(file),
     {
-      type: $file.File$File$type_(file),
+      type: $file.File$File$mime_type(file),
       lastModified: timestampToMs($file.File$File$last_modified(file)),
     },
   );

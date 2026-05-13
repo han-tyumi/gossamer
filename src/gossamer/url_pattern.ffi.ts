@@ -1,9 +1,18 @@
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
+import {
+  type Option$,
+  Option$isNone,
+  Option$Some$0,
+} from "$/gleam_stdlib/gleam/option.mjs";
 import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
+
+function optionToValue(option: Option$<string>): string | undefined {
+  return Option$isNone(option) ? undefined : Option$Some$0(option);
+}
 
 function invalidPattern() {
   return Result$Error(undefined);
@@ -62,48 +71,31 @@ export const build: typeof $urlPattern.do_build = (
   }
 };
 
-export const from_string: typeof $urlPattern.from_string = (pattern) => {
+export const from_string: typeof $urlPattern.from_string = (pattern, base) => {
   try {
-    return Result$Ok(new URLPattern(pattern));
+    const baseURL = optionToValue(base);
+    return Result$Ok(
+      baseURL === undefined
+        ? new URLPattern(pattern)
+        : new URLPattern(pattern, baseURL),
+    );
   } catch {
     return invalidPattern();
   }
 };
 
-export const from_string_with_base: typeof $urlPattern.from_string_with_base = (
-  pattern,
-  baseURL,
-) => {
-  try {
-    return Result$Ok(new URLPattern(pattern, baseURL));
-  } catch {
-    return invalidPattern();
-  }
+export const matches: typeof $urlPattern.matches = (pattern, input, base) => {
+  const baseURL = optionToValue(base);
+  return baseURL === undefined
+    ? pattern.test(input)
+    : pattern.test(input, baseURL);
 };
 
-export const test_: typeof $urlPattern.test_ = (pattern, input) => {
-  return pattern.test(input);
-};
-
-export const test_with_base: typeof $urlPattern.test_with_base = (
-  pattern,
-  input,
-  baseURL,
-) => {
-  return pattern.test(input, baseURL);
-};
-
-export const exec: typeof $urlPattern.exec = (pattern, input) => {
-  const result = pattern.exec(input);
-  return result === null ? toResult(null) : toResult(toMatch(result));
-};
-
-export const exec_with_base: typeof $urlPattern.exec_with_base = (
-  pattern,
-  input,
-  baseURL,
-) => {
-  const result = pattern.exec(input, baseURL);
+export const exec: typeof $urlPattern.exec = (pattern, input, base) => {
+  const baseURL = optionToValue(base);
+  const result = baseURL === undefined
+    ? pattern.exec(input)
+    : pattern.exec(input, baseURL);
   return result === null ? toResult(null) : toResult(toMatch(result));
 };
 

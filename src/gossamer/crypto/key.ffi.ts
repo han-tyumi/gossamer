@@ -117,17 +117,17 @@ export function fromHashAlgorithm(value: string): $crypto.HashAlgorithm$ {
   }
 }
 
-export function toKeyType(value: KeyType): $crypto.KeyType$ {
+export function toKeyKind(value: KeyType): $crypto.KeyKind$ {
   switch (value) {
     case "private":
-      return $crypto.KeyType$Private();
+      return $crypto.KeyKind$Private();
     case "public":
-      return $crypto.KeyType$Public();
+      return $crypto.KeyKind$Public();
     case "secret":
-      return $crypto.KeyType$Secret();
+      return $crypto.KeyKind$Secret();
     default:
       throw new Error(
-        `gossamer.crypto.key.type_: runtime returned unexpected CryptoKey.type: ${value}`,
+        `gossamer.crypto.key.kind: runtime returned unexpected CryptoKey.type: ${value}`,
       );
   }
 }
@@ -240,8 +240,8 @@ export const is_extractable: typeof $key.is_extractable = (key) => {
   return key.extractable;
 };
 
-export const type_: typeof $key.type_ = (key) => {
-  return toKeyType(key.type);
+export const kind: typeof $key.kind = (key) => {
+  return toKeyKind(key.type);
 };
 
 export const usages: typeof $key.usages = (key) => {
