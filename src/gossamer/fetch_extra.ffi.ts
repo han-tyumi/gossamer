@@ -178,7 +178,9 @@ function toResponseType(value: string): $fetchExtra.ResponseType$ {
     case "default":
       return $fetchExtra.ResponseType$ResponseDefault();
     default:
-      return $fetchExtra.ResponseType$ResponseOther(value);
+      throw new Error(
+        `gossamer.fetch_extra: runtime returned unexpected Response.type: ${value}`,
+      );
   }
 }
 

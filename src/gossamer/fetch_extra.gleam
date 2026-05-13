@@ -68,10 +68,6 @@ pub type ResponseType {
   /// An opaque redirect response with `redirect: ResponseError`-like
   /// behavior. The body is hidden.
   ResponseOpaqueRedirect
-
-  /// Any value the binding doesn't recognize, passed through
-  /// verbatim from the runtime.
-  ResponseOther(String)
 }
 
 /// A builder for fetch options. Construct with `options` and chain
