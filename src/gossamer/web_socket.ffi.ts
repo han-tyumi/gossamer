@@ -1,8 +1,15 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
-import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
+
+function wrapBinary(value: unknown): unknown {
+  if (value instanceof ArrayBuffer) {
+    return BitArray$BitArray(new Uint8Array(value));
+  }
+  return value;
+}
 
 function isValidWebSocketUrl(url: string): boolean {
   let parsed: URL;
@@ -75,7 +82,7 @@ export const build: typeof $webSocket.do_build = (
     ws,
     "onmessage",
     on_message,
-    (handler) => (event) => handler(event),
+    (handler) => (event) => handler(wrapBinary(event.data)),
   );
   mapIfSome(ws, "onerror", on_error, (handler) => () => handler());
   mapIfSome(

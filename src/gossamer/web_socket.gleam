@@ -6,10 +6,10 @@
 //// [`send_bytes`](#send_bytes), or [`send_blob`](#send_blob); close with
 //// [`close`](#close) or [`close_with`](#close_with).
 
+import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
 import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}
-import gossamer/message_event.{type MessageEvent}
 
 /// Errors raised by `WebSocket` operations.
 pub type WebSocketError {
@@ -89,7 +89,7 @@ pub opaque type Builder {
     protocols: List(String),
     binary_type: Option(BinaryType),
     on_open: Option(fn() -> Nil),
-    on_message: Option(fn(MessageEvent) -> Nil),
+    on_message: Option(fn(Dynamic) -> Nil),
     on_error: Option(fn() -> Nil),
     on_close: Option(fn(CloseEvent) -> Nil),
   )
@@ -145,16 +145,19 @@ pub fn with_on_open(builder: Builder, run handler: fn() -> a) -> Builder {
   )
 }
 
-/// Registers a handler invoked for each incoming message.
+/// Registers a handler invoked for each incoming message. The handler
+/// receives the message payload directly: text messages arrive as
+/// `String`, binary messages as `BitArray` or `Blob` depending on the
+/// configured `binary_type`.
 ///
 pub fn with_on_message(
   builder: Builder,
-  run handler: fn(MessageEvent) -> a,
+  run handler: fn(Dynamic) -> a,
 ) -> Builder {
   Builder(
     ..builder,
-    on_message: Some(fn(event) {
-      handler(event)
+    on_message: Some(fn(data) {
+      handler(data)
       Nil
     }),
   )
@@ -211,7 +214,7 @@ pub fn do_build(
   protocols: List(String),
   binary_type: Option(BinaryType),
   on_open: Option(fn() -> Nil),
-  on_message: Option(fn(MessageEvent) -> Nil),
+  on_message: Option(fn(Dynamic) -> Nil),
   on_error: Option(fn() -> Nil),
   on_close: Option(fn(CloseEvent) -> Nil),
 ) -> Result(WebSocket, WebSocketError)
