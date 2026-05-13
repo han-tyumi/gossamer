@@ -39,16 +39,26 @@ pub type CloseEvent {
 /// The format binary messages arrive as on a `WebSocket`.
 ///
 pub type BinaryType {
+  /// Binary messages arrive as `ArrayBuffer`.
   ArrayBuffer
+
+  /// Binary messages arrive as `Blob`.
   Blob
 }
 
 /// The state of a `WebSocket` connection.
 ///
 pub type ReadyState {
+  /// The handshake is in progress.
   Connecting
+
+  /// The connection is open and messages can flow.
   Open
+
+  /// `close` has been called; the closing handshake is in progress.
   Closing
+
+  /// The connection has closed.
   Closed
 }
 
