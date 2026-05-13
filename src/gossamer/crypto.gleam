@@ -7,17 +7,33 @@
 /// operations matching one of its declared usages.
 ///
 pub type KeyUsage {
+  /// The key may be used to decrypt ciphertext.
   Decrypt
+
+  /// The key may be used to derive raw byte material.
   DeriveBits
+
+  /// The key may be used to derive another `CryptoKey`.
   DeriveKey
+
+  /// The key may be used to encrypt plaintext.
   Encrypt
+
+  /// The key may be used to produce a signature.
   Sign
+
+  /// The key may be used to decrypt a wrapped key.
   UnwrapKey
+
+  /// The key may be used to verify a signature.
   Verify
+
+  /// The key may be used to encrypt another key for transport.
   WrapKey
 }
 
 /// Errors raised by `subtle` operations.
+///
 pub type CryptoError {
   /// The key's `usages` don't include the capability required for this
   /// operation (e.g., calling `encrypt` with a key whose usages don't
@@ -61,10 +77,20 @@ pub type CryptoError {
 /// Unrecognized or non-standard algorithms use `AesOther(String)`.
 ///
 pub type AesAlgorithm {
+  /// AES with Cipher Block Chaining — symmetric encryption.
   AesCbc
+
+  /// AES with Counter mode — symmetric encryption.
   AesCtr
+
+  /// AES with Galois/Counter Mode — authenticated symmetric encryption.
   AesGcm
+
+  /// AES Key Wrap — symmetric encryption of another key.
   AesKw
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   AesOther(String)
 }
 
@@ -73,9 +99,18 @@ pub type AesAlgorithm {
 /// Unrecognized or non-standard algorithms use `RsaOther(String)`.
 ///
 pub type RsaAlgorithm {
+  /// RSA with Optimal Asymmetric Encryption Padding — asymmetric
+  /// encryption.
   RsaOaep
+
+  /// RSA with Probabilistic Signature Scheme — asymmetric signing.
   RsaPss
+
+  /// RSA with PKCS #1 v1.5 padding — legacy asymmetric signing.
   RsaSsaPkcs1V15
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   RsaOther(String)
 }
 
@@ -84,8 +119,14 @@ pub type RsaAlgorithm {
 /// Unrecognized or non-standard algorithms use `EcOther(String)`.
 ///
 pub type EcAlgorithm {
+  /// Elliptic Curve Diffie-Hellman — key agreement.
   EcDh
+
+  /// Elliptic Curve Digital Signature Algorithm — signing.
   EcDsa
+
+  /// Any algorithm name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   EcOther(String)
 }
 
@@ -94,10 +135,21 @@ pub type EcAlgorithm {
 /// Unrecognized or non-standard algorithms use `HashOther(String)`.
 ///
 pub type HashAlgorithm {
+  /// SHA-1 — included for legacy compatibility; avoid for new
+  /// signatures.
   Sha1
+
+  /// SHA-2 with 256-bit output.
   Sha256
+
+  /// SHA-2 with 384-bit output.
   Sha384
+
+  /// SHA-2 with 512-bit output.
   Sha512
+
+  /// Any hash name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   HashOther(String)
 }
 
@@ -107,17 +159,30 @@ pub type HashAlgorithm {
 /// Unrecognized or non-standard curves use `NamedCurveOther(String)`.
 ///
 pub type NamedCurve {
+  /// NIST P-256 (secp256r1).
   P256
+
+  /// NIST P-384 (secp384r1).
   P384
+
+  /// NIST P-521 (secp521r1).
   P521
+
+  /// Any curve name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   NamedCurveOther(String)
 }
 
 /// Whether a `CryptoKey` is public, private, or secret (symmetric).
 ///
 pub type KeyKind {
+  /// The private half of an asymmetric key pair.
   Private
+
+  /// The public half of an asymmetric key pair.
   Public
+
+  /// A symmetric key (e.g., AES, HMAC).
   Secret
 }
 
@@ -125,9 +190,18 @@ pub type KeyKind {
 /// `key.algorithm`.
 ///
 pub type KeyAlgorithm {
+  /// An AES key. `length` is the key size in bits (128, 192, or 256).
   Aes(name: AesAlgorithm, length: Int)
+
+  /// An elliptic-curve key bound to `named_curve`.
   Ec(name: EcAlgorithm, named_curve: NamedCurve)
+
+  /// An HMAC key bound to `hash` with `length` bits of key material.
   Hmac(hash: HashAlgorithm, length: Int)
+
+  /// An RSA key with `modulus_length` bits and the given `hash`.
+  /// `public_exponent` is the raw bytes of the exponent (commonly
+  /// `<<1, 0, 1>>` for 65537).
   Rsa(
     name: RsaAlgorithm,
     modulus_length: Int,
