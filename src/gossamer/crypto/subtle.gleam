@@ -1,3 +1,21 @@
+//// The `SubtleCrypto` interface from the Web Cryptography API — the
+//// low-level cryptographic primitives. Operations include hashing
+//// ([`digest`](#digest)), symmetric and asymmetric encryption
+//// ([`encrypt`](#encrypt), [`decrypt`](#decrypt)), signing and
+//// verification ([`sign`](#sign), [`verify`](#verify)), key generation
+//// ([`generate_key`](#generate_key),
+//// [`generate_key_pair`](#generate_key_pair)), key derivation
+//// ([`derive_bits`](#derive_bits), [`derive_key`](#derive_key)), and
+//// key serialization ([`import_key`](#import_key),
+//// [`export_key`](#export_key), [`wrap_key`](#wrap_key),
+//// [`unwrap_key`](#unwrap_key)).
+////
+//// Every operation returns `Promise(Result(_, CryptoError))`. Key-usage
+//// and extractability constraints are checked before dispatch and
+//// surface as typed `CryptoError` variants.
+////
+//// See [SubtleCrypto](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto) on MDN.
+
 import gleam/javascript/promise.{type Promise}
 import gossamer/crypto.{
   type AesAlgorithm, type CryptoError, type EcAlgorithm, type HashAlgorithm,
@@ -28,8 +46,6 @@ pub type KeyFormat {
 
 /// Algorithm parameters for `derive_bits` and `derive_key`.
 ///
-/// Non-standard or unnamed algorithms use `DeriveOther(String)`.
-///
 pub type DeriveAlgorithm {
   /// HMAC-based Key Derivation Function with the given `hash`,
   /// context-binding `info`, and `salt`.
@@ -43,14 +59,13 @@ pub type DeriveAlgorithm {
   /// `public` key.
   DeriveEcDh(public: CryptoKey)
 
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  DeriveOther(String)
+  /// X25519 key agreement with the given peer `public` key. Returns
+  /// `Error(AlgorithmNotSupported)` on Bun (≤ 1.3.12) — see
+  /// https://github.com/oven-sh/bun/issues/20148.
+  DeriveX25519(public: CryptoKey)
 }
 
 /// The target key type for `derive_key`.
-///
-/// Non-standard or unnamed algorithms use `DerivedKeyOther(String)`.
 ///
 pub type DerivedKeyKind {
   /// Derive an AES key of `length` bits.
@@ -58,15 +73,9 @@ pub type DerivedKeyKind {
 
   /// Derive an HMAC key bound to `hash`.
   DerivedKeyHmac(hash: HashAlgorithm)
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  DerivedKeyOther(String)
 }
 
 /// Algorithm parameters for `encrypt` and `decrypt`.
-///
-/// Non-standard or unnamed algorithms use `EncryptOther(String)`.
 ///
 pub type EncryptAlgorithm {
   /// AES-CBC with the given initialization vector.
@@ -89,17 +98,14 @@ pub type EncryptAlgorithm {
 
   /// RSA-OAEP with the given `label`.
   EncryptRsaOaepWith(label: BitArray)
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  EncryptOther(String)
 }
 
 /// Algorithm parameters for `import_key` and `import_key_jwk`.
 ///
-/// Non-standard or unnamed algorithms use `ImportOther(String)`.
-///
 pub type ImportAlgorithm {
+  /// Import a raw AES key for the given AES mode.
+  ImportAes(name: AesAlgorithm)
+
   /// Import an HMAC key with the given `hash`.
   ImportHmac(hash: HashAlgorithm)
 
@@ -110,14 +116,20 @@ pub type ImportAlgorithm {
   /// `named_curve`.
   ImportEc(name: EcAlgorithm, named_curve: NamedCurve)
 
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  ImportOther(String)
+  /// Import an Ed25519 signing key.
+  ImportEd25519
+
+  /// Import an X25519 key-agreement key.
+  ImportX25519
+
+  /// Import an HKDF base key for key derivation.
+  ImportHkdf
+
+  /// Import a PBKDF2 base key for password-based derivation.
+  ImportPbkdf2
 }
 
 /// Algorithm parameters for `generate_key` (symmetric keys).
-///
-/// Non-standard or unnamed algorithms use `KeyGenOther(String)`.
 ///
 pub type KeyGenAlgorithm {
   /// Generate an AES key of `length` bits.
@@ -125,15 +137,9 @@ pub type KeyGenAlgorithm {
 
   /// Generate an HMAC key bound to `hash`.
   KeyGenHmac(hash: HashAlgorithm)
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  KeyGenOther(String)
 }
 
 /// Algorithm parameters for `generate_key_pair` (asymmetric keys).
-///
-/// Non-standard or unnamed algorithms use `KeyPairGenOther(String)`.
 ///
 pub type KeyPairGenAlgorithm {
   /// Generate an RSA key pair with `modulus_length` bits, the given
@@ -153,15 +159,9 @@ pub type KeyPairGenAlgorithm {
 
   /// Generate an X25519 key-agreement key pair.
   KeyPairGenX25519
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  KeyPairGenOther(String)
 }
 
 /// Algorithm parameters for `sign` and `verify`.
-///
-/// Non-standard or unnamed algorithms use `SignOther(String)`.
 ///
 pub type SignAlgorithm {
   /// Sign or verify with an HMAC key.
@@ -176,14 +176,11 @@ pub type SignAlgorithm {
   /// Sign or verify with ECDSA using the given `hash`.
   SignEcDsa(hash: HashAlgorithm)
 
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  SignOther(String)
+  /// Sign or verify with Ed25519.
+  SignEd25519
 }
 
 /// Algorithm parameters for `wrap_key` and `unwrap_key`.
-///
-/// Non-standard or unnamed algorithms use `WrapOther(String)`.
 ///
 pub type WrapAlgorithm {
   /// Wrap or unwrap with AES-CBC and the given initialization vector.
@@ -193,15 +190,23 @@ pub type WrapAlgorithm {
   /// counter `length` in bits.
   WrapAesCtr(counter: BitArray, length: Int)
 
+  /// Wrap or unwrap with AES-GCM and the given initialization vector,
+  /// using the default authentication tag length.
+  WrapAesGcm(iv: BitArray)
+
+  /// Wrap or unwrap with AES-GCM, the given initialization vector,
+  /// additional authenticated data, and explicit `tag_length` in bits.
+  WrapAesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+
+  /// Wrap or unwrap with AES Key Wrap (RFC 3394). The wrapping key
+  /// must be an AES-KW `CryptoKey`.
+  WrapAesKw
+
   /// Wrap or unwrap with RSA-OAEP without a label.
   WrapRsaOaep
 
   /// Wrap or unwrap with RSA-OAEP and the given `label`.
   WrapRsaOaepWith(label: BitArray)
-
-  /// Any algorithm name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  WrapOther(String)
 }
 
 /// Computes a cryptographic hash of `data`. Returns

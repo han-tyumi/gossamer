@@ -101,9 +101,6 @@ function toKeyFormat(
 function toDeriveAlgorithm(
   algorithm: $subtle.DeriveAlgorithm$,
 ): AlgorithmIdentifier | HkdfParams | Pbkdf2Params | EcdhKeyDeriveParams {
-  if ($subtle.DeriveAlgorithm$isDeriveOther(algorithm)) {
-    return $subtle.DeriveAlgorithm$DeriveOther$0(algorithm);
-  }
   if ($subtle.DeriveAlgorithm$isDeriveHkdf(algorithm)) {
     return {
       name: "HKDF",
@@ -130,18 +127,21 @@ function toDeriveAlgorithm(
       ),
     };
   }
+  if ($subtle.DeriveAlgorithm$isDeriveEcDh(algorithm)) {
+    return {
+      name: "ECDH",
+      public: $subtle.DeriveAlgorithm$DeriveEcDh$public(algorithm),
+    };
+  }
   return {
-    name: "ECDH",
-    public: $subtle.DeriveAlgorithm$DeriveEcDh$public(algorithm),
+    name: "X25519",
+    public: $subtle.DeriveAlgorithm$DeriveX25519$public(algorithm),
   };
 }
 
 function toDerivedKeyKind(
   derivedKeyKind: $subtle.DerivedKeyKind$,
 ): AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams {
-  if ($subtle.DerivedKeyKind$isDerivedKeyOther(derivedKeyKind)) {
-    return $subtle.DerivedKeyKind$DerivedKeyOther$0(derivedKeyKind);
-  }
   if ($subtle.DerivedKeyKind$isDerivedKeyAes(derivedKeyKind)) {
     return {
       name: toAesAlgorithm(
@@ -166,9 +166,6 @@ function toEncryptAlgorithm(
   | AesGcmParams
   | AesCtrParams
   | RsaOaepParams {
-  if ($subtle.EncryptAlgorithm$isEncryptOther(algorithm)) {
-    return $subtle.EncryptAlgorithm$EncryptOther$0(algorithm);
-  }
   if ($subtle.EncryptAlgorithm$isEncryptAesCbc(algorithm)) {
     return {
       name: "AES-CBC",
@@ -224,8 +221,8 @@ function toImportAlgorithm(
   | HmacImportParams
   | RsaHashedImportParams
   | EcKeyImportParams {
-  if ($subtle.ImportAlgorithm$isImportOther(algorithm)) {
-    return $subtle.ImportAlgorithm$ImportOther$0(algorithm);
+  if ($subtle.ImportAlgorithm$isImportAes(algorithm)) {
+    return toAesAlgorithm($subtle.ImportAlgorithm$ImportAes$name(algorithm));
   }
   if ($subtle.ImportAlgorithm$isImportHmac(algorithm)) {
     return {
@@ -245,22 +242,25 @@ function toImportAlgorithm(
       ),
     };
   }
-  return {
-    name: toEcAlgorithm(
-      $subtle.ImportAlgorithm$ImportEc$name(algorithm),
-    ),
-    namedCurve: toNamedCurve(
-      $subtle.ImportAlgorithm$ImportEc$named_curve(algorithm),
-    ),
-  };
+  if ($subtle.ImportAlgorithm$isImportEc(algorithm)) {
+    return {
+      name: toEcAlgorithm(
+        $subtle.ImportAlgorithm$ImportEc$name(algorithm),
+      ),
+      namedCurve: toNamedCurve(
+        $subtle.ImportAlgorithm$ImportEc$named_curve(algorithm),
+      ),
+    };
+  }
+  if ($subtle.ImportAlgorithm$isImportEd25519(algorithm)) return "Ed25519";
+  if ($subtle.ImportAlgorithm$isImportX25519(algorithm)) return "X25519";
+  if ($subtle.ImportAlgorithm$isImportHkdf(algorithm)) return "HKDF";
+  return "PBKDF2";
 }
 
 function toKeyGenAlgorithm(
   algorithm: $subtle.KeyGenAlgorithm$,
 ): AlgorithmIdentifier | AesKeyGenParams | HmacKeyGenParams {
-  if ($subtle.KeyGenAlgorithm$isKeyGenOther(algorithm)) {
-    return $subtle.KeyGenAlgorithm$KeyGenOther$0(algorithm);
-  }
   if ($subtle.KeyGenAlgorithm$isKeyGenAes(algorithm)) {
     return {
       name: toAesAlgorithm($subtle.KeyGenAlgorithm$KeyGenAes$name(algorithm)),
@@ -278,9 +278,6 @@ function toKeyGenAlgorithm(
 function toKeyPairGenAlgorithm(
   algorithm: $subtle.KeyPairGenAlgorithm$,
 ): AlgorithmIdentifier | RsaHashedKeyGenParams | EcKeyGenParams {
-  if ($subtle.KeyPairGenAlgorithm$isKeyPairGenOther(algorithm)) {
-    return $subtle.KeyPairGenAlgorithm$KeyPairGenOther$0(algorithm);
-  }
   if ($subtle.KeyPairGenAlgorithm$isKeyPairGenRsa(algorithm)) {
     return {
       name: toRsaAlgorithm(
@@ -317,9 +314,6 @@ function toKeyPairGenAlgorithm(
 function toSignAlgorithm(
   algorithm: $subtle.SignAlgorithm$,
 ): AlgorithmIdentifier | RsaPssParams | EcdsaParams {
-  if ($subtle.SignAlgorithm$isSignOther(algorithm)) {
-    return $subtle.SignAlgorithm$SignOther$0(algorithm);
-  }
   if ($subtle.SignAlgorithm$isSignHmac(algorithm)) return "HMAC";
   if ($subtle.SignAlgorithm$isSignRsaSsaPkcs1V15(algorithm)) {
     return "RSASSA-PKCS1-v1_5";
@@ -330,20 +324,25 @@ function toSignAlgorithm(
       saltLength: $subtle.SignAlgorithm$SignRsaPss$salt_length(algorithm),
     };
   }
-  return {
-    name: "ECDSA",
-    hash: toHashAlgorithm(
-      $subtle.SignAlgorithm$SignEcDsa$hash(algorithm),
-    ),
-  };
+  if ($subtle.SignAlgorithm$isSignEcDsa(algorithm)) {
+    return {
+      name: "ECDSA",
+      hash: toHashAlgorithm(
+        $subtle.SignAlgorithm$SignEcDsa$hash(algorithm),
+      ),
+    };
+  }
+  return "Ed25519";
 }
 
 function toWrapAlgorithm(
   algorithm: $subtle.WrapAlgorithm$,
-): AlgorithmIdentifier | AesCbcParams | AesCtrParams | RsaOaepParams {
-  if ($subtle.WrapAlgorithm$isWrapOther(algorithm)) {
-    return $subtle.WrapAlgorithm$WrapOther$0(algorithm);
-  }
+):
+  | AlgorithmIdentifier
+  | AesCbcParams
+  | AesCtrParams
+  | AesGcmParams
+  | RsaOaepParams {
   if ($subtle.WrapAlgorithm$isWrapAesCbc(algorithm)) {
     return {
       name: "AES-CBC",
@@ -361,6 +360,25 @@ function toWrapAlgorithm(
       length: $subtle.WrapAlgorithm$WrapAesCtr$length(algorithm),
     };
   }
+  if ($subtle.WrapAlgorithm$isWrapAesGcm(algorithm)) {
+    return {
+      name: "AES-GCM",
+      iv: toBufferSource($subtle.WrapAlgorithm$WrapAesGcm$iv(algorithm)),
+    };
+  }
+  if ($subtle.WrapAlgorithm$isWrapAesGcmWith(algorithm)) {
+    return {
+      name: "AES-GCM",
+      iv: toBufferSource(
+        $subtle.WrapAlgorithm$WrapAesGcmWith$iv(algorithm),
+      ),
+      additionalData: toBufferSource(
+        $subtle.WrapAlgorithm$WrapAesGcmWith$additional_data(algorithm),
+      ),
+      tagLength: $subtle.WrapAlgorithm$WrapAesGcmWith$tag_length(algorithm),
+    };
+  }
+  if ($subtle.WrapAlgorithm$isWrapAesKw(algorithm)) return "AES-KW";
   if ($subtle.WrapAlgorithm$isWrapRsaOaepWith(algorithm)) {
     return {
       name: "RSA-OAEP",

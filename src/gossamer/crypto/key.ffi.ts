@@ -201,6 +201,11 @@ export function toKeyAlgorithm(
 ): $crypto.KeyAlgorithm$ {
   const name = algorithm.name;
 
+  if (name === "Ed25519") return $crypto.KeyAlgorithm$Ed25519();
+  if (name === "X25519") return $crypto.KeyAlgorithm$X25519();
+  if (name === "HKDF") return $crypto.KeyAlgorithm$Hkdf();
+  if (name === "PBKDF2") return $crypto.KeyAlgorithm$Pbkdf2();
+
   if ("namedCurve" in algorithm) {
     return $crypto.KeyAlgorithm$Ec(
       fromEcAlgorithm(name),

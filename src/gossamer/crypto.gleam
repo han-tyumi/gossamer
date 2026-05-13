@@ -196,8 +196,17 @@ pub type KeyAlgorithm {
   /// An elliptic-curve key bound to `named_curve`.
   Ec(name: EcAlgorithm, named_curve: NamedCurve)
 
+  /// An Ed25519 signing key.
+  Ed25519
+
+  /// An HKDF base key for key derivation.
+  Hkdf
+
   /// An HMAC key bound to `hash` with `length` bits of key material.
   Hmac(hash: HashAlgorithm, length: Int)
+
+  /// A PBKDF2 base key for password-based derivation.
+  Pbkdf2
 
   /// An RSA key with `modulus_length` bits and the given `hash`.
   /// `public_exponent` is the raw bytes of the exponent (commonly
@@ -208,6 +217,9 @@ pub type KeyAlgorithm {
     public_exponent: BitArray,
     hash: HashAlgorithm,
   )
+
+  /// An X25519 key-agreement key.
+  X25519
 }
 
 /// Generates `length` cryptographically strong random bytes. A
