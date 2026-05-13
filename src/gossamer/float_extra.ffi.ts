@@ -1,5 +1,6 @@
 import type * as $float_extra from "$/gossamer/gossamer/float_extra.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toArray } from "~/utils/list.ffi.ts";
 
 function toResult(value: number) {
   return Number.isFinite(value) ? Result$Ok(value) : Result$Error(undefined);
@@ -18,7 +19,8 @@ function withRange(
 }
 
 export const cbrt: typeof $float_extra.cbrt = (value) => Math.cbrt(value);
-export const hypot: typeof $float_extra.hypot = (x, y) => Math.hypot(x, y);
+export const hypot: typeof $float_extra.hypot = (values) =>
+  Math.hypot(...toArray(values));
 export const fround: typeof $float_extra.fround = (value) => Math.fround(value);
 
 export const sin: typeof $float_extra.sin = (angle) => Math.sin(angle);

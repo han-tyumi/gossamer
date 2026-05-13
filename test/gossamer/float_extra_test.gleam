@@ -7,7 +7,15 @@ pub fn cbrt_test() {
 }
 
 pub fn hypot_test() {
-  float_extra.hypot(3.0, 4.0) |> should.equal(5.0)
+  float_extra.hypot([3.0, 4.0]) |> should.equal(5.0)
+}
+
+pub fn hypot_three_test() {
+  float_extra.hypot([1.0, 2.0, 2.0]) |> should.equal(3.0)
+}
+
+pub fn hypot_empty_test() {
+  float_extra.hypot([]) |> should.equal(0.0)
 }
 
 pub fn fround_test() {

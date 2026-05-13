@@ -52,11 +52,25 @@ pub const sqrt1_2 = 0.7071067811865476
 @external(javascript, "./float_extra.ffi.mjs", "cbrt")
 pub fn cbrt(value: Float) -> Float
 
-/// Returns the square root of the sum of the squares of its arguments
-/// (the hypotenuse).
+/// Returns the square root of the sum of the squares of its values.
+/// The two-dimensional case is the hypotenuse `sqrt(x*x + y*y)`; the
+/// general case is the Euclidean norm of a vector. An empty list
+/// returns `0.0`.
+///
+/// ## Examples
+///
+/// ```gleam
+/// float_extra.hypot([3.0, 4.0])
+/// // -> 5.0
+/// ```
+///
+/// ```gleam
+/// float_extra.hypot([1.0, 2.0, 2.0])
+/// // -> 3.0
+/// ```
 ///
 @external(javascript, "./float_extra.ffi.mjs", "hypot")
-pub fn hypot(x: Float, y: Float) -> Float
+pub fn hypot(values: List(Float)) -> Float
 
 /// Returns the nearest 32-bit single-precision float representation of
 /// a number.
