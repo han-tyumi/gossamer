@@ -1,6 +1,5 @@
 import type { BitArray } from "$/prelude.mjs";
 import type * as $textEncoderStream from "$/gossamer/gossamer/encoding/text_encoder_stream.mjs";
-import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toBitArrayStream } from "~/utils/bit_array.ffi.ts";
 
 const wrappedReadables = new WeakMap<
@@ -23,8 +22,4 @@ export const readable: typeof $textEncoderStream.readable = (encoder) => {
 
 export const writable: typeof $textEncoderStream.writable = (encoder) => {
   return encoder.writable;
-};
-
-export const encoding: typeof $textEncoderStream.encoding = (encoder) => {
-  return fromEncoding(encoder.encoding);
 };

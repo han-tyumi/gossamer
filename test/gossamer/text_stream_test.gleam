@@ -9,11 +9,6 @@ import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/read_result
 import gossamer/stream/readable_stream/reader
 
-pub fn text_encoder_stream_new_test() {
-  let encoder = text_encoder_stream.new()
-  text_encoder_stream.encoding(encoder) |> should.equal(encoding.Utf8)
-}
-
 pub fn text_encoder_stream_readable_writable_test() {
   let encoder = text_encoder_stream.new()
   let _readable = text_encoder_stream.readable(encoder)
