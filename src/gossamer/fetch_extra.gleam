@@ -31,6 +31,7 @@
 //// fetch_extra.send(request, with: opts)
 //// ```
 
+import gleam/dynamic.{type Dynamic}
 import gleam/fetch.{type FetchBody}
 import gleam/fetch/form_data.{type FormData}
 import gleam/http/request.{type Request}
@@ -38,8 +39,33 @@ import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/fetch_error.{type FetchError}
 import gossamer/stream/readable_stream.{type ReadableStream}
+
+/// Errors raised by `fetch_extra`. Supersedes
+/// [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
+/// by mirroring its `NetworkError` / `UnableToReadBody` /
+/// `InvalidJsonBody` variants and adding `Aborted` for bindings that
+/// accept an `AbortSignal`.
+///
+pub type FetchError {
+  /// A network error occurred (lost connection, server timeout, DNS
+  /// failure, etc.). The `message` payload carries the underlying
+  /// runtime detail.
+  NetworkError(message: String)
+
+  /// The body has already been consumed and can't be re-read. Body
+  /// streams are single-pass per spec.
+  UnableToReadBody
+
+  /// The body was expected to be valid JSON but parsing failed.
+  InvalidJsonBody
+
+  /// The operation was aborted via an `AbortSignal`. The `reason`
+  /// payload carries whatever value was passed to `abort(reason)` — or
+  /// an `AbortError` `DOMException` if `abort()` was called with no
+  /// argument.
+  Aborted(reason: Dynamic)
+}
 
 /// The classification of a `Response`. Reflects how the response was
 /// obtained and what content the consumer can access (a `ResponseBasic`

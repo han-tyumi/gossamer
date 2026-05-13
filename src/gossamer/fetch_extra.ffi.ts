@@ -1,5 +1,4 @@
 import type * as $fetch from "$/gleam_fetch/gleam/fetch.mjs";
-import * as $fetchError from "$/gossamer/gossamer/fetch_error.mjs";
 import * as $fetchExtra from "$/gossamer/gossamer/fetch_extra.mjs";
 import * as $http from "$/gleam_http/gleam/http.mjs";
 import * as $request from "$/gleam_http/gleam/http/request.mjs";
@@ -186,9 +185,9 @@ async function send_internal(jsRequest: Request, init: RequestInit) {
     return Result$Ok(from_fetch_response(jsResponse));
   } catch (error) {
     if (init.signal?.aborted) {
-      return Result$Error($fetchError.FetchError$Aborted(init.signal.reason));
+      return Result$Error($fetchExtra.FetchError$Aborted(init.signal.reason));
     }
-    return Result$Error($fetchError.FetchError$NetworkError(String(error)));
+    return Result$Error($fetchExtra.FetchError$NetworkError(String(error)));
   }
 }
 
@@ -222,7 +221,7 @@ export const send_stream: typeof $fetchExtra.send_stream = (
     const body = $request.Request$Request$body(request);
     if (body.locked) {
       return Promise.resolve(
-        Result$Error($fetchError.FetchError$UnableToReadBody()),
+        Result$Error($fetchExtra.FetchError$UnableToReadBody()),
       );
     }
     init.body = fromBitArrayReadable(body);
@@ -234,7 +233,7 @@ export const send_stream: typeof $fetchExtra.send_stream = (
 export const response_clone: typeof $fetchExtra.response_clone = (response) => {
   const jsResponse = jsResponseOf(response);
   if (jsResponse.bodyUsed || jsResponse.body?.locked) {
-    return Result$Error($fetchError.FetchError$UnableToReadBody());
+    return Result$Error($fetchExtra.FetchError$UnableToReadBody());
   }
   return Result$Ok(from_fetch_response(jsResponse.clone()));
 };

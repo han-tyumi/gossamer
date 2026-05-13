@@ -45,11 +45,11 @@ Node.js, Bun, and browsers.
 `Headers`, `Request`, and `Response` are delegated to `gleam_http`. The
 outgoing-request body and Fetch-spec init dict (cache, credentials, integrity,
 keepalive, mode, priority, redirect, referrer, referrer policy, signal) live on
-`gossamer/fetch_extra` as the `FetchOptions` builder; `gossamer/fetch_error`
-hosts the `FetchError` sum that supersedes `gleam_fetch.FetchError` to add
-`Aborted` for `AbortSignal`-cancelled sends. String and `BitArray` entries on a
-`FormData` use `gleam/fetch/form_data`; `gossamer/form_data_extra` adds
-`append_file` / `set_file` for multipart file uploads.
+`gossamer/fetch_extra` as the `FetchOptions` builder, alongside the `FetchError`
+sum that supersedes `gleam_fetch.FetchError` to add `Aborted` for
+`AbortSignal`-cancelled sends. String and `BitArray` entries on a `FormData` use
+`gleam/fetch/form_data`; `gossamer/form_data_extra` adds `append_file` /
+`set_file` for multipart file uploads.
 
 ### URL
 
