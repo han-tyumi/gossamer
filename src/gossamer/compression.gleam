@@ -19,8 +19,7 @@ pub type CompressionFormat {
   /// CRC-32 trailer.
   Gzip
 
-  /// Brotli compression. Supported by browsers and Node; check
-  /// runtime availability before using on Deno and Bun.
+  /// Brotli compression.
   Brotli
 
   /// Any format name the binding doesn't recognize, passed through

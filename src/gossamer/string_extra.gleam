@@ -9,9 +9,21 @@ import gleam/order.{type Order}
 /// decomposition.
 ///
 pub type NormalizationForm {
+  /// Canonical composition — characters are recomposed into the
+  /// shortest equivalent form. The default for equivalence comparison.
   Nfc
+
+  /// Canonical decomposition — composed characters are decomposed
+  /// into their canonical sequence (e.g., `é` → `e + ́`).
   Nfd
+
+  /// Compatibility composition — applies compatibility decomposition
+  /// then canonical composition. Lossy: visually similar forms
+  /// collapse (e.g., `ﬁ` → `fi`).
   Nfkc
+
+  /// Compatibility decomposition — like `Nfd` but also decomposes
+  /// compatibility variants. Lossy in the same way as `Nfkc`.
   Nfkd
 }
 

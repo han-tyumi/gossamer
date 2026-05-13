@@ -1,3 +1,10 @@
+//// JavaScript `Set` bindings for interop with APIs that produce or
+//// consume a `Set`. Treated as a transit type: bridge to
+//// [`gleam/set.Set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html)
+//// via [`to_set`](#to_set) and operate on the canonical Gleam surface
+//// for transformations, then [`from_set`](#from_set) back when handing
+//// off to JavaScript.
+
 import gleam/set
 import gleam/yielder.{type Yielder}
 

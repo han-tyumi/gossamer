@@ -1,3 +1,10 @@
+//// JavaScript `Map` bindings for interop with APIs that produce or
+//// consume a `Map`. Treated as a transit type: bridge to
+//// [`gleam/dict.Dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html)
+//// via [`to_dict`](#to_dict) and operate on the canonical Gleam
+//// surface for transformations, then [`from_dict`](#from_dict) back
+//// when handing off to JavaScript.
+
 import gleam/dict.{type Dict}
 import gleam/yielder.{type Yielder}
 

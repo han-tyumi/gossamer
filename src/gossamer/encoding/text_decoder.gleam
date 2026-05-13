@@ -1,3 +1,11 @@
+//// Decode byte sequences into text in a specified character encoding,
+//// optionally retaining state across multi-byte boundaries. Build a
+//// decoder with [`new`](#new) and chain `with_*` setters then
+//// [`build`](#build), or pass a one-shot input through
+//// [`decode`](#decode). For default UTF-8 decoding,
+//// [`gleam/bit_array.to_string`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html#to_string)
+//// is sufficient.
+
 import gossamer/encoding.{type DecoderError, type Encoding}
 
 /// Decodes a stream of bytes into text using a specified character

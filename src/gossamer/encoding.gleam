@@ -23,8 +23,7 @@ pub type DecoderError {
   UnsupportedEncoding(label: String)
 
   /// The decoder is in fatal mode and encountered bytes that don't form
-  /// a valid sequence for the configured encoding. Only `decode_chunk`,
-  /// `flush`, and `decode` can produce this — the static `build`
-  /// constructor doesn't process any input.
+  /// a valid sequence for the configured encoding. Produced by
+  /// `decode_chunk`, `flush`, and `decode`.
   MalformedInput
 }

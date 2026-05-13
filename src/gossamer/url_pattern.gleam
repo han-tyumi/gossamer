@@ -1,3 +1,11 @@
+//// Patterns for matching URLs, with wildcards, named groups, and
+//// regular-expression groups. Useful for routing and request
+//// dispatching. Build a pattern with [`new`](#new) and the `with_*`
+//// setters then [`build`](#build), or parse a single
+//// [URL Pattern Syntax](https://urlpattern.spec.whatwg.org/#pattern-syntax)
+//// string with [`from_string`](#from_string). Match with
+//// [`matches`](#matches) (boolean) or [`exec`](#exec) (captures).
+
 import gleam/dict.{type Dict}
 import gleam/option.{type Option, None, Some}
 

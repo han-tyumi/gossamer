@@ -1,3 +1,9 @@
+//// The controller passed to `WritableStream` sink callbacks. Use it to
+//// signal an error mid-stream via [`error`](#error) or to observe the
+//// stream's abort signal via [`signal`](#signal). See
+//// [`gossamer/stream/writable_stream`](../writable_stream.html) for
+//// constructing the stream.
+
 import gossamer/abort_signal.{type AbortSignal}
 
 /// A controller for a `WritableStream`'s underlying sink, passed to the

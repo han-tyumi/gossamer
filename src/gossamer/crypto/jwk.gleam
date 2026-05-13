@@ -1,7 +1,16 @@
+//// JSON Web Keys (JWK) as defined by
+//// [RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517). Construct
+//// a `JsonWebKey` with [`new`](#new) and chain `set_*` setters for the
+//// fields appropriate to your key type, then pass to
+//// [`subtle.import_key_jwk`](./subtle.html#import_key_jwk). Export an
+//// existing key with
+//// [`subtle.export_key_jwk`](./subtle.html#export_key_jwk).
+
 import gleam/option.{type Option, None, Some}
 import gossamer/crypto.{type KeyUsage}
 
-/// Represents a JSON Web Key (JWK) as defined by RFC 7517. Used with
+/// A JSON Web Key (JWK), as defined by
+/// [RFC 7517](https://datatracker.ietf.org/doc/html/rfc7517). Used with
 /// `subtle.import_key_jwk` and `subtle.export_key_jwk`.
 ///
 pub type JsonWebKey {

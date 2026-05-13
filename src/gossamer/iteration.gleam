@@ -1,3 +1,8 @@
+//// Shared types used by both [`iterator`](./iteration/iterator.html)
+//// and [`async_iterator`](./iteration/async_iterator.html) — the
+//// per-step result variants and the outcome of invoking a `return` or
+//// `throw` handler.
+
 /// The result of advancing an iterator. `Yield` carries a value produced
 /// by the iterator; `Return` signals iteration has ended, carrying any
 /// final return value.

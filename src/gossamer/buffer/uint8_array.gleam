@@ -1,3 +1,10 @@
+//// JavaScript `Uint8Array` bindings for interop with APIs that
+//// specifically require a typed byte array. Treated as a transit type:
+//// bridge to `BitArray` via [`to_bit_array`](#to_bit_array) and operate
+//// on the canonical Gleam surface for transformations, then
+//// [`from_bit_array`](#from_bit_array) back when handing off to
+//// JavaScript.
+
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 
 /// A typed array of 8-bit unsigned integers (bytes).

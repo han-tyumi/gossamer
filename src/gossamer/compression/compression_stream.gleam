@@ -22,8 +22,8 @@ import gossamer/stream/writable_stream.{type WritableStream}
 @external(javascript, "./compression_stream.type.ts", "CompressionStream$")
 pub type CompressionStream
 
-/// Returns an error if the format is not supported by the current
-/// runtime.
+/// Creates a `CompressionStream` for the given format. Returns an error
+/// if the format is not supported by the current runtime.
 ///
 @external(javascript, "./compression_stream.ffi.mjs", "new_")
 pub fn new(format: CompressionFormat) -> Result(CompressionStream, Nil)

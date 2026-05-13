@@ -7,11 +7,23 @@ import gleam/dict.{type Dict}
 /// A JSON value.
 ///
 pub type Json {
+  /// The JSON `null` literal.
   Null
+
+  /// A JSON boolean — `true` or `false`.
   Boolean(Bool)
+
+  /// A JSON number. JSON has no distinction between integers and floats;
+  /// all numeric values are decoded as `Float`.
   Number(Float)
+
+  /// A JSON string.
   String(String)
+
+  /// A JSON array — an ordered sequence of values.
   Array(List(Json))
+
+  /// A JSON object — a string-keyed map of values.
   Object(Dict(String, Json))
 }
 

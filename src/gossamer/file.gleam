@@ -1,3 +1,9 @@
+//// `Blob`s annotated with a filename and last-modified timestamp.
+//// Typical use is form uploads — pair with
+//// [`gleam/fetch/form_data.append_file`](https://hexdocs.pm/gleam_fetch/gleam/fetch/form_data.html#append_file).
+//// Construct with [`from_strings`](#from_strings) for text content or
+//// [`from_blob`](#from_blob) to wrap existing bytes.
+
 import gleam/javascript/promise.{type Promise}
 import gleam/time/timestamp.{type Timestamp}
 import gossamer/blob.{type Blob}

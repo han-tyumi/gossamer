@@ -1,3 +1,11 @@
+//// Bidirectional, message-oriented WebSocket connections (`ws:` and
+//// `wss:`). Configure a connection via [`from_url_string`](#from_url_string)
+//// or [`from_uri`](#from_uri), chain `with_*` setters for protocols,
+//// binary type, and event handlers, then call [`build`](#build) to open
+//// the socket. Send messages with [`send_string`](#send_string),
+//// [`send_bytes`](#send_bytes), or [`send_blob`](#send_blob); close with
+//// [`close`](#close) or [`close_with`](#close_with).
+
 import gleam/option.{type Option, None, Some}
 import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}

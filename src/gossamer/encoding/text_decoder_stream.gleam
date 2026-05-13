@@ -1,3 +1,11 @@
+//// A transform stream that decodes bytes into text in a specified
+//// character encoding. Pipe a byte-producing `ReadableStream` through
+//// the writable side and read decoded strings off the readable side.
+//// Build with [`new`](#new), chain `with_*` setters, then call
+//// [`build`](#build). Pair with
+//// [`readable_stream.pipe_through`](../stream/readable_stream.html#pipe_through)
+//// via [`read_write_pair`](#read_write_pair).
+
 import gossamer/encoding.{type DecoderError, type Encoding}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/writable_stream.{type WritableStream}
