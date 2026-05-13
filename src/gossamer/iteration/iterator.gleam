@@ -105,5 +105,8 @@ pub fn throw(
   reason reason: e,
 ) -> Result(IteratorHandlerOutcome(a, return), Dynamic)
 
+/// Consumes the iterator, calling `fun` on each yielded value. After
+/// `for` returns, `next` produces `Return`.
+///
 @external(javascript, "./iterator.ffi.mjs", "for_")
 pub fn for(in iterator: Iterator(a, return, next), run fun: fn(a) -> any) -> Nil
