@@ -43,8 +43,8 @@ function toMode(value: $fetchExtra.Mode$): RequestMode {
 function toPriority(
   value: $fetchExtra.Priority$,
 ): RequestPriority {
-  if ($fetchExtra.Priority$isHigh(value)) return "high";
-  if ($fetchExtra.Priority$isLow(value)) return "low";
+  if ($fetchExtra.Priority$isPriorityHigh(value)) return "high";
+  if ($fetchExtra.Priority$isPriorityLow(value)) return "low";
   return "auto";
 }
 

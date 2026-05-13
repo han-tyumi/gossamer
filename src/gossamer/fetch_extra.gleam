@@ -155,14 +155,14 @@ pub type Mode {
 ///
 pub type Priority {
   /// Higher priority than other requests of the same destination.
-  High
+  PriorityHigh
 
   /// Lower priority than other requests of the same destination.
-  Low
+  PriorityLow
 
   /// Let the runtime pick a priority based on the request type and
   /// context.
-  Auto
+  PriorityAuto
 }
 
 /// How a `Request` handles redirect responses.
