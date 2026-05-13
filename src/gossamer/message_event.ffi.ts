@@ -1,7 +1,7 @@
 import { BitArray$BitArray } from "$/prelude.mjs";
 import type * as $messageEvent from "$/gossamer/gossamer/message_event.mjs";
 
-function wrapBinary(value: unknown): unknown {
+export function wrapBinary(value: unknown): unknown {
   if (value instanceof ArrayBuffer) {
     return BitArray$BitArray(new Uint8Array(value));
   }

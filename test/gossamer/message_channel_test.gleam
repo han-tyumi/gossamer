@@ -1,6 +1,7 @@
 import gleam/dynamic/decode
 import gleam/javascript/promise
 import gleeunit/should
+import gossamer/buffer/array_buffer
 import gossamer/message_channel
 import gossamer/message_port
 
@@ -49,4 +50,26 @@ pub fn on_message_error_test() {
   let port1 = message_channel.port1(channel)
   message_port.on_message_error(port1, fn() { Nil })
   message_port.close(port1)
+}
+
+pub fn post_message_array_buffer_wraps_as_bit_array_test() {
+  let channel = message_channel.new()
+  let port1 = message_channel.port1(channel)
+  let port2 = message_channel.port2(channel)
+
+  let #(p, resolve) = promise.start()
+
+  message_port.on_message(port2, fn(data) {
+    let assert Ok(bytes) = decode.run(data, decode.bit_array)
+    resolve(bytes)
+    Nil
+  })
+
+  let buffer = array_buffer.from_bit_array(<<1, 2, 3>>)
+  let assert Ok(_) = message_port.post_message(port1, buffer)
+
+  use bytes <- promise.map(p)
+  should.equal(bytes, <<1, 2, 3>>)
+  message_port.close(port1)
+  message_port.close(port2)
 }
