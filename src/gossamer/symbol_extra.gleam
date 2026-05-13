@@ -3,19 +3,19 @@
 
 import gleam/javascript/symbol.{type Symbol}
 
-/// Creates a new symbol with no description. Distinct from
+/// Creates a symbol with no description. Distinct from
 /// `symbol.new("")`, which sets the description to the empty string.
 ///
 /// ## Examples
 ///
 /// ```gleam
-/// let s = symbol_extra.new()
+/// let s = symbol_extra.anonymous()
 /// symbol.description(s)
 /// // -> Error(Nil)
 /// ```
 ///
-@external(javascript, "./symbol_extra.ffi.mjs", "new_")
-pub fn new() -> Symbol
+@external(javascript, "./symbol_extra.ffi.mjs", "anonymous")
+pub fn anonymous() -> Symbol
 
 /// The registry key for a global symbol. Returns an error if `symbol`
 /// is not in the global registry.

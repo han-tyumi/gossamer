@@ -1,7 +1,7 @@
 import type * as $symbolExtra from "$/gossamer/gossamer/symbol_extra.mjs";
 import { toResult } from "~/utils/result.ffi.ts";
 
-export const new_: typeof $symbolExtra.new$ = () => {
+export const anonymous: typeof $symbolExtra.anonymous = () => {
   return Symbol();
 };
 

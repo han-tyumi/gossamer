@@ -2,8 +2,8 @@ import gleam/javascript/symbol
 import gleeunit/should
 import gossamer/symbol_extra
 
-pub fn new_no_description_test() {
-  symbol_extra.new() |> symbol.description |> should.be_error
+pub fn anonymous_no_description_test() {
+  symbol_extra.anonymous() |> symbol.description |> should.be_error
 }
 
 pub fn to_string_with_description_test() {
@@ -11,7 +11,7 @@ pub fn to_string_with_description_test() {
 }
 
 pub fn to_string_no_description_test() {
-  symbol_extra.new() |> symbol_extra.to_string |> should.equal("Symbol()")
+  symbol_extra.anonymous() |> symbol_extra.to_string |> should.equal("Symbol()")
 }
 
 pub fn key_for_registry_symbol_test() {
@@ -21,5 +21,5 @@ pub fn key_for_registry_symbol_test() {
 }
 
 pub fn key_for_non_registry_symbol_test() {
-  symbol_extra.new() |> symbol_extra.key_for |> should.be_error
+  symbol_extra.anonymous() |> symbol_extra.key_for |> should.be_error
 }
