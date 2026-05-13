@@ -1,7 +1,7 @@
 //// The read side of the abort-signal pair. Accept a signal in
 //// cancelable operations like `fetch_extra.send`, then observe its
 //// state via [`is_aborted`](#is_aborted) / [`reason`](#reason) or
-//// react to cancellation via [`on_abort`](#on_abort).
+//// react to cancellation via [`set_on_abort`](#set_on_abort).
 //// `AbortSignal` values are produced by an `abort_controller` or by
 //// the constructors below.
 

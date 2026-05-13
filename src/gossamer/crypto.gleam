@@ -193,7 +193,9 @@ pub type KeyAlgorithm {
 }
 
 /// Generates `length` cryptographically strong random bytes. A
-/// non-positive `length` returns an empty `BitArray`.
+/// non-positive `length` returns an empty `BitArray`. Requests over
+/// `65_536` bytes are split into chunks under the runtime's
+/// `getRandomValues` quota and concatenated.
 ///
 @external(javascript, "./crypto.ffi.mjs", "random_bytes")
 pub fn random_bytes(length: Int) -> BitArray

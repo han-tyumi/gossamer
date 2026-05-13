@@ -24,6 +24,7 @@ pub type DecompressionStream
 
 /// Creates a `DecompressionStream` for the given format. Returns an
 /// error if the format is not supported by the current runtime.
+/// `Brotli` is not supported on Bun.
 ///
 @external(javascript, "./decompression_stream.ffi.mjs", "new_")
 pub fn new(format: CompressionFormat) -> Result(DecompressionStream, Nil)
