@@ -154,14 +154,15 @@ classifier (symmetric vs asymmetric public/private).
 
 ### Utilities
 
-| Name                | Status | Module                       |
-| ------------------- | ------ | ---------------------------- |
-| structuredClone     | ✅     | `gossamer`                   |
-| atob / btoa         | ✅     | `gossamer`                   |
-| console             | ✅     | `gossamer/console`           |
-| Performance         | ✅     | `gossamer/performance`       |
-| PerformanceEntry    | ✅     | `gossamer/performance_entry` |
-| navigator.userAgent | ✅     | `gossamer`                   |
+| Name                   | Status | Module                       |
+| ---------------------- | ------ | ---------------------------- |
+| structuredClone        | ✅     | `gossamer`                   |
+| atob (`decode_base64`) | ✅     | `gossamer`                   |
+| btoa (`encode_base64`) | ✅     | `gossamer`                   |
+| console                | ✅     | `gossamer/console`           |
+| Performance            | ✅     | `gossamer/performance`       |
+| PerformanceEntry       | ✅     | `gossamer/performance_entry` |
+| navigator.userAgent    | ✅     | `gossamer`                   |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
 no idiomatic use; log via `console.error` instead.
