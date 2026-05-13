@@ -11,6 +11,7 @@ import {
 } from "~/gossamer/crypto/key.ffi.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/crypto/jwk.ffi.ts";
 import { toBufferSource, toUint8Array } from "~/utils/bit_array.ffi.ts";
+import { setIfSome } from "~/utils/option.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
 
@@ -175,24 +176,19 @@ function toEncryptAlgorithm(
     };
   }
   if ($subtle.EncryptAlgorithm$isEncryptAesGcm(algorithm)) {
-    return {
+    const params: AesGcmParams = {
       name: "AES-GCM",
       iv: toBufferSource($subtle.EncryptAlgorithm$EncryptAesGcm$iv(algorithm)),
-    };
-  }
-  if ($subtle.EncryptAlgorithm$isEncryptAesGcmWith(algorithm)) {
-    return {
-      name: "AES-GCM",
-      iv: toBufferSource(
-        $subtle.EncryptAlgorithm$EncryptAesGcmWith$iv(algorithm),
-      ),
       additionalData: toBufferSource(
-        $subtle.EncryptAlgorithm$EncryptAesGcmWith$additional_data(algorithm),
-      ),
-      tagLength: $subtle.EncryptAlgorithm$EncryptAesGcmWith$tag_length(
-        algorithm,
+        $subtle.EncryptAlgorithm$EncryptAesGcm$additional_data(algorithm),
       ),
     };
+    setIfSome(
+      params,
+      "tagLength",
+      $subtle.EncryptAlgorithm$EncryptAesGcm$tag_length(algorithm),
+    );
+    return params;
   }
   if ($subtle.EncryptAlgorithm$isEncryptAesCtr(algorithm)) {
     return {
@@ -203,15 +199,12 @@ function toEncryptAlgorithm(
       length: $subtle.EncryptAlgorithm$EncryptAesCtr$length(algorithm),
     };
   }
-  if ($subtle.EncryptAlgorithm$isEncryptRsaOaepWith(algorithm)) {
-    return {
-      name: "RSA-OAEP",
-      label: toBufferSource(
-        $subtle.EncryptAlgorithm$EncryptRsaOaepWith$label(algorithm),
-      ),
-    };
-  }
-  return { name: "RSA-OAEP" };
+  return {
+    name: "RSA-OAEP",
+    label: toBufferSource(
+      $subtle.EncryptAlgorithm$EncryptRsaOaep$label(algorithm),
+    ),
+  };
 }
 
 function toImportAlgorithm(
@@ -361,33 +354,25 @@ function toWrapAlgorithm(
     };
   }
   if ($subtle.WrapAlgorithm$isWrapAesGcm(algorithm)) {
-    return {
+    const params: AesGcmParams = {
       name: "AES-GCM",
       iv: toBufferSource($subtle.WrapAlgorithm$WrapAesGcm$iv(algorithm)),
-    };
-  }
-  if ($subtle.WrapAlgorithm$isWrapAesGcmWith(algorithm)) {
-    return {
-      name: "AES-GCM",
-      iv: toBufferSource(
-        $subtle.WrapAlgorithm$WrapAesGcmWith$iv(algorithm),
-      ),
       additionalData: toBufferSource(
-        $subtle.WrapAlgorithm$WrapAesGcmWith$additional_data(algorithm),
+        $subtle.WrapAlgorithm$WrapAesGcm$additional_data(algorithm),
       ),
-      tagLength: $subtle.WrapAlgorithm$WrapAesGcmWith$tag_length(algorithm),
     };
+    setIfSome(
+      params,
+      "tagLength",
+      $subtle.WrapAlgorithm$WrapAesGcm$tag_length(algorithm),
+    );
+    return params;
   }
   if ($subtle.WrapAlgorithm$isWrapAesKw(algorithm)) return "AES-KW";
-  if ($subtle.WrapAlgorithm$isWrapRsaOaepWith(algorithm)) {
-    return {
-      name: "RSA-OAEP",
-      label: toBufferSource(
-        $subtle.WrapAlgorithm$WrapRsaOaepWith$label(algorithm),
-      ),
-    };
-  }
-  return { name: "RSA-OAEP" };
+  return {
+    name: "RSA-OAEP",
+    label: toBufferSource($subtle.WrapAlgorithm$WrapRsaOaep$label(algorithm)),
+  };
 }
 
 export const digest: typeof $subtle.digest = (algorithm, data) => {

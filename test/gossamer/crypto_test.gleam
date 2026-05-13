@@ -60,7 +60,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   let plaintext = <<"Hello":utf8>>
 
   use result <- promise.await(subtle.encrypt(
-    subtle.EncryptAesGcm(iv),
+    subtle.EncryptAesGcm(iv, <<>>, option.None),
     key,
     plaintext,
   ))
@@ -68,7 +68,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.be_true(bit_array.byte_size(ciphertext) > 0)
 
   use result <- promise.await(subtle.decrypt(
-    subtle.EncryptAesGcm(iv),
+    subtle.EncryptAesGcm(iv, <<>>, option.None),
     key,
     ciphertext,
   ))
@@ -410,11 +410,15 @@ pub fn encrypt_key_usage_mismatch_test() {
   let assert Ok(key) = result
 
   use encrypt_result <- promise.await(
-    subtle.encrypt(subtle.EncryptAesGcm(crypto.random_bytes(12)), key, <<
-      1,
-      2,
-      3,
-    >>),
+    subtle.encrypt(
+      subtle.EncryptAesGcm(crypto.random_bytes(12), <<>>, option.None),
+      key,
+      <<
+        1,
+        2,
+        3,
+      >>,
+    ),
   )
   let assert Error(crypto.KeyUsageMismatch(crypto.Encrypt)) = encrypt_result
   promise.resolve(Nil)
@@ -529,7 +533,7 @@ pub fn wrap_unwrap_key_aes_gcm_test() {
     subtle.Raw,
     key_to_wrap,
     wrapping_key,
-    subtle.WrapAesGcm(iv),
+    subtle.WrapAesGcm(iv, <<>>, option.None),
   ))
   let assert Ok(wrapped) = result
   should.be_true(bit_array.byte_size(wrapped) > 0)
@@ -539,7 +543,7 @@ pub fn wrap_unwrap_key_aes_gcm_test() {
       subtle.Raw,
       wrapped,
       wrapping_key,
-      subtle.WrapAesGcm(iv),
+      subtle.WrapAesGcm(iv, <<>>, option.None),
       subtle.ImportAes(crypto.Cbc),
       True,
       [crypto.Encrypt],
@@ -572,7 +576,7 @@ pub fn wrap_unwrap_key_aes_gcm_with_test() {
     subtle.Raw,
     key_to_wrap,
     wrapping_key,
-    subtle.WrapAesGcmWith(iv, aad, 128),
+    subtle.WrapAesGcm(iv, aad, option.Some(128)),
   ))
   let assert Ok(wrapped) = result
   should.be_true(bit_array.byte_size(wrapped) > 0)
@@ -582,7 +586,7 @@ pub fn wrap_unwrap_key_aes_gcm_with_test() {
       subtle.Raw,
       wrapped,
       wrapping_key,
-      subtle.WrapAesGcmWith(iv, aad, 128),
+      subtle.WrapAesGcm(iv, aad, option.Some(128)),
       subtle.ImportAes(crypto.Cbc),
       True,
       [crypto.Encrypt],

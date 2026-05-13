@@ -17,6 +17,7 @@
 //// See [SubtleCrypto](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto) on MDN.
 
 import gleam/javascript/promise.{type Promise}
+import gleam/option.{type Option}
 import gossamer/crypto.{
   type AesAlgorithm, type CryptoError, type EcAlgorithm, type HashAlgorithm,
   type KeyUsage, type NamedCurve, type RsaAlgorithm,
@@ -81,23 +82,23 @@ pub type EncryptAlgorithm {
   /// AES-CBC with the given initialization vector.
   EncryptAesCbc(iv: BitArray)
 
-  /// AES-GCM with the given initialization vector and default
-  /// authentication tag length.
-  EncryptAesGcm(iv: BitArray)
-
   /// AES-GCM with the given initialization vector, additional
-  /// authenticated data, and explicit `tag_length` in bits.
-  EncryptAesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+  /// authenticated data, and authentication `tag_length` in bits.
+  /// Pass `<<>>` for `additional_data` to omit it; pass `None` for
+  /// `tag_length` for the spec default (128 bits).
+  EncryptAesGcm(
+    iv: BitArray,
+    additional_data: BitArray,
+    tag_length: Option(Int),
+  )
 
   /// AES-CTR with the given `counter` block and counter `length` in
   /// bits.
   EncryptAesCtr(counter: BitArray, length: Int)
 
-  /// RSA-OAEP without a label.
-  EncryptRsaOaep
-
-  /// RSA-OAEP with the given `label`.
-  EncryptRsaOaepWith(label: BitArray)
+  /// RSA-OAEP with the given `label`. Pass `<<>>` for the spec
+  /// default (no label).
+  EncryptRsaOaep(label: BitArray)
 }
 
 /// Algorithm parameters for `import_key` and `import_key_jwk`.
@@ -190,23 +191,19 @@ pub type WrapAlgorithm {
   /// counter `length` in bits.
   WrapAesCtr(counter: BitArray, length: Int)
 
-  /// Wrap or unwrap with AES-GCM and the given initialization vector,
-  /// using the default authentication tag length.
-  WrapAesGcm(iv: BitArray)
-
   /// Wrap or unwrap with AES-GCM, the given initialization vector,
-  /// additional authenticated data, and explicit `tag_length` in bits.
-  WrapAesGcmWith(iv: BitArray, additional_data: BitArray, tag_length: Int)
+  /// additional authenticated data, and authentication `tag_length`
+  /// in bits. Pass `<<>>` for `additional_data` to omit it; pass
+  /// `None` for `tag_length` for the spec default (128 bits).
+  WrapAesGcm(iv: BitArray, additional_data: BitArray, tag_length: Option(Int))
 
   /// Wrap or unwrap with AES Key Wrap (RFC 3394). The wrapping key
   /// must be an AES-KW `CryptoKey`.
   WrapAesKw
 
-  /// Wrap or unwrap with RSA-OAEP without a label.
-  WrapRsaOaep
-
-  /// Wrap or unwrap with RSA-OAEP and the given `label`.
-  WrapRsaOaepWith(label: BitArray)
+  /// Wrap or unwrap with RSA-OAEP and the given `label`. Pass `<<>>`
+  /// for the spec default (no label).
+  WrapRsaOaep(label: BitArray)
 }
 
 /// Computes a cryptographic hash of `data`. Returns
