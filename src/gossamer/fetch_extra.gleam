@@ -73,15 +73,16 @@ pub type ResponseType {
 /// A builder for fetch options. Construct with `options` and chain
 /// setters; pass to `send` (or its variants) via the `with` label.
 ///
-/// Every field is unset by default; unset fields use the runtime's
-/// default. Setting a field forces that value.
+/// Fields with spec-default empty values (`integrity: ""`,
+/// `keepalive: False`) carry those values directly. Enum and reference
+/// fields are `Option`; unset means the runtime applies its default.
 ///
 pub type FetchOptions {
   FetchOptions(
     cache: Option(Cache),
     credentials: Option(Credentials),
-    integrity: Option(String),
-    keepalive: Option(Bool),
+    integrity: String,
+    keepalive: Bool,
     mode: Option(Mode),
     priority: Option(Priority),
     redirect: Option(Redirect),
@@ -219,8 +220,8 @@ pub fn options() -> FetchOptions {
   FetchOptions(
     cache: None,
     credentials: None,
-    integrity: None,
-    keepalive: None,
+    integrity: "",
+    keepalive: False,
     mode: None,
     priority: None,
     redirect: None,
@@ -249,14 +250,14 @@ pub fn set_credentials(opts: FetchOptions, value: Credentials) -> FetchOptions {
 /// the given value.
 ///
 pub fn set_integrity(opts: FetchOptions, value: String) -> FetchOptions {
-  FetchOptions(..opts, integrity: Some(value))
+  FetchOptions(..opts, integrity: value)
 }
 
 /// Sets the keepalive flag, allowing the request to outlive its
 /// originating context (subject to per-origin size limits).
 ///
 pub fn set_keepalive(opts: FetchOptions, value: Bool) -> FetchOptions {
-  FetchOptions(..opts, keepalive: Some(value))
+  FetchOptions(..opts, keepalive: value)
 }
 
 /// Sets the CORS mode, controlling how cross-origin requests are handled.

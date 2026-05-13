@@ -94,16 +94,8 @@ function buildInit(options: $fetchExtra.FetchOptions$): RequestInit {
     $fetchExtra.FetchOptions$FetchOptions$credentials(options),
     toCredentials,
   );
-  setIfSome(
-    init,
-    "integrity",
-    $fetchExtra.FetchOptions$FetchOptions$integrity(options),
-  );
-  setIfSome(
-    init,
-    "keepalive",
-    $fetchExtra.FetchOptions$FetchOptions$keepalive(options),
-  );
+  init.integrity = $fetchExtra.FetchOptions$FetchOptions$integrity(options);
+  init.keepalive = $fetchExtra.FetchOptions$FetchOptions$keepalive(options);
   mapIfSome(
     init,
     "mode",
