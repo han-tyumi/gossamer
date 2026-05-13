@@ -6,8 +6,8 @@
 
 import gleam/javascript/promise.{type Promise}
 import gleam/time/timestamp.{type Timestamp}
+import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/blob.{type Blob}
-import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/fetch_error.{type FetchError}
 import gossamer/stream/readable_stream.{type ReadableStream}
 

@@ -1,4 +1,4 @@
-import type * as $uint8Array from "$/gossamer/gossamer/buffer/uint8_array.mjs";
+import type * as $uint8Array from "$/gossamer/gossamer/uint8_array.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toUint8Array } from "~/utils/bit_array.ffi.ts";
 

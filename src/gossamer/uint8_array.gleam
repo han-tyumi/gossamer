@@ -5,7 +5,7 @@
 //// [`from_bit_array`](#from_bit_array) back when handing off to
 //// JavaScript.
 
-import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/array_buffer.{type ArrayBuffer}
 
 /// A typed array of 8-bit unsigned integers (bytes).
 ///

@@ -4,7 +4,7 @@
 //// [`from_string`](#from_string).
 
 import gleam/javascript/promise.{type Promise}
-import gossamer/buffer/array_buffer.{type ArrayBuffer}
+import gossamer/array_buffer.{type ArrayBuffer}
 import gossamer/fetch_error.{type FetchError}
 import gossamer/stream/readable_stream.{type ReadableStream}
 

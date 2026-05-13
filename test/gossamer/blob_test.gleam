@@ -2,8 +2,8 @@ import gleam/bit_array
 import gleam/javascript/promise
 import gleam/string
 import gleeunit/should
+import gossamer/array_buffer
 import gossamer/blob
-import gossamer/buffer/array_buffer
 
 pub fn blob_from_string_test() {
   let b = blob.from_string("hello", content_type: "")

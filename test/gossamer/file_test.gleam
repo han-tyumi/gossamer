@@ -4,8 +4,8 @@ import gleam/order
 import gleam/string
 import gleam/time/timestamp
 import gleeunit/should
+import gossamer/array_buffer
 import gossamer/blob
-import gossamer/buffer/array_buffer
 import gossamer/file
 
 pub fn file_from_strings_test() {

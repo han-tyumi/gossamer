@@ -1,4 +1,4 @@
-import type * as $arrayBuffer from "$/gossamer/gossamer/buffer/array_buffer.mjs";
+import type * as $arrayBuffer from "$/gossamer/gossamer/array_buffer.mjs";
 import { BitArray$BitArray } from "$/prelude.mjs";
 import { toUint8Array } from "~/utils/bit_array.ffi.ts";
 
