@@ -1,3 +1,8 @@
+//// A transit type for JavaScript `ArrayBuffer` interop. For byte data
+//// in pure Gleam, prefer `BitArray`; bridge with
+//// [`from_bit_array`](#from_bit_array) /
+//// [`to_bit_array`](#to_bit_array).
+
 /// A generic raw binary data buffer.
 ///
 /// `ArrayBuffer` is a transit type — it exists for interop with
@@ -16,9 +21,14 @@ pub type ArrayBuffer
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
 pub fn new(byte_length: Int) -> ArrayBuffer
 
+/// The size of the buffer in bytes.
+///
 @external(javascript, "./array_buffer.ffi.mjs", "byte_length")
 pub fn byte_length(array_buffer: ArrayBuffer) -> Int
 
+/// `True` if `value` is a typed-array view backed by an `ArrayBuffer`
+/// (e.g., `Uint8Array`).
+///
 @external(javascript, "./array_buffer.ffi.mjs", "is_view")
 pub fn is_view(value: a) -> Bool
 
