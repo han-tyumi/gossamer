@@ -7,24 +7,6 @@ function timestampToDate(timestamp: Timestamp$): Date {
   return new Date(timestampToMs(timestamp));
 }
 
-export const to_locale_string: typeof $time_extra.to_locale_string = (
-  timestamp,
-) => {
-  return timestampToDate(timestamp).toLocaleString();
-};
-
-export const to_locale_date_string: typeof $time_extra.to_locale_date_string = (
-  timestamp,
-) => {
-  return timestampToDate(timestamp).toLocaleDateString();
-};
-
-export const to_locale_time_string: typeof $time_extra.to_locale_time_string = (
-  timestamp,
-) => {
-  return timestampToDate(timestamp).toLocaleTimeString();
-};
-
 export const to_utc_string: typeof $time_extra.to_utc_string = (timestamp) => {
   return timestampToDate(timestamp).toUTCString();
 };

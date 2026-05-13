@@ -1,26 +1,9 @@
-//// JavaScript runtime extras layered on top of `gleam/time/timestamp`.
-////
-//// Covers locale-aware string formatting, RFC 7231 HTTP date strings,
-//// and day-of-week — none of which `gleam_time` exposes itself.
-////
+//// Extras for `gleam/time/timestamp` — RFC 7231 HTTP date-header
+//// strings and day-of-week, neither of which `gleam_time` exposes
+//// itself.
 
 import gleam/time/duration.{type Duration}
 import gleam/time/timestamp.{type Timestamp}
-
-/// Returns a locale-sensitive string representing the full date and time.
-///
-@external(javascript, "./time_extra.ffi.mjs", "to_locale_string")
-pub fn to_locale_string(timestamp: Timestamp) -> String
-
-/// Returns a locale-sensitive string representing the date portion.
-///
-@external(javascript, "./time_extra.ffi.mjs", "to_locale_date_string")
-pub fn to_locale_date_string(timestamp: Timestamp) -> String
-
-/// Returns a locale-sensitive string representing the time portion.
-///
-@external(javascript, "./time_extra.ffi.mjs", "to_locale_time_string")
-pub fn to_locale_time_string(timestamp: Timestamp) -> String
 
 /// Returns the timestamp as an RFC 7231 string (e.g.,
 /// `"Thu, 01 Jan 1970 00:00:00 GMT"`). This is the format used by HTTP
