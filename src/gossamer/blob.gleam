@@ -1,3 +1,7 @@
+//// A JavaScript `Blob` is an immutable container of binary data with
+//// an associated MIME type. Use to assemble bytes for upload, slice
+//// large payloads, or stream data through transforms.
+
 import gleam/javascript/promise.{type Promise}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
 import gossamer/fetch_error.{type FetchError}
@@ -11,6 +15,10 @@ import gossamer/stream/readable_stream.{type ReadableStream}
 @external(javascript, "./blob.type.ts", "Blob$")
 pub type Blob
 
+/// Creates an empty `Blob` with no MIME type. Use
+/// [`from_bytes`](#from_bytes) or [`from_string`](#from_string) to
+/// construct one with contents.
+///
 @external(javascript, "./blob.ffi.mjs", "new_")
 pub fn new() -> Blob
 
@@ -26,9 +34,14 @@ pub fn from_bytes(bytes: BitArray, content_type content_type: String) -> Blob
 @external(javascript, "./blob.ffi.mjs", "from_string")
 pub fn from_string(content: String, content_type content_type: String) -> Blob
 
+/// The size of the blob's contents in bytes.
+///
 @external(javascript, "./blob.ffi.mjs", "size")
 pub fn size(blob: Blob) -> Int
 
+/// The MIME type associated with the blob, or `""` if no type was set
+/// at construction.
+///
 @external(javascript, "./blob.ffi.mjs", "mime_type")
 pub fn mime_type(blob: Blob) -> String
 
@@ -57,6 +70,9 @@ pub fn slice(
   content_type content_type: String,
 ) -> Blob
 
+/// Returns a `ReadableStream` that produces the blob's bytes in
+/// chunks. Suitable for piping into a compression or upload stream.
+///
 @external(javascript, "./blob.ffi.mjs", "stream")
 pub fn stream(blob: Blob) -> ReadableStream(BitArray)
 
