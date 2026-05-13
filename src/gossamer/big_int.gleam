@@ -1,3 +1,7 @@
+//// A JavaScript `BigInt` binding for working with arbitrary-precision
+//// integers — values outside the safe-integer range of Gleam `Int`
+//// (±2^53−1).
+
 import gleam/order.{type Order}
 
 /// A JavaScript `BigInt` — an arbitrary-precision integer. Use when
@@ -10,6 +14,7 @@ import gleam/order.{type Order}
 pub type BigInt
 
 /// Errors raised by `BigInt` bindings.
+///
 pub type BigIntError {
   /// The input string could not be parsed as an integer.
   InvalidInteger
@@ -18,13 +23,17 @@ pub type BigIntError {
   DivisionByZero
 }
 
+/// Creates a `BigInt` from a Gleam `Int`. Pair with
+/// [`from_string`](#from_string) when the source is a string literal
+/// outside the safe-integer range.
+///
 @external(javascript, "./big_int.ffi.mjs", "from_int")
 pub fn from_int(value: Int) -> BigInt
 
 /// Parses an integer string. Accepts decimal (`"42"`), hex
 /// (`"0x2a"`), octal (`"0o52"`), and binary (`"0b101010"`) literals
 /// with an optional sign and surrounding whitespace. Returns
-/// `InvalidInteger` on malformed input — decimal floats like
+/// `Error(InvalidInteger)` on malformed input — decimal floats like
 /// `"1.5"`, scientific notation like `"1e3"`, and the trailing-`n`
 /// literal suffix like `"42n"` are all rejected. The empty string
 /// parses as `0`.
@@ -39,35 +48,50 @@ pub fn from_string(string: String) -> Result(BigInt, BigIntError)
 @external(javascript, "./big_int.ffi.mjs", "to_int")
 pub fn to_int(value: BigInt) -> Result(Int, Nil)
 
+/// Returns the decimal string representation of `value`.
+///
 @external(javascript, "./big_int.ffi.mjs", "to_string")
 pub fn to_string(value: BigInt) -> String
 
+/// Returns the sum of `a` and `b`.
+///
 @external(javascript, "./big_int.ffi.mjs", "add")
 pub fn add(a: BigInt, b: BigInt) -> BigInt
 
+/// Returns the difference of `a` and `b`.
+///
 @external(javascript, "./big_int.ffi.mjs", "subtract")
 pub fn subtract(a: BigInt, b: BigInt) -> BigInt
 
+/// Returns the product of `a` and `b`.
+///
 @external(javascript, "./big_int.ffi.mjs", "multiply")
 pub fn multiply(a: BigInt, b: BigInt) -> BigInt
 
-/// Truncating integer division. Returns `DivisionByZero` if `divisor`
-/// is `0`.
+/// Truncating integer division. Returns `Error(DivisionByZero)` if
+/// `divisor` is `0`.
 ///
 @external(javascript, "./big_int.ffi.mjs", "divide")
 pub fn divide(a: BigInt, by divisor: BigInt) -> Result(BigInt, BigIntError)
 
-/// Returns the remainder of `a / divisor`. Returns `DivisionByZero`
-/// if `divisor` is `0`.
+/// Returns the remainder of `a / divisor`. Returns
+/// `Error(DivisionByZero)` if `divisor` is `0`.
 ///
 @external(javascript, "./big_int.ffi.mjs", "remainder")
 pub fn remainder(a: BigInt, by divisor: BigInt) -> Result(BigInt, BigIntError)
 
+/// Returns the additive inverse of `value` (i.e., `-value`).
+///
 @external(javascript, "./big_int.ffi.mjs", "negate")
 pub fn negate(value: BigInt) -> BigInt
 
+/// Returns the absolute value of `value`.
+///
 @external(javascript, "./big_int.ffi.mjs", "absolute_value")
 pub fn absolute_value(value: BigInt) -> BigInt
 
+/// Compares `a` and `b`, returning their relative ordering as a
+/// [`gleam/order.Order`](https://hexdocs.pm/gleam_stdlib/gleam/order.html#Order).
+///
 @external(javascript, "./big_int.ffi.mjs", "compare")
 pub fn compare(a: BigInt, b: BigInt) -> Order
