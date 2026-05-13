@@ -12,5 +12,5 @@ pub fn to_utc_string_test() {
 pub fn day_of_week_test() {
   timestamp.unix_epoch
   |> time_extra.day_of_week(calendar.utc_offset)
-  |> should.equal(4)
+  |> should.equal(time_extra.Thursday)
 }

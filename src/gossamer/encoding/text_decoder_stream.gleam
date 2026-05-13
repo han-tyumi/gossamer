@@ -90,6 +90,8 @@ pub fn is_fatal(decoder: TextDecoderStream) -> Bool
 pub fn is_ignore_bom(decoder: TextDecoderStream) -> Bool
 
 /// Returns the readable and writable sides of the decoder as a tuple.
+/// Convenient for passing directly to
+/// [`readable_stream.pipe_through`](../stream/readable_stream.html#pipe_through).
 ///
 pub fn read_write_pair(
   decoder: TextDecoderStream,
