@@ -1,8 +1,13 @@
+//// The controller passed to a `ReadableStream`'s `Start` and `Pull`
+//// callbacks. Use it to feed chunks into the stream via
+//// [`enqueue`](#enqueue), close it with [`close`](#close), or signal
+//// failure with [`error`](#error).
+
 import gossamer/stream.{type StreamLifecycleError}
 
-/// A controller for a `ReadableStream`'s default source, passed to the
-/// `Start` and `Pull` callbacks. Used to enqueue chunks, close the stream,
-/// or signal an error.
+/// A JavaScript `ReadableStreamDefaultController` — passed to the
+/// `Start` and `Pull` callbacks of a `ReadableStream`. Used to
+/// enqueue chunks, close the stream, or signal an error.
 ///
 /// See [ReadableStreamDefaultController](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultController) on MDN.
 ///

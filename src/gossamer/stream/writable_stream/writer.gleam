@@ -1,7 +1,13 @@
+//// The push-side cursor over a `WritableStream`. Acquire one with
+//// [`gossamer/stream/writable_stream.get_writer`](../writable_stream.html#get_writer)
+//// then call [`write`](#write) to send chunks. Release the lock via
+//// [`release_lock`](#release_lock) when done.
+
 import gleam/javascript/promise.{type Promise}
 import gossamer/stream.{type StreamLifecycleError}
 
-/// A locked writer over a `WritableStream`.
+/// A JavaScript `WritableStreamDefaultWriter` — a locked writer over
+/// a `WritableStream`.
 ///
 /// See [WritableStreamDefaultWriter](https://developer.mozilla.org/en-US/docs/Web/API/WritableStreamDefaultWriter) on MDN.
 ///

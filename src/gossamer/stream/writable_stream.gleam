@@ -1,3 +1,8 @@
+//// The sink side of the Streams API. Build one from an underlying
+//// sink via the `Builder` and write into it through a
+//// [`Writer`](./writable_stream/writer.html) acquired with
+//// [`get_writer`](#get_writer).
+
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
@@ -7,7 +12,8 @@ import gossamer/stream/writable_stream/default_controller.{
 }
 import gossamer/stream/writable_stream/writer.{type Writer}
 
-/// A destination stream for writing bytes or objects.
+/// A JavaScript `WritableStream` — a destination for writing bytes or
+/// objects.
 ///
 /// See [WritableStream](https://developer.mozilla.org/en-US/docs/Web/API/WritableStream) on MDN.
 ///

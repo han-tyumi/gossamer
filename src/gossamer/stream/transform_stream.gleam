@@ -1,3 +1,8 @@
+//// The transform side of the Streams API — a writable + readable pair
+//// where each chunk written passes through a transformer to produce
+//// output. Pipe one through `readable_stream.pipe_through` to
+//// connect transformations.
+
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
@@ -8,8 +13,8 @@ import gossamer/stream/transform_stream/default_controller.{
 }
 import gossamer/stream/writable_stream.{type WritableStream}
 
-/// A pair of streams — a writable side that receives input and a readable
-/// side that produces transformed output.
+/// A JavaScript `TransformStream` — a writable side that receives
+/// input and a readable side that produces transformed output.
 ///
 /// See [TransformStream](https://developer.mozilla.org/en-US/docs/Web/API/TransformStream) on MDN.
 ///

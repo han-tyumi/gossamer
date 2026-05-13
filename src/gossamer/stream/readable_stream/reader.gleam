@@ -1,8 +1,14 @@
+//// The pull-side cursor over a `ReadableStream`. Acquire one with
+//// [`gossamer/stream/readable_stream.get_reader`](../readable_stream.html#get_reader)
+//// then call [`read`](#read) to pull chunks. Release the lock via
+//// [`release_lock`](#release_lock) when done.
+
 import gleam/javascript/promise.{type Promise}
 import gossamer/stream.{type StreamLifecycleError}
 import gossamer/stream/readable_stream/read_result.{type ReadResult}
 
-/// A locked reader over a `ReadableStream`.
+/// A JavaScript `ReadableStreamDefaultReader` — a locked reader over a
+/// `ReadableStream`.
 ///
 /// See [ReadableStreamDefaultReader](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStreamDefaultReader) on MDN.
 ///

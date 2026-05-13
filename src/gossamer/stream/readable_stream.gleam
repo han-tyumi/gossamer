@@ -1,3 +1,8 @@
+//// The source side of the Streams API. Build one from a pull-based
+//// source via the `Builder`, or bridge from a Gleam `Yielder` /
+//// `AsyncIterator`. Reads happen through a [`Reader`](./readable_stream/reader.html)
+//// acquired with [`get_reader`](#get_reader).
+
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
@@ -11,7 +16,8 @@ import gossamer/stream/readable_stream/default_controller.{
 import gossamer/stream/readable_stream/reader.{type Reader}
 import gossamer/stream/writable_stream.{type WritableStream}
 
-/// A pull-based stream of bytes or objects, used as a source for data.
+/// A JavaScript `ReadableStream` — a pull-based stream of bytes or
+/// objects used as a source for data.
 ///
 /// See [ReadableStream](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream) on MDN.
 ///

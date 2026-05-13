@@ -8,12 +8,19 @@
 import gleam/dynamic.{type Dynamic}
 
 /// The backpressure threshold applied to a stream's internal queue.
-/// `ByCount` measures by chunk count, `ByByteLength` by byte size of
-/// each chunk; `Unlimited` disables backpressure signaling entirely.
 ///
 pub type QueuingStrategy {
+  /// Backpressure measured by chunk count — the queue holds at most
+  /// `high_water_mark` chunks before signaling pressure.
   ByCount(high_water_mark: Int)
+
+  /// Backpressure measured by byte size — the queue holds at most
+  /// `high_water_mark` total bytes across all chunks before signaling
+  /// pressure.
   ByByteLength(high_water_mark: Int)
+
+  /// Disables backpressure signaling entirely. The stream accepts
+  /// chunks as fast as they arrive.
   Unlimited
 }
 

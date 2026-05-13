@@ -1,7 +1,13 @@
+//// The controller passed to a `TransformStream`'s transformer
+//// callbacks. Use it to emit chunks to the readable side via
+//// [`enqueue`](#enqueue), error the stream with [`error`](#error),
+//// or end transformation with [`terminate`](#terminate).
+
 import gossamer/stream.{type StreamLifecycleError}
 
-/// A controller passed to a `TransformStream`'s transformer callbacks.
-/// Used to enqueue output chunks, signal errors, or terminate the stream.
+/// A JavaScript `TransformStreamDefaultController` — passed to a
+/// `TransformStream`'s transformer callbacks. Used to enqueue output
+/// chunks, signal errors, or terminate the stream.
 ///
 /// See [TransformStreamDefaultController](https://developer.mozilla.org/en-US/docs/Web/API/TransformStreamDefaultController) on MDN.
 ///
