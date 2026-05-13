@@ -96,3 +96,44 @@ pub fn absolute_value(value: BigInt) -> BigInt
 ///
 @external(javascript, "./big_int.ffi.mjs", "compare")
 pub fn compare(a: BigInt, b: BigInt) -> Order
+
+/// Raises `base` to the power of `exponent`. Returns `Error(Nil)` if
+/// `exponent` is negative (the result would be fractional).
+///
+@external(javascript, "./big_int.ffi.mjs", "power")
+pub fn power(base: BigInt, of exponent: BigInt) -> Result(BigInt, Nil)
+
+/// Returns the bitwise AND of `a` and `b`. Operates on the two's
+/// complement representation.
+///
+@external(javascript, "./big_int.ffi.mjs", "bitwise_and")
+pub fn bitwise_and(a: BigInt, b: BigInt) -> BigInt
+
+/// Returns the bitwise OR of `a` and `b`. Operates on the two's
+/// complement representation.
+///
+@external(javascript, "./big_int.ffi.mjs", "bitwise_or")
+pub fn bitwise_or(a: BigInt, b: BigInt) -> BigInt
+
+/// Returns the bitwise XOR of `a` and `b`. Operates on the two's
+/// complement representation.
+///
+@external(javascript, "./big_int.ffi.mjs", "bitwise_exclusive_or")
+pub fn bitwise_exclusive_or(a: BigInt, b: BigInt) -> BigInt
+
+/// Returns the bitwise NOT of `value`. Equivalent to `-value - 1`.
+///
+@external(javascript, "./big_int.ffi.mjs", "bitwise_not")
+pub fn bitwise_not(value: BigInt) -> BigInt
+
+/// Shifts `value` left by `by` bits. Returns `Error(Nil)` if `by` is
+/// negative.
+///
+@external(javascript, "./big_int.ffi.mjs", "bitwise_shift_left")
+pub fn bitwise_shift_left(value: BigInt, by: BigInt) -> Result(BigInt, Nil)
+
+/// Shifts `value` right by `by` bits (arithmetic shift — sign-extends).
+/// Returns `Error(Nil)` if `by` is negative.
+///
+@external(javascript, "./big_int.ffi.mjs", "bitwise_shift_right")
+pub fn bitwise_shift_right(value: BigInt, by: BigInt) -> Result(BigInt, Nil)

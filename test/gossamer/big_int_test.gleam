@@ -188,3 +188,79 @@ pub fn compare_large_values_test() {
   let assert Ok(b) = big_int.from_string("99999999999999999998")
   big_int.compare(a, b) |> should.equal(order.Gt)
 }
+
+pub fn power_test() {
+  let base = big_int.from_int(2)
+  let exponent = big_int.from_int(10)
+  let assert Ok(result) = big_int.power(base, of: exponent)
+  big_int.to_string(result) |> should.equal("1024")
+}
+
+pub fn power_large_test() {
+  // 2^100 is well outside Int's safe range.
+  let base = big_int.from_int(2)
+  let exponent = big_int.from_int(100)
+  let assert Ok(result) = big_int.power(base, of: exponent)
+  big_int.to_string(result)
+  |> should.equal("1267650600228229401496703205376")
+}
+
+pub fn power_negative_exponent_errors_test() {
+  let base = big_int.from_int(2)
+  let exponent = big_int.from_int(-1)
+  let assert Error(_) = big_int.power(base, of: exponent)
+}
+
+pub fn bitwise_and_test() {
+  big_int.bitwise_and(big_int.from_int(0b1100), big_int.from_int(0b1010))
+  |> big_int.to_int
+  |> should.equal(Ok(0b1000))
+}
+
+pub fn bitwise_or_test() {
+  big_int.bitwise_or(big_int.from_int(0b1100), big_int.from_int(0b1010))
+  |> big_int.to_int
+  |> should.equal(Ok(0b1110))
+}
+
+pub fn bitwise_exclusive_or_test() {
+  big_int.bitwise_exclusive_or(
+    big_int.from_int(0b1100),
+    big_int.from_int(0b1010),
+  )
+  |> big_int.to_int
+  |> should.equal(Ok(0b0110))
+}
+
+pub fn bitwise_not_test() {
+  // ~5 in two's complement is -6.
+  big_int.bitwise_not(big_int.from_int(5))
+  |> big_int.to_int
+  |> should.equal(Ok(-6))
+}
+
+pub fn bitwise_shift_left_test() {
+  let value = big_int.from_int(1)
+  let by = big_int.from_int(8)
+  let assert Ok(result) = big_int.bitwise_shift_left(value, by)
+  big_int.to_int(result) |> should.equal(Ok(256))
+}
+
+pub fn bitwise_shift_left_negative_errors_test() {
+  let value = big_int.from_int(1)
+  let by = big_int.from_int(-1)
+  let assert Error(_) = big_int.bitwise_shift_left(value, by)
+}
+
+pub fn bitwise_shift_right_test() {
+  let value = big_int.from_int(256)
+  let by = big_int.from_int(4)
+  let assert Ok(result) = big_int.bitwise_shift_right(value, by)
+  big_int.to_int(result) |> should.equal(Ok(16))
+}
+
+pub fn bitwise_shift_right_negative_errors_test() {
+  let value = big_int.from_int(256)
+  let by = big_int.from_int(-1)
+  let assert Error(_) = big_int.bitwise_shift_right(value, by)
+}
