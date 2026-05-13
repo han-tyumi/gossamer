@@ -59,7 +59,7 @@ export const release_lock: typeof $writer.release_lock = (
 ) => {
   try {
     writer.releaseLock();
-    return Result$Ok(writer);
+    return Result$Ok(undefined);
   } catch {
     return releasedError();
   }

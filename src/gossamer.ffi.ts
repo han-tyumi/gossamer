@@ -1,4 +1,4 @@
-import * as $gossamer from "$/gossamer/gossamer.mjs";
+import type * as $gossamer from "$/gossamer/gossamer.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { durationToMs } from "~/utils/time.ffi.ts";
 
@@ -10,9 +10,7 @@ export const structured_clone: typeof $gossamer.structured_clone = (value) => {
   try {
     return Result$Ok(globalThis.structuredClone(value));
   } catch (err) {
-    return Result$Error(
-      $gossamer.StructuredCloneError$NotCloneable(errorMessage(err)),
-    );
+    return Result$Error(errorMessage(err));
   }
 };
 
@@ -20,9 +18,7 @@ export const decode_base64: typeof $gossamer.decode_base64 = (encoded) => {
   try {
     return Result$Ok(globalThis.atob(encoded));
   } catch (err) {
-    return Result$Error(
-      $gossamer.Base64Error$InvalidEncoding(errorMessage(err)),
-    );
+    return Result$Error(errorMessage(err));
   }
 };
 
@@ -30,9 +26,7 @@ export const encode_base64: typeof $gossamer.encode_base64 = (data) => {
   try {
     return Result$Ok(globalThis.btoa(data));
   } catch (err) {
-    return Result$Error(
-      $gossamer.Base64Error$InvalidEncoding(errorMessage(err)),
-    );
+    return Result$Error(errorMessage(err));
   }
 };
 

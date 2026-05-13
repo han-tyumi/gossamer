@@ -14,7 +14,6 @@ export const abort: typeof $abortController.abort = (
   controller: AbortController,
 ) => {
   controller.abort();
-  return controller;
 };
 
 export const abort_with: typeof $abortController.abort_with = (
@@ -22,5 +21,4 @@ export const abort_with: typeof $abortController.abort_with = (
   reason,
 ) => {
   controller.abort(reason);
-  return controller;
 };

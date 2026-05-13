@@ -54,11 +54,6 @@ pub type CryptoError {
   /// The input exceeds runtime-imposed size limits. Corresponds to the
   /// `QuotaExceededError` DOMException.
   QuotaExceeded
-
-  /// A failure that doesn't match any of the above DOMException names.
-  /// The `message` payload carries the underlying JavaScript error
-  /// description.
-  OtherError(message: String)
 }
 
 /// AES cipher modes supported by `subtle`.

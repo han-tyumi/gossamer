@@ -1,4 +1,4 @@
-import * as $performance from "$/gossamer/gossamer/performance.mjs";
+import type * as $performance from "$/gossamer/gossamer/performance.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray } from "~/utils/list.ffi.ts";
 import { msToDuration, msToTimestamp } from "~/utils/time.ffi.ts";
@@ -15,7 +15,7 @@ export const mark: typeof $performance.mark = (name) => {
   try {
     return Result$Ok(performance.mark(name));
   } catch {
-    return Result$Error($performance.PerformanceError$ReservedName());
+    return Result$Error(undefined);
   }
 };
 
@@ -27,7 +27,7 @@ export const measure: typeof $performance.measure = (
   try {
     return Result$Ok(performance.measure(name, startMark, endMark));
   } catch {
-    return Result$Error($performance.PerformanceError$MarkNotFound());
+    return Result$Error(undefined);
   }
 };
 

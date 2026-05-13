@@ -44,7 +44,7 @@ export const release_lock: typeof $reader.release_lock = (
 ) => {
   try {
     reader.releaseLock();
-    return Result$Ok(reader);
+    return Result$Ok(undefined);
   } catch {
     return releasedError();
   }

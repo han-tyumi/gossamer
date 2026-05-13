@@ -3,19 +3,6 @@ import gleam/time/duration.{type Duration}
 import gleam/time/timestamp.{type Timestamp}
 import gossamer/performance_entry.{type PerformanceEntry}
 
-/// Errors raised by `performance.mark` and `performance.measure`.
-pub type PerformanceError {
-  /// `name` collides with a read-only attribute on the legacy
-  /// `PerformanceTiming` interface. Only browsers (Window contexts)
-  /// produce this; Deno, Node, and Bun don't expose `PerformanceTiming`
-  /// and skip the check entirely.
-  ReservedName
-
-  /// One of the named marks doesn't exist on the performance timeline.
-  /// Only `measure` produces this.
-  MarkNotFound
-}
-
 /// Returns the high-resolution elapsed time since `time_origin`. Pair
 /// with `time_origin` to recover an absolute `Timestamp`, or subtract
 /// two `now()` values via `duration.difference` to measure elapsed
@@ -31,24 +18,24 @@ pub fn now() -> Duration
 pub fn time_origin() -> Timestamp
 
 /// Records a performance mark with `name` at the current time. Returns
-/// `ReservedName` in browser Window contexts when `name` collides with
-/// a `PerformanceTiming` read-only attribute; never fails on Deno,
-/// Node, or Bun.
+/// an error in browser Window contexts when `name` collides with a
+/// `PerformanceTiming` read-only attribute; never fails on Deno, Node,
+/// or Bun.
 ///
 @external(javascript, "./performance.ffi.mjs", "mark")
-pub fn mark(name: String) -> Result(PerformanceEntry, PerformanceError)
+pub fn mark(name: String) -> Result(PerformanceEntry, Nil)
 
 /// Records a measurement between two previously-recorded marks. Returns
-/// `MarkNotFound` if either `start_mark` or `end_mark` doesn't exist,
-/// or `ReservedName` in browser Window contexts when `name` collides
-/// with a `PerformanceTiming` read-only attribute.
+/// an error if either `start_mark` or `end_mark` doesn't exist, or in
+/// browser Window contexts when `name` collides with a
+/// `PerformanceTiming` read-only attribute.
 ///
 @external(javascript, "./performance.ffi.mjs", "measure")
 pub fn measure(
   name: String,
   from start_mark: String,
   to end_mark: String,
-) -> Result(PerformanceEntry, PerformanceError)
+) -> Result(PerformanceEntry, Nil)
 
 @external(javascript, "./performance.ffi.mjs", "clear_marks")
 pub fn clear_marks() -> Nil

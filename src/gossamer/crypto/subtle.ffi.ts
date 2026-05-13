@@ -28,9 +28,13 @@ function toCryptoError(value: unknown): $crypto.CryptoError$ {
       case "QuotaExceededError":
         return $crypto.CryptoError$QuotaExceeded();
     }
-    return $crypto.CryptoError$OtherError(value.message);
   }
-  return $crypto.CryptoError$OtherError(String(value));
+  throw new Error(
+    `gossamer/crypto/subtle: unmapped error from JavaScript SubtleCrypto: ${
+      value instanceof Error ? `${value.name}: ${value.message}` : String(value)
+    }. Please file an issue at https://github.com/han-tyumi/gossamer/issues.`,
+    { cause: value },
+  );
 }
 
 async function toCryptoResult<T>(thunk: () => Promise<T>) {

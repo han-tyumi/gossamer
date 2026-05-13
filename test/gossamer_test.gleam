@@ -35,17 +35,15 @@ pub fn base64_roundtrip_test() {
 }
 
 pub fn decode_base64_invalid_test() {
-  let assert Error(gossamer.InvalidEncoding(_)) =
-    gossamer.decode_base64("!!!invalid!!!")
+  let assert Error(_) = gossamer.decode_base64("!!!invalid!!!")
 }
 
 pub fn encode_base64_non_latin1_test() {
-  let assert Error(gossamer.InvalidEncoding(_)) = gossamer.encode_base64("日本語")
+  let assert Error(_) = gossamer.encode_base64("日本語")
 }
 
 pub fn structured_clone_function_test() {
-  let assert Error(gossamer.NotCloneable(_)) =
-    gossamer.structured_clone(fn() { Nil })
+  let assert Error(_) = gossamer.structured_clone(fn() { Nil })
 }
 
 pub fn user_agent_test() {

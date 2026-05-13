@@ -37,6 +37,4 @@ pub fn read(
 /// reader is no longer the active reader.
 ///
 @external(javascript, "./reader.ffi.mjs", "release_lock")
-pub fn release_lock(
-  reader: Reader(a),
-) -> Result(Reader(a), StreamLifecycleError)
+pub fn release_lock(reader: Reader(a)) -> Result(Nil, StreamLifecycleError)
