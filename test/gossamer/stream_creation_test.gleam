@@ -555,13 +555,13 @@ pub fn readable_stream_async_iterator_test() {
 
   let iter = readable_stream.async_iterator(stream)
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Yield(1)))
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Yield(2)))
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }

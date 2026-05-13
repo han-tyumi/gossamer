@@ -14,8 +14,8 @@ import gleam/yielder.{type Yielder}
 import gossamer/iteration.{type IteratorHandlerOutcome, type IteratorResult}
 
 /// A pull-based iterator that yields values one at a time. `a` is the
-/// yielded value type, `return` is the final return value, `next` is the
-/// type of values passed in via `next_with`.
+/// yielded value type, `return` is the final return value, `next` is
+/// the type of values passed in to [`next`](#next).
 ///
 /// See [Iterator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator) on MDN.
 ///
@@ -43,62 +43,55 @@ pub fn from_yielder(yielder: Yielder(a)) -> Iterator(a, Nil, Nil)
 @external(javascript, "./iterator.ffi.mjs", "to_yielder")
 pub fn to_yielder(iterator: Iterator(a, return, next)) -> Yielder(a)
 
-/// Adds a `return` handler to the iterator, called when the consumer
-/// ends iteration early — e.g., by breaking out of a `for` loop or
-/// returning from a generator.
+/// Sets the iterator's optional `return` handler, called when the
+/// consumer ends iteration early — e.g., by breaking out of a `for`
+/// loop or returning from a generator.
 ///
-@external(javascript, "./iterator.ffi.mjs", "with_return")
-pub fn with_return(
+@external(javascript, "./iterator.ffi.mjs", "set_return")
+pub fn set_return(
   iterator: Iterator(a, return, next),
   return: fn(Option(return)) -> IteratorResult(a, return),
 ) -> Iterator(a, return, next)
 
-/// Adds a `throw` handler to the iterator, called when the consumer
-/// signals an error.
+/// Sets the iterator's optional `throw` handler, called when the
+/// consumer signals an error.
 ///
-@external(javascript, "./iterator.ffi.mjs", "with_throw")
-pub fn with_throw(
+@external(javascript, "./iterator.ffi.mjs", "set_throw")
+pub fn set_throw(
   iterator: Iterator(a, return, next),
   throw: fn(e) -> IteratorResult(a, return),
 ) -> Iterator(a, return, next)
 
-/// Advances the iterator and returns the next result.
+/// Advances the iterator and returns the next result. Pass
+/// `Some(value)` to send a value into the iterator's internal logic
+/// (e.g., the right-hand side of `yield` in a generator); pass `None`
+/// for a plain advance.
 ///
 @external(javascript, "./iterator.ffi.mjs", "next")
-pub fn next(iterator: Iterator(a, return, next)) -> IteratorResult(a, return)
-
-/// Advances the iterator, passing `value` to the iterator's internal logic.
-///
-@external(javascript, "./iterator.ffi.mjs", "next_with")
-pub fn next_with(
+pub fn next(
   iterator: Iterator(a, return, next),
-  value: next,
+  value value: Option(next),
 ) -> IteratorResult(a, return)
 
 /// Ends iteration early by invoking the iterator's optional `return`
 /// handler. `Ok(NoHandler)` if the iterator doesn't define one;
-/// `Ok(Handled)` carries the result the handler produced. Returns
-/// an error carrying the thrown value if the handler throws.
+/// `Ok(Handled)` carries the result the handler produced. Returns an
+/// error carrying the thrown value if the handler throws.
+///
+/// Pass `Some(value)` to forward a value to the handler; pass `None`
+/// when the handler is no-arg or you have nothing to forward.
 ///
 @external(javascript, "./iterator.ffi.mjs", "return_")
 pub fn return(
   iterator: Iterator(a, return, next),
-) -> Result(IteratorHandlerOutcome(a, return), Dynamic)
-
-/// Like `return`, but passes `value` to the iterator's `return` handler.
-/// `value` is discarded if the iterator doesn't define one.
-///
-@external(javascript, "./iterator.ffi.mjs", "return_with")
-pub fn return_with(
-  iterator: Iterator(a, return, next),
-  value: return,
+  value value: Option(return),
 ) -> Result(IteratorHandlerOutcome(a, return), Dynamic)
 
 /// Signals an error to the iterator by invoking its optional `throw`
-/// handler. `Ok(NoHandler)` if the iterator doesn't define one — `reason`
-/// is discarded; the caller must decide whether to propagate. `Ok(Handled)`
-/// carries the result the handler produced. Returns an error carrying the
-/// thrown value if the handler itself throws.
+/// handler. `Ok(NoHandler)` if the iterator doesn't define one —
+/// `reason` is discarded; the caller must decide whether to propagate.
+/// `Ok(Handled)` carries the result the handler produced. Returns an
+/// error carrying the thrown value if the handler itself throws.
 ///
 @external(javascript, "./iterator.ffi.mjs", "throw_")
 pub fn throw(

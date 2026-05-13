@@ -8,7 +8,7 @@ pub fn new_and_next_test() {
   let iter =
     async_iterator.new(fn(_next) { promise.resolve(iteration.Return(Nil)) })
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
@@ -26,16 +26,16 @@ pub fn stateful_iterator_test() {
       }
     })
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Yield(0)))
 
-  use result <- promise.await(async_iterator.next_with(iter, 0))
+  use result <- promise.await(async_iterator.next(iter, value: Some(0)))
   should.equal(result, Ok(iteration.Yield(1)))
 
-  use result <- promise.await(async_iterator.next_with(iter, 1))
+  use result <- promise.await(async_iterator.next(iter, value: Some(1)))
   should.equal(result, Ok(iteration.Yield(2)))
 
-  use result <- promise.await(async_iterator.next_with(iter, 2))
+  use result <- promise.await(async_iterator.next(iter, value: Some(2)))
   should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
@@ -43,7 +43,7 @@ pub fn stateful_iterator_test() {
 pub fn return_no_handler_test() {
   let iter = async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
 
-  use result <- promise.await(async_iterator.return(iter))
+  use result <- promise.await(async_iterator.return(iter, value: None))
   should.equal(result, Ok(iteration.NoHandler))
   promise.resolve(Nil)
 }
@@ -51,11 +51,11 @@ pub fn return_no_handler_test() {
 pub fn return_with_handler_test() {
   let iter =
     async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
-    |> async_iterator.with_return(fn(_value) {
+    |> async_iterator.set_return(fn(_value) {
       promise.resolve(iteration.Return(Nil))
     })
 
-  use result <- promise.await(async_iterator.return(iter))
+  use result <- promise.await(async_iterator.return(iter, value: None))
   should.equal(result, Ok(iteration.Handled(iteration.Return(Nil))))
   promise.resolve(Nil)
 }
@@ -63,14 +63,14 @@ pub fn return_with_handler_test() {
 pub fn return_with_value_test() {
   let iter =
     async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
-    |> async_iterator.with_return(fn(value) {
+    |> async_iterator.set_return(fn(value) {
       case value {
         Some(val) -> promise.resolve(iteration.Return(val))
         None -> promise.resolve(iteration.Return(99))
       }
     })
 
-  use result <- promise.await(async_iterator.return_with(iter, 42))
+  use result <- promise.await(async_iterator.return(iter, value: Some(42)))
   should.equal(result, Ok(iteration.Handled(iteration.Return(42))))
   promise.resolve(Nil)
 }
@@ -86,7 +86,7 @@ pub fn throw_no_handler_test() {
 pub fn throw_with_handler_test() {
   let iter =
     async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
-    |> async_iterator.with_throw(fn(_err) {
+    |> async_iterator.set_throw(fn(_err) {
       promise.resolve(iteration.Return(Nil))
     })
 
@@ -98,7 +98,7 @@ pub fn throw_with_handler_test() {
 pub fn throw_passes_reason_test() {
   let iter =
     async_iterator.new(fn(_) { promise.resolve(iteration.Yield(1)) })
-    |> async_iterator.with_throw(fn(err) {
+    |> async_iterator.set_throw(fn(err) {
       promise.resolve(iteration.Return(err))
     })
 
@@ -113,7 +113,7 @@ pub fn throw_passes_reason_test() {
 pub fn next_callback_throws_test() {
   let iter = async_iterator.new(fn(_) { panic as "next boom" })
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   let assert Error(_) = result
   promise.resolve(Nil)
 }
@@ -127,7 +127,7 @@ pub fn for_await_test() {
   )
   should.equal(for_result, Ok(Nil))
 
-  use next_result <- promise.await(async_iterator.next(iter))
+  use next_result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(next_result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
@@ -135,16 +135,16 @@ pub fn for_await_test() {
 pub fn from_list_test() {
   let iter = async_iterator.from_list([10, 20, 30])
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Yield(10)))
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Yield(20)))
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Yield(30)))
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }
@@ -152,7 +152,7 @@ pub fn from_list_test() {
 pub fn from_list_empty_test() {
   let iter = async_iterator.from_list([])
 
-  use result <- promise.await(async_iterator.next(iter))
+  use result <- promise.await(async_iterator.next(iter, value: None))
   should.equal(result, Ok(iteration.Return(Nil)))
   promise.resolve(Nil)
 }

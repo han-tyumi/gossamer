@@ -1,4 +1,9 @@
 import * as $iteration from "$/gossamer/gossamer/iteration.mjs";
+import {
+  type Option$,
+  Option$isNone,
+  Option$Some$0,
+} from "$/gleam_stdlib/gleam/option.mjs";
 import type * as $iterator from "$/gossamer/gossamer/iteration/iterator.mjs";
 import { Result$Ok } from "$/prelude.mjs";
 import {
@@ -9,6 +14,10 @@ import {
   yielderAsJsIterator,
 } from "~/gossamer/iteration.ffi.ts";
 import { toOption } from "~/utils/option.ffi.ts";
+
+function optionToValue<T>(option: Option$<T>): T | undefined {
+  return Option$isNone(option) ? undefined : Option$Some$0(option);
+}
 
 export const new_: typeof $iterator.new$ = <TNext, T, TReturn>(
   ...[next]: Parameters<typeof $iterator.new$<TNext, T, TReturn>>
@@ -26,9 +35,9 @@ export const from_yielder: typeof $iterator.from_yielder = yielderAsJsIterator;
 
 export const to_yielder: typeof $iterator.to_yielder = jsIteratorAsYielder;
 
-export const with_return: typeof $iterator.with_return = <T, TReturn, TNext>(
+export const set_return: typeof $iterator.set_return = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
-  return_: Parameters<typeof $iterator.with_return<T, TReturn, TNext>>[1],
+  return_: Parameters<typeof $iterator.set_return<T, TReturn, TNext>>[1],
 ) => {
   const newIterator: IterableIterator<T, TReturn, TNext> = {
     ...iterator,
@@ -41,9 +50,9 @@ export const with_return: typeof $iterator.with_return = <T, TReturn, TNext>(
   return newIterator;
 };
 
-export const with_throw: typeof $iterator.with_throw = <T, TReturn, TNext>(
+export const set_throw: typeof $iterator.set_throw = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
-  throw_: Parameters<typeof $iterator.with_throw<T, TReturn, TNext>>[1],
+  throw_: Parameters<typeof $iterator.set_throw<T, TReturn, TNext>>[1],
 ) => {
   const newIterator: IterableIterator<T, TReturn, TNext> = {
     ...iterator,
@@ -58,21 +67,16 @@ export const with_throw: typeof $iterator.with_throw = <T, TReturn, TNext>(
 
 export const next: typeof $iterator.next = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
+  value: Option$<TNext>,
 ) => {
-  const result = iterator.next();
-  return toGleamIteratorResult(result);
-};
-
-export const next_with: typeof $iterator.next_with = <T, TReturn, TNext>(
-  iterator: Iterator<T, TReturn, TNext>,
-  value: Parameters<typeof $iterator.next_with<T, TReturn, TNext>>[1],
-) => {
-  const result = iterator.next(value);
+  const sent = optionToValue(value);
+  const result = sent === undefined ? iterator.next() : iterator.next(sent);
   return toGleamIteratorResult(result);
 };
 
 export const return_: typeof $iterator.return$ = <T, TReturn, TNext>(
   iterator: Iterator<T, TReturn, TNext>,
+  value: Option$<TReturn>,
 ) => {
   const returnFn = iterator.return;
   if (!returnFn) {
@@ -80,26 +84,14 @@ export const return_: typeof $iterator.return$ = <T, TReturn, TNext>(
       $iteration.IteratorHandlerOutcome$NoHandler(),
     );
   }
+  const sent = optionToValue(value);
   return toCallbackResult(() =>
     $iteration.IteratorHandlerOutcome$Handled(
-      toGleamIteratorResult(returnFn.call(iterator)),
-    )
-  );
-};
-
-export const return_with: typeof $iterator.return_with = <T, TReturn, TNext>(
-  iterator: Iterator<T, TReturn, TNext>,
-  value: Parameters<typeof $iterator.return_with<T, TReturn>>[1],
-) => {
-  const returnFn = iterator.return;
-  if (!returnFn) {
-    return Result$Ok(
-      $iteration.IteratorHandlerOutcome$NoHandler(),
-    );
-  }
-  return toCallbackResult(() =>
-    $iteration.IteratorHandlerOutcome$Handled(
-      toGleamIteratorResult(returnFn.call(iterator, value)),
+      toGleamIteratorResult(
+        sent === undefined
+          ? returnFn.call(iterator)
+          : returnFn.call(iterator, sent),
+      ),
     )
   );
 };
