@@ -28,6 +28,8 @@ function toCryptoError(value: unknown): $crypto.CryptoError$ {
         return $crypto.CryptoError$DataMalformed();
       case "QuotaExceededError":
         return $crypto.CryptoError$QuotaExceeded();
+      case "SyntaxError":
+        return $crypto.CryptoError$InvalidSyntax();
     }
   }
   throw new Error(

@@ -437,6 +437,28 @@ pub fn export_key_not_extractable_test() {
   promise.resolve(Nil)
 }
 
+pub fn generate_key_empty_usages_test() {
+  use result <- promise.await(
+    subtle.generate_key(subtle.KeyGenAes(crypto.Gcm, 256), True, []),
+  )
+  let assert Error(crypto.InvalidSyntax) = result
+  promise.resolve(Nil)
+}
+
+pub fn import_key_empty_usages_test() {
+  use result <- promise.await(
+    subtle.import_key(
+      subtle.Raw,
+      crypto.random_bytes(16),
+      subtle.ImportAes(crypto.Gcm),
+      True,
+      [],
+    ),
+  )
+  let assert Error(crypto.InvalidSyntax) = result
+  promise.resolve(Nil)
+}
+
 pub fn sign_verify_ed25519_test() {
   use result <- promise.await(
     subtle.generate_key_pair(subtle.KeyPairGenEd25519, True, [

@@ -274,7 +274,7 @@ pub fn verify(
 
 /// Generates a new symmetric `CryptoKey`. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// algorithm.
+/// algorithm, or `Error(InvalidSyntax)` if `usages` is empty.
 ///
 @external(javascript, "./subtle.ffi.mjs", "generate_key")
 pub fn generate_key(
@@ -285,7 +285,8 @@ pub fn generate_key(
 
 /// Generates a new public/private key pair. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// algorithm.
+/// algorithm, or `Error(InvalidSyntax)` if `usages` is empty for an
+/// algorithm that requires it.
 ///
 @external(javascript, "./subtle.ffi.mjs", "generate_key_pair")
 pub fn generate_key_pair(
@@ -296,8 +297,9 @@ pub fn generate_key_pair(
 
 /// Imports a raw key from `data`. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// algorithm, or `Error(DataMalformed)` if `data` doesn't match
-/// `format`.
+/// algorithm, `Error(DataMalformed)` if `data` doesn't match
+/// `format`, or `Error(InvalidSyntax)` if `usages` is empty for an
+/// algorithm that requires it.
 ///
 @external(javascript, "./subtle.ffi.mjs", "import_key")
 pub fn import_key(
@@ -310,7 +312,9 @@ pub fn import_key(
 
 /// Imports a key from a JSON Web Key. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// algorithm, or `Error(DataMalformed)` if `data` is malformed.
+/// algorithm, `Error(DataMalformed)` if `data` is malformed, or
+/// `Error(InvalidSyntax)` if `usages` is empty for an algorithm that
+/// requires it.
 ///
 @external(javascript, "./subtle.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(

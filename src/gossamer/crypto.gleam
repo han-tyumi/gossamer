@@ -70,6 +70,11 @@ pub type CryptoError {
   /// The input exceeds runtime-imposed size limits. Corresponds to the
   /// `QuotaExceededError` DOMException.
   QuotaExceeded
+
+  /// A required parameter is missing or invalid for the algorithm
+  /// (e.g., an empty `usages` list when generating or importing a
+  /// symmetric key). Corresponds to the `SyntaxError` DOMException.
+  InvalidSyntax
 }
 
 /// AES cipher modes supported by `subtle`.
