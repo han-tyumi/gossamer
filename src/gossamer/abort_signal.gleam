@@ -48,12 +48,6 @@ pub fn is_aborted(signal: AbortSignal) -> Bool
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
 pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 
-/// Returns `Error` carrying the abort reason if the signal is aborted, or
-/// `Ok(Nil)` otherwise.
-///
-@external(javascript, "./abort_signal.ffi.mjs", "throw_if_aborted")
-pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, Dynamic)
-
 /// Registers `handler` to run when the signal aborts. If the signal is
 /// already aborted, `handler` is not called.
 ///

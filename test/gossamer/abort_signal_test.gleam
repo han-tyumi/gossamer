@@ -32,18 +32,6 @@ pub fn reason_on_unaborted_signal_test() {
   abort_signal.reason(signal) |> should.be_error
 }
 
-pub fn throw_if_aborted_on_aborted_test() {
-  let signal = abort_signal.abort("stopped")
-  let assert Error(reason) = abort_signal.throw_if_aborted(signal)
-  let assert Ok(value) = decode.run(reason, decode.string)
-  should.equal(value, "stopped")
-}
-
-pub fn throw_if_aborted_on_unaborted_test() {
-  let signal = abort_signal.timeout(duration.seconds(10))
-  abort_signal.throw_if_aborted(signal) |> should.be_ok
-}
-
 pub fn on_abort_test() {
   let controller = abort_controller.new()
   let signal = abort_controller.signal(controller)
