@@ -55,7 +55,7 @@ pub fn on_abort_test() {
     Nil
   })
 
-  abort_controller.abort(controller)
+  abort_controller.abort(controller, reason: Nil)
 
   use value <- promise.map(p)
   should.equal(value, "aborted")
@@ -72,14 +72,14 @@ pub fn controller_abort_test() {
   let controller = abort_controller.new()
   let signal = abort_controller.signal(controller)
   abort_signal.is_aborted(signal) |> should.be_false
-  abort_controller.abort(controller)
+  abort_controller.abort(controller, reason: Nil)
   abort_signal.is_aborted(signal) |> should.be_true
 }
 
 pub fn controller_abort_with_test() {
   let controller = abort_controller.new()
   let signal = abort_controller.signal(controller)
-  abort_controller.abort_with(controller, "custom reason")
+  abort_controller.abort(controller, reason: "custom reason")
   abort_signal.is_aborted(signal) |> should.be_true
   let assert Ok(reason) = abort_signal.reason(signal)
   let assert Ok(value) = decode.run(reason, decode.string)

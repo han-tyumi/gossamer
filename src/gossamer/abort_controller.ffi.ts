@@ -12,12 +12,6 @@ export const signal: typeof $abortController.signal = (
 
 export const abort: typeof $abortController.abort = (
   controller: AbortController,
-) => {
-  controller.abort();
-};
-
-export const abort_with: typeof $abortController.abort_with = (
-  controller: AbortController,
   reason,
 ) => {
   controller.abort(reason);

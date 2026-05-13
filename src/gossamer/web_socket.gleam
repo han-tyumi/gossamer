@@ -241,17 +241,19 @@ pub fn ready_state(socket: WebSocket) -> ReadyState
 @external(javascript, "./web_socket.ffi.mjs", "url")
 pub fn url(socket: WebSocket) -> String
 
-/// Closes the WebSocket connection. Does nothing if the connection is
-/// already closing or closed.
+/// Closes the WebSocket connection with the default code `1000` and
+/// no reason. Does nothing if the connection is already closing or
+/// closed. For custom code or reason, use
+/// [`close_with`](#close_with).
 ///
 @external(javascript, "./web_socket.ffi.mjs", "close")
 pub fn close(socket: WebSocket) -> Nil
 
-/// Closes the WebSocket connection with the given code and reason. Returns
-/// `Error(InvalidCloseCode(code))` when `code` is not `1000` and not in the
-/// range `3000`–`4999`, or `Error(CloseReasonTooLong)` when `reason`
-/// exceeds `123` bytes when encoded as UTF-8. Pre-checked at the FFI so
-/// the constraints are enforced uniformly across runtimes.
+/// Closes the WebSocket connection with the given `code` and
+/// `reason`. Returns `Error(InvalidCloseCode(code))` if `code` is
+/// outside `1000` or the range `3000`–`4999`, or
+/// `Error(CloseReasonTooLong)` if `reason` exceeds `123` bytes when
+/// encoded as UTF-8.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "close_with")
 pub fn close_with(
