@@ -46,12 +46,31 @@ import gossamer/stream/readable_stream.{type ReadableStream}
 /// response exposes its body; a `ResponseOpaque` response does not).
 ///
 pub type ResponseType {
+  /// A same-origin response. The body and most headers are exposed.
   ResponseBasic
+
+  /// A cross-origin response with CORS headers. The body and
+  /// CORS-safelisted headers are exposed.
   ResponseCors
+
+  /// A response from a synthetic source (e.g., `Response.new` /
+  /// `from_string`).
   ResponseDefault
+
+  /// A network error response. The body is opaque and consumers
+  /// can't read it.
   ResponseError
+
+  /// A no-cors cross-origin response. The body and most headers are
+  /// hidden.
   ResponseOpaque
+
+  /// An opaque redirect response with `redirect: ResponseError`-like
+  /// behavior. The body is hidden.
   ResponseOpaqueRedirect
+
+  /// Any value the binding doesn't recognize, passed through
+  /// verbatim from the runtime.
   ResponseOther(String)
 }
 
@@ -80,11 +99,26 @@ pub type FetchOptions {
 /// HTTP cache.
 ///
 pub type Cache {
+  /// Default behavior — the cache is consulted and revalidated per
+  /// normal HTTP caching semantics.
   CacheDefault
+
+  /// Use a cached response unconditionally if one exists, ignoring
+  /// freshness. Fetch from the network only on a cache miss.
   CacheForceCache
+
+  /// Validate cached responses with the server before using them.
   CacheNoCache
+
+  /// Bypass the cache entirely — neither read from nor write to it.
   CacheNoStore
+
+  /// Return a cached response or fail with a network error. Never hit
+  /// the network.
   CacheOnlyIfCached
+
+  /// Always fetch from the network, but update the cache with the
+  /// response.
   CacheReload
 }
 
@@ -92,8 +126,13 @@ pub type Cache {
 /// cross-origin requests.
 ///
 pub type Credentials {
+  /// Always include credentials, even on cross-origin requests.
   CredentialsInclude
+
+  /// Never send credentials, even on same-origin requests.
   CredentialsOmit
+
+  /// Send credentials only on same-origin requests.
   CredentialsSameOrigin
 }
 
@@ -101,9 +140,17 @@ pub type Credentials {
 /// are handled.
 ///
 pub type Mode {
+  /// Allow cross-origin requests subject to CORS preflight checks.
   ModeCors
+
+  /// Reserved for navigation requests (top-level document loads).
   ModeNavigate
+
+  /// Allow cross-origin requests with no CORS preflight; the response
+  /// body is opaque.
   ModeNoCors
+
+  /// Allow only same-origin requests; cross-origin requests fail.
   ModeSameOrigin
 }
 
@@ -111,16 +158,29 @@ pub type Mode {
 /// compared to other requests.
 ///
 pub type Priority {
+  /// Higher priority than other requests of the same destination.
   High
+
+  /// Lower priority than other requests of the same destination.
   Low
+
+  /// Let the runtime pick a priority based on the request type and
+  /// context.
   Auto
 }
 
 /// How a `Request` handles redirect responses.
 ///
 pub type Redirect {
+  /// Reject the response with a network error if the server responds
+  /// with a redirect.
   RedirectError
+
+  /// Automatically follow redirects (the default).
   RedirectFollow
+
+  /// Return the redirect response opaquely without following it; the
+  /// caller decides what to do.
   RedirectManual
 }
 
@@ -128,13 +188,30 @@ pub type Redirect {
 /// the `Referer` header.
 ///
 pub type ReferrerPolicy {
+  /// Send no `Referer` header.
   ReferrerNoReferrer
+
+  /// Send the full URL, but omit it on a secure-to-insecure downgrade.
   ReferrerNoReferrerWhenDowngrade
+
+  /// Send only the origin (scheme + host + port).
   ReferrerOrigin
+
+  /// Send the full URL on same-origin; only the origin on cross-origin.
   ReferrerOriginWhenCrossOrigin
+
+  /// Send the full URL on same-origin; nothing on cross-origin.
   ReferrerSameOrigin
+
+  /// Send only the origin, and omit on a secure-to-insecure downgrade.
   ReferrerStrictOrigin
+
+  /// Send the full URL on same-origin; the origin on cross-origin;
+  /// nothing on a secure-to-insecure downgrade.
   ReferrerStrictOriginWhenCrossOrigin
+
+  /// Always send the full URL. Discouraged because it can leak
+  /// sensitive paths.
   ReferrerUnsafeUrl
 }
 
