@@ -50,11 +50,10 @@ pub fn abort(
 @external(javascript, "./writer.ffi.mjs", "close")
 pub fn close(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Releases the writer's lock on the stream. Returns `Released` if
-/// the writer is no longer the active writer.
+/// Releases the writer's lock on the stream.
 ///
 @external(javascript, "./writer.ffi.mjs", "release_lock")
-pub fn release_lock(writer: Writer(a)) -> Result(Nil, StreamLifecycleError)
+pub fn release_lock(writer: Writer(a)) -> Nil
 
 /// Writes `chunk` to the stream. Returns `Errored` if the stream
 /// enters an errored state, or if the stream was already closed when

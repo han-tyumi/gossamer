@@ -7,10 +7,6 @@ function erroredError(reason: unknown) {
   return Result$Error($stream.StreamLifecycleError$Errored(reason));
 }
 
-function releasedError() {
-  return Result$Error($stream.StreamLifecycleError$Released());
-}
-
 export const closed: typeof $writer.closed = (
   writer: WritableStreamDefaultWriter,
 ) => {
@@ -57,12 +53,7 @@ export const close: typeof $writer.close = (
 export const release_lock: typeof $writer.release_lock = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  try {
-    writer.releaseLock();
-    return Result$Ok(undefined);
-  } catch {
-    return releasedError();
-  }
+  writer.releaseLock();
 };
 
 export const write: typeof $writer.write = <W>(

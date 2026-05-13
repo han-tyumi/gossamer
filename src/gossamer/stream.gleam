@@ -30,10 +30,6 @@ pub type StreamLifecycleError {
   /// lock or piping a locked stream is not allowed.
   Locked
 
-  /// The reader or writer no longer holds the lock on its stream.
-  /// Operations on a released reader/writer reject.
-  Released
-
   /// The stream or controller is closed. Enqueueing into or closing a
   /// closed controller is not allowed.
   Closed

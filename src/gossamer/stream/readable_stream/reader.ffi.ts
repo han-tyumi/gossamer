@@ -7,10 +7,6 @@ function erroredError(reason: unknown) {
   return Result$Error($stream.StreamLifecycleError$Errored(reason));
 }
 
-function releasedError() {
-  return Result$Error($stream.StreamLifecycleError$Released());
-}
-
 export const closed: typeof $reader.closed = (
   reader: ReadableStreamDefaultReader,
 ) => {
@@ -42,10 +38,5 @@ export const read: typeof $reader.read = (
 export const release_lock: typeof $reader.release_lock = (
   reader: ReadableStreamDefaultReader,
 ) => {
-  try {
-    reader.releaseLock();
-    return Result$Ok(undefined);
-  } catch {
-    return releasedError();
-  }
+  reader.releaseLock();
 };

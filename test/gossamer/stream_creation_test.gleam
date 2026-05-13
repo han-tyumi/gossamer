@@ -265,7 +265,7 @@ pub fn writable_stream_is_locked_test() {
   let assert Ok(w) = writable_stream.get_writer(stream)
   writable_stream.is_locked(stream) |> should.be_true
 
-  let assert Ok(_) = writer.release_lock(w)
+  writer.release_lock(w)
   Nil
 }
 
@@ -295,7 +295,7 @@ pub fn reader_release_lock_test() {
   let assert Ok(r) = readable_stream.get_reader(stream)
   readable_stream.is_locked(stream) |> should.be_true
 
-  let assert Ok(_) = reader.release_lock(r)
+  reader.release_lock(r)
   readable_stream.is_locked(stream) |> should.be_false
 }
 
@@ -306,7 +306,7 @@ pub fn writer_release_lock_test() {
   let assert Ok(w) = writable_stream.get_writer(stream)
   writable_stream.is_locked(stream) |> should.be_true
 
-  let assert Ok(_) = writer.release_lock(w)
+  writer.release_lock(w)
   writable_stream.is_locked(stream) |> should.be_false
 }
 
@@ -380,7 +380,7 @@ pub fn writer_desired_size_test() {
   let assert Ok(w) = writable_stream.get_writer(stream)
   let assert Ok(size) = writer.desired_size(w)
   should.be_true(size >= 0)
-  let assert Ok(_) = writer.release_lock(w)
+  writer.release_lock(w)
   Nil
 }
 
@@ -391,7 +391,7 @@ pub fn writer_ready_test() {
   let assert Ok(w) = writable_stream.get_writer(stream)
 
   use _ <- promise.await(writer.ready(w))
-  let assert Ok(_) = writer.release_lock(w)
+  writer.release_lock(w)
   promise.resolve(Nil)
 }
 

@@ -39,8 +39,8 @@ pub fn read(
   reader: Reader(a),
 ) -> Promise(Result(ReadResult(a), StreamLifecycleError))
 
-/// Releases the reader's lock on the stream. Returns `Released` if the
-/// reader is no longer the active reader.
+/// Releases the reader's lock on the stream. Pending reads reject
+/// asynchronously after release.
 ///
 @external(javascript, "./reader.ffi.mjs", "release_lock")
-pub fn release_lock(reader: Reader(a)) -> Result(Nil, StreamLifecycleError)
+pub fn release_lock(reader: Reader(a)) -> Nil
