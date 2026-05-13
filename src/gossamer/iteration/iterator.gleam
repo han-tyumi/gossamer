@@ -44,7 +44,8 @@ pub fn from_yielder(yielder: Yielder(a)) -> Iterator(a, Nil, Nil)
 pub fn to_yielder(iterator: Iterator(a, return, next)) -> Yielder(a)
 
 /// Adds a `return` handler to the iterator, called when the consumer
-/// ends iteration early. Used to release resources.
+/// ends iteration early — e.g., by breaking out of a `for` loop or
+/// returning from a generator.
 ///
 @external(javascript, "./iterator.ffi.mjs", "with_return")
 pub fn with_return(

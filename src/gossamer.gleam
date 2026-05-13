@@ -6,7 +6,7 @@
 import gleam/time/duration.{type Duration}
 
 /// Creates a deep clone of `value` using the structured clone algorithm.
-/// Returns an error carrying the underlying JavaScript error
+/// Returns an error carrying the JavaScript error
 /// description if `value` contains a function, symbol, `DOM` node, or
 /// other non-cloneable component.
 ///

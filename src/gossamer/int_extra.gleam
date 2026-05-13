@@ -2,9 +2,9 @@
 //// 32-bit integer operations, and locale-aware string formatting that
 //// `gleam/int` doesn't cover.
 
-/// The maximum safe integer in JavaScript, `2^53 - 1`. Integers within
-/// `min_safe_integer` and `max_safe_integer` round-trip without loss
-/// across the FFI boundary.
+/// The maximum safe integer in JavaScript, `2^53 - 1`. Gleam `Int`
+/// values between `min_safe_integer` and `max_safe_integer` are
+/// represented exactly; values outside this range lose precision.
 ///
 pub const max_safe_integer = 9_007_199_254_740_991
 

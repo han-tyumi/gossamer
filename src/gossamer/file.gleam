@@ -25,14 +25,13 @@ pub fn from_strings(parts: List(String), named name: String) -> File
 @external(javascript, "./file.ffi.mjs", "from_blob")
 pub fn from_blob(blob: Blob, named name: String) -> File
 
-/// Sets the MIME type. Returns a new `File` with the given type.
+/// Sets the MIME type.
 ///
 pub fn set_mime_type(file: File, value: String) -> File {
   File(..file, mime_type: value)
 }
 
-/// Sets the last-modified timestamp. Returns a new `File` with the
-/// given timestamp.
+/// Sets the last-modified timestamp.
 ///
 pub fn set_last_modified(file: File, value: Timestamp) -> File {
   File(..file, last_modified: value)

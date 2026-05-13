@@ -3,7 +3,7 @@
 //// formatting that `gleam/float` doesn't cover.
 
 /// The difference between `1.0` and the smallest representable
-/// floating-point value greater than `1.0`. Roughly `2.22e-16`.
+/// floating-point value greater than `1.0`.
 ///
 pub const epsilon = 2.220446049250313e-16
 
