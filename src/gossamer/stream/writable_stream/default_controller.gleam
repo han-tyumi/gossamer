@@ -9,6 +9,9 @@ import gossamer/abort_signal.{type AbortSignal}
 @external(javascript, "./default_controller.type.ts", "DefaultController$")
 pub type DefaultController
 
+/// An `AbortSignal` that fires when the sink should abort its work
+/// (e.g., the consumer called `writer.abort` or `writable_stream.abort`).
+///
 @external(javascript, "./default_controller.ffi.mjs", "signal")
 pub fn signal(controller: DefaultController) -> AbortSignal
 
