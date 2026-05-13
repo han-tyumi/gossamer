@@ -6,7 +6,6 @@
 //// when handing off to JavaScript.
 
 import gleam/dict.{type Dict}
-import gleam/yielder.{type Yielder}
 
 /// A JavaScript `Map`, holding key-value pairs and preserving insertion
 /// order. Supports any key type (unlike plain objects).
@@ -46,40 +45,5 @@ pub fn from_dict(dict: Dict(key, value)) -> Map(key, value)
 /// Converts the `Map` to a `Dict`. Iteration order is preserved as
 /// `Dict` insertion order.
 ///
-pub fn to_dict(map: Map(key, value)) -> Dict(key, value) {
-  yielder.fold(entries(map), dict.new(), fn(acc, entry) {
-    let #(key, value) = entry
-    dict.insert(acc, key, value)
-  })
-}
-
-/// The number of entries in the `Map`.
-///
-@external(javascript, "./map.ffi.mjs", "size")
-pub fn size(map: Map(key, value)) -> Int
-
-/// Returns the value associated with the given key, or `Error(Nil)` if
-/// the key is absent.
-///
-@external(javascript, "./map.ffi.mjs", "get")
-pub fn get(from map: Map(key, value), key key: key) -> Result(value, Nil)
-
-/// Returns whether the `Map` contains the given key.
-///
-@external(javascript, "./map.ffi.mjs", "has")
-pub fn has(in map: Map(key, value), key key: key) -> Bool
-
-/// Returns the keys of the `Map` in insertion order.
-///
-@external(javascript, "./map.ffi.mjs", "keys")
-pub fn keys(map: Map(key, value)) -> Yielder(key)
-
-/// Returns the values of the `Map` in insertion order.
-///
-@external(javascript, "./map.ffi.mjs", "values")
-pub fn values(map: Map(key, value)) -> Yielder(value)
-
-/// Returns the `#(key, value)` pairs of the `Map` in insertion order.
-///
-@external(javascript, "./map.ffi.mjs", "entries")
-pub fn entries(map: Map(key, value)) -> Yielder(#(key, value))
+@external(javascript, "./map.ffi.mjs", "to_dict")
+pub fn to_dict(map: Map(key, value)) -> Dict(key, value)
