@@ -1,6 +1,7 @@
-//// A JavaScript `BigInt` binding for working with arbitrary-precision
-//// integers — values outside the safe-integer range of Gleam `Int`
-//// (±2^53−1).
+//// Arbitrary-precision integer arithmetic for values outside Gleam
+//// `Int`'s safe-integer range. Construct via [`from_int`](#from_int)
+//// for safe-range starting values or [`from_string`](#from_string)
+//// when parsing larger literals from text.
 
 import gleam/order.{type Order}
 

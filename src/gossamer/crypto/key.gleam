@@ -1,6 +1,6 @@
-//// A `CryptoKey` is a handle to a cryptographic key managed by the
-//// runtime. Use [`gossamer/crypto/subtle`](./subtle.html) to
-//// generate, import, derive, or unwrap one.
+//// Read-only accessors for a `CryptoKey` — its algorithm, kind,
+//// usages, and extractability. Generate, import, derive, or unwrap
+//// keys via [`gossamer/crypto/subtle`](./subtle.html).
 
 import gossamer/crypto.{type KeyAlgorithm, type KeyKind, type KeyUsage}
 

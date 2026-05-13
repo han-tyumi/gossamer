@@ -1,6 +1,7 @@
-//// A JavaScript `Blob` is an immutable container of binary data with
-//// an associated MIME type. Use to assemble bytes for upload, slice
-//// large payloads, or stream data through transforms.
+//// Immutable binary containers with an associated MIME type — used to
+//// assemble payloads for upload, slice large data, or stream bytes
+//// through transforms. Construct with [`from_bytes`](#from_bytes) or
+//// [`from_string`](#from_string).
 
 import gleam/javascript/promise.{type Promise}
 import gossamer/buffer/array_buffer.{type ArrayBuffer}
