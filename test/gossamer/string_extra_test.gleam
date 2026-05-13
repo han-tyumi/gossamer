@@ -2,24 +2,6 @@ import gleam/order
 import gleeunit/should
 import gossamer/string_extra
 
-pub fn from_code_point_test() {
-  string_extra.from_code_point(0x1F600) |> should.equal(Ok("😀"))
-}
-
-pub fn from_code_point_invalid_test() {
-  string_extra.from_code_point(0x110_000) |> should.be_error
-}
-
-pub fn from_code_points_test() {
-  string_extra.from_code_points([72, 105, 0x1F600])
-  |> should.equal(Ok("Hi😀"))
-}
-
-pub fn from_code_points_invalid_test() {
-  string_extra.from_code_points([72, 0x110_000])
-  |> should.be_error
-}
-
 pub fn normalize_test() {
   let nfd = "e\u{0301}"
   string_extra.normalize(nfd) |> should.equal("é")

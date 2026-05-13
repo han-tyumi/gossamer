@@ -1,6 +1,9 @@
 //// Extras for `gleam/string` — Unicode normalization, locale-aware
-//// comparison and case conversion, code-point construction, and
-//// UTF-16 well-formedness checks.
+//// comparison and case conversion, and UTF-16 well-formedness checks.
+////
+//// For constructing a string from Unicode code points, use
+//// `gleam/string.utf_codepoint` together with
+//// `gleam/string.from_utf_codepoints`.
 
 import gleam/order.{type Order}
 
@@ -26,19 +29,6 @@ pub type NormalizationForm {
   /// compatibility variants. Lossy in the same way as `Nfkc`.
   Nfkd
 }
-
-/// Constructs a string from a Unicode code point. Returns an error
-/// carrying `code` if it's outside the valid range (`0`–`1_114_111`).
-///
-@external(javascript, "./string_extra.ffi.mjs", "from_code_point")
-pub fn from_code_point(code: Int) -> Result(String, Int)
-
-/// Constructs a string from a list of Unicode code points. Returns an
-/// error carrying the first invalid code if any element of `codes` is
-/// outside the valid range (`0`–`1_114_111`).
-///
-@external(javascript, "./string_extra.ffi.mjs", "from_code_points")
-pub fn from_code_points(codes: List(Int)) -> Result(String, Int)
 
 /// Returns the NFC-normalized form of `string`. NFC is the canonical
 /// choice for equivalence comparison.
