@@ -8,7 +8,11 @@
 /// Encodings other than UTF-8 use `Other(String)`.
 ///
 pub type Encoding {
+  /// UTF-8.
   Utf8
+
+  /// Any encoding name the binding doesn't recognize, passed through
+  /// verbatim to the runtime.
   Other(String)
 }
 
