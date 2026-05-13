@@ -1,3 +1,10 @@
+//// The read side of the abort-signal pair. Accept a signal in
+//// cancelable operations like `fetch_extra.send`, then observe its
+//// state via [`is_aborted`](#is_aborted) / [`reason`](#reason) or
+//// react to cancellation via [`on_abort`](#on_abort).
+//// `AbortSignal` values are produced by an `abort_controller` or by
+//// the constructors below.
+
 import gleam/dynamic.{type Dynamic}
 import gleam/time/duration.{type Duration}
 
@@ -9,9 +16,16 @@ import gleam/time/duration.{type Duration}
 @external(javascript, "./abort_signal.type.ts", "AbortSignal$")
 pub type AbortSignal
 
+/// Returns an `AbortSignal` that is already aborted with the given
+/// `reason`. Useful for short-circuiting operations that accept a
+/// signal without wiring up a full controller.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "abort")
 pub fn abort(reason: r) -> AbortSignal
 
+/// Returns an `AbortSignal` that becomes aborted as soon as any of
+/// `signals` does, with the same `reason` as the triggering signal.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "any")
 pub fn any(signals: List(AbortSignal)) -> AbortSignal
 
@@ -23,6 +37,8 @@ pub fn any(signals: List(AbortSignal)) -> AbortSignal
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
 pub fn timeout(duration: Duration) -> AbortSignal
 
+/// `True` once the signal has been aborted.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool
 
@@ -38,5 +54,8 @@ pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 @external(javascript, "./abort_signal.ffi.mjs", "throw_if_aborted")
 pub fn throw_if_aborted(signal: AbortSignal) -> Result(Nil, Dynamic)
 
+/// Registers `handler` to run when the signal aborts. If the signal is
+/// already aborted, `handler` is not called.
+///
 @external(javascript, "./abort_signal.ffi.mjs", "on_abort")
 pub fn on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil
