@@ -6,6 +6,8 @@ import gossamer/crypto.{
 import gossamer/crypto/jwk.{type JsonWebKey}
 import gossamer/crypto/key.{type CryptoKey}
 
+/// A public/private key pair produced by [`generate_key_pair`](#generate_key_pair).
+///
 pub type CryptoKeyPair {
   CryptoKeyPair(public_key: CryptoKey, private_key: CryptoKey)
 }
