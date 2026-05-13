@@ -5,7 +5,6 @@
 
 import gleam/javascript/promise.{type Promise}
 import gossamer/array_buffer.{type ArrayBuffer}
-import gossamer/fetch_error.{type FetchError}
 import gossamer/stream/readable_stream.{type ReadableStream}
 
 /// A file-like object of immutable, raw data. Can be read as text, bytes,
@@ -46,17 +45,17 @@ pub fn size(blob: Blob) -> Int
 @external(javascript, "./blob.ffi.mjs", "mime_type")
 pub fn mime_type(blob: Blob) -> String
 
-/// Reads the blob's contents as an `ArrayBuffer`. Returns
-/// `UnableToReadBody` if the blob's source can't be read.
+/// Reads the blob's contents as an `ArrayBuffer`. Returns an error if
+/// the blob's source can't be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "array_buffer")
-pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, FetchError))
+pub fn array_buffer(blob: Blob) -> Promise(Result(ArrayBuffer, Nil))
 
-/// Reads the blob's contents as a `BitArray`. Returns
-/// `UnableToReadBody` if the blob's source can't be read.
+/// Reads the blob's contents as a `BitArray`. Returns an error if the
+/// blob's source can't be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "bytes")
-pub fn bytes(blob: Blob) -> Promise(Result(BitArray, FetchError))
+pub fn bytes(blob: Blob) -> Promise(Result(BitArray, Nil))
 
 /// Returns a `Blob` containing the bytes between `start` (inclusive)
 /// and `end` (exclusive). Negative offsets count from the end. Pass `""`
@@ -77,11 +76,11 @@ pub fn slice(
 @external(javascript, "./blob.ffi.mjs", "stream")
 pub fn stream(blob: Blob) -> ReadableStream(BitArray)
 
-/// Reads the blob's contents as a UTF-8 string. Returns
-/// `UnableToReadBody` if the blob's source can't be read.
+/// Reads the blob's contents as a UTF-8 string. Returns an error if the
+/// blob's source can't be read.
 ///
 @external(javascript, "./blob.ffi.mjs", "text")
-pub fn text(blob: Blob) -> Promise(Result(String, FetchError))
+pub fn text(blob: Blob) -> Promise(Result(String, Nil))
 
 /// Creates a string containing a URL representing the blob. The URL
 /// lifetime is tied to the document or worker that created it; release

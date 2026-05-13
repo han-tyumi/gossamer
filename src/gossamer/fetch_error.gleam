@@ -1,16 +1,13 @@
-//// The shared error type for [`fetch_extra`](./fetch_extra.html) and
-//// the body-reading methods on [`blob`](./blob.html) and
-//// [`file`](./file.html). Supersedes
+//// The error type for [`fetch_extra`](./fetch_extra.html). Supersedes
 //// [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
 //// to add an `Aborted` variant for bindings that accept an
 //// `AbortSignal`.
 
 import gleam/dynamic.{type Dynamic}
 
-/// Errors raised by `fetch_extra` and the `blob`/`file` body-reading
-/// bindings. Mirrors `gleam_fetch.FetchError`'s NetworkError /
-/// UnableToReadBody / InvalidJsonBody variants and adds `Aborted` for
-/// bindings that accept an `AbortSignal`.
+/// Errors raised by `fetch_extra`. Mirrors `gleam_fetch.FetchError`'s
+/// NetworkError / UnableToReadBody / InvalidJsonBody variants and adds
+/// `Aborted` for bindings that accept an `AbortSignal`.
 ///
 pub type FetchError {
   /// A network error occurred (lost connection, server timeout, DNS
