@@ -59,8 +59,7 @@ file uploads.
 | URLPattern | ✅     | `gossamer/url_pattern` |
 
 `gossamer/url` is slimmed to `parse` + `is_valid` (WHATWG-strict; returns
-`gleam/uri.Uri`). `URLSearchParams` is delegated to `gleam/uri.parse_query`
-(returns `List(#(String, String))`).
+`gleam/uri.Uri`). `URLSearchParams` is delegated to `gleam/uri.parse_query`.
 
 ### Streams
 
