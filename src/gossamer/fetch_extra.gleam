@@ -31,8 +31,7 @@
 //// fetch_extra.send(request, with: opts)
 //// ```
 
-import gleam/dynamic.{type Dynamic}
-import gleam/fetch.{type FetchBody}
+import gleam/fetch.{type FetchBody, type FetchError}
 import gleam/fetch/form_data.{type FormData}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
@@ -40,32 +39,6 @@ import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/stream/readable_stream.{type ReadableStream}
-
-/// Errors raised by `fetch_extra`. Supersedes
-/// [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
-/// by mirroring its `NetworkError` / `UnableToReadBody` /
-/// `InvalidJsonBody` variants and adding `Aborted` for bindings that
-/// accept an `AbortSignal`.
-///
-pub type FetchError {
-  /// A network error occurred (lost connection, server timeout, DNS
-  /// failure, etc.). The `message` payload carries the underlying
-  /// runtime detail.
-  NetworkError(message: String)
-
-  /// The body has already been consumed and can't be re-read. Body
-  /// streams are single-pass per spec.
-  UnableToReadBody
-
-  /// The body was expected to be valid JSON but parsing failed.
-  InvalidJsonBody
-
-  /// The operation was aborted via an `AbortSignal`. The `reason`
-  /// payload carries whatever value was passed to `abort(reason)` — or
-  /// an `AbortError` `DOMException` if `abort()` was called with no
-  /// argument.
-  Aborted(reason: Dynamic)
-}
 
 /// The classification of a `Response`. Reflects how the response was
 /// obtained and what content the consumer can access (a `ResponseBasic`
@@ -359,10 +332,12 @@ pub fn is_response_body_used(response: Response(FetchBody)) -> Bool
 pub fn response_type(response: Response(FetchBody)) -> ResponseType
 
 /// Sends a `Request(String)` with the given options. Returns
-/// `Error(NetworkError(_))` if the network request fails, or
-/// `Error(Aborted(_))` if the options carry an `AbortSignal` that
-/// fires before the response arrives. A non-`2xx` status is still a
-/// successful send.
+/// `Error(fetch.NetworkError(_))` on network failure. When an
+/// `AbortSignal` on the options aborts the request, the failure
+/// surfaces as `NetworkError(_)`; observe the signal via
+/// [`abort_signal.is_aborted`](./abort_signal.html#is_aborted) and
+/// [`abort_signal.reason`](./abort_signal.html#reason) for typed
+/// inspection. A non-`2xx` status is still a successful send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send")
 pub fn send(
@@ -370,11 +345,8 @@ pub fn send(
   with options: FetchOptions,
 ) -> Promise(Result(Response(FetchBody), FetchError))
 
-/// Sends a `Request(BitArray)` with the given options. Returns
-/// `Error(NetworkError(_))` if the network request fails, or
-/// `Error(Aborted(_))` if the options carry an `AbortSignal` that
-/// fires before the response arrives. A non-`2xx` status is still a
-/// successful send.
+/// Sends a `Request(BitArray)` with the given options. See
+/// [`send`](#send) for error semantics.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_bits")
 pub fn send_bits(
@@ -383,10 +355,8 @@ pub fn send_bits(
 ) -> Promise(Result(Response(FetchBody), FetchError))
 
 /// Sends a `Request(FormData)` with the given options. The body is
-/// encoded as `multipart/form-data`. Returns `Error(NetworkError(_))`
-/// if the network request fails, or `Error(Aborted(_))` if the options
-/// carry an `AbortSignal` that fires before the response arrives. A
-/// non-`2xx` status is still a successful send.
+/// encoded as `multipart/form-data`. See [`send`](#send) for error
+/// semantics.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_form_data")
 pub fn send_form_data(
@@ -397,11 +367,8 @@ pub fn send_form_data(
 /// Sends a `Request(ReadableStream(BitArray))` with the given options.
 /// The body is streamed as the request is sent (the Fetch spec requires
 /// `duplex: "half"`, which gossamer sets automatically). Returns
-/// `Error(UnableToReadBody)` if the body stream is already locked to a
-/// reader, `Error(NetworkError(_))` if the network request fails, or
-/// `Error(Aborted(_))` if the options carry an `AbortSignal` that fires
-/// before the response arrives. A non-`2xx` status is still a successful
-/// send.
+/// `Error(fetch.UnableToReadBody)` if the body stream is already locked
+/// to a reader. See [`send`](#send) for the remaining error semantics.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send_stream")
 pub fn send_stream(
@@ -411,8 +378,8 @@ pub fn send_stream(
 
 /// Clones a `Response`. The cloned response has its own independent body
 /// stream, so the original and clone can each be consumed once. Returns
-/// `Error(UnableToReadBody)` if the body has already been read or is
-/// locked to a reader.
+/// `Error(fetch.UnableToReadBody)` if the body has already been read or
+/// is locked to a reader.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "response_clone")
 pub fn response_clone(

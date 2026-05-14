@@ -6,6 +6,8 @@ import * as $response from "$/gleam_http/gleam/http/response.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   bitarray_request_to_fetch_request,
+  FetchError$NetworkError,
+  FetchError$UnableToReadBody,
   form_data_to_fetch_request,
   from_fetch_response,
   to_fetch_request,
@@ -184,10 +186,7 @@ async function send_internal(jsRequest: Request, init: RequestInit) {
     const jsResponse = await globalThis.fetch(jsRequest, init);
     return Result$Ok(from_fetch_response(jsResponse));
   } catch (error) {
-    if (init.signal?.aborted) {
-      return Result$Error($fetchExtra.FetchError$Aborted(init.signal.reason));
-    }
-    return Result$Error($fetchExtra.FetchError$NetworkError(String(error)));
+    return Result$Error(FetchError$NetworkError(String(error)));
   }
 }
 
@@ -221,7 +220,7 @@ export const send_stream: typeof $fetchExtra.send_stream = (
     const body = $request.Request$Request$body(request);
     if (body.locked) {
       return Promise.resolve(
-        Result$Error($fetchExtra.FetchError$UnableToReadBody()),
+        Result$Error(FetchError$UnableToReadBody()),
       );
     }
     init.body = fromBitArrayReadable(body);
@@ -233,7 +232,7 @@ export const send_stream: typeof $fetchExtra.send_stream = (
 export const response_clone: typeof $fetchExtra.response_clone = (response) => {
   const jsResponse = jsResponseOf(response);
   if (jsResponse.bodyUsed || jsResponse.body?.locked) {
-    return Result$Error($fetchExtra.FetchError$UnableToReadBody());
+    return Result$Error(FetchError$UnableToReadBody());
   }
   return Result$Ok(from_fetch_response(jsResponse.clone()));
 };

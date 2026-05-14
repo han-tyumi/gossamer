@@ -6,7 +6,7 @@ import gleam/http/request
 import gleam/http/response.{type Response}
 import gleam/javascript/promise.{type Promise}
 import gleeunit/should
-import gossamer/abort_signal
+import gossamer/abort_signal.{type AbortSignal}
 import gossamer/fetch_extra
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
@@ -45,7 +45,14 @@ pub fn is_response_ok_polymorphic_test() {
   fetch_extra.is_response_ok(with_list) |> should.be_false
 }
 
-pub fn send_aborted_signal_yields_aborted_test() {
+fn assert_signal_aborted_with_reason(signal: AbortSignal, expected: String) {
+  abort_signal.is_aborted(signal) |> should.be_true
+  let assert Ok(reason) = abort_signal.reason(signal)
+  let assert Ok(value) = decode.run(reason, decode.string)
+  should.equal(value, expected)
+}
+
+pub fn send_with_aborted_signal_test() {
   let req =
     request.new()
     |> request.set_method(http.Get)
@@ -56,13 +63,12 @@ pub fn send_aborted_signal_yields_aborted_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send(req, with: opts))
-  let assert Error(fetch_extra.Aborted(reason)) = result
-  let assert Ok(value) = decode.run(reason, decode.string)
-  should.equal(value, "pre-aborted")
+  should.be_error(result)
+  assert_signal_aborted_with_reason(signal, "pre-aborted")
   promise.resolve(Nil)
 }
 
-pub fn send_bits_aborted_signal_yields_aborted_test() {
+pub fn send_bits_with_aborted_signal_test() {
   let req =
     request.new()
     |> request.set_method(http.Post)
@@ -74,11 +80,12 @@ pub fn send_bits_aborted_signal_yields_aborted_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_bits(req, with: opts))
-  let assert Error(fetch_extra.Aborted(_)) = result
+  should.be_error(result)
+  assert_signal_aborted_with_reason(signal, "pre-aborted")
   promise.resolve(Nil)
 }
 
-pub fn send_form_data_aborted_signal_yields_aborted_test() {
+pub fn send_form_data_with_aborted_signal_test() {
   let body = form_data.new() |> form_data.append("key", "value")
   let req =
     request.new()
@@ -91,11 +98,12 @@ pub fn send_form_data_aborted_signal_yields_aborted_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_form_data(req, with: opts))
-  let assert Error(fetch_extra.Aborted(_)) = result
+  should.be_error(result)
+  assert_signal_aborted_with_reason(signal, "pre-aborted")
   promise.resolve(Nil)
 }
 
-pub fn send_stream_aborted_signal_yields_aborted_test() {
+pub fn send_stream_with_aborted_signal_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
       let assert Ok(_) = default_controller.enqueue(controller, <<"payload">>)
@@ -113,7 +121,8 @@ pub fn send_stream_aborted_signal_yields_aborted_test() {
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_stream(req, with: opts))
-  let assert Error(fetch_extra.Aborted(_)) = result
+  should.be_error(result)
+  assert_signal_aborted_with_reason(signal, "pre-aborted")
   promise.resolve(Nil)
 }
 
@@ -136,7 +145,7 @@ pub fn send_stream_locked_body_yields_unable_to_read_body_test() {
     req,
     with: fetch_extra.options(),
   ))
-  let assert Error(fetch_extra.UnableToReadBody) = result
+  let assert Error(fetch.UnableToReadBody) = result
   promise.resolve(Nil)
 }
 
