@@ -38,3 +38,13 @@ pub fn readable(stream: CompressionStream) -> ReadableStream(BitArray)
 ///
 @external(javascript, "./compression_stream.ffi.mjs", "writable")
 pub fn writable(stream: CompressionStream) -> WritableStream(BitArray)
+
+/// Returns the readable and writable sides of the stream as a tuple.
+/// Convenient for passing directly to
+/// [`readable_stream.pipe_through`](../stream/readable_stream.html#pipe_through).
+///
+pub fn read_write_pair(
+  stream: CompressionStream,
+) -> #(ReadableStream(BitArray), WritableStream(BitArray)) {
+  #(stream |> readable, stream |> writable)
+}

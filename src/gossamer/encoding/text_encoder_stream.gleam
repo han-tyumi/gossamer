@@ -27,3 +27,13 @@ pub fn readable(encoder: TextEncoderStream) -> ReadableStream(BitArray)
 ///
 @external(javascript, "./text_encoder_stream.ffi.mjs", "writable")
 pub fn writable(encoder: TextEncoderStream) -> WritableStream(String)
+
+/// Returns the readable and writable sides of the encoder as a tuple.
+/// Convenient for passing directly to
+/// [`readable_stream.pipe_through`](../stream/readable_stream.html#pipe_through).
+///
+pub fn read_write_pair(
+  encoder: TextEncoderStream,
+) -> #(ReadableStream(BitArray), WritableStream(String)) {
+  #(encoder |> readable, encoder |> writable)
+}
