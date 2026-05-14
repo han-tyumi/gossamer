@@ -64,13 +64,13 @@ export const to_list: typeof $asyncIterator.to_list = <T>(
   })());
 };
 
-export const for_await: typeof $asyncIterator.for_await = <
+export const each: typeof $asyncIterator.each = <
   T,
   TReturn,
   TNext,
 >(
   iterator: AsyncIterator<T, TReturn, TNext>,
-  fun: Parameters<typeof $asyncIterator.for_await<T>>[1],
+  fun: Parameters<typeof $asyncIterator.each<T>>[1],
 ) => {
   return toCallbackResultPromise((async () => {
     while (true) {

@@ -45,10 +45,10 @@ pub fn to_list(
 
 /// Consumes the iterator, calling `fun` on each yielded value. Returns
 /// the thrown value or rejection reason if the iterator or `fun` throws
-/// or rejects.
+/// or rejects. Equivalent to JavaScript's `for await...of` loop.
 ///
-@external(javascript, "./async_iterator.ffi.mjs", "for_await")
-pub fn for_await(
+@external(javascript, "./async_iterator.ffi.mjs", "each")
+pub fn each(
   in iterator: AsyncIterator(a, return, next),
   run fun: fn(a) -> any,
 ) -> Promise(Result(Nil, Dynamic))

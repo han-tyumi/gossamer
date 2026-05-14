@@ -14,8 +14,8 @@ pub fn new_yielder_round_trip_test() {
 pub fn for_test() {
   let collected = [3, 2, 1]
   let iter = yielder.from_list([1, 2, 3]) |> iterator.from_yielder
-  iterator.for(iter, fn(_value) { Nil })
-  // Just confirm `for` consumes without panicking.
+  iterator.each(iter, fn(_value) { Nil })
+  // Just confirm `each` consumes without panicking.
   collected |> should.equal([3, 2, 1])
 }
 

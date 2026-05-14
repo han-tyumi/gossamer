@@ -10,11 +10,11 @@ pub fn new_to_list_test() {
   promise.resolve(Nil)
 }
 
-pub fn for_await_test() {
+pub fn each_test() {
   let iter = async_iterator.from_list([1, 2, 3])
 
   use result <- promise.await(
-    async_iterator.for_await(iter, fn(_value) { promise.resolve(Nil) }),
+    async_iterator.each(iter, fn(_value) { promise.resolve(Nil) }),
   )
   should.equal(result, Ok(Nil))
   promise.resolve(Nil)

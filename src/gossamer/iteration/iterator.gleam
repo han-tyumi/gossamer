@@ -42,6 +42,10 @@ pub fn from_yielder(yielder: Yielder(a)) -> Iterator(a, Nil, Nil)
 pub fn to_yielder(iterator: Iterator(a, return, next)) -> Yielder(a)
 
 /// Consumes the iterator, calling `fun` on each yielded value.
+/// Equivalent to JavaScript's `for...of` loop.
 ///
-@external(javascript, "./iterator.ffi.mjs", "for_")
-pub fn for(in iterator: Iterator(a, return, next), run fun: fn(a) -> any) -> Nil
+@external(javascript, "./iterator.ffi.mjs", "each")
+pub fn each(
+  in iterator: Iterator(a, return, next),
+  run fun: fn(a) -> any,
+) -> Nil
