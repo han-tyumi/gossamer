@@ -40,7 +40,7 @@ pub fn from_string(content: String, content_type content_type: String) -> Blob
 pub fn size(blob: Blob) -> Int
 
 /// The MIME type associated with the blob, or `""` if no type was set
-/// at construction.
+/// at construction. Equivalent to JavaScript's `Blob.type`.
 ///
 @external(javascript, "./blob.ffi.mjs", "mime_type")
 pub fn mime_type(blob: Blob) -> String
@@ -84,13 +84,16 @@ pub fn text(blob: Blob) -> Promise(Result(String, Nil))
 
 /// Creates a string containing a URL representing the blob. The URL
 /// lifetime is tied to the document or worker that created it; release
-/// it with `revoke_object_url`.
+/// it with [`revoke_object_url`](#revoke_object_url). Equivalent to
+/// JavaScript's `URL.createObjectURL`.
 ///
 @external(javascript, "./blob.ffi.mjs", "to_object_url")
 pub fn to_object_url(blob: Blob) -> String
 
-/// Revokes an object URL previously created with `to_object_url`. Call
-/// this to release the reference once the URL is no longer needed.
+/// Revokes an object URL previously created with
+/// [`to_object_url`](#to_object_url). Call this to release the
+/// reference once the URL is no longer needed. Equivalent to
+/// JavaScript's `URL.revokeObjectURL`.
 ///
 @external(javascript, "./blob.ffi.mjs", "revoke_object_url")
 pub fn revoke_object_url(url: String) -> Nil

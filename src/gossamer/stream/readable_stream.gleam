@@ -183,14 +183,16 @@ pub fn from_pull(
 ) -> ReadableStream(a)
 
 /// Creates a `ReadableStream` from a `Yielder`. Values are pulled from
-/// the yielder as the stream is read. Panics on Bun — see
-/// https://github.com/oven-sh/bun/issues/3700.
+/// the yielder as the stream is read. Equivalent to JavaScript's
+/// `ReadableStream.from` with a synchronous iterable. Panics on Bun —
+/// see https://github.com/oven-sh/bun/issues/3700.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_yielder")
 pub fn from_yielder(yielder: Yielder(a)) -> ReadableStream(a)
 
-/// Creates a `ReadableStream` from an `AsyncIterator`. Panics on Bun —
-/// see https://github.com/oven-sh/bun/issues/3700.
+/// Creates a `ReadableStream` from an `AsyncIterator`. Equivalent to
+/// JavaScript's `ReadableStream.from` with an async iterable. Panics
+/// on Bun — see https://github.com/oven-sh/bun/issues/3700.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "from_async_iterator")
 pub fn from_async_iterator(
@@ -252,7 +254,9 @@ pub fn tee(
 ) -> Result(#(ReadableStream(a), ReadableStream(a)), StreamLifecycleError)
 
 /// Returns an `AsyncIterator` that reads from the stream. The iterator
-/// locks the stream until reading completes.
+/// locks the stream until reading completes. Equivalent to
+/// JavaScript's `ReadableStream.values` (or
+/// `stream[Symbol.asyncIterator]()`).
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "async_iterator")
 pub fn async_iterator(stream: ReadableStream(a)) -> AsyncIterator(a, Nil, Nil)

@@ -28,6 +28,7 @@ pub fn to_utc_string(timestamp: Timestamp) -> String
 /// Returns the day of the week for the given offset. Pass
 /// `gleam/time/calendar.utc_offset` for UTC or
 /// `gleam/time/calendar.local_offset()` for the host's local timezone.
+/// Equivalent to JavaScript's `Date.prototype.getDay`.
 ///
 @external(javascript, "./time_extra.ffi.mjs", "day_of_week")
 pub fn day_of_week(timestamp: Timestamp, offset: Duration) -> Weekday

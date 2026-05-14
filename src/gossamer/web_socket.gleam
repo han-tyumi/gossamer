@@ -133,7 +133,9 @@ pub fn with_binary_type(builder: Builder, value: BinaryType) -> Builder {
   Builder(..builder, binary_type: Some(value))
 }
 
-/// Registers a handler invoked when the connection opens.
+/// Registers a handler invoked when the connection opens. Equivalent
+/// to JavaScript's `WebSocket.onopen` (or
+/// `addEventListener("open", ...)`).
 ///
 pub fn with_on_open(builder: Builder, run handler: fn() -> a) -> Builder {
   Builder(
@@ -148,7 +150,8 @@ pub fn with_on_open(builder: Builder, run handler: fn() -> a) -> Builder {
 /// Registers a handler invoked for each incoming message. The handler
 /// receives the message payload directly: text messages arrive as
 /// `String`, binary messages as `BitArray` or `Blob` depending on the
-/// configured `binary_type`.
+/// configured `binary_type`. Equivalent to JavaScript's
+/// `WebSocket.onmessage` (or `addEventListener("message", ...)`).
 ///
 pub fn with_on_message(
   builder: Builder,
@@ -163,7 +166,9 @@ pub fn with_on_message(
   )
 }
 
-/// Registers a handler invoked when the connection encounters an error.
+/// Registers a handler invoked when the connection encounters an
+/// error. Equivalent to JavaScript's `WebSocket.onerror` (or
+/// `addEventListener("error", ...)`).
 ///
 pub fn with_on_error(builder: Builder, run handler: fn() -> a) -> Builder {
   Builder(
@@ -175,7 +180,9 @@ pub fn with_on_error(builder: Builder, run handler: fn() -> a) -> Builder {
   )
 }
 
-/// Registers a handler invoked when the connection closes.
+/// Registers a handler invoked when the connection closes. Equivalent
+/// to JavaScript's `WebSocket.onclose` (or
+/// `addEventListener("close", ...)`).
 ///
 pub fn with_on_close(
   builder: Builder,
@@ -279,7 +286,8 @@ pub fn close_with(
 
 /// Sends a `Blob` through the WebSocket. Returns `Error(NotOpen)` if the
 /// connection is still `Connecting`. Data sent after the connection is
-/// `Closing` or `Closed` is silently discarded per spec.
+/// `Closing` or `Closed` is silently discarded per spec. Equivalent to
+/// JavaScript's `WebSocket.send` with a `Blob` argument.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
 pub fn send_blob(
@@ -289,7 +297,8 @@ pub fn send_blob(
 
 /// Sends binary data through the WebSocket. Returns `Error(NotOpen)` if
 /// the connection is still `Connecting`. Data sent after the connection
-/// is `Closing` or `Closed` is silently discarded per spec.
+/// is `Closing` or `Closed` is silently discarded per spec. Equivalent
+/// to JavaScript's `WebSocket.send` with an `ArrayBuffer` argument.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_bytes")
 pub fn send_bytes(
@@ -299,7 +308,8 @@ pub fn send_bytes(
 
 /// Sends a string through the WebSocket. Returns `Error(NotOpen)` if the
 /// connection is still `Connecting`. Data sent after the connection is
-/// `Closing` or `Closed` is silently discarded per spec.
+/// `Closing` or `Closed` is silently discarded per spec. Equivalent to
+/// JavaScript's `WebSocket.send` with a `String` argument.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_string")
 pub fn send_string(

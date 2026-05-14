@@ -286,7 +286,8 @@ pub fn generate_key(
 /// Generates a new public/private key pair. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
 /// algorithm, or `Error(InvalidSyntax)` if `usages` is empty for an
-/// algorithm that requires it.
+/// algorithm that requires it. Equivalent to JavaScript's
+/// `SubtleCrypto.generateKey` with an asymmetric-key algorithm.
 ///
 @external(javascript, "./subtle.ffi.mjs", "generate_key_pair")
 pub fn generate_key_pair(
@@ -314,7 +315,8 @@ pub fn import_key(
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
 /// algorithm, `Error(DataMalformed)` if `data` is malformed, or
 /// `Error(InvalidSyntax)` if `usages` is empty for an algorithm that
-/// requires it.
+/// requires it. Equivalent to JavaScript's `SubtleCrypto.importKey`
+/// with format `"jwk"`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "import_key_jwk")
 pub fn import_key_jwk(
@@ -336,7 +338,8 @@ pub fn export_key(
 ) -> Promise(Result(BitArray, CryptoError))
 
 /// Exports `key` as a JSON Web Key. Returns `Error(KeyNotExtractable)`
-/// if `key.extractable` is `False`.
+/// if `key.extractable` is `False`. Equivalent to JavaScript's
+/// `SubtleCrypto.exportKey` with format `"jwk"`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "export_key_jwk")
 pub fn export_key_jwk(
@@ -383,7 +386,9 @@ pub fn wrap_key(
   algorithm algorithm: WrapAlgorithm,
 ) -> Promise(Result(BitArray, CryptoError))
 
-/// Like `wrap_key`, but exports `key` as a JSON Web Key before wrapping.
+/// Like [`wrap_key`](#wrap_key), but exports `key` as a JSON Web Key
+/// before wrapping. Equivalent to JavaScript's `SubtleCrypto.wrapKey`
+/// with format `"jwk"`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "wrap_key_jwk")
 pub fn wrap_key_jwk(
@@ -410,7 +415,9 @@ pub fn unwrap_key(
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))
 
-/// Like `unwrap_key`, but imports the decrypted key as a JSON Web Key.
+/// Like [`unwrap_key`](#unwrap_key), but imports the decrypted key as
+/// a JSON Web Key. Equivalent to JavaScript's `SubtleCrypto.unwrapKey`
+/// with format `"jwk"`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "unwrap_key_jwk")
 pub fn unwrap_key_jwk(
