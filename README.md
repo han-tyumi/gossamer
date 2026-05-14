@@ -7,20 +7,33 @@ Cross-runtime JavaScript API bindings for [Gleam](https://gleam.run/).
 
 gossamer covers Web Platform APIs
 ([WinterTC](https://min-common-api.proposal.wintertc.org/)) and ECMAScript
-built-ins, including native JS types that complement Gleam's standard library
-for interop. All APIs work across Deno, Node.js, Bun, and browsers.
+built-ins that don't have idiomatic Gleam wrappers yet. Bindings work across
+Deno, Node.js, Bun, and browsers without polyfills.
 
-APIs mirror their JavaScript counterparts in structure and naming, adapted to
-Gleam conventions — snake_case naming, pipeable signatures, `Result` for
-throwing/nullable APIs, and `Promise(Result(a, e))` for rejectable promises.
+## Reach for ecosystem packages first
 
-For higher-level Gleam-idiomatic abstractions, see
-[gleam_javascript](https://hexdocs.pm/gleam_javascript/),
-[gleam_fetch](https://hexdocs.pm/gleam_fetch/), and
-[gleam_json](https://hexdocs.pm/gleam_json/).
+gossamer is gap-fill. Where the Gleam ecosystem already covers a domain, use its
+canonical types and functions directly:
 
-See the [coverage doc](https://hexdocs.pm/gossamer/coverage.html) for the full
-list of implemented and planned APIs.
+| Domain                                     | Use this                                                      |
+| ------------------------------------------ | ------------------------------------------------------------- |
+| HTTP requests, responses, methods, headers | [`gleam_http`](https://hexdocs.pm/gleam_http/)                |
+| `fetch`                                    | [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/)              |
+| URLs (RFC 3986 parsing, building)          | [`gleam/uri`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html) |
+| Timestamps and durations                   | [`gleam_time`](https://hexdocs.pm/gleam_time/)                |
+| JSON                                       | [`gleam_json`](https://hexdocs.pm/gleam_json/)                |
+| `Promise`, `Array`, `Symbol`               | [`gleam_javascript`](https://hexdocs.pm/gleam_javascript/)    |
+| Iterators                                  | [`gleam_yielder`](https://hexdocs.pm/gleam_yielder/)          |
+| Regular expressions                        | [`gleam_regexp`](https://hexdocs.pm/gleam_regexp/)            |
+| Strong random bytes                        | [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/)            |
+
+gossamer fills the rest: `AbortSignal`, `Blob` / `File`, the Streams API,
+`SubtleCrypto`, `WebSocket`, `TextDecoder` / `TextDecoderStream` /
+`TextEncoderStream`, `CompressionStream` / `DecompressionStream`, `URLPattern`,
+`BigInt`, `Performance`, plus per-module extras (`fetch_extra`,
+`form_data_extra`, `time_extra`, `string_extra`, `regexp_extra`, `symbol_extra`,
+`int_extra`, `float_extra`). See the
+[coverage page](https://hexdocs.pm/gossamer/coverage.html) for the full list.
 
 ## Installation
 
@@ -30,25 +43,29 @@ gleam add gossamer
 
 ## Usage
 
+A fetch through `gossamer/fetch_extra` with cache and keepalive overrides —
+chain setters on the `FetchOptions` builder, then pass it to `send`. The result
+composes with `gleam/fetch`'s body readers:
+
 ```gleam
-import gossamer
-import gossamer/promise
-import gossamer/response
-import gossamer/url
+import gleam/fetch
+import gleam/http/request
+import gleam/javascript/promise
+import gossamer/fetch_extra
 
 pub fn main() {
-  let assert Ok(parsed) = url.new("https://example.com/path?q=gleam")
-  let hostname = url.hostname(parsed)  // "example.com"
-
-  use result <- promise.then(gossamer.fetch("https://example.com"))
-  let assert Ok(resp) = result
-  use result <- promise.then(response.text(resp))
-  let assert Ok(body) = result
-  promise.resolve(body)
+  let assert Ok(req) = request.to("https://example.com/api")
+  let opts =
+    fetch_extra.options()
+    |> fetch_extra.set_cache(fetch_extra.CacheNoStore)
+    |> fetch_extra.set_keepalive(True)
+  use resp <- promise.try_await(fetch_extra.send(req, with: opts))
+  use resp <- promise.try_await(fetch.read_text_body(resp))
+  promise.resolve(Ok(resp.body))
 }
 ```
 
-Further documentation can be found at <https://hexdocs.pm/gossamer>.
+Further documentation lives at <https://hexdocs.pm/gossamer>.
 
 ## Contributing
 
