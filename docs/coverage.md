@@ -44,9 +44,9 @@ Node.js, Bun, and browsers.
 the `FormData` type come from [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/).
 
 [`gossamer/fetch_extra`](./gossamer/fetch_extra.html) adds the Fetch-spec init
-dict as a `FetchOptions` builder. Its `FetchError` supersedes
-[`gleam_fetch`'s](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError) to
-add `Aborted` for `AbortSignal`-cancelled sends.
+dict as a `FetchOptions` builder. Its `FetchError` supersedes the
+[`FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError) in
+`gleam_fetch` to add `Aborted` for `AbortSignal`-cancelled sends.
 
 [`gossamer/form_data_extra`](./gossamer/form_data_extra.html) adds `append_file`
 / `set_file` for multipart file uploads.
@@ -131,9 +131,9 @@ types shared across the submodules — `KeyUsage`, `CryptoError`, `KeyKind`, and
 the algorithm types (`AesAlgorithm`, `RsaAlgorithm`, `EcAlgorithm`,
 `HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`).
 
-For simple primitives (hashing, HMAC, CSPRNG, secure compare, message signing),
-prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/) — it's sync and skips
-the key-import ceremony Web Crypto requires. Reach for
+For simple primitives (hashing, HMAC, random bytes, secure compare, message
+signing), prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/) — it's sync
+and skips the key-import ceremony Web Crypto requires. Reach for
 [`gossamer/crypto`](./gossamer/crypto.html) for the full Web Crypto API (key
 generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
