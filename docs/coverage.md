@@ -44,8 +44,9 @@ Node.js, Bun, and browsers.
 the `FormData` type come from [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/).
 
 [`gossamer/fetch_extra`](./gossamer/fetch_extra.html) adds the Fetch-spec init
-dict as a `FetchOptions` builder. Its `FetchError` supersedes `gleam_fetch`'s
-`FetchError` to add `Aborted` for `AbortSignal`-cancelled sends.
+dict as a `FetchOptions` builder. Its `FetchError` supersedes
+[`gleam_fetch`'s](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError) to
+add `Aborted` for `AbortSignal`-cancelled sends.
 
 [`gossamer/form_data_extra`](./gossamer/form_data_extra.html) adds `append_file`
 / `set_file` for multipart file uploads.
@@ -61,8 +62,10 @@ dict as a `FetchOptions` builder. Its `FetchError` supersedes `gleam_fetch`'s
 canonical Gleam URL type. [`gossamer/url`](./gossamer/url.html) wraps the JS
 `URL` constructor for WHATWG-strict parsing into a `gleam/uri.Uri` — useful when
 JS and Gleam disagree on whether a string parses. `URLSearchParams` parsing is
-delegated to `gleam/uri.parse_query`; manipulate the resulting
-`List(#(String, String))` with `gleam/list`.
+delegated to
+[`gleam/uri.parse_query`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html#parse_query);
+manipulate the resulting `List(#(String, String))` with
+[`gleam/list`](https://hexdocs.pm/gleam_stdlib/gleam/list.html).
 
 ### WebSocket
 
@@ -108,8 +111,10 @@ delegated to `gleam/uri.parse_query`; manipulate the resulting
 [`gossamer/encoding`](./gossamer/encoding.html) hosts the shared `Encoding` and
 `DecoderError`.
 
-`TextEncoder` is omitted in favor of `gleam/bit_array.from_string` /
-`<<s:utf8>>`. For default UTF-8 decoding, use `gleam/bit_array.to_string`;
+`TextEncoder` is omitted in favor of
+[`gleam/bit_array.from_string`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html#from_string)
+/ `<<s:utf8>>`. For default UTF-8 decoding, use
+[`gleam/bit_array.to_string`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html#to_string);
 `text_decoder.decode` requires an explicit encoding label.
 
 ### Crypto
@@ -121,10 +126,10 @@ delegated to `gleam/uri.parse_query`; manipulate the resulting
 | CryptoKey    | [`gossamer/crypto/key`](./gossamer/crypto/key.html)       |
 | JsonWebKey   | [`gossamer/crypto/jwk`](./gossamer/crypto/jwk.html)       |
 
-[`gossamer/crypto`](./gossamer/crypto.html) is both the `Crypto` interface
-(`random_uuid`) and the family parent for the submodules. It hosts the shared
-`KeyUsage`, `CryptoError`, `KeyKind`, and the algorithm types (`AesAlgorithm`,
-`RsaAlgorithm`, `EcAlgorithm`, `HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`).
+[`gossamer/crypto`](./gossamer/crypto.html) exposes `random_uuid` and hosts the
+types shared across the submodules — `KeyUsage`, `CryptoError`, `KeyKind`, and
+the algorithm types (`AesAlgorithm`, `RsaAlgorithm`, `EcAlgorithm`,
+`HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`).
 
 For simple primitives (hashing, HMAC, CSPRNG, secure compare, message signing),
 prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/) — it's sync and skips
@@ -203,16 +208,21 @@ Gleam type that mirrors a JS namespace.
 return them while the canonical Gleam type stays preferred. `ArrayBuffer` /
 `Uint8Array` bridge to `BitArray`; `Iterator` bridges to
 [`gleam_yielder.Yielder`](https://hexdocs.pm/gleam_yielder/); `Map` / `Set`
-bridge to `gleam/dict` / `gleam/set`. `AsyncIterator` has no canonical Gleam
-counterpart — consume it via the binding's own helpers.
+bridge to [`gleam/dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html) /
+[`gleam/set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html). `AsyncIterator`
+has no canonical Gleam counterpart — consume it via the binding's own helpers.
 [`gossamer/iteration`](./gossamer/iteration.html) hosts the shared
 `IteratorResult` type used by both `iterator` and `async_iterator`.
 
 **Extras** modules layer JS-specific capabilities on top of Gleam's canonical
-types (`gleam/string`, `gleam/int`, `gleam/float`, `gleam/time`, `gleam/regexp`,
-`gleam/javascript/symbol`), which already are the JS primitives under the hood.
-`Number` and `Math` split across `int_extra` and `float_extra` mirroring
-`gleam/int` / `gleam/float`.
+types ([`gleam/string`](https://hexdocs.pm/gleam_stdlib/gleam/string.html),
+[`gleam/int`](https://hexdocs.pm/gleam_stdlib/gleam/int.html),
+[`gleam/float`](https://hexdocs.pm/gleam_stdlib/gleam/float.html),
+[`gleam/time`](https://hexdocs.pm/gleam_time/),
+[`gleam/regexp`](https://hexdocs.pm/gleam_regexp/),
+[`gleam/javascript/symbol`](https://hexdocs.pm/gleam_javascript/gleam/javascript/symbol.html)),
+which already are the JS primitives under the hood. `Number` and `Math` split
+across `int_extra` and `float_extra` mirroring `gleam/int` / `gleam/float`.
 
 [`gossamer/json`](./gossamer/json.html) provides a transparent `Json` type for
 inspecting or pattern-matching JSON of unknown structure. For typed
