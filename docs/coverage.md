@@ -251,7 +251,17 @@ Use the upstream bindings directly — gossamer doesn't wrap them.
 | Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                  |
 | Worker, ServiceWorker, SharedWorker, MessageChannel, MessagePort   | APIs diverge across runtimes; revisit when WinterTC stabilizes a common shape |
 | Intl (`DateTimeFormat`, `NumberFormat`, `Collator`, etc.)          | Deferred; revisit with one builder module per constructor                     |
-| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Not yet bound; revisit when a concrete use case arrives                       |
-| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | Not yet bound; `Uint8Array` covers byte data via `BitArray` bridge            |
-| DataView                                                           | Not yet bound; bridge via `Uint8Array` for raw bytes                          |
+| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Revisit when a concrete use case arrives                                      |
+| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | `Uint8Array` covers byte data via the `BitArray` bridge                       |
+| DataView                                                           | Bridge via `Uint8Array` for raw bytes                                         |
 | ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases               |
+
+Several of these unbound APIs exist for JS-specific performance or memory
+characteristics — `WeakMap` / `WeakSet` / `WeakRef` / `FinalizationRegistry` let
+the GC collect referenced objects when nothing else holds them; typed arrays
+beyond `Uint8Array` expose typed views (`Float64Array`, `Int32Array`) for
+numeric data without boxing; `DataView` gives structured byte-level access for
+binary protocols; `ReadableStreamBYOBReader` reuses buffers to avoid copies.
+Gossamer prefers the simpler Gleam-canonical types (`BitArray`, `gleam/dict`,
+`gleam/set`) until concrete cross-runtime needs surface. Reach into FFI directly
+when you specifically need one of these characteristics.
