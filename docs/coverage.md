@@ -88,7 +88,7 @@ entirely to `gleam/uri.parse_query`.
 | DecompressionStream | [`gossamer/compression/decompression_stream`](./gossamer/compression/decompression_stream.html) |
 
 [`gossamer/compression`](./gossamer/compression.html) hosts the shared
-`CompressionFormat` enum.
+`CompressionFormat`.
 
 ### Text Encoding
 
@@ -98,8 +98,8 @@ entirely to `gleam/uri.parse_query`.
 | TextEncoderStream | [`gossamer/encoding/text_encoder_stream`](./gossamer/encoding/text_encoder_stream.html) |
 | TextDecoderStream | [`gossamer/encoding/text_decoder_stream`](./gossamer/encoding/text_decoder_stream.html) |
 
-[`gossamer/encoding`](./gossamer/encoding.html) hosts the shared `Encoding` enum
-and `DecoderError`.
+[`gossamer/encoding`](./gossamer/encoding.html) hosts the shared `Encoding` and
+`DecoderError`.
 
 `TextEncoder` is omitted in favor of `gleam/bit_array.from_string` /
 `<<s:utf8>>`. For default UTF-8 decoding, use `gleam/bit_array.to_string`;
@@ -116,7 +116,7 @@ and `DecoderError`.
 
 [`gossamer/crypto`](./gossamer/crypto.html) is both the `Crypto` interface
 (`random_uuid`) and the family parent for the submodules. It hosts the shared
-`KeyUsage`, `CryptoError`, `KeyKind`, and the algorithm enums (`AesAlgorithm`,
+`KeyUsage`, `CryptoError`, `KeyKind`, and the algorithm types (`AesAlgorithm`,
 `RsaAlgorithm`, `EcAlgorithm`, `HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`).
 
 For simple primitives (hashing, HMAC, CSPRNG, secure compare, message signing),
@@ -139,27 +139,20 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 | AbortController | [`gossamer/abort_controller`](./gossamer/abort_controller.html) |
 | AbortSignal     | [`gossamer/abort_signal`](./gossamer/abort_signal.html)         |
 
-### Timers & Scheduling
+### Globals
 
-| Name           | Module     |
-| -------------- | ---------- |
-| setTimeout     | `gossamer` |
-| setInterval    | `gossamer` |
-| clearTimeout   | `gossamer` |
-| clearInterval  | `gossamer` |
-| queueMicrotask | `gossamer` |
-
-### Utilities
-
-| Name                   | Module                                                            |
-| ---------------------- | ----------------------------------------------------------------- |
-| structuredClone        | `gossamer`                                                        |
-| atob (`decode_base64`) | `gossamer`                                                        |
-| btoa (`encode_base64`) | `gossamer`                                                        |
-| console                | [`gossamer/console`](./gossamer/console.html)                     |
-| Performance            | [`gossamer/performance`](./gossamer/performance.html)             |
-| PerformanceEntry       | [`gossamer/performance_entry`](./gossamer/performance_entry.html) |
-| navigator.userAgent    | `gossamer`                                                        |
+| Name                        | Module                                                            |
+| --------------------------- | ----------------------------------------------------------------- |
+| structuredClone             | `gossamer`                                                        |
+| atob (`decode_base64`)      | `gossamer`                                                        |
+| btoa (`encode_base64`)      | `gossamer`                                                        |
+| setTimeout / clearTimeout   | `gossamer`                                                        |
+| setInterval / clearInterval | `gossamer`                                                        |
+| queueMicrotask              | `gossamer`                                                        |
+| navigator.userAgent         | `gossamer`                                                        |
+| console                     | [`gossamer/console`](./gossamer/console.html)                     |
+| Performance                 | [`gossamer/performance`](./gossamer/performance.html)             |
+| PerformanceEntry            | [`gossamer/performance_entry`](./gossamer/performance_entry.html) |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
 no idiomatic use; log via `console.error` instead.
@@ -234,19 +227,19 @@ Use the upstream bindings directly — gossamer doesn't wrap them.
 
 ## Out of Scope
 
-| Category                                                           | Reason                                                                |
-| ------------------------------------------------------------------ | --------------------------------------------------------------------- |
-| DOM APIs (document, window, Element, etc.)                         | Browser-only                                                          |
-| Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets |
-| ErrorEvent                                                         | Re-add receive-only when Worker support arrives                       |
-| PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                |
-| WebAssembly                                                        | Warrants its own package                                              |
-| Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system               |
-| SharedArrayBuffer, Atomics                                         | Threading; revisit if Workers become cross-runtime                    |
-| Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                          |
-| Worker, ServiceWorker, SharedWorker, MessageChannel, MessagePort   | Deferred until cross-realm messaging is well-supported                |
-| Intl (`DateTimeFormat`, `NumberFormat`, `Collator`, etc.)          | Deferred; revisit with one builder module per constructor             |
-| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Not yet bound; revisit when a concrete use case arrives               |
-| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | Not yet bound; `Uint8Array` covers byte data via `BitArray` bridge    |
-| DataView                                                           | Not yet bound; bridge via `Uint8Array` for raw bytes                  |
-| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases       |
+| Category                                                           | Reason                                                                        |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
+| DOM APIs (document, window, Element, etc.)                         | Browser-only                                                                  |
+| Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets         |
+| ErrorEvent                                                         | Re-add receive-only when Worker support arrives                               |
+| PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                        |
+| WebAssembly                                                        | Warrants its own package                                                      |
+| Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system                       |
+| SharedArrayBuffer, Atomics                                         | Threading; revisit if Workers become cross-runtime                            |
+| Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                  |
+| Worker, ServiceWorker, SharedWorker, MessageChannel, MessagePort   | APIs diverge across runtimes; revisit when WinterTC stabilizes a common shape |
+| Intl (`DateTimeFormat`, `NumberFormat`, `Collator`, etc.)          | Deferred; revisit with one builder module per constructor                     |
+| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Not yet bound; revisit when a concrete use case arrives                       |
+| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | Not yet bound; `Uint8Array` covers byte data via `BitArray` bridge            |
+| DataView                                                           | Not yet bound; bridge via `Uint8Array` for raw bytes                          |
+| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases               |
