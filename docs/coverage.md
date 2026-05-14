@@ -57,11 +57,18 @@ dict as a `FetchOptions` builder. Its `FetchError` supersedes `gleam_fetch`'s
 | URL        | [`gossamer/url`](./gossamer/url.html)                 |
 | URLPattern | [`gossamer/url_pattern`](./gossamer/url_pattern.html) |
 
-[`gleam/uri`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html) is the canonical
-Gleam URL type. [`gossamer/url`](./gossamer/url.html) wraps the JS `URL`
-constructor for WHATWG-strict parsing into a `gleam/uri.Uri` — useful when JS
-and Gleam disagree on whether a string parses. `URLSearchParams` is delegated
-entirely to `gleam/uri.parse_query`.
+[`gleam/uri.Uri`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html#Uri) is the
+canonical Gleam URL type. [`gossamer/url`](./gossamer/url.html) wraps the JS
+`URL` constructor for WHATWG-strict parsing into a `gleam/uri.Uri` — useful when
+JS and Gleam disagree on whether a string parses. `URLSearchParams` parsing is
+delegated to `gleam/uri.parse_query`; manipulate the resulting
+`List(#(String, String))` with `gleam/list`.
+
+### WebSocket
+
+| Name      | Module                                              |
+| --------- | --------------------------------------------------- |
+| WebSocket | [`gossamer/web_socket`](./gossamer/web_socket.html) |
 
 ### Streams
 
@@ -157,12 +164,6 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
 no idiomatic use; log via `console.error` instead.
 
-### WebSocket
-
-| Name      | Module                                              |
-| --------- | --------------------------------------------------- |
-| WebSocket | [`gossamer/web_socket`](./gossamer/web_socket.html) |
-
 ## ECMAScript Built-ins
 
 ### Native (no Gleam stdlib equivalent)
@@ -177,10 +178,11 @@ dedicated type.
 
 ### Extending Gleam stdlib
 
-These bindings layer on top of an existing Gleam-canonical type — either as
-transit types (the JS native form, exposed for interop while the canonical Gleam
-type stays preferred) or as `*_extra` modules (gap-filling capabilities the
-Gleam canonical doesn't cover).
+These bindings layer on top of an existing Gleam-canonical type — as transit
+types (the JS native form, exposed for interop while the canonical Gleam type
+stays preferred), as `*_extra` modules (gap-filling capabilities the Gleam
+canonical doesn't cover), or — in `gossamer/json`'s case — as a transparent
+Gleam type that mirrors a JS namespace.
 
 | Name          | Module                                                                                                   |
 | ------------- | -------------------------------------------------------------------------------------------------------- |
@@ -204,7 +206,7 @@ return them while the canonical Gleam type stays preferred. `ArrayBuffer` /
 bridge to `gleam/dict` / `gleam/set`. `AsyncIterator` has no canonical Gleam
 counterpart — consume it via the binding's own helpers.
 [`gossamer/iteration`](./gossamer/iteration.html) hosts the shared
-`IteratorResult` type used by both iterators.
+`IteratorResult` type used by both `iterator` and `async_iterator`.
 
 **Extras** modules layer JS-specific capabilities on top of Gleam's canonical
 types (`gleam/string`, `gleam/int`, `gleam/float`, `gleam/time`, `gleam/regexp`,
