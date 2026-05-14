@@ -1,4 +1,3 @@
-import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import * as $stringExtra from "$/gossamer/gossamer/string_extra.mjs";
 
 function toNormalizationForm(
@@ -15,16 +14,6 @@ export const normalize: typeof $stringExtra.normalize = (string) =>
 
 export const normalize_to: typeof $stringExtra.normalize_to = (string, form) =>
   string.normalize(toNormalizationForm(form));
-
-export const locale_compare: typeof $stringExtra.locale_compare = (
-  string,
-  other,
-) => {
-  const result = string.localeCompare(other);
-  if (result < 0) return $order.Order$Lt();
-  if (result > 0) return $order.Order$Gt();
-  return $order.Order$Eq();
-};
 
 export const to_locale_lower_case: typeof $stringExtra.to_locale_lower_case = (
   string,

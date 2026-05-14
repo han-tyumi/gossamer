@@ -1,11 +1,10 @@
 //// Extras for `gleam/string` — Unicode normalization, locale-aware
-//// comparison and case conversion, and UTF-16 well-formedness checks.
+//// case conversion, and UTF-16 well-formedness checks.
 ////
 //// For constructing a string from Unicode code points, use
 //// `gleam/string.utf_codepoint` together with
-//// `gleam/string.from_utf_codepoints`.
-
-import gleam/order.{type Order}
+//// `gleam/string.from_utf_codepoints`. For locale-aware comparison,
+//// use [`gossamer/intl/collator`](./intl/collator.html).
 
 /// A Unicode normalization form used by `normalize_to`. NFC and NFD
 /// preserve equivalence; NFKC and NFKD also apply compatibility
@@ -40,13 +39,6 @@ pub fn normalize(string: String) -> String
 ///
 @external(javascript, "./string_extra.ffi.mjs", "normalize_to")
 pub fn normalize_to(string: String, form form: NormalizationForm) -> String
-
-/// Compares two strings using the runtime's locale-aware collation. The
-/// resulting `Order` reflects the active locale, which differs from
-/// `gleam/string.compare`'s code-point ordering.
-///
-@external(javascript, "./string_extra.ffi.mjs", "locale_compare")
-pub fn locale_compare(string: String, to other: String) -> Order
 
 /// Returns `string` lowercased using the runtime's active locale. This
 /// differs from `gleam/string.lowercase` for locale-specific casing rules
