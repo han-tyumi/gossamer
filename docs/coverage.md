@@ -57,9 +57,11 @@ dict as a `FetchOptions` builder. Its `FetchError` supersedes `gleam_fetch`'s
 | URL        | [`gossamer/url`](./gossamer/url.html)                 |
 | URLPattern | [`gossamer/url_pattern`](./gossamer/url_pattern.html) |
 
-[`gossamer/url`](./gossamer/url.html) is slimmed to `parse` + `is_valid`
-(WHATWG-strict; returns `gleam/uri.Uri`). `URLSearchParams` is delegated to
-`gleam/uri.parse_query`.
+[`gleam/uri`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html) is the canonical
+Gleam URL type. [`gossamer/url`](./gossamer/url.html) wraps the JS `URL`
+constructor for WHATWG-strict parsing into a `gleam/uri.Uri` — useful when JS
+and Gleam disagree on whether a string parses. `URLSearchParams` is delegated
+entirely to `gleam/uri.parse_query`.
 
 ### Streams
 
@@ -74,14 +76,9 @@ dict as a `FetchOptions` builder. Its `FetchError` supersedes `gleam_fetch`'s
 | TransformStream                  | [`gossamer/stream/transform_stream`](./gossamer/stream/transform_stream.html)                                       |
 | TransformStreamDefaultController | [`gossamer/stream/transform_stream/default_controller`](./gossamer/stream/transform_stream/default_controller.html) |
 
-[`gossamer/stream`](./gossamer/stream.html) is the family parent — it hosts the
-shared `QueuingStrategy` (collapsing the JS `ByteLengthQueuingStrategy` and
-`CountQueuingStrategy` classes into variants) and the `StreamLifecycleError`
-sum.
-
-BYOB streams (`ReadableStreamBYOBReader`, `ReadableByteStreamController`) are
-not bound; the default reader and controller are sufficient for the
-cross-runtime use cases gossamer targets.
+[`gossamer/stream`](./gossamer/stream.html) is the family parent — it hosts
+`QueuingStrategy` (collapsing the JS `ByteLengthQueuingStrategy` and
+`CountQueuingStrategy` classes into variants) and `StreamLifecycleError`.
 
 ### Compression
 
@@ -119,19 +116,14 @@ and `DecoderError`.
 
 [`gossamer/crypto`](./gossamer/crypto.html) is both the `Crypto` interface
 (`random_uuid`) and the family parent for the submodules. It hosts the shared
-`KeyUsage` and `CryptoError` sums, the algorithm enums (`AesAlgorithm`,
-`RsaAlgorithm`, `EcAlgorithm`, `HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`),
-and the `KeyKind` classifier (symmetric vs asymmetric public/private).
+`KeyUsage`, `CryptoError`, `KeyKind`, and the algorithm enums (`AesAlgorithm`,
+`RsaAlgorithm`, `EcAlgorithm`, `HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`).
 
-For simple primitives, prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/)
-— `hash` (one-shot or streaming via `Hasher`), `hmac`, `strong_random_bytes`,
-`secure_compare`, and `sign_message` / `verify_signed_message` are sync and skip
-the key-import ceremony Web Crypto requires. Random-byte generation lives
-entirely in `gleam_crypto`; gossamer doesn't duplicate it.
-
-Reach for [`gossamer/crypto`](./gossamer/crypto.html) when you need the full Web
-Crypto API: key generation, AES / RSA encryption, JSON Web Keys, or key
-derivation.
+For simple primitives (hashing, HMAC, CSPRNG, secure compare, message signing),
+prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/) — it's sync and skips
+the key-import ceremony Web Crypto requires. Reach for
+[`gossamer/crypto`](./gossamer/crypto.html) for the full Web Crypto API (key
+generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
 ### Data Types
 
@@ -197,69 +189,48 @@ transit types (the JS native form, exposed for interop while the canonical Gleam
 type stays preferred) or as `*_extra` modules (gap-filling capabilities the
 Gleam canonical doesn't cover).
 
-| Name          | Module                                                                                                   | Pattern         |
-| ------------- | -------------------------------------------------------------------------------------------------------- | --------------- |
-| ArrayBuffer   | [`gossamer/array_buffer`](./gossamer/array_buffer.html)                                                  | transit type    |
-| Uint8Array    | `gossamer/uint8_array`                                                                                   | transit type    |
-| Iterator      | [`gossamer/iteration/iterator`](./gossamer/iteration/iterator.html)                                      | transit type    |
-| AsyncIterator | [`gossamer/iteration/async_iterator`](./gossamer/iteration/async_iterator.html)                          | transit type    |
-| Map           | [`gossamer/map`](./gossamer/map.html)                                                                    | transit type    |
-| Set           | [`gossamer/set`](./gossamer/set.html)                                                                    | transit type    |
-| String        | [`gossamer/string_extra`](./gossamer/string_extra.html)                                                  | extras          |
-| Number / Math | [`gossamer/int_extra`](./gossamer/int_extra.html), [`gossamer/float_extra`](./gossamer/float_extra.html) | extras          |
-| Date          | [`gossamer/time_extra`](./gossamer/time_extra.html)                                                      | extras          |
-| RegExp        | [`gossamer/regexp_extra`](./gossamer/regexp_extra.html)                                                  | extras          |
-| Symbol        | [`gossamer/symbol_extra`](./gossamer/symbol_extra.html)                                                  | extras          |
-| JSON          | [`gossamer/json`](./gossamer/json.html)                                                                  | transparent ADT |
+| Name          | Module                                                                                                   |
+| ------------- | -------------------------------------------------------------------------------------------------------- |
+| ArrayBuffer   | [`gossamer/array_buffer`](./gossamer/array_buffer.html)                                                  |
+| Uint8Array    | [`gossamer/uint8_array`](./gossamer/uint8_array.html)                                                    |
+| Iterator      | [`gossamer/iteration/iterator`](./gossamer/iteration/iterator.html)                                      |
+| AsyncIterator | [`gossamer/iteration/async_iterator`](./gossamer/iteration/async_iterator.html)                          |
+| Map           | [`gossamer/map`](./gossamer/map.html)                                                                    |
+| Set           | [`gossamer/set`](./gossamer/set.html)                                                                    |
+| String        | [`gossamer/string_extra`](./gossamer/string_extra.html)                                                  |
+| Number / Math | [`gossamer/int_extra`](./gossamer/int_extra.html), [`gossamer/float_extra`](./gossamer/float_extra.html) |
+| Date          | [`gossamer/time_extra`](./gossamer/time_extra.html)                                                      |
+| RegExp        | [`gossamer/regexp_extra`](./gossamer/regexp_extra.html)                                                  |
+| Symbol        | [`gossamer/symbol_extra`](./gossamer/symbol_extra.html)                                                  |
+| JSON          | [`gossamer/json`](./gossamer/json.html)                                                                  |
 
 **Transit types** are JS native types exposed for interop with JS APIs that
-return them while the canonical Gleam type stays preferred:
-
-- `ArrayBuffer` and `Uint8Array` bridge to `BitArray` via `from_bit_array` /
-  `to_bit_array`.
-- `Iterator` bridges to
-  [`gleam_yielder.Yielder`](https://hexdocs.pm/gleam_yielder/) via
-  `from_yielder` / `to_yielder`.
-- `AsyncIterator` bridges to `List` via `from_list` / `to_list` (returning
-  `Promise(List(a))`); Gleam has no canonical async-iteration type.
-- `Map` and `Set` bridge to `gleam/dict` and `gleam/set` via `from_dict` /
-  `to_dict` / `from_set` / `to_set`.
-
+return them while the canonical Gleam type stays preferred. `ArrayBuffer` /
+`Uint8Array` bridge to `BitArray`; `Iterator` bridges to
+[`gleam_yielder.Yielder`](https://hexdocs.pm/gleam_yielder/); `Map` / `Set`
+bridge to `gleam/dict` / `gleam/set`. `AsyncIterator` has no canonical Gleam
+counterpart — consume it via the binding's own helpers.
 [`gossamer/iteration`](./gossamer/iteration.html) hosts the shared
-`IteratorResult` type.
+`IteratorResult` type used by both iterators.
 
 **Extras** modules layer JS-specific capabilities on top of Gleam's canonical
 types (`gleam/string`, `gleam/int`, `gleam/float`, `gleam/time`, `gleam/regexp`,
 `gleam/javascript/symbol`), which already are the JS primitives under the hood.
-`Number` and `Math` split across `int_extra` (safe-integer bounds, `clz32`,
-`imul`, locale formatting) and `float_extra` (`epsilon`, `min_value` /
-`max_value`, `pi` / `e`, trig, `log` / `exp` / `pow`) mirroring Gleam's stdlib
-split.
+`Number` and `Math` split across `int_extra` and `float_extra` mirroring
+`gleam/int` / `gleam/float`.
 
-[`gossamer/json`](./gossamer/json.html) provides a transparent `Json` ADT for
-inspecting or pattern- matching JSON of unknown structure. For typed
+[`gossamer/json`](./gossamer/json.html) provides a transparent `Json` type for
+inspecting or pattern-matching JSON of unknown structure. For typed
 encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 
 ### Delegated
 
-| Name    | Module                     |
-| ------- | -------------------------- |
-| Promise | `gleam/javascript/promise` |
-| Array   | `gleam/javascript/array`   |
+| Name    | Module                                                                                          |
+| ------- | ----------------------------------------------------------------------------------------------- |
+| Promise | [`gleam/javascript/promise`](https://hexdocs.pm/gleam_javascript/gleam/javascript/promise.html) |
+| Array   | [`gleam/javascript/array`](https://hexdocs.pm/gleam_javascript/gleam/javascript/array.html)     |
 
-`Promise` is bound by `gleam/javascript/promise`. Gossamer's auto-Result-wrap
-discipline at the FFI boundary means user-facing promises don't reject in normal
-Gleam-controlled flow, so the rejection-aware extras (`Promise.allSettled`,
-`Promise.any`, `Promise.withResolvers`) reduce to upstream's `await_list` /
-`race_list` / `start`.
-
-`Array` is bound by `gleam/javascript/array` as a transit type with `array.size`
-/ `map` / `fold` / `get`. For collection operations beyond those, convert to
-`List` via `array.to_list` and use `gleam/list`.
-
-JS error types (`Error`, `TypeError`, `RangeError`, etc.) aren't exposed as a
-unified typed sum. Per-binding typed errors (e.g., `FetchError`, `CryptoError`,
-`StreamLifecycleError`) cover the cases users need to react to.
+Use the upstream bindings directly — gossamer doesn't wrap them.
 
 ## Out of Scope
 
@@ -278,3 +249,4 @@ unified typed sum. Per-binding typed errors (e.g., `FetchError`, `CryptoError`,
 | WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Not yet bound; revisit when a concrete use case arrives               |
 | Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | Not yet bound; `Uint8Array` covers byte data via `BitArray` bridge    |
 | DataView                                                           | Not yet bound; bridge via `Uint8Array` for raw bytes                  |
+| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases       |
