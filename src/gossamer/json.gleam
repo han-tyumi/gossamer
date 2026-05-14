@@ -1,4 +1,4 @@
-//// A transparent `Json` ADT for inspecting or pattern-matching on JSON
+//// A transparent `Json` type for inspecting or pattern-matching on JSON
 //// of unknown structure. For typed encode/decode pipelines, use
 //// `gleam_json`.
 

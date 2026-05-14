@@ -42,8 +42,10 @@ pub fn timeout(duration: Duration) -> AbortSignal
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool
 
-/// The reason the signal was aborted with, or `Error(Nil)` if the signal
-/// is not aborted.
+/// The reason the signal was aborted with, or `Error(Nil)` if no
+/// reason is available — either the signal is not aborted, or it was
+/// aborted with a `null` reason. To distinguish the two, pair with
+/// [`is_aborted`](#is_aborted).
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
 pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
