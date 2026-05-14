@@ -1,10 +1,9 @@
 //// JavaScript `AsyncIterator` binding for interop with APIs that
 //// produce or consume async iterators. Treated as a transit type:
 //// pass an async iterator across the FFI boundary and consume from
-//// Gleam via [`for_await`](#for_await) or [`to_list`](#to_list). The
-//// iterator protocol (`next`, `return`, `throw`) is intentionally not
-//// exposed publicly — observable mutation lives on the JavaScript
-//// side.
+//// Gleam via [`each`](#each) or [`to_list`](#to_list). The iterator
+//// protocol (`next`, `return`, `throw`) is intentionally not exposed
+//// publicly — observable mutation lives on the JavaScript side.
 
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
@@ -12,9 +11,9 @@ import gleam/option.{type Option}
 import gossamer/iteration.{type IteratorResult}
 
 /// A pull-based iterator that yields values asynchronously. Each call
-/// to [`next`](#next) returns a promise. `a` is the yielded value type,
+/// to `next` returns a promise. `a` is the yielded value type,
 /// `return` is the final return value, `next` is the type of values
-/// passed via [`next`](#next).
+/// passed via `next`.
 ///
 /// See [AsyncIterator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncIterator) on MDN.
 ///
