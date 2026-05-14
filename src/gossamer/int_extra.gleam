@@ -1,6 +1,8 @@
-//// Extras for `gleam/int` — JavaScript Number safe-integer bounds,
-//// 32-bit integer operations, and locale-aware string formatting that
-//// `gleam/int` doesn't cover.
+//// Extras for `gleam/int` — JavaScript Number safe-integer bounds and
+//// 32-bit integer operations that `gleam/int` doesn't cover.
+////
+//// For locale-aware number formatting, use
+//// [`gossamer/intl/number_format`](./intl/number_format.html).
 
 /// The maximum safe integer in JavaScript, `2^53 - 1`. Gleam `Int`
 /// values between `min_safe_integer` and `max_safe_integer` are
@@ -23,11 +25,3 @@ pub fn clz32(value: Int) -> Int
 ///
 @external(javascript, "./int_extra.ffi.mjs", "imul")
 pub fn imul(a: Int, b: Int) -> Int
-
-/// Returns a locale-sensitive string representation of the integer,
-/// applying the runtime's locale for thousands separators and digit
-/// shaping (e.g., `1234` becomes `"1,234"` in `en-US` and `"1 234"`
-/// in `fr-FR`). For plain formatting, use `gleam/int.to_string`.
-///
-@external(javascript, "./int_extra.ffi.mjs", "to_locale_string")
-pub fn to_locale_string(value: Int) -> String

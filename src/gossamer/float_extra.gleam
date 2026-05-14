@@ -1,6 +1,9 @@
 //// Extras for `gleam/float` — JavaScript Number representation
 //// constants, mathematical constants and operations, and number
 //// formatting that `gleam/float` doesn't cover.
+////
+//// For locale-aware number formatting, use
+//// [`gossamer/intl/number_format`](./intl/number_format.html).
 
 /// The difference between `1.0` and the smallest representable
 /// floating-point value greater than `1.0`.
@@ -199,12 +202,3 @@ pub fn to_exponential_string(
   value: Float,
   digits digits: Int,
 ) -> Result(String, Nil)
-
-/// Returns a locale-sensitive string representation of the number,
-/// applying the runtime's locale for thousands separators, decimal
-/// marks, and digit shaping (e.g., `1234.5` becomes `"1,234.5"` in
-/// `en-US` and `"1 234,5"` in `fr-FR`). For plain formatting, use
-/// `gleam/float.to_string`.
-///
-@external(javascript, "./float_extra.ffi.mjs", "to_locale_string")
-pub fn to_locale_string(value: Float) -> String

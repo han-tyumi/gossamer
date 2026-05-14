@@ -66,6 +66,3 @@ export const to_precision_string: typeof $float_extra.to_precision_string = (
 export const to_exponential_string: typeof $float_extra.to_exponential_string =
   (value, digits) =>
     withRange(digits, 0, 100, () => value.toExponential(digits));
-
-export const to_locale_string: typeof $float_extra.to_locale_string = (value) =>
-  value.toLocaleString();

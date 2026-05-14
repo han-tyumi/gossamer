@@ -179,8 +179,3 @@ pub fn to_exponential_string_out_of_range_test() {
   float_extra.to_exponential_string(1.0, digits: -1) |> should.be_error()
   float_extra.to_exponential_string(1.0, digits: 101) |> should.be_error()
 }
-
-pub fn to_locale_string_test() {
-  let result = float_extra.to_locale_string(1234.5)
-  should.be_true(result != "")
-}
