@@ -1,9 +1,13 @@
 import gleam/dynamic/decode
 import gleam/javascript/promise
+import gleam/option.{None}
 import gleam/time/duration
 import gleeunit/should
 import gossamer/abort_controller
-import gossamer/abort_signal
+import gossamer/abort_signal.{type AbortSignal}
+
+@external(javascript, "./abort_signal_test.ffi.mjs", "null_aborted_signal")
+fn null_aborted_signal() -> AbortSignal
 
 pub fn abort_creates_aborted_signal_test() {
   let signal = abort_signal.abort("cancelled")
@@ -30,6 +34,14 @@ pub fn reason_on_aborted_signal_test() {
 pub fn reason_on_unaborted_signal_test() {
   let signal = abort_signal.timeout(duration.seconds(10))
   abort_signal.reason(signal) |> should.be_error
+}
+
+pub fn reason_on_null_aborted_signal_test() {
+  let signal = null_aborted_signal()
+  abort_signal.is_aborted(signal) |> should.be_true
+  let assert Ok(reason) = abort_signal.reason(signal)
+  decode.run(reason, decode.optional(decode.string))
+  |> should.equal(Ok(None))
 }
 
 pub fn set_on_abort_test() {

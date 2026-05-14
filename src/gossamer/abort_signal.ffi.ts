@@ -1,6 +1,6 @@
 import type * as $abortSignal from "$/gossamer/gossamer/abort_signal.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 import { durationToMs } from "~/utils/time.ffi.ts";
 
 export const abort: typeof $abortSignal.abort = (reason) => {
@@ -20,7 +20,10 @@ export const is_aborted: typeof $abortSignal.is_aborted = (signal) => {
 };
 
 export const reason: typeof $abortSignal.reason = (signal) => {
-  return toResult(signal.reason);
+  if (signal.reason === undefined) {
+    return Result$Error(undefined);
+  }
+  return Result$Ok(signal.reason);
 };
 
 export const set_on_abort: typeof $abortSignal.set_on_abort = (

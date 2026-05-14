@@ -334,10 +334,10 @@ pub fn response_type(response: Response(FetchBody)) -> ResponseType
 /// Sends a `Request(String)` with the given options. Returns
 /// `Error(fetch.NetworkError(_))` on network failure. When an
 /// `AbortSignal` on the options aborts the request, the failure
-/// surfaces as `NetworkError(_)`; observe the signal via
+/// surfaces as `NetworkError(_)`; inspect the signal via
 /// [`abort_signal.is_aborted`](./abort_signal.html#is_aborted) and
-/// [`abort_signal.reason`](./abort_signal.html#reason) for typed
-/// inspection. A non-`2xx` status is still a successful send.
+/// [`abort_signal.reason`](./abort_signal.html#reason) to recover
+/// the abort reason. A non-`2xx` status is still a successful send.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "send")
 pub fn send(
