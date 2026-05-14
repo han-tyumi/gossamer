@@ -8,18 +8,6 @@ pub fn main() {
   gleeunit.main()
 }
 
-pub fn structured_clone_int_test() {
-  gossamer.structured_clone(42) |> should.equal(Ok(42))
-}
-
-pub fn structured_clone_string_test() {
-  gossamer.structured_clone("hello") |> should.equal(Ok("hello"))
-}
-
-pub fn structured_clone_tuple_test() {
-  gossamer.structured_clone(#(1, "two")) |> should.equal(Ok(#(1, "two")))
-}
-
 pub fn encode_base64_test() {
   gossamer.encode_base64("Hello") |> should.equal(Ok("SGVsbG8="))
 }
@@ -40,10 +28,6 @@ pub fn decode_base64_invalid_test() {
 
 pub fn encode_base64_non_latin1_test() {
   let assert Error(_) = gossamer.encode_base64("日本語")
-}
-
-pub fn structured_clone_function_test() {
-  let assert Error(_) = gossamer.structured_clone(fn() { Nil })
 }
 
 pub fn user_agent_test() {

@@ -5,13 +5,6 @@
 
 import gleam/time/duration.{type Duration}
 
-/// Creates a deep clone of `value` using the structured clone algorithm.
-/// Returns an error if `value` contains a function, symbol, `DOM` node,
-/// or other non-cloneable component.
-///
-@external(javascript, "./gossamer.ffi.mjs", "structured_clone")
-pub fn structured_clone(value: a) -> Result(a, Nil)
-
 /// Decodes a base64-encoded string. Returns an error if the string is
 /// not valid base64. Equivalent to JavaScript's `atob`.
 ///

@@ -157,7 +157,6 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
 | Name                               | Module                                                            |
 | ---------------------------------- | ----------------------------------------------------------------- |
-| structuredClone                    | `gossamer`                                                        |
 | atob (`decode_base64`)             | `gossamer`                                                        |
 | btoa (`encode_base64`)             | `gossamer`                                                        |
 | setTimeout / clearTimeout          | `gossamer`                                                        |
@@ -241,22 +240,23 @@ Use the upstream bindings directly — gossamer doesn't wrap them.
 
 ## Out of Scope
 
-| Category                                                           | Reason                                                                        |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------------------- |
-| DOM APIs (document, window, Element, etc.)                         | Browser-only                                                                  |
-| Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets         |
-| ErrorEvent                                                         | Re-add receive-only when Worker support arrives                               |
-| PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                        |
-| WebAssembly                                                        | Warrants its own package                                                      |
-| Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system                       |
-| SharedArrayBuffer, Atomics                                         | Threading; revisit if Workers become cross-runtime                            |
-| Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                  |
-| Worker, ServiceWorker, SharedWorker, MessageChannel, MessagePort   | APIs diverge across runtimes; revisit when WinterTC stabilizes a common shape |
-| Intl (`DateTimeFormat`, `NumberFormat`, `Collator`, etc.)          | Deferred; revisit with one builder module per constructor                     |
-| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Revisit when a concrete use case arrives                                      |
-| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | `Uint8Array` covers byte data via the `BitArray` bridge                       |
-| DataView                                                           | Bridge via `Uint8Array` for raw bytes                                         |
-| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases               |
+| Category                                                           | Reason                                                                                |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| DOM APIs (document, window, Element, etc.)                         | Browser-only                                                                          |
+| Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets                 |
+| ErrorEvent                                                         | Re-add receive-only when Worker support arrives                                       |
+| PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                                |
+| structuredClone                                                    | Gleam values are immutable; the "break shared references" primitive doesn't translate |
+| WebAssembly                                                        | Warrants its own package                                                              |
+| Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system                               |
+| SharedArrayBuffer, Atomics                                         | Threading; revisit if Workers become cross-runtime                                    |
+| Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                          |
+| Worker, ServiceWorker, SharedWorker, MessageChannel, MessagePort   | APIs diverge across runtimes; revisit when WinterTC stabilizes a common shape         |
+| Intl (`DateTimeFormat`, `NumberFormat`, `Collator`, etc.)          | Deferred; revisit with one builder module per constructor                             |
+| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Revisit when a concrete use case arrives                                              |
+| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | `Uint8Array` covers byte data via the `BitArray` bridge                               |
+| DataView                                                           | Bridge via `Uint8Array` for raw bytes                                                 |
+| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases                       |
 
 Several of these unbound APIs exist for JS-specific performance or memory
 characteristics — `WeakMap` / `WeakSet` / `WeakRef` / `FinalizationRegistry` let
