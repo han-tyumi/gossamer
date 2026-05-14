@@ -34,47 +34,50 @@ Node.js, Bun, and browsers.
 
 ### Fetch & HTTP
 
-| Name     | Module                                    |
-| -------- | ----------------------------------------- |
-| fetch    | `gossamer/fetch_extra`                    |
-| FormData | `gossamer/form_data_extra` (file uploads) |
+| Name     | Module                                                                       |
+| -------- | ---------------------------------------------------------------------------- |
+| fetch    | [`gossamer/fetch_extra`](./gossamer/fetch_extra.html)                        |
+| FormData | [`gossamer/form_data_extra`](./gossamer/form_data_extra.html) (file uploads) |
 
-`Request`, `Response`, and `Headers` come from `gleam_http`. The underlying
-fetch call and the `FormData` type come from `gleam_fetch`.
+`Request`, `Response`, and `Headers` come from
+[`gleam_http`](https://hexdocs.pm/gleam_http/). The underlying fetch call and
+the `FormData` type come from [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/).
 
-`gossamer/fetch_extra` adds the Fetch-spec init dict as a `FetchOptions`
-builder. Its `FetchError` supersedes `gleam_fetch.FetchError` to add `Aborted`
-for `AbortSignal`-cancelled sends.
+[`gossamer/fetch_extra`](./gossamer/fetch_extra.html) adds the Fetch-spec init
+dict as a `FetchOptions` builder. Its `FetchError` supersedes `gleam_fetch`'s
+`FetchError` to add `Aborted` for `AbortSignal`-cancelled sends.
 
-`gossamer/form_data_extra` adds `append_file` / `set_file` for multipart file
-uploads.
+[`gossamer/form_data_extra`](./gossamer/form_data_extra.html) adds `append_file`
+/ `set_file` for multipart file uploads.
 
 ### URL
 
-| Name       | Module                 |
-| ---------- | ---------------------- |
-| URL        | `gossamer/url`         |
-| URLPattern | `gossamer/url_pattern` |
+| Name       | Module                                                |
+| ---------- | ----------------------------------------------------- |
+| URL        | [`gossamer/url`](./gossamer/url.html)                 |
+| URLPattern | [`gossamer/url_pattern`](./gossamer/url_pattern.html) |
 
-`gossamer/url` is slimmed to `parse` + `is_valid` (WHATWG-strict; returns
-`gleam/uri.Uri`). `URLSearchParams` is delegated to `gleam/uri.parse_query`.
+[`gossamer/url`](./gossamer/url.html) is slimmed to `parse` + `is_valid`
+(WHATWG-strict; returns `gleam/uri.Uri`). `URLSearchParams` is delegated to
+`gleam/uri.parse_query`.
 
 ### Streams
 
-| Name                             | Module                                                |
-| -------------------------------- | ----------------------------------------------------- |
-| ReadableStream                   | `gossamer/stream/readable_stream`                     |
-| ReadableStreamDefaultReader      | `gossamer/stream/readable_stream/reader`              |
-| ReadableStreamDefaultController  | `gossamer/stream/readable_stream/default_controller`  |
-| WritableStream                   | `gossamer/stream/writable_stream`                     |
-| WritableStreamDefaultWriter      | `gossamer/stream/writable_stream/writer`              |
-| WritableStreamDefaultController  | `gossamer/stream/writable_stream/default_controller`  |
-| TransformStream                  | `gossamer/stream/transform_stream`                    |
-| TransformStreamDefaultController | `gossamer/stream/transform_stream/default_controller` |
+| Name                             | Module                                                                                                              |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| ReadableStream                   | [`gossamer/stream/readable_stream`](./gossamer/stream/readable_stream.html)                                         |
+| ReadableStreamDefaultReader      | [`gossamer/stream/readable_stream/reader`](./gossamer/stream/readable_stream/reader.html)                           |
+| ReadableStreamDefaultController  | [`gossamer/stream/readable_stream/default_controller`](./gossamer/stream/readable_stream/default_controller.html)   |
+| WritableStream                   | [`gossamer/stream/writable_stream`](./gossamer/stream/writable_stream.html)                                         |
+| WritableStreamDefaultWriter      | [`gossamer/stream/writable_stream/writer`](./gossamer/stream/writable_stream/writer.html)                           |
+| WritableStreamDefaultController  | [`gossamer/stream/writable_stream/default_controller`](./gossamer/stream/writable_stream/default_controller.html)   |
+| TransformStream                  | [`gossamer/stream/transform_stream`](./gossamer/stream/transform_stream.html)                                       |
+| TransformStreamDefaultController | [`gossamer/stream/transform_stream/default_controller`](./gossamer/stream/transform_stream/default_controller.html) |
 
-`gossamer/stream` is the family parent — it hosts the shared `QueuingStrategy`
-(collapsing the JS `ByteLengthQueuingStrategy` and `CountQueuingStrategy`
-classes into variants) and the `StreamLifecycleError` sum.
+[`gossamer/stream`](./gossamer/stream.html) is the family parent — it hosts the
+shared `QueuingStrategy` (collapsing the JS `ByteLengthQueuingStrategy` and
+`CountQueuingStrategy` classes into variants) and the `StreamLifecycleError`
+sum.
 
 BYOB streams (`ReadableStreamBYOBReader`, `ReadableByteStreamController`) are
 not bound; the default reader and controller are sufficient for the
@@ -82,22 +85,24 @@ cross-runtime use cases gossamer targets.
 
 ### Compression
 
-| Name                | Module                                      |
-| ------------------- | ------------------------------------------- |
-| CompressionStream   | `gossamer/compression/compression_stream`   |
-| DecompressionStream | `gossamer/compression/decompression_stream` |
+| Name                | Module                                                                                          |
+| ------------------- | ----------------------------------------------------------------------------------------------- |
+| CompressionStream   | [`gossamer/compression/compression_stream`](./gossamer/compression/compression_stream.html)     |
+| DecompressionStream | [`gossamer/compression/decompression_stream`](./gossamer/compression/decompression_stream.html) |
 
-`gossamer/compression` hosts the shared `CompressionFormat` enum.
+[`gossamer/compression`](./gossamer/compression.html) hosts the shared
+`CompressionFormat` enum.
 
 ### Text Encoding
 
-| Name              | Module                                  |
-| ----------------- | --------------------------------------- |
-| TextDecoder       | `gossamer/encoding/text_decoder`        |
-| TextEncoderStream | `gossamer/encoding/text_encoder_stream` |
-| TextDecoderStream | `gossamer/encoding/text_decoder_stream` |
+| Name              | Module                                                                                  |
+| ----------------- | --------------------------------------------------------------------------------------- |
+| TextDecoder       | [`gossamer/encoding/text_decoder`](./gossamer/encoding/text_decoder.html)               |
+| TextEncoderStream | [`gossamer/encoding/text_encoder_stream`](./gossamer/encoding/text_encoder_stream.html) |
+| TextDecoderStream | [`gossamer/encoding/text_decoder_stream`](./gossamer/encoding/text_decoder_stream.html) |
 
-`gossamer/encoding` hosts the shared `Encoding` enum and `DecoderError`.
+[`gossamer/encoding`](./gossamer/encoding.html) hosts the shared `Encoding` enum
+and `DecoderError`.
 
 `TextEncoder` is omitted in favor of `gleam/bit_array.from_string` /
 `<<s:utf8>>`. For default UTF-8 decoding, use `gleam/bit_array.to_string`;
@@ -105,18 +110,18 @@ cross-runtime use cases gossamer targets.
 
 ### Crypto
 
-| Name         | Module                   |
-| ------------ | ------------------------ |
-| Crypto       | `gossamer/crypto`        |
-| SubtleCrypto | `gossamer/crypto/subtle` |
-| CryptoKey    | `gossamer/crypto/key`    |
-| JsonWebKey   | `gossamer/crypto/jwk`    |
+| Name         | Module                                                    |
+| ------------ | --------------------------------------------------------- |
+| Crypto       | [`gossamer/crypto`](./gossamer/crypto.html)               |
+| SubtleCrypto | [`gossamer/crypto/subtle`](./gossamer/crypto/subtle.html) |
+| CryptoKey    | [`gossamer/crypto/key`](./gossamer/crypto/key.html)       |
+| JsonWebKey   | [`gossamer/crypto/jwk`](./gossamer/crypto/jwk.html)       |
 
-`gossamer/crypto` is both the `Crypto` interface (`random_uuid`) and the family
-parent for the submodules. It hosts the shared `KeyUsage` and `CryptoError`
-sums, the algorithm enums (`AesAlgorithm`, `RsaAlgorithm`, `EcAlgorithm`,
-`HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`), and the `KeyKind` classifier
-(symmetric vs asymmetric public/private).
+[`gossamer/crypto`](./gossamer/crypto.html) is both the `Crypto` interface
+(`random_uuid`) and the family parent for the submodules. It hosts the shared
+`KeyUsage` and `CryptoError` sums, the algorithm enums (`AesAlgorithm`,
+`RsaAlgorithm`, `EcAlgorithm`, `HashAlgorithm`, `NamedCurve`, `KeyAlgorithm`),
+and the `KeyKind` classifier (symmetric vs asymmetric public/private).
 
 For simple primitives, prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/)
 — `hash` (one-shot or streaming via `Hasher`), `hmac`, `strong_random_bytes`,
@@ -124,22 +129,23 @@ For simple primitives, prefer [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/)
 the key-import ceremony Web Crypto requires. Random-byte generation lives
 entirely in `gleam_crypto`; gossamer doesn't duplicate it.
 
-Reach for `gossamer/crypto` when you need the full Web Crypto API: key
-generation, AES / RSA encryption, JSON Web Keys, or key derivation.
+Reach for [`gossamer/crypto`](./gossamer/crypto.html) when you need the full Web
+Crypto API: key generation, AES / RSA encryption, JSON Web Keys, or key
+derivation.
 
 ### Data Types
 
-| Name | Module          |
-| ---- | --------------- |
-| Blob | `gossamer/blob` |
-| File | `gossamer/file` |
+| Name | Module                                  |
+| ---- | --------------------------------------- |
+| Blob | [`gossamer/blob`](./gossamer/blob.html) |
+| File | [`gossamer/file`](./gossamer/file.html) |
 
 ### Cancellation
 
-| Name            | Module                      |
-| --------------- | --------------------------- |
-| AbortController | `gossamer/abort_controller` |
-| AbortSignal     | `gossamer/abort_signal`     |
+| Name            | Module                                                          |
+| --------------- | --------------------------------------------------------------- |
+| AbortController | [`gossamer/abort_controller`](./gossamer/abort_controller.html) |
+| AbortSignal     | [`gossamer/abort_signal`](./gossamer/abort_signal.html)         |
 
 ### Timers & Scheduling
 
@@ -153,32 +159,32 @@ generation, AES / RSA encryption, JSON Web Keys, or key derivation.
 
 ### Utilities
 
-| Name                   | Module                       |
-| ---------------------- | ---------------------------- |
-| structuredClone        | `gossamer`                   |
-| atob (`decode_base64`) | `gossamer`                   |
-| btoa (`encode_base64`) | `gossamer`                   |
-| console                | `gossamer/console`           |
-| Performance            | `gossamer/performance`       |
-| PerformanceEntry       | `gossamer/performance_entry` |
-| navigator.userAgent    | `gossamer`                   |
+| Name                   | Module                                                            |
+| ---------------------- | ----------------------------------------------------------------- |
+| structuredClone        | `gossamer`                                                        |
+| atob (`decode_base64`) | `gossamer`                                                        |
+| btoa (`encode_base64`) | `gossamer`                                                        |
+| console                | [`gossamer/console`](./gossamer/console.html)                     |
+| Performance            | [`gossamer/performance`](./gossamer/performance.html)             |
+| PerformanceEntry       | [`gossamer/performance_entry`](./gossamer/performance_entry.html) |
+| navigator.userAgent    | `gossamer`                                                        |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
 no idiomatic use; log via `console.error` instead.
 
 ### WebSocket
 
-| Name      | Module                |
-| --------- | --------------------- |
-| WebSocket | `gossamer/web_socket` |
+| Name      | Module                                              |
+| --------- | --------------------------------------------------- |
+| WebSocket | [`gossamer/web_socket`](./gossamer/web_socket.html) |
 
 ## ECMAScript Built-ins
 
 ### Native (no Gleam stdlib equivalent)
 
-| Name   | Module             |
-| ------ | ------------------ |
-| BigInt | `gossamer/big_int` |
+| Name   | Module                                        |
+| ------ | --------------------------------------------- |
+| BigInt | [`gossamer/big_int`](./gossamer/big_int.html) |
 
 `BigInt` is the only ECMAScript built-in gossamer binds that has no Gleam
 canonical — Gleam's `Int` is fixed-width, so arbitrary-precision integers need a
@@ -191,20 +197,20 @@ transit types (the JS native form, exposed for interop while the canonical Gleam
 type stays preferred) or as `*_extra` modules (gap-filling capabilities the
 Gleam canonical doesn't cover).
 
-| Name          | Module                                       | Pattern         |
-| ------------- | -------------------------------------------- | --------------- |
-| ArrayBuffer   | `gossamer/array_buffer`                      | transit type    |
-| Uint8Array    | `gossamer/uint8_array`                       | transit type    |
-| Iterator      | `gossamer/iteration/iterator`                | transit type    |
-| AsyncIterator | `gossamer/iteration/async_iterator`          | transit type    |
-| Map           | `gossamer/map`                               | transit type    |
-| Set           | `gossamer/set`                               | transit type    |
-| String        | `gossamer/string_extra`                      | extras          |
-| Number / Math | `gossamer/int_extra`, `gossamer/float_extra` | extras          |
-| Date          | `gossamer/time_extra`                        | extras          |
-| RegExp        | `gossamer/regexp_extra`                      | extras          |
-| Symbol        | `gossamer/symbol_extra`                      | extras          |
-| JSON          | `gossamer/json`                              | transparent ADT |
+| Name          | Module                                                                                                   | Pattern         |
+| ------------- | -------------------------------------------------------------------------------------------------------- | --------------- |
+| ArrayBuffer   | [`gossamer/array_buffer`](./gossamer/array_buffer.html)                                                  | transit type    |
+| Uint8Array    | `gossamer/uint8_array`                                                                                   | transit type    |
+| Iterator      | [`gossamer/iteration/iterator`](./gossamer/iteration/iterator.html)                                      | transit type    |
+| AsyncIterator | [`gossamer/iteration/async_iterator`](./gossamer/iteration/async_iterator.html)                          | transit type    |
+| Map           | [`gossamer/map`](./gossamer/map.html)                                                                    | transit type    |
+| Set           | [`gossamer/set`](./gossamer/set.html)                                                                    | transit type    |
+| String        | [`gossamer/string_extra`](./gossamer/string_extra.html)                                                  | extras          |
+| Number / Math | [`gossamer/int_extra`](./gossamer/int_extra.html), [`gossamer/float_extra`](./gossamer/float_extra.html) | extras          |
+| Date          | [`gossamer/time_extra`](./gossamer/time_extra.html)                                                      | extras          |
+| RegExp        | [`gossamer/regexp_extra`](./gossamer/regexp_extra.html)                                                  | extras          |
+| Symbol        | [`gossamer/symbol_extra`](./gossamer/symbol_extra.html)                                                  | extras          |
+| JSON          | [`gossamer/json`](./gossamer/json.html)                                                                  | transparent ADT |
 
 **Transit types** are JS native types exposed for interop with JS APIs that
 return them while the canonical Gleam type stays preferred:
@@ -219,7 +225,8 @@ return them while the canonical Gleam type stays preferred:
 - `Map` and `Set` bridge to `gleam/dict` and `gleam/set` via `from_dict` /
   `to_dict` / `from_set` / `to_set`.
 
-`gossamer/iteration` hosts the shared `IteratorResult` type.
+[`gossamer/iteration`](./gossamer/iteration.html) hosts the shared
+`IteratorResult` type.
 
 **Extras** modules layer JS-specific capabilities on top of Gleam's canonical
 types (`gleam/string`, `gleam/int`, `gleam/float`, `gleam/time`, `gleam/regexp`,
@@ -229,9 +236,9 @@ types (`gleam/string`, `gleam/int`, `gleam/float`, `gleam/time`, `gleam/regexp`,
 `max_value`, `pi` / `e`, trig, `log` / `exp` / `pow`) mirroring Gleam's stdlib
 split.
 
-`gossamer/json` provides a transparent `Json` ADT for inspecting or pattern-
-matching JSON of unknown structure. For typed encode/decode pipelines, use
-`gleam_json`.
+[`gossamer/json`](./gossamer/json.html) provides a transparent `Json` ADT for
+inspecting or pattern- matching JSON of unknown structure. For typed
+encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 
 ### Delegated
 
