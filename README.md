@@ -19,8 +19,8 @@ For higher-level Gleam-idiomatic abstractions, see
 [gleam_fetch](https://hexdocs.pm/gleam_fetch/), and
 [gleam_json](https://hexdocs.pm/gleam_json/).
 
-See [COVERAGE.md](COVERAGE.md) for the full list of implemented and planned
-APIs.
+See [docs/coverage.md](docs/coverage.md) for the full list of implemented and
+planned APIs.
 
 ## Installation
 

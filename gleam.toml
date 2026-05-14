@@ -14,6 +14,11 @@ typescript_declarations = true
 allow_read = true
 allow_net = true
 
+[documentation]
+pages = [
+  { title = "Coverage", path = "coverage.html", source = "./docs/coverage.md" },
+]
+
 [dependencies]
 gleam_stdlib = ">= 0.44.0 and < 2.0.0"
 gleam_http = ">= 4.3.0 and < 5.0.0"
