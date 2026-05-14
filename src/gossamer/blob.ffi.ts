@@ -54,5 +54,12 @@ export const to_object_url: typeof $blob.to_object_url = (blob) => {
 };
 
 export const revoke_object_url: typeof $blob.revoke_object_url = (url) => {
-  URL.revokeObjectURL(url);
+  // Deno throws on unparseable URL strings; Node and Bun match the
+  // spec's silent-no-op behavior. Swallow the throw so the binding is
+  // uniform across runtimes.
+  try {
+    URL.revokeObjectURL(url);
+  } catch {
+    // Spec: invalid object URLs silently fail.
+  }
 };

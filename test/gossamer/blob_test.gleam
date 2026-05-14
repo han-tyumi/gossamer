@@ -101,3 +101,10 @@ pub fn blob_revoke_object_url_test() {
   |> blob.to_object_url
   |> blob.revoke_object_url
 }
+
+pub fn blob_revoke_object_url_silent_on_invalid_test() {
+  // Deno throws on unparseable URL strings; Node and Bun match the
+  // spec's silent-no-op. The FFI swallows the Deno throw so the binding
+  // is uniform — this asserts the binding doesn't panic on any runtime.
+  blob.revoke_object_url("not-a-url")
+}
