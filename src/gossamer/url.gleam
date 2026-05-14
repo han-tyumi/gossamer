@@ -21,7 +21,7 @@ import gleam/uri.{type Uri}
 pub fn parse(url: String) -> Result(Uri, Nil)
 
 /// Returns `True` if `url` is a valid absolute URL per the WHATWG URL
-/// spec.
+/// spec. Equivalent to JavaScript's `URL.canParse`.
 ///
 @external(javascript, "./url.ffi.mjs", "is_valid")
 pub fn is_valid(url: String) -> Bool

@@ -4,7 +4,7 @@
 //// See [console](https://developer.mozilla.org/en-US/docs/Web/API/console) on MDN.
 
 /// Logs `data` as an error if `condition` is `False`. A no-op when the
-/// condition holds.
+/// condition holds. Equivalent to JavaScript's `console.assert`.
 ///
 @external(javascript, "./console.ffi.mjs", "log_if_false")
 pub fn log_if_false(that condition: Bool, log data: a) -> Nil

@@ -5,6 +5,7 @@ import gleam/javascript/symbol.{type Symbol}
 
 /// Creates a symbol with no description. Distinct from
 /// `symbol.new("")`, which sets the description to the empty string.
+/// Equivalent to JavaScript's `Symbol()` (called with no argument).
 ///
 /// ## Examples
 ///

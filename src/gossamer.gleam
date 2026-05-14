@@ -15,7 +15,7 @@ pub fn structured_clone(value: a) -> Result(a, String)
 
 /// Decodes a base64-encoded string. Returns an error carrying the
 /// underlying JavaScript error description if the string is not valid
-/// base64.
+/// base64. Equivalent to JavaScript's `atob`.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "decode_base64")
 pub fn decode_base64(encoded: String) -> Result(String, String)
@@ -23,7 +23,7 @@ pub fn decode_base64(encoded: String) -> Result(String, String)
 /// Encodes a binary string as base64. Returns an error carrying the
 /// underlying JavaScript error description if `data` contains code
 /// points beyond `0xFF` (use `gleam/bit_array.base64_encode` for
-/// arbitrary bytes).
+/// arbitrary bytes). Equivalent to JavaScript's `btoa`.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "encode_base64")
 pub fn encode_base64(data: String) -> Result(String, String)
@@ -60,7 +60,7 @@ pub fn set_interval(every delay: Duration, run callback: fn() -> a) -> Int
 pub fn set_timeout(after delay: Duration, run callback: fn() -> a) -> Int
 
 /// Returns the runtime's user agent string (e.g., browser identity,
-/// Deno/Node version).
+/// Deno/Node version). Equivalent to JavaScript's `navigator.userAgent`.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "user_agent")
 pub fn user_agent() -> String
