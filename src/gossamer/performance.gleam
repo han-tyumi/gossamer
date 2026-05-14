@@ -22,12 +22,10 @@ pub fn now() -> Duration
 @external(javascript, "./performance.ffi.mjs", "time_origin")
 pub fn time_origin() -> Timestamp
 
-/// Records a performance mark with `name` at the current time. Returns
-/// an error if the runtime rejects the name (Deno, Node, and Bun always
-/// accept any string).
+/// Records a performance mark with `name` at the current time.
 ///
 @external(javascript, "./performance.ffi.mjs", "mark")
-pub fn mark(name: String) -> Result(PerformanceEntry, Nil)
+pub fn mark(name: String) -> PerformanceEntry
 
 /// Records a measurement between two previously-recorded marks. Returns
 /// an error if either `start_mark` or `end_mark` doesn't exist.

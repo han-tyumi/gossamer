@@ -19,7 +19,7 @@ pub fn time_origin_test() {
 }
 
 pub fn mark_test() {
-  let assert Ok(entry) = performance.mark("test-mark")
+  let entry = performance.mark("test-mark")
   performance_entry.name(entry) |> should.equal("test-mark")
   performance_entry.entry_type(entry) |> should.equal("mark")
   duration.compare(performance_entry.start_time(entry), duration.seconds(0))
@@ -29,8 +29,8 @@ pub fn mark_test() {
 }
 
 pub fn measure_test() {
-  let assert Ok(_) = performance.mark("measure-start")
-  let assert Ok(_) = performance.mark("measure-end")
+  let _ = performance.mark("measure-start")
+  let _ = performance.mark("measure-end")
   let assert Ok(entry) =
     performance.measure("test-measure", "measure-start", "measure-end")
   performance_entry.name(entry) |> should.equal("test-measure")
@@ -49,7 +49,7 @@ pub fn measure_invalid_test() {
 pub fn get_entries_test() {
   performance.clear_marks()
   performance.clear_measures()
-  let assert Ok(_) = performance.mark("entries-mark")
+  let _ = performance.mark("entries-mark")
   let entries = performance.get_entries()
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
@@ -57,7 +57,7 @@ pub fn get_entries_test() {
 
 pub fn get_entries_by_name_test() {
   performance.clear_marks()
-  let assert Ok(_) = performance.mark("named-mark")
+  let _ = performance.mark("named-mark")
   let entries = performance.get_entries_by_name("named-mark")
   should.equal(list.length(entries), 1)
   performance.clear_marks()
@@ -65,22 +65,22 @@ pub fn get_entries_by_name_test() {
 
 pub fn get_entries_by_type_test() {
   performance.clear_marks()
-  let assert Ok(_) = performance.mark("typed-mark")
+  let _ = performance.mark("typed-mark")
   let entries = performance.get_entries_by_type("mark")
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
 }
 
 pub fn clear_marks_test() {
-  let assert Ok(_) = performance.mark("to-clear")
+  let _ = performance.mark("to-clear")
   performance.clear_marks()
   let entries = performance.get_entries_by_name("to-clear")
   should.equal(list.length(entries), 0)
 }
 
 pub fn clear_measures_test() {
-  let assert Ok(_) = performance.mark("cm-start")
-  let assert Ok(_) = performance.mark("cm-end")
+  let _ = performance.mark("cm-start")
+  let _ = performance.mark("cm-end")
   let assert Ok(_) = performance.measure("to-clear-m", "cm-start", "cm-end")
   performance.clear_measures()
   let entries = performance.get_entries_by_name("to-clear-m")
@@ -89,13 +89,13 @@ pub fn clear_measures_test() {
 }
 
 pub fn performance_entry_detail_test() {
-  let assert Ok(entry) = performance.mark("detail-mark")
+  let entry = performance.mark("detail-mark")
   performance_entry.detail(entry) |> should.be_error
   performance.clear_marks()
 }
 
 pub fn performance_entry_to_json_test() {
-  let assert Ok(entry) = performance.mark("json-mark")
+  let entry = performance.mark("json-mark")
   let _json = performance_entry.to_json(entry)
   performance.clear_marks()
 }

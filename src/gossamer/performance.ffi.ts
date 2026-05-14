@@ -12,11 +12,7 @@ export const time_origin: typeof $performance.time_origin = () => {
 };
 
 export const mark: typeof $performance.mark = (name) => {
-  try {
-    return Result$Ok(performance.mark(name));
-  } catch {
-    return Result$Error(undefined);
-  }
+  return performance.mark(name);
 };
 
 export const measure: typeof $performance.measure = (
