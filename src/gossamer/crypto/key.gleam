@@ -24,6 +24,7 @@ pub fn algorithm(key: CryptoKey) -> KeyAlgorithm
 pub fn is_extractable(key: CryptoKey) -> Bool
 
 /// Whether `key` is `Secret` (symmetric), `Public`, or `Private`.
+/// Equivalent to JavaScript's `CryptoKey.type`.
 ///
 @external(javascript, "./key.ffi.mjs", "kind")
 pub fn kind(key: CryptoKey) -> KeyKind
