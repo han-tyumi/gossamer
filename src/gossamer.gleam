@@ -6,27 +6,25 @@
 import gleam/time/duration.{type Duration}
 
 /// Creates a deep clone of `value` using the structured clone algorithm.
-/// Returns an error carrying the JavaScript error
-/// description if `value` contains a function, symbol, `DOM` node, or
-/// other non-cloneable component.
+/// Returns an error if `value` contains a function, symbol, `DOM` node,
+/// or other non-cloneable component.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "structured_clone")
-pub fn structured_clone(value: a) -> Result(a, String)
+pub fn structured_clone(value: a) -> Result(a, Nil)
 
-/// Decodes a base64-encoded string. Returns an error carrying the
-/// underlying JavaScript error description if the string is not valid
-/// base64. Equivalent to JavaScript's `atob`.
+/// Decodes a base64-encoded string. Returns an error if the string is
+/// not valid base64. Equivalent to JavaScript's `atob`.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "decode_base64")
-pub fn decode_base64(encoded: String) -> Result(String, String)
+pub fn decode_base64(encoded: String) -> Result(String, Nil)
 
-/// Encodes a binary string as base64. Returns an error carrying the
-/// underlying JavaScript error description if `data` contains code
-/// points beyond `0xFF` (use `gleam/bit_array.base64_encode` for
-/// arbitrary bytes). Equivalent to JavaScript's `btoa`.
+/// Encodes a binary string as base64. Returns an error if `data`
+/// contains code points beyond `0xFF` (use
+/// `gleam/bit_array.base64_encode` for arbitrary bytes). Equivalent to
+/// JavaScript's `btoa`.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "encode_base64")
-pub fn encode_base64(data: String) -> Result(String, String)
+pub fn encode_base64(data: String) -> Result(String, Nil)
 
 /// Cancels a repeating timer previously scheduled with `set_interval`.
 ///
