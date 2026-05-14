@@ -44,9 +44,11 @@ Node.js, Bun, and browsers.
 the `FormData` type come from [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/).
 
 [`gossamer/fetch_extra`](./gossamer/fetch_extra.html) adds the Fetch-spec init
-dict as a `FetchOptions` builder. Its `FetchError` supersedes the
-[`FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError) in
-`gleam_fetch` to add `Aborted` for `AbortSignal`-cancelled sends.
+dict as a `FetchOptions` builder, plus `send` variants that consume it. Errors
+come from
+[`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError);
+inspect aborts via `gossamer/abort_signal` on the signal you passed to
+`set_signal`.
 
 [`gossamer/form_data_extra`](./gossamer/form_data_extra.html) adds `append_file`
 / `set_file` for multipart file uploads.
