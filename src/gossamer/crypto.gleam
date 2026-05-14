@@ -1,7 +1,8 @@
 //// Cross-runtime bindings for the Web Cryptography API. The top-level
-//// `Crypto` interface (`random_bytes`, `random_uuid`) lives here, along
-//// with types shared across `gossamer/crypto/key`,
-//// `gossamer/crypto/subtle`, and `gossamer/crypto/jwk`.
+//// `Crypto` interface (`random_uuid`) lives here, along with types
+//// shared across `gossamer/crypto/key`, `gossamer/crypto/subtle`, and
+//// `gossamer/crypto/jwk`. For cryptographically strong random bytes,
+//// use [`gleam_crypto.strong_random_bytes`](https://hexdocs.pm/gleam_crypto/).
 
 /// An allowed use for a `CryptoKey`. A key can only be used with
 /// operations matching one of its declared usages.
@@ -196,14 +197,6 @@ pub type KeyAlgorithm {
   /// An X25519 key-agreement key.
   X25519
 }
-
-/// Generates `length` cryptographically strong random bytes. A
-/// non-positive `length` returns an empty `BitArray`. Requests over
-/// `65_536` bytes are split into chunks under the runtime's
-/// `getRandomValues` quota and concatenated.
-///
-@external(javascript, "./crypto.ffi.mjs", "random_bytes")
-pub fn random_bytes(length: Int) -> BitArray
 
 /// Generates a random UUID (version 4).
 ///

@@ -1,4 +1,5 @@
 import gleam/bit_array
+import gleam/crypto as gleam_crypto
 import gleam/javascript/promise
 import gleam/list
 import gleam/option
@@ -8,20 +9,6 @@ import gossamer/crypto
 import gossamer/crypto/key
 import gossamer/crypto/subtle
 import runtime
-
-pub fn random_bytes_test() {
-  crypto.random_bytes(16) |> bit_array.byte_size |> should.equal(16)
-}
-
-pub fn random_bytes_negative_test() {
-  crypto.random_bytes(-5) |> should.equal(<<>>)
-}
-
-pub fn random_bytes_quota_test() {
-  // The Web Crypto getRandomValues quota is 65_536 bytes per call;
-  // the binding chunks transparently for larger requests.
-  crypto.random_bytes(100_000) |> bit_array.byte_size |> should.equal(100_000)
-}
 
 pub fn random_uuid_test() {
   let uuid = crypto.random_uuid()
@@ -56,7 +43,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   should.equal(key.is_extractable(key), True)
   should.equal(key.kind(key), crypto.Secret)
 
-  let iv = crypto.random_bytes(12)
+  let iv = gleam_crypto.strong_random_bytes(12)
   let plaintext = <<"Hello":utf8>>
 
   use result <- promise.await(subtle.encrypt(
@@ -135,7 +122,7 @@ pub fn generate_rsa_key_pair_test() {
 }
 
 pub fn import_export_key_test() {
-  let raw_key = crypto.random_bytes(16)
+  let raw_key = gleam_crypto.strong_random_bytes(16)
 
   use result <- promise.await(
     subtle.import_key(subtle.Raw, raw_key, subtle.ImportAes(crypto.Gcm), True, [
@@ -192,7 +179,7 @@ pub fn crypto_key_algorithm_hkdf_test() {
   use result <- promise.await(
     subtle.import_key(
       subtle.Raw,
-      crypto.random_bytes(32),
+      gleam_crypto.strong_random_bytes(32),
       subtle.ImportHkdf,
       False,
       [crypto.DeriveBits],
@@ -273,7 +260,7 @@ pub fn import_key_jwk_test() {
 
 pub fn derive_bits_test() {
   let password = <<"pass":utf8>>
-  let salt = crypto.random_bytes(16)
+  let salt = gleam_crypto.strong_random_bytes(16)
 
   use result <- promise.await(
     subtle.import_key(subtle.Raw, password, subtle.ImportPbkdf2, False, [
@@ -294,7 +281,7 @@ pub fn derive_bits_test() {
 
 pub fn derive_key_test() {
   let password = <<"pass":utf8>>
-  let salt = crypto.random_bytes(16)
+  let salt = gleam_crypto.strong_random_bytes(16)
 
   use result <- promise.await(
     subtle.import_key(subtle.Raw, password, subtle.ImportPbkdf2, False, [
@@ -411,7 +398,11 @@ pub fn encrypt_key_usage_mismatch_test() {
 
   use encrypt_result <- promise.await(
     subtle.encrypt(
-      subtle.EncryptAesGcm(crypto.random_bytes(12), <<>>, option.None),
+      subtle.EncryptAesGcm(
+        gleam_crypto.strong_random_bytes(12),
+        <<>>,
+        option.None,
+      ),
       key,
       <<
         1,
@@ -449,7 +440,7 @@ pub fn import_key_empty_usages_test() {
   use result <- promise.await(
     subtle.import_key(
       subtle.Raw,
-      crypto.random_bytes(16),
+      gleam_crypto.strong_random_bytes(16),
       subtle.ImportAes(crypto.Gcm),
       True,
       [],
@@ -550,7 +541,7 @@ pub fn wrap_unwrap_key_aes_gcm_test() {
   )
   let assert Ok(key_to_wrap) = result
 
-  let iv = crypto.random_bytes(12)
+  let iv = gleam_crypto.strong_random_bytes(12)
   use result <- promise.await(subtle.wrap_key(
     subtle.Raw,
     key_to_wrap,
@@ -592,7 +583,7 @@ pub fn wrap_unwrap_key_aes_gcm_with_test() {
   )
   let assert Ok(key_to_wrap) = result
 
-  let iv = crypto.random_bytes(12)
+  let iv = gleam_crypto.strong_random_bytes(12)
   let aad = <<"context":utf8>>
   use result <- promise.await(subtle.wrap_key(
     subtle.Raw,
@@ -659,7 +650,7 @@ pub fn import_x25519_public_test() {
 }
 
 pub fn import_hkdf_base_key_test() {
-  let key_material = crypto.random_bytes(32)
+  let key_material = gleam_crypto.strong_random_bytes(32)
   use result <- promise.await(
     subtle.import_key(subtle.Raw, key_material, subtle.ImportHkdf, False, [
       crypto.DeriveBits,
