@@ -1,6 +1,7 @@
 import * as $intl from "$/gossamer/gossamer/intl.mjs";
 import * as $numberFormat from "$/gossamer/gossamer/intl/number_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { fromRangeSource } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
@@ -166,12 +167,6 @@ function fromPartKind(type: string): $numberFormat.PartKind$ {
   }
 }
 
-function fromRangePartSource(source: string): $numberFormat.RangePartSource$ {
-  if (source === "startRange") return $numberFormat.RangePartSource$Start();
-  if (source === "endRange") return $numberFormat.RangePartSource$End();
-  return $numberFormat.RangePartSource$Shared();
-}
-
 function toPart(
   item: Intl.NumberFormatPart,
 ): $numberFormat.Part$ {
@@ -181,14 +176,14 @@ function toPart(
 interface NumberRangeFormatPart {
   type: string;
   value: string;
-  source: string;
+  source: "startRange" | "shared" | "endRange";
 }
 
 function toRangePart(item: NumberRangeFormatPart): $numberFormat.RangePart$ {
   return $numberFormat.RangePart$RangePart(
     fromPartKind(item.type),
     item.value,
-    fromRangePartSource(item.source),
+    fromRangeSource(item.source),
   );
 }
 

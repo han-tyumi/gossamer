@@ -1,4 +1,5 @@
 import gleeunit/should
+import gossamer/intl
 import gossamer/intl/list_format
 
 pub fn build_default_test() {
@@ -38,7 +39,7 @@ pub fn format_unit_test() {
 pub fn format_short_style_test() {
   let assert Ok(formatter) =
     list_format.new(["en-US"])
-    |> list_format.with_style(list_format.Short)
+    |> list_format.with_style(intl.Short)
     |> list_format.build
   list_format.format(formatter, ["apple", "banana", "cherry"])
   |> should.equal("apple, banana, & cherry")
@@ -48,7 +49,7 @@ pub fn format_narrow_style_unit_test() {
   let assert Ok(formatter) =
     list_format.new(["en-US"])
     |> list_format.with_kind(list_format.Unit)
-    |> list_format.with_style(list_format.Narrow)
+    |> list_format.with_style(intl.Narrow)
     |> list_format.build
   list_format.format(formatter, ["5h", "10m"])
   |> should.equal("5h 10m")

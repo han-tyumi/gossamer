@@ -81,12 +81,12 @@ pub fn numbering_system_absent_test() {
   locale.numbering_system(at("en-US")) |> should.equal(None)
 }
 
-pub fn numeric_true_test() {
-  locale.numeric(at("en-US-u-kn-true")) |> should.be_true
+pub fn is_numeric_true_test() {
+  locale.is_numeric(at("en-US-u-kn-true")) |> should.be_true
 }
 
-pub fn numeric_default_test() {
-  locale.numeric(at("en-US")) |> should.be_false
+pub fn is_numeric_default_test() {
+  locale.is_numeric(at("en-US")) |> should.be_false
 }
 
 pub fn calendars_test() {

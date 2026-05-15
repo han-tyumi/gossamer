@@ -1,4 +1,5 @@
 import gleeunit/should
+import gossamer/intl
 import gossamer/intl/display_names
 
 pub fn build_default_test() {
@@ -59,7 +60,7 @@ pub fn of_date_time_field_test() {
 pub fn of_short_style_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Region)
-    |> display_names.with_style(display_names.Short)
+    |> display_names.with_style(intl.Short)
     |> display_names.build
   display_names.of(formatter, "US") |> should.equal(Ok("US"))
 }

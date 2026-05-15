@@ -100,7 +100,7 @@ pub fn format_month_narrow_test() {
 pub fn format_weekday_long_test() {
   let assert Ok(fmt) =
     utc_format()
-    |> date_time_format.with_weekday(date_time_format.Long)
+    |> date_time_format.with_weekday(intl.Long)
     |> date_time_format.build
   date_time_format.format(fmt, fixed()) |> should.equal("Thursday")
 }
@@ -108,7 +108,7 @@ pub fn format_weekday_long_test() {
 pub fn format_weekday_narrow_test() {
   let assert Ok(fmt) =
     utc_format()
-    |> date_time_format.with_weekday(date_time_format.Narrow)
+    |> date_time_format.with_weekday(intl.Narrow)
     |> date_time_format.build
   date_time_format.format(fmt, fixed()) |> should.equal("T")
 }
@@ -117,7 +117,7 @@ pub fn format_era_long_test() {
   let assert Ok(fmt) =
     utc_format()
     |> date_time_format.with_year(date_time_format.Numeric)
-    |> date_time_format.with_era(date_time_format.Long)
+    |> date_time_format.with_era(intl.Long)
     |> date_time_format.build
   date_time_format.format(fmt, fixed())
   |> should.equal("2025 Anno Domini")
@@ -343,8 +343,8 @@ pub fn format_range_to_parts_test() {
       to: at("2025-05-15"),
     )
   let sources = list.map(parts, fn(p) { p.source })
-  list.contains(sources, date_time_format.StartRange) |> should.be_true
-  list.contains(sources, date_time_format.EndRange) |> should.be_true
+  list.contains(sources, intl.Start) |> should.be_true
+  list.contains(sources, intl.End) |> should.be_true
 }
 
 pub fn resolved_locale_test() {

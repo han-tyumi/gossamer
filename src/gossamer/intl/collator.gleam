@@ -147,7 +147,7 @@ pub fn do_build(
 /// Compares two strings under the configured locale's collation.
 ///
 @external(javascript, "./collator.ffi.mjs", "compare")
-pub fn compare(collator: Collator, a: String, to b: String) -> Order
+pub fn compare(collator: Collator, a: String, b: String) -> Order
 
 /// The BCP 47 locale tag the runtime resolved from the requested
 /// priority list (e.g., `"en-US"`).

@@ -75,7 +75,7 @@ export const hour_cycle: typeof $locale.hour_cycle = (locale) => {
 export const numbering_system: typeof $locale.numbering_system = (locale) =>
   toOption(locale.numberingSystem);
 
-export const numeric: typeof $locale.numeric = (locale) =>
+export const is_numeric: typeof $locale.is_numeric = (locale) =>
   locale.numeric ?? false;
 
 export const calendars: typeof $locale.calendars = (locale) =>

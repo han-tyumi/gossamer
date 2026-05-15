@@ -1,5 +1,6 @@
 import * as $listFormat from "$/gossamer/gossamer/intl/list_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toLabelStyle } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
@@ -9,12 +10,6 @@ function toKind(
   if ($listFormat.Kind$isConjunction(kind)) return "conjunction";
   if ($listFormat.Kind$isDisjunction(kind)) return "disjunction";
   return "unit";
-}
-
-function toStyle(style: $listFormat.Style$): "long" | "short" | "narrow" {
-  if ($listFormat.Style$isLong(style)) return "long";
-  if ($listFormat.Style$isShort(style)) return "short";
-  return "narrow";
 }
 
 function fromPartKind(type: string): $listFormat.PartKind$ {
@@ -30,7 +25,7 @@ function toPart(item: { type: string; value: string }): $listFormat.Part$ {
 export const build: typeof $listFormat.do_build = (locales, kind, style) => {
   const options: Intl.ListFormatOptions = {};
   mapIfSome(options, "type", kind, toKind);
-  mapIfSome(options, "style", style, toStyle);
+  mapIfSome(options, "style", style, toLabelStyle);
   try {
     return Result$Ok(new Intl.ListFormat(toArray(locales), options));
   } catch {

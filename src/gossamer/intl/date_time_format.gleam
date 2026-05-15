@@ -10,7 +10,7 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/time/timestamp.{type Timestamp}
-import gossamer/intl.{type HourCycle}
+import gossamer/intl.{type HourCycle, type LabelStyle, type RangePartSource}
 
 /// A configured formatter that renders a `Timestamp` as a
 /// locale-aware date/time string.
@@ -19,21 +19,6 @@ import gossamer/intl.{type HourCycle}
 ///
 @external(javascript, "./date_time_format.type.ts", "DateTimeFormat$")
 pub type DateTimeFormat
-
-/// The verbosity of a labelled date/time component. Maps the
-/// JavaScript `"long" | "short" | "narrow"` value set, shared by the
-/// `weekday`, `era`, and `dayPeriod` options.
-///
-pub type Width {
-  /// Full names (`"Friday"`, `"Anno Domini"`).
-  Long
-
-  /// Shortened forms (`"Fri"`, `"AD"`).
-  Short
-
-  /// The shortest forms (`"F"`, `"A"`).
-  Narrow
-}
 
 /// The presentation of a numeric date/time component. Maps the
 /// JavaScript `"numeric" | "2-digit"` value set, shared by the
@@ -131,24 +116,12 @@ pub type Part {
 }
 
 /// A single segment of a formatted date/time range, returned by
-/// [`format_range_to_parts`](#format_range_to_parts). `source`
-/// identifies which side of the range produced the segment.
+/// [`format_range_to_parts`](#format_range_to_parts). `source` is an
+/// [`intl.RangePartSource`](../intl.html#RangePartSource)
+/// identifying which side of the range produced the segment.
 ///
 pub type RangePart {
   RangePart(kind: PartKind, value: String, source: RangePartSource)
-}
-
-/// Which side of a formatted range produced a [`RangePart`](#RangePart).
-///
-pub type RangePartSource {
-  /// Shared by both sides of the range (e.g., a connecting `" - "`).
-  Shared
-
-  /// Produced from the start of the range.
-  StartRange
-
-  /// Produced from the end of the range.
-  EndRange
 }
 
 /// The kind of a [`Part`](#Part) or [`RangePart`](#RangePart).
@@ -214,8 +187,8 @@ pub opaque type Builder {
     hour12: Option(Bool),
     hour_cycle: Option(HourCycle),
     time_zone: Option(String),
-    weekday: Option(Width),
-    era: Option(Width),
+    weekday: Option(LabelStyle),
+    era: Option(LabelStyle),
     year: Option(NumericWidth),
     month: Option(Month),
     day: Option(NumericWidth),
@@ -224,7 +197,7 @@ pub opaque type Builder {
     second: Option(NumericWidth),
     fractional_second_digits: Option(FractionalSecondDigits),
     time_zone_name: Option(TimeZoneName),
-    day_period: Option(Width),
+    day_period: Option(LabelStyle),
     date_style: Option(Style),
     time_style: Option(Style),
   )
@@ -300,13 +273,13 @@ pub fn with_time_zone(builder: Builder, value: String) -> Builder {
 
 /// Sets the format of the day-of-week component.
 ///
-pub fn with_weekday(builder: Builder, value: Width) -> Builder {
+pub fn with_weekday(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, weekday: Some(value))
 }
 
 /// Sets the format of the era component.
 ///
-pub fn with_era(builder: Builder, value: Width) -> Builder {
+pub fn with_era(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, era: Some(value))
 }
 
@@ -364,7 +337,7 @@ pub fn with_time_zone_name(builder: Builder, value: TimeZoneName) -> Builder {
 /// Sets the format of the day-period component (e.g., `"AM"` /
 /// `"in the morning"`).
 ///
-pub fn with_day_period(builder: Builder, value: Width) -> Builder {
+pub fn with_day_period(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, day_period: Some(value))
 }
 
@@ -426,8 +399,8 @@ pub fn do_build(
   hour12: Option(Bool),
   hour_cycle: Option(HourCycle),
   time_zone: Option(String),
-  weekday: Option(Width),
-  era: Option(Width),
+  weekday: Option(LabelStyle),
+  era: Option(LabelStyle),
   year: Option(NumericWidth),
   month: Option(Month),
   day: Option(NumericWidth),
@@ -436,7 +409,7 @@ pub fn do_build(
   second: Option(NumericWidth),
   fractional_second_digits: Option(FractionalSecondDigits),
   time_zone_name: Option(TimeZoneName),
-  day_period: Option(Width),
+  day_period: Option(LabelStyle),
   date_style: Option(Style),
   time_style: Option(Style),
 ) -> Result(DateTimeFormat, Nil)

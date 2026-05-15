@@ -3,6 +3,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
+import gossamer/intl.{type LabelStyle}
 
 /// A configured list formatter that joins a list of strings using a
 /// locale-specific conjunction or separator.
@@ -28,20 +29,6 @@ pub type Kind {
   Unit
 }
 
-/// The verbosity of the joining words and separators. Maps the
-/// JavaScript `style` option.
-///
-pub type Style {
-  /// Full words and standard separators (the default).
-  Long
-
-  /// Shortened forms.
-  Short
-
-  /// The shortest forms.
-  Narrow
-}
-
 /// A single segment of a formatted list, returned by
 /// [`format_to_parts`](#format_to_parts).
 ///
@@ -63,7 +50,7 @@ pub type PartKind {
 /// The configuration for a [`ListFormat`](#ListFormat).
 ///
 pub opaque type Builder {
-  Builder(locales: List(String), kind: Option(Kind), style: Option(Style))
+  Builder(locales: List(String), kind: Option(Kind), style: Option(LabelStyle))
 }
 
 /// Creates a `Builder` for the given locale priority list. The
@@ -82,7 +69,7 @@ pub fn with_kind(builder: Builder, value: Kind) -> Builder {
 
 /// Sets the verbosity of the joining words and separators.
 ///
-pub fn with_style(builder: Builder, value: Style) -> Builder {
+pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, style: Some(value))
 }
 
@@ -99,7 +86,7 @@ pub fn build(builder: Builder) -> Result(ListFormat, Nil) {
 pub fn do_build(
   locales: List(String),
   kind: Option(Kind),
-  style: Option(Style),
+  style: Option(LabelStyle),
 ) -> Result(ListFormat, Nil)
 
 /// Formats `list` as a locale-aware joined string. An empty list

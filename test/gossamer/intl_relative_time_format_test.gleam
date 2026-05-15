@@ -1,5 +1,6 @@
 import gleam/option
 import gleeunit/should
+import gossamer/intl
 import gossamer/intl/relative_time_format
 
 pub fn build_default_test() {
@@ -51,7 +52,7 @@ pub fn format_numeric_auto_test() {
 pub fn format_style_short_test() {
   let assert Ok(formatter) =
     relative_time_format.new(["en-US"])
-    |> relative_time_format.with_style(relative_time_format.Short)
+    |> relative_time_format.with_style(intl.Short)
     |> relative_time_format.build
   relative_time_format.format_int(formatter, 1, in: relative_time_format.Month)
   |> should.equal("in 1 mo.")
@@ -60,7 +61,7 @@ pub fn format_style_short_test() {
 pub fn format_style_narrow_test() {
   let assert Ok(formatter) =
     relative_time_format.new(["en-US"])
-    |> relative_time_format.with_style(relative_time_format.Narrow)
+    |> relative_time_format.with_style(intl.Narrow)
     |> relative_time_format.build
   relative_time_format.format_int(formatter, 1, in: relative_time_format.Month)
   |> should.equal("in 1mo")

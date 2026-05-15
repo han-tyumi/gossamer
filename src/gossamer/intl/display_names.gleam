@@ -5,6 +5,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
+import gossamer/intl.{type LabelStyle}
 
 /// A configured formatter that maps standard codes (BCP 47 language
 /// tags, ISO 4217 currency codes, ISO 15924 script codes, etc.) to
@@ -38,20 +39,6 @@ pub type Kind {
   DateTimeField
 }
 
-/// The verbosity of the produced display name. Maps the JavaScript
-/// `style` option.
-///
-pub type Style {
-  /// Full names (the default).
-  Long
-
-  /// Shortened forms.
-  Short
-
-  /// The shortest forms.
-  Narrow
-}
-
 /// What the formatter returns when no display name exists for the
 /// input code. Maps the JavaScript `fallback` option.
 ///
@@ -83,7 +70,7 @@ pub opaque type Builder {
   Builder(
     locales: List(String),
     kind: Kind,
-    style: Option(Style),
+    style: Option(LabelStyle),
     fallback: Option(Fallback),
     language_display: Option(LanguageDisplay),
   )
@@ -100,7 +87,7 @@ pub fn new(locales: List(String), of kind: Kind) -> Builder {
 
 /// Sets the verbosity of the produced display name.
 ///
-pub fn with_style(builder: Builder, value: Style) -> Builder {
+pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, style: Some(value))
 }
 
@@ -140,7 +127,7 @@ pub fn build(builder: Builder) -> Result(DisplayNames, Nil) {
 pub fn do_build(
   locales: List(String),
   kind: Kind,
-  style: Option(Style),
+  style: Option(LabelStyle),
   fallback: Option(Fallback),
   language_display: Option(LanguageDisplay),
 ) -> Result(DisplayNames, Nil)

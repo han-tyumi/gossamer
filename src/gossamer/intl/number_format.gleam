@@ -10,7 +10,8 @@
 import gleam/option.{type Option, None, Some}
 import gossamer/big_int.{type BigInt}
 import gossamer/intl.{
-  type RoundingMode, type RoundingPriority, type TrailingZeroDisplay,
+  type RangePartSource, type RoundingMode, type RoundingPriority,
+  type TrailingZeroDisplay,
 }
 
 /// A configured number formatter that produces locale-aware string
@@ -217,26 +218,12 @@ pub type PartKind {
 
 /// A single segment of a formatted number range, returned by the
 /// `format_*_range_to_parts` family. Like [`Part`](#Part) but also
-/// carries a [`RangePartSource`](#RangePartSource) identifying which
+/// carries a [`intl.RangePartSource`](../intl.html#RangePartSource)
+/// identifying which
 /// endpoint the segment came from.
 ///
 pub type RangePart {
   RangePart(kind: PartKind, value: String, source: RangePartSource)
-}
-
-/// Which endpoint of a formatted range a [`RangePart`](#RangePart)
-/// belongs to.
-///
-pub type RangePartSource {
-  /// The segment is part of the range's start value.
-  Start
-
-  /// The segment is shared (typically the separator and any
-  /// literal surrounds).
-  Shared
-
-  /// The segment is part of the range's end value.
-  End
 }
 
 /// The configuration for a [`NumberFormat`](#NumberFormat).

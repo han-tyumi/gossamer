@@ -1,19 +1,12 @@
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $relativeTimeFormat from "$/gossamer/gossamer/intl/relative_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toLabelStyle } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
 function toNumeric(numeric: $relativeTimeFormat.Numeric$): "always" | "auto" {
   return $relativeTimeFormat.Numeric$isAlways(numeric) ? "always" : "auto";
-}
-
-function toStyle(
-  style: $relativeTimeFormat.Style$,
-): "long" | "short" | "narrow" {
-  if ($relativeTimeFormat.Style$isLong(style)) return "long";
-  if ($relativeTimeFormat.Style$isShort(style)) return "short";
-  return "narrow";
 }
 
 function toUnit(
@@ -94,7 +87,7 @@ export const build: typeof $relativeTimeFormat.do_build = (
 ) => {
   const options: Intl.RelativeTimeFormatOptions = {};
   mapIfSome(options, "numeric", numeric, toNumeric);
-  mapIfSome(options, "style", style, toStyle);
+  mapIfSome(options, "style", style, toLabelStyle);
   try {
     return Result$Ok(new Intl.RelativeTimeFormat(toArray(locales), options));
   } catch {

@@ -4,6 +4,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
+import gossamer/intl.{type LabelStyle}
 
 /// A configured formatter that renders relative time spans
 /// (`"in 2 hours"`, `"yesterday"`, etc.) in a locale-specific way.
@@ -24,20 +25,6 @@ pub type Numeric {
   /// Substitute locale-specific wording for special values
   /// (`"tomorrow"` instead of `"in 1 day"`).
   Auto
-}
-
-/// The verbosity of the unit labels. Maps the JavaScript `style`
-/// option.
-///
-pub type Style {
-  /// Full words (`"in 1 month"`, the default).
-  Long
-
-  /// Shortened forms (`"in 1 mo."`).
-  Short
-
-  /// The shortest forms (`"in 1mo"`).
-  Narrow
 }
 
 /// A time unit accepted by the format operations. Maps the JavaScript
@@ -103,7 +90,11 @@ pub type PartKind {
 /// [`RelativeTimeFormat`](#RelativeTimeFormat).
 ///
 pub opaque type Builder {
-  Builder(locales: List(String), numeric: Option(Numeric), style: Option(Style))
+  Builder(
+    locales: List(String),
+    numeric: Option(Numeric),
+    style: Option(LabelStyle),
+  )
 }
 
 /// Creates a `Builder` for the given locale priority list. The
@@ -123,7 +114,7 @@ pub fn with_numeric(builder: Builder, value: Numeric) -> Builder {
 
 /// Sets the verbosity of the unit labels.
 ///
-pub fn with_style(builder: Builder, value: Style) -> Builder {
+pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, style: Some(value))
 }
 
@@ -140,7 +131,7 @@ pub fn build(builder: Builder) -> Result(RelativeTimeFormat, Nil) {
 pub fn do_build(
   locales: List(String),
   numeric: Option(Numeric),
-  style: Option(Style),
+  style: Option(LabelStyle),
 ) -> Result(RelativeTimeFormat, Nil)
 
 /// Formats a `Float` value as a relative time in the given unit

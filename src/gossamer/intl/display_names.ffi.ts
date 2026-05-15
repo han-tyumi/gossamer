@@ -1,5 +1,6 @@
 import * as $displayNames from "$/gossamer/gossamer/intl/display_names.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toLabelStyle } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
@@ -10,12 +11,6 @@ function toKind(kind: $displayNames.Kind$): Intl.DisplayNamesType {
   if ($displayNames.Kind$isCurrency(kind)) return "currency";
   if ($displayNames.Kind$isCalendar(kind)) return "calendar";
   return "dateTimeField";
-}
-
-function toStyle(style: $displayNames.Style$): "long" | "short" | "narrow" {
-  if ($displayNames.Style$isLong(style)) return "long";
-  if ($displayNames.Style$isShort(style)) return "short";
-  return "narrow";
 }
 
 function toFallback(fallback: $displayNames.Fallback$): "code" | "none" {
@@ -38,7 +33,7 @@ export const build: typeof $displayNames.do_build = (
   languageDisplay,
 ) => {
   const options: Intl.DisplayNamesOptions = { type: toKind(kind) };
-  mapIfSome(options, "style", style, toStyle);
+  mapIfSome(options, "style", style, toLabelStyle);
   mapIfSome(options, "fallback", fallback, toFallback);
   mapIfSome(options, "languageDisplay", languageDisplay, toLanguageDisplay);
   try {

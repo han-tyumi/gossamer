@@ -223,8 +223,8 @@ pub fn numbering_system(locale: Locale) -> Option(String)
 
 /// Whether numeric collation is preferred for the locale.
 ///
-@external(javascript, "./locale.ffi.mjs", "numeric")
-pub fn numeric(locale: Locale) -> Bool
+@external(javascript, "./locale.ffi.mjs", "is_numeric")
+pub fn is_numeric(locale: Locale) -> Bool
 
 /// The calendars supported by the locale, in preference order.
 ///

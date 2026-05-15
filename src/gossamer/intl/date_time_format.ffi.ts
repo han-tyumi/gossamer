@@ -1,14 +1,12 @@
 import * as $dateTimeFormat from "$/gossamer/gossamer/intl/date_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toHourCycle } from "~/utils/intl.ffi.ts";
+import {
+  fromRangeSource,
+  toHourCycle,
+  toLabelStyle,
+} from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
-
-function toWidth(width: $dateTimeFormat.Width$): "long" | "short" | "narrow" {
-  if ($dateTimeFormat.Width$isLong(width)) return "long";
-  if ($dateTimeFormat.Width$isShort(width)) return "short";
-  return "narrow";
-}
 
 function toNumericWidth(
   width: $dateTimeFormat.NumericWidth$,
@@ -105,16 +103,6 @@ function fromPartKind(type: string): $dateTimeFormat.PartKind$ {
   }
 }
 
-function fromRangeSource(
-  source: "shared" | "startRange" | "endRange",
-): $dateTimeFormat.RangePartSource$ {
-  if (source === "shared") return $dateTimeFormat.RangePartSource$Shared();
-  if (source === "startRange") {
-    return $dateTimeFormat.RangePartSource$StartRange();
-  }
-  return $dateTimeFormat.RangePartSource$EndRange();
-}
-
 function toPart(
   item: { type: string; value: string },
 ): $dateTimeFormat.Part$ {
@@ -166,8 +154,8 @@ export const build: typeof $dateTimeFormat.do_build = (
   setIfSome(options, "hour12", hour12);
   mapIfSome(options, "hourCycle", hourCycle, toHourCycle);
   mapIfSome(options, "timeZone", timeZone, (value) => value);
-  mapIfSome(options, "weekday", weekday, toWidth);
-  mapIfSome(options, "era", era, toWidth);
+  mapIfSome(options, "weekday", weekday, toLabelStyle);
+  mapIfSome(options, "era", era, toLabelStyle);
   mapIfSome(options, "year", year, toNumericWidth);
   mapIfSome(options, "month", month, toMonth);
   mapIfSome(options, "day", day, toNumericWidth);
@@ -181,7 +169,7 @@ export const build: typeof $dateTimeFormat.do_build = (
     toFractionalSecondDigits,
   );
   mapIfSome(options, "timeZoneName", timeZoneName, toTimeZoneName);
-  mapIfSome(options, "dayPeriod", dayPeriod, toWidth);
+  mapIfSome(options, "dayPeriod", dayPeriod, toLabelStyle);
   mapIfSome(options, "dateStyle", dateStyle, toStyle);
   mapIfSome(options, "timeStyle", timeStyle, toStyle);
   try {

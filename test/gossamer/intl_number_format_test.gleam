@@ -249,7 +249,7 @@ pub fn format_range_to_parts_test() {
     number_format.format_float_range_to_parts(formatter, from: 1.0, to: 5.0)
   // First part should be from the start side.
   case parts {
-    [first, ..] -> first.source |> should.equal(number_format.Start)
+    [first, ..] -> first.source |> should.equal(intl.Start)
     [] -> panic as "expected non-empty parts"
   }
 }

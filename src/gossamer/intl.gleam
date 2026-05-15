@@ -96,3 +96,34 @@ pub type CaseFirst {
   /// Case is not considered (the JavaScript option value `"false"`).
   Neither
 }
+
+/// The verbosity of a rendered label. Maps the JavaScript
+/// `"long" | "short" | "narrow"` value set used by `Intl.DateTimeFormat`
+/// (weekday/era/dayPeriod), `Intl.DisplayNames` (style),
+/// `Intl.ListFormat` (style), and `Intl.RelativeTimeFormat` (style).
+///
+pub type LabelStyle {
+  /// Full names (`"Friday"`, `"American English"`).
+  Long
+
+  /// Shortened forms (`"Fri"`, `"AmE"`).
+  Short
+
+  /// The shortest forms (`"F"`).
+  Narrow
+}
+
+/// Which side of a formatted range produced a particular segment.
+/// Returned in the `source` field of `format_range_to_parts` output
+/// across `Intl.DateTimeFormat` and `Intl.NumberFormat`.
+///
+pub type RangePartSource {
+  /// Produced from the start of the range.
+  Start
+
+  /// Shared by both sides of the range (e.g., a connecting `" - "`).
+  Shared
+
+  /// Produced from the end of the range.
+  End
+}

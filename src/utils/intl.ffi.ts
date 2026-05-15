@@ -9,6 +9,22 @@ export function toHourCycle(
   return "h24";
 }
 
+export function toLabelStyle(
+  style: $intl.LabelStyle$,
+): "long" | "short" | "narrow" {
+  if ($intl.LabelStyle$isLong(style)) return "long";
+  if ($intl.LabelStyle$isShort(style)) return "short";
+  return "narrow";
+}
+
+export function fromRangeSource(
+  source: "startRange" | "shared" | "endRange",
+): $intl.RangePartSource$ {
+  if (source === "startRange") return $intl.RangePartSource$Start();
+  if (source === "endRange") return $intl.RangePartSource$End();
+  return $intl.RangePartSource$Shared();
+}
+
 export function fromHourCycle(value: string): $intl.HourCycle$ {
   switch (value) {
     case "h11":
