@@ -1,4 +1,5 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
+import * as $intl from "$/gossamer/gossamer/intl.mjs";
 import * as $collator from "$/gossamer/gossamer/intl/collator.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
@@ -18,10 +19,10 @@ function toSensitivity(
 }
 
 function toCaseFirst(
-  case_first: $collator.CaseFirst$,
+  case_first: $intl.CaseFirst$,
 ): "upper" | "lower" | "false" {
-  if ($collator.CaseFirst$isUpper(case_first)) return "upper";
-  if ($collator.CaseFirst$isLower(case_first)) return "lower";
+  if ($intl.CaseFirst$isUpper(case_first)) return "upper";
+  if ($intl.CaseFirst$isLower(case_first)) return "lower";
   return "false";
 }
 

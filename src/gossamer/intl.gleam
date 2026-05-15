@@ -1,8 +1,5 @@
 //// Parent module for the Internationalization family — JavaScript's
-//// `Intl.*` constructors. Hosts the rounding option enums shared
-//// across siblings that accept rounding configuration
-//// ([`gossamer/intl/number_format`](./intl/number_format.html) and
-//// [`gossamer/intl/plural_rules`](./intl/plural_rules.html)).
+//// `Intl.*` constructors. Hosts option enums shared across siblings.
 
 /// The rounding strategy applied to a formatter's output. Maps the
 /// JavaScript `roundingMode` option.
@@ -66,4 +63,36 @@ pub type TrailingZeroDisplay {
   /// Strip trailing fraction zeros from integer values (e.g.,
   /// `"1.00"` becomes `"1"`).
   TrailingZeroStripIfInteger
+}
+
+/// The clock format. Maps the JavaScript `hourCycle` option.
+///
+pub type HourCycle {
+  /// 12-hour clock starting at hour 0 (midnight is `0:00 AM`).
+  H11
+
+  /// 12-hour clock starting at hour 12 (midnight is `12:00 AM` — the
+  /// common AM/PM clock).
+  H12
+
+  /// 24-hour clock starting at hour 0 (midnight is `0:00` — the
+  /// common 24-hour clock).
+  H23
+
+  /// 24-hour clock starting at hour 24 (midnight is `24:00`).
+  H24
+}
+
+/// How case influences sort order when case would otherwise be a
+/// tiebreaker. Maps the JavaScript `caseFirst` option.
+///
+pub type CaseFirst {
+  /// Uppercase letters sort before their lowercase equivalents.
+  Upper
+
+  /// Lowercase letters sort before their uppercase equivalents.
+  Lower
+
+  /// Case is not considered (the JavaScript option value `"false"`).
+  Neither
 }

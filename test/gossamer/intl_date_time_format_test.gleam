@@ -2,6 +2,7 @@ import gleam/list
 import gleam/string
 import gleam/time/timestamp.{type Timestamp}
 import gleeunit/should
+import gossamer/intl
 import gossamer/intl/date_time_format
 
 // 2025-05-15T14:30:45.123Z — a fixed UTC instant used across tests.
@@ -127,7 +128,7 @@ pub fn format_hour_minute_test() {
     utc_format()
     |> date_time_format.with_hour(date_time_format.Numeric)
     |> date_time_format.with_minute(date_time_format.TwoDigit)
-    |> date_time_format.with_hour_cycle(date_time_format.H23)
+    |> date_time_format.with_hour_cycle(intl.H23)
     |> date_time_format.build
   date_time_format.format(fmt, fixed()) |> should.equal("14:30")
 }
@@ -136,7 +137,7 @@ pub fn format_second_test() {
   let assert Ok(fmt) =
     utc_format()
     |> date_time_format.with_second(date_time_format.TwoDigit)
-    |> date_time_format.with_hour_cycle(date_time_format.H23)
+    |> date_time_format.with_hour_cycle(intl.H23)
     |> date_time_format.build
   // hour is implied by the presence of second; assert it contains "45".
   date_time_format.format(fmt, fixed())
@@ -151,7 +152,7 @@ pub fn format_fractional_seconds_test() {
     |> date_time_format.with_fractional_second_digits(
       date_time_format.FractionalSeconds3,
     )
-    |> date_time_format.with_hour_cycle(date_time_format.H23)
+    |> date_time_format.with_hour_cycle(intl.H23)
     |> date_time_format.build
   date_time_format.format(fmt, fixed())
   |> string.contains("123")
@@ -174,7 +175,7 @@ pub fn format_hour_cycle_h23_test() {
   let assert Ok(fmt) =
     utc_format()
     |> date_time_format.with_hour(date_time_format.Numeric)
-    |> date_time_format.with_hour_cycle(date_time_format.H23)
+    |> date_time_format.with_hour_cycle(intl.H23)
     |> date_time_format.build
   date_time_format.format(fmt, fixed()) |> should.equal("14")
 }
@@ -206,7 +207,7 @@ pub fn format_with_time_zone_test() {
     date_time_format.new(["en-US"])
     |> date_time_format.with_time_zone("America/New_York")
     |> date_time_format.with_hour(date_time_format.Numeric)
-    |> date_time_format.with_hour_cycle(date_time_format.H23)
+    |> date_time_format.with_hour_cycle(intl.H23)
     |> date_time_format.build
   // 14:30 UTC is 10:30 EDT in May.
   date_time_format.format(fmt, fixed()) |> should.equal("10")
@@ -224,7 +225,7 @@ pub fn format_time_style_short_test() {
   let assert Ok(fmt) =
     utc_format()
     |> date_time_format.with_time_style(date_time_format.StyleShort)
-    |> date_time_format.with_hour_cycle(date_time_format.H23)
+    |> date_time_format.with_hour_cycle(intl.H23)
     |> date_time_format.build
   date_time_format.format(fmt, fixed()) |> should.equal("14:30")
 }

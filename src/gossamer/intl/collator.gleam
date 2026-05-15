@@ -4,6 +4,7 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/order.{type Order}
+import gossamer/intl.{type CaseFirst}
 
 /// A configured comparator that orders strings using a locale-
 /// specific collation.
@@ -41,20 +42,6 @@ pub type Sensitivity {
 
   /// Base letters, accents, and case all differ.
   Variant
-}
-
-/// How case influences sort order when case would otherwise be a
-/// tiebreaker. Maps the JavaScript `caseFirst` option.
-///
-pub type CaseFirst {
-  /// Uppercase letters sort before their lowercase equivalents.
-  Upper
-
-  /// Lowercase letters sort before their uppercase equivalents.
-  Lower
-
-  /// Case is not considered (the JavaScript option value `"false"`).
-  Neither
 }
 
 /// The configuration for a [`Collator`](#Collator).

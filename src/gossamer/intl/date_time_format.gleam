@@ -10,6 +10,7 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/time/timestamp.{type Timestamp}
+import gossamer/intl.{type HourCycle}
 
 /// A configured formatter that renders a `Timestamp` as a
 /// locale-aware date/time string.
@@ -102,24 +103,6 @@ pub type TimeZoneName {
 
   /// Long generic non-location name (`"Pacific Time"`).
   TimeZoneLongGeneric
-}
-
-/// The clock format. Maps the JavaScript `hourCycle` option.
-///
-pub type HourCycle {
-  /// 12-hour clock starting at hour 0 (midnight is `0:00 AM`).
-  H11
-
-  /// 12-hour clock starting at hour 12 (midnight is `12:00 AM` — the
-  /// common AM/PM clock).
-  H12
-
-  /// 24-hour clock starting at hour 0 (midnight is `0:00` — the
-  /// common 24-hour clock).
-  H23
-
-  /// 24-hour clock starting at hour 24 (midnight is `24:00`).
-  H24
 }
 
 /// A verbosity preset for date or time formatting. Used by
@@ -291,10 +274,11 @@ pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
 
 /// Sets whether time is rendered with a 12-hour clock (when `True`)
 /// or a 24-hour clock (when `False`). The runtime picks a specific
-/// [`HourCycle`](#HourCycle) compatible with the locale. Takes
-/// precedence over [`with_hour_cycle`](#with_hour_cycle) when both
-/// are set; use [`with_hour_cycle`](#with_hour_cycle) alone to pick
-/// a specific cycle.
+/// [`intl.HourCycle`](../intl.html#HourCycle) compatible with the
+/// locale. Takes precedence over
+/// [`with_hour_cycle`](#with_hour_cycle) when both are set; use
+/// [`with_hour_cycle`](#with_hour_cycle) alone to pick a specific
+/// cycle.
 ///
 pub fn with_hour12(builder: Builder, value: Bool) -> Builder {
   Builder(..builder, hour12: Some(value))

@@ -1,6 +1,7 @@
 import gleam/list
 import gleam/order
 import gleeunit/should
+import gossamer/intl
 import gossamer/intl/collator
 
 pub fn build_default_test() {
@@ -53,7 +54,7 @@ pub fn case_sensitivity_base_test() {
 pub fn case_first_upper_test() {
   let assert Ok(c) =
     collator.new(["en-US"])
-    |> collator.with_case_first(collator.Upper)
+    |> collator.with_case_first(intl.Upper)
     |> collator.build
   collator.compare(c, "Apple", to: "apple") |> should.equal(order.Lt)
 }
@@ -61,7 +62,7 @@ pub fn case_first_upper_test() {
 pub fn case_first_lower_test() {
   let assert Ok(c) =
     collator.new(["en-US"])
-    |> collator.with_case_first(collator.Lower)
+    |> collator.with_case_first(intl.Lower)
     |> collator.build
   collator.compare(c, "apple", to: "Apple") |> should.equal(order.Lt)
 }
