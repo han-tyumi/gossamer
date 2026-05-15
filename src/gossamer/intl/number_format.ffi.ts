@@ -86,7 +86,7 @@ function toSignDisplay(
   return "never";
 }
 
-function toRoundingMode(
+export function toRoundingMode(
   mode: $intl.RoundingMode$,
 ):
   | "ceil"
@@ -109,7 +109,7 @@ function toRoundingMode(
   return "halfEven";
 }
 
-function toRoundingPriority(
+export function toRoundingPriority(
   priority: $intl.RoundingPriority$,
 ): "auto" | "morePrecision" | "lessPrecision" {
   if ($intl.RoundingPriority$isRoundingPriorityAuto(priority)) return "auto";
@@ -119,7 +119,7 @@ function toRoundingPriority(
   return "lessPrecision";
 }
 
-function toTrailingZeroDisplay(
+export function toTrailingZeroDisplay(
   display: $intl.TrailingZeroDisplay$,
 ): "auto" | "stripIfInteger" {
   return $intl.TrailingZeroDisplay$isTrailingZeroAuto(display)
