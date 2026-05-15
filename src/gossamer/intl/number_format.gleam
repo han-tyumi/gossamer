@@ -1,8 +1,7 @@
 //// Locale-aware number formatting via the JavaScript
-//// `Intl.NumberFormat`. Configure with [`new`](#new) and chain
-//// `with_*` setters before calling [`build`](#build). Reusing a built
-//// [`NumberFormat`](#NumberFormat) across many calls is significantly
-//// faster than building one per call.
+//// `Intl.NumberFormat`. Reusing a built
+//// [`NumberFormat`](#NumberFormat) across many calls is
+//// significantly faster than building one per call.
 ////
 //// Formatting is bound per numeric type — `format_float`,
 //// `format_int`, and `format_big_int` — each with matching
@@ -240,9 +239,7 @@ pub type RangePartSource {
   End
 }
 
-/// The configuration for a [`NumberFormat`](#NumberFormat). Construct
-/// with [`new`](#new), chain `with_*` setters, then call
-/// [`build`](#build).
+/// The configuration for a [`NumberFormat`](#NumberFormat).
 ///
 pub opaque type Builder {
   Builder(

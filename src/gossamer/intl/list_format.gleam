@@ -1,8 +1,6 @@
 //// Locale-aware list formatting via the JavaScript `Intl.ListFormat`.
-//// Configure with [`new`](#new) and chain `with_*` setters before
-//// calling [`build`](#build). Reusing a built
-//// [`ListFormat`](#ListFormat) across many calls is significantly
-//// faster than building one per call.
+//// Reusing a built [`ListFormat`](#ListFormat) across many calls is
+//// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
 
@@ -62,9 +60,7 @@ pub type PartKind {
   Element
 }
 
-/// The configuration for a [`ListFormat`](#ListFormat). Construct
-/// with [`new`](#new), chain `with_*` setters, then call
-/// [`build`](#build).
+/// The configuration for a [`ListFormat`](#ListFormat).
 ///
 pub opaque type Builder {
   Builder(locales: List(String), kind: Option(Kind), style: Option(Style))

@@ -1,7 +1,8 @@
 //// Locale-aware localized names for languages, regions, scripts,
 //// currencies, calendars, and date/time fields via the JavaScript
-//// `Intl.DisplayNames`. Configure with [`new`](#new) and chain
-//// `with_*` setters before calling [`build`](#build).
+//// `Intl.DisplayNames`. Reusing a built
+//// [`DisplayNames`](#DisplayNames) across many calls is
+//// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
 
@@ -76,9 +77,7 @@ pub type LanguageDisplay {
   Standard
 }
 
-/// The configuration for a [`DisplayNames`](#DisplayNames). Construct
-/// with [`new`](#new), chain `with_*` setters, then call
-/// [`build`](#build).
+/// The configuration for a [`DisplayNames`](#DisplayNames).
 ///
 pub opaque type Builder {
   Builder(

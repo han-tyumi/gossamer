@@ -1,8 +1,7 @@
 //// Locale-aware plural-form selection via the JavaScript
-//// `Intl.PluralRules`. Configure with [`new`](#new) and chain
-//// `with_*` setters before calling [`build`](#build). Reusing a built
-//// [`PluralRules`](#PluralRules) across many selections is
-//// significantly faster than building one per call.
+//// `Intl.PluralRules`. Reusing a built [`PluralRules`](#PluralRules)
+//// across many selections is significantly faster than building one
+//// per call.
 ////
 //// Selection is bound for `Float` and `Int` with matching `*_range`
 //// variants returning [`PluralCategory`](#PluralCategory). `BigInt`
@@ -63,9 +62,7 @@ pub type PluralCategory {
   Other
 }
 
-/// The configuration for a [`PluralRules`](#PluralRules). Construct
-/// with [`new`](#new), chain `with_*` setters, then call
-/// [`build`](#build).
+/// The configuration for a [`PluralRules`](#PluralRules).
 ///
 pub opaque type Builder {
   Builder(

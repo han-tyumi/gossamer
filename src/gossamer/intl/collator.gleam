@@ -1,8 +1,6 @@
 //// Locale-aware string comparison via the JavaScript `Intl.Collator`.
-//// Configure with [`new`](#new) and chain `with_*` setters before
-//// calling [`build`](#build). Reusing a built [`Collator`](#Collator)
-//// across many comparisons is significantly faster than building one
-//// per call.
+//// Reusing a built [`Collator`](#Collator) across many comparisons
+//// is significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
 import gleam/order.{type Order}
@@ -59,9 +57,7 @@ pub type CaseFirst {
   Neither
 }
 
-/// The configuration for an [`Intl.Collator`](#Collator). Construct
-/// with [`new`](#new), chain `with_*` setters, then call
-/// [`build`](#build).
+/// The configuration for a [`Collator`](#Collator).
 ///
 pub opaque type Builder {
   Builder(

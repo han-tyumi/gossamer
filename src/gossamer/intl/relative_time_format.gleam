@@ -1,8 +1,7 @@
 //// Locale-aware relative-time formatting via the JavaScript
-//// `Intl.RelativeTimeFormat`. Configure with [`new`](#new) and
-//// chain `with_*` setters before calling [`build`](#build). Reusing
-//// a built [`RelativeTimeFormat`](#RelativeTimeFormat) across many
-//// calls is significantly faster than building one per call.
+//// `Intl.RelativeTimeFormat`. Reusing a built
+//// [`RelativeTimeFormat`](#RelativeTimeFormat) across many calls is
+//// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
 
@@ -101,9 +100,7 @@ pub type PartKind {
 }
 
 /// The configuration for a
-/// [`RelativeTimeFormat`](#RelativeTimeFormat). Construct with
-/// [`new`](#new), chain `with_*` setters, then call
-/// [`build`](#build).
+/// [`RelativeTimeFormat`](#RelativeTimeFormat).
 ///
 pub opaque type Builder {
   Builder(locales: List(String), numeric: Option(Numeric), style: Option(Style))
