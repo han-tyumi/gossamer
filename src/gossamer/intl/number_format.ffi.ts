@@ -1,3 +1,4 @@
+import * as $intl from "$/gossamer/gossamer/intl.mjs";
 import * as $numberFormat from "$/gossamer/gossamer/intl/number_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
@@ -86,7 +87,7 @@ function toSignDisplay(
 }
 
 function toRoundingMode(
-  mode: $numberFormat.RoundingMode$,
+  mode: $intl.RoundingMode$,
 ):
   | "ceil"
   | "floor"
@@ -97,43 +98,31 @@ function toRoundingMode(
   | "halfExpand"
   | "halfTrunc"
   | "halfEven" {
-  if ($numberFormat.RoundingMode$isRoundingModeCeil(mode)) return "ceil";
-  if ($numberFormat.RoundingMode$isRoundingModeFloor(mode)) return "floor";
-  if ($numberFormat.RoundingMode$isRoundingModeExpand(mode)) return "expand";
-  if ($numberFormat.RoundingMode$isRoundingModeTrunc(mode)) return "trunc";
-  if ($numberFormat.RoundingMode$isRoundingModeHalfCeil(mode)) {
-    return "halfCeil";
-  }
-  if ($numberFormat.RoundingMode$isRoundingModeHalfFloor(mode)) {
-    return "halfFloor";
-  }
-  if ($numberFormat.RoundingMode$isRoundingModeHalfExpand(mode)) {
-    return "halfExpand";
-  }
-  if ($numberFormat.RoundingMode$isRoundingModeHalfTrunc(mode)) {
-    return "halfTrunc";
-  }
+  if ($intl.RoundingMode$isRoundingModeCeil(mode)) return "ceil";
+  if ($intl.RoundingMode$isRoundingModeFloor(mode)) return "floor";
+  if ($intl.RoundingMode$isRoundingModeExpand(mode)) return "expand";
+  if ($intl.RoundingMode$isRoundingModeTrunc(mode)) return "trunc";
+  if ($intl.RoundingMode$isRoundingModeHalfCeil(mode)) return "halfCeil";
+  if ($intl.RoundingMode$isRoundingModeHalfFloor(mode)) return "halfFloor";
+  if ($intl.RoundingMode$isRoundingModeHalfExpand(mode)) return "halfExpand";
+  if ($intl.RoundingMode$isRoundingModeHalfTrunc(mode)) return "halfTrunc";
   return "halfEven";
 }
 
 function toRoundingPriority(
-  priority: $numberFormat.RoundingPriority$,
+  priority: $intl.RoundingPriority$,
 ): "auto" | "morePrecision" | "lessPrecision" {
-  if ($numberFormat.RoundingPriority$isRoundingPriorityAuto(priority)) {
-    return "auto";
-  }
-  if (
-    $numberFormat.RoundingPriority$isRoundingPriorityMorePrecision(priority)
-  ) {
+  if ($intl.RoundingPriority$isRoundingPriorityAuto(priority)) return "auto";
+  if ($intl.RoundingPriority$isRoundingPriorityMorePrecision(priority)) {
     return "morePrecision";
   }
   return "lessPrecision";
 }
 
 function toTrailingZeroDisplay(
-  display: $numberFormat.TrailingZeroDisplay$,
+  display: $intl.TrailingZeroDisplay$,
 ): "auto" | "stripIfInteger" {
-  return $numberFormat.TrailingZeroDisplay$isTrailingZeroAuto(display)
+  return $intl.TrailingZeroDisplay$isTrailingZeroAuto(display)
     ? "auto"
     : "stripIfInteger";
 }

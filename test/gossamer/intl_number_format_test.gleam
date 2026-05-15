@@ -1,5 +1,6 @@
 import gleeunit/should
 import gossamer/big_int
+import gossamer/intl
 import gossamer/intl/number_format
 
 pub fn build_default_test() {
@@ -138,7 +139,7 @@ pub fn format_rounding_mode_floor_test() {
   let assert Ok(formatter) =
     number_format.new(["en-US"])
     |> number_format.with_maximum_fraction_digits(0)
-    |> number_format.with_rounding_mode(number_format.RoundingModeFloor)
+    |> number_format.with_rounding_mode(intl.RoundingModeFloor)
     |> number_format.build
   number_format.format_float(formatter, 1.9) |> should.equal("1")
   number_format.format_float(formatter, -1.1) |> should.equal("-2")
@@ -148,7 +149,7 @@ pub fn format_rounding_mode_ceil_test() {
   let assert Ok(formatter) =
     number_format.new(["en-US"])
     |> number_format.with_maximum_fraction_digits(0)
-    |> number_format.with_rounding_mode(number_format.RoundingModeCeil)
+    |> number_format.with_rounding_mode(intl.RoundingModeCeil)
     |> number_format.build
   number_format.format_float(formatter, 1.1) |> should.equal("2")
   number_format.format_float(formatter, -1.9) |> should.equal("-1")
@@ -158,7 +159,7 @@ pub fn format_rounding_mode_half_even_test() {
   let assert Ok(formatter) =
     number_format.new(["en-US"])
     |> number_format.with_maximum_fraction_digits(0)
-    |> number_format.with_rounding_mode(number_format.RoundingModeHalfEven)
+    |> number_format.with_rounding_mode(intl.RoundingModeHalfEven)
     |> number_format.build
   number_format.format_float(formatter, 2.5) |> should.equal("2")
   number_format.format_float(formatter, 3.5) |> should.equal("4")
@@ -187,9 +188,7 @@ pub fn format_rounding_priority_more_precision_test() {
     number_format.new(["en-US"])
     |> number_format.with_maximum_significant_digits(3)
     |> number_format.with_maximum_fraction_digits(2)
-    |> number_format.with_rounding_priority(
-      number_format.RoundingPriorityMorePrecision,
-    )
+    |> number_format.with_rounding_priority(intl.RoundingPriorityMorePrecision)
     |> number_format.build
   // Significant digits (3) wins over fraction digits (2).
   number_format.format_float(formatter, 1.2345) |> should.equal("1.23")
@@ -199,9 +198,7 @@ pub fn format_trailing_zero_strip_test() {
   let assert Ok(formatter) =
     number_format.new(["en-US"])
     |> number_format.with_minimum_fraction_digits(2)
-    |> number_format.with_trailing_zero_display(
-      number_format.TrailingZeroStripIfInteger,
-    )
+    |> number_format.with_trailing_zero_display(intl.TrailingZeroStripIfInteger)
     |> number_format.build
   number_format.format_float(formatter, 1.0) |> should.equal("1")
   number_format.format_float(formatter, 1.5) |> should.equal("1.50")
