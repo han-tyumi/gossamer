@@ -24,9 +24,7 @@ import gossamer/stream/writable_stream.{type WritableStream}
 @external(javascript, "./readable_stream.type.ts", "ReadableStream$")
 pub type ReadableStream(a)
 
-/// The configuration for a `ReadableStream`. Construct with `new` and
-/// refine with `with_start`, `with_pull`, `with_cancel`, and
-/// `with_queuing_strategy`, then call `build` to create the stream.
+/// The configuration for a [`ReadableStream`](#ReadableStream).
 ///
 pub opaque type Builder(a) {
   Builder(

@@ -1,10 +1,9 @@
 //// Bidirectional, message-oriented WebSocket connections (`ws:` and
-//// `wss:`). Configure a connection via [`from_url_string`](#from_url_string)
-//// or [`from_uri`](#from_uri), chain `with_*` setters for protocols,
-//// binary type, and event handlers, then call [`build`](#build) to open
-//// the socket. Send messages with [`send_string`](#send_string),
-//// [`send_bytes`](#send_bytes), or [`send_blob`](#send_blob); close with
-//// [`close`](#close) or [`close_with`](#close_with).
+//// `wss:`). Construct via [`from_url_string`](#from_url_string) or
+//// [`from_uri`](#from_uri). Send messages with
+//// [`send_string`](#send_string), [`send_bytes`](#send_bytes), or
+//// [`send_blob`](#send_blob); close with [`close`](#close) or
+//// [`close_with`](#close_with).
 
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
@@ -77,11 +76,7 @@ pub type ReadyState {
 @external(javascript, "./web_socket.type.ts", "WebSocket$")
 pub type WebSocket
 
-/// The configuration for a `WebSocket`. Construct with `from_url_string`
-/// or `from_uri`, refine with `with_protocols` / `with_binary_type` and
-/// the event-handler setters (`with_on_open`, `with_on_message`,
-/// `with_on_error`, `with_on_close`), then call `build` to open the
-/// connection.
+/// The configuration for a [`WebSocket`](#WebSocket).
 ///
 pub opaque type Builder {
   Builder(

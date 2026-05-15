@@ -1,8 +1,7 @@
 //// Decode byte sequences into text in a specified character encoding,
-//// optionally retaining state across multi-byte boundaries. Build a
-//// decoder with [`new`](#new) and chain `with_*` setters then
-//// [`build`](#build), or pass a one-shot input through
-//// [`decode`](#decode). For default UTF-8 decoding,
+//// optionally retaining state across multi-byte boundaries. Pass a
+//// one-shot input through [`decode`](#decode) for stateless decoding.
+//// For default UTF-8 decoding,
 //// [`gleam/bit_array.to_string`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html#to_string)
 //// is sufficient.
 
@@ -16,9 +15,7 @@ import gossamer/encoding.{type DecoderError, type Encoding}
 @external(javascript, "./text_decoder.type.ts", "TextDecoder$")
 pub type TextDecoder
 
-/// The configuration for a `TextDecoder`. Construct with `new`, refine
-/// with `with_fatal` and `with_ignore_bom`, then call `build` (or
-/// `decode` for one-shot use).
+/// The configuration for a [`TextDecoder`](#TextDecoder).
 ///
 pub opaque type Builder {
   Builder(label: String, fatal: Bool, ignore_bom: Bool)

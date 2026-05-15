@@ -20,9 +20,7 @@ import gossamer/stream/writable_stream/writer.{type Writer}
 @external(javascript, "./writable_stream.type.ts", "WritableStream$")
 pub type WritableStream(a)
 
-/// The configuration for a `WritableStream`. Construct with `new` and
-/// refine with `with_start`, `with_write`, `with_close`, `with_abort`, and
-/// `with_queuing_strategy`, then call `build` to create the stream.
+/// The configuration for a [`WritableStream`](#WritableStream).
 ///
 pub opaque type Builder(a) {
   Builder(

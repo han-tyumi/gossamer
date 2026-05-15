@@ -1,8 +1,7 @@
 //// A transform stream that decodes bytes into text in a specified
 //// character encoding. Pipe a byte-producing `ReadableStream` through
 //// the writable side and read decoded strings off the readable side.
-//// Build with [`new`](#new), chain `with_*` setters, then call
-//// [`build`](#build). Pair with
+//// Pair with
 //// [`readable_stream.pipe_through`](../stream/readable_stream.html#pipe_through)
 //// via [`read_write_pair`](#read_write_pair).
 
@@ -18,8 +17,7 @@ import gossamer/stream/writable_stream.{type WritableStream}
 @external(javascript, "./text_decoder_stream.type.ts", "TextDecoderStream$")
 pub type TextDecoderStream
 
-/// The configuration for a `TextDecoderStream`. Construct with `new`,
-/// refine with `with_fatal` and `with_ignore_bom`, then call `build`.
+/// The configuration for a [`TextDecoderStream`](#TextDecoderStream).
 ///
 pub opaque type Builder {
   Builder(label: String, fatal: Bool, ignore_bom: Bool)

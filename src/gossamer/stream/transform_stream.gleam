@@ -21,10 +21,7 @@ import gossamer/stream/writable_stream.{type WritableStream}
 @external(javascript, "./transform_stream.type.ts", "TransformStream$")
 pub type TransformStream(input, output)
 
-/// The configuration for a `TransformStream`. Construct with `new` and
-/// refine with `with_start`, `with_transform`, `with_flush`, `with_cancel`,
-/// `with_writable_strategy`, and `with_readable_strategy`, then call
-/// `build` to create the stream.
+/// The configuration for a [`TransformStream`](#TransformStream).
 ///
 pub opaque type Builder(input, output) {
   Builder(

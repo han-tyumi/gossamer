@@ -1,9 +1,9 @@
 //// Patterns for matching URLs, with wildcards, named groups, and
 //// regular-expression groups. Useful for routing and request
-//// dispatching. Build a pattern with [`new`](#new) and the `with_*`
-//// setters then [`build`](#build), or parse a single
+//// dispatching. Parse a single
 //// [URL Pattern Syntax](https://urlpattern.spec.whatwg.org/#pattern-syntax)
-//// string with [`from_string`](#from_string). Match with
+//// string with [`from_string`](#from_string), or build a per-component
+//// pattern via the [`Builder`](#Builder). Match with
 //// [`matches`](#matches) (boolean) or [`exec`](#exec) (captures).
 
 import gleam/dict.{type Dict}
@@ -17,9 +17,8 @@ import gleam/option.{type Option, None, Some}
 @external(javascript, "./url_pattern.type.ts", "UrlPattern$")
 pub type UrlPattern
 
-/// The per-component configuration for a `UrlPattern`. Construct with
-/// `new`, refine with the `with_X` setters, then call `build`. Unset
-/// components match any value.
+/// The per-component configuration for a [`UrlPattern`](#UrlPattern).
+/// Unset components match any value.
 ///
 pub opaque type Builder {
   Builder(
