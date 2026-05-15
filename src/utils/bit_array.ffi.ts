@@ -26,6 +26,17 @@ export function toUint8Array(bitArray: BitArray): Uint8Array {
 }
 
 /**
+ * Wraps an incoming structured-clone payload so `ArrayBuffer` values are
+ * exposed to Gleam as `BitArray`. Other values pass through unchanged.
+ */
+export function wrapArrayBuffer(value: unknown): unknown {
+  if (value instanceof ArrayBuffer) {
+    return BitArray$BitArray(new Uint8Array(value));
+  }
+  return value;
+}
+
+/**
  * Awaits an `ArrayBuffer`-returning Web API call and wraps the result
  * as a `BitArray` Result. Sync throws inside `fn` become `Error` rather
  * than unhandled FFI panics.
