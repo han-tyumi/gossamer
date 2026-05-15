@@ -5,6 +5,7 @@
 //// `get_entries_*` queries.
 
 import gleam/dynamic.{type Dynamic}
+import gleam/option.{type Option}
 import gleam/time/duration.{type Duration}
 
 /// A single performance metric produced by the Performance API.
@@ -14,36 +15,36 @@ import gleam/time/duration.{type Duration}
 @external(javascript, "./performance_entry.type.ts", "PerformanceEntry$")
 pub type PerformanceEntry
 
-/// The entry's name (the `name` argument passed to `mark` or
-/// `measure`).
+/// A snapshot of a [`PerformanceEntry`](#PerformanceEntry)'s
+/// recorded fields, returned by [`info`](#info). All fields are
+/// immutable once the runtime has recorded the entry.
 ///
-@external(javascript, "./performance_entry.ffi.mjs", "name")
-pub fn name(entry: PerformanceEntry) -> String
+pub type Info {
+  Info(
+    /// The entry's name (the `name` argument passed to `mark` or
+    /// `measure`).
+    name: String,
+    /// The entry's type as a string (e.g., `"mark"`, `"measure"`,
+    /// `"resource"`).
+    entry_type: String,
+    /// The high-resolution elapsed time since
+    /// `performance.time_origin` at which the entry was recorded.
+    start_time: Duration,
+    /// The high-resolution duration of the entry. For `mark` entries
+    /// this is always zero; for `measure` entries it is the elapsed
+    /// time between the start and end marks.
+    duration: Duration,
+    /// Extra data associated with the entry, or `None` if none was
+    /// provided.
+    detail: Option(Dynamic),
+  )
+}
 
-/// The entry's type as a string (e.g., `"mark"`, `"measure"`,
-/// `"resource"`).
+/// A snapshot of the entry's name, type, start time, duration, and
+/// optional detail payload.
 ///
-@external(javascript, "./performance_entry.ffi.mjs", "entry_type")
-pub fn entry_type(entry: PerformanceEntry) -> String
-
-/// The high-resolution elapsed time since `performance.time_origin` at
-/// which the entry was recorded.
-///
-@external(javascript, "./performance_entry.ffi.mjs", "start_time")
-pub fn start_time(entry: PerformanceEntry) -> Duration
-
-/// The high-resolution duration of the entry. For `mark` entries this
-/// is always zero; for `measure` entries it is the elapsed time between
-/// the start and end marks.
-///
-@external(javascript, "./performance_entry.ffi.mjs", "duration")
-pub fn duration(entry: PerformanceEntry) -> Duration
-
-/// Extra data associated with the entry, or `Error(Nil)` if none was
-/// provided.
-///
-@external(javascript, "./performance_entry.ffi.mjs", "detail")
-pub fn detail(entry: PerformanceEntry) -> Result(Dynamic, Nil)
+@external(javascript, "./performance_entry.ffi.mjs", "info")
+pub fn info(entry: PerformanceEntry) -> Info
 
 /// Returns a JSON-serializable snapshot of the entry as a `Dynamic`.
 /// Pass to `gleam/json.encode_dynamic` (or any dynamic-aware

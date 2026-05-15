@@ -1,25 +1,15 @@
-import type * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
+import { toOption } from "~/utils/option.ffi.ts";
 import { msToDuration } from "~/utils/time.ffi.ts";
 
-export const name: typeof $performanceEntry.name = (entry) => {
-  return entry.name;
-};
-
-export const entry_type: typeof $performanceEntry.entry_type = (entry) => {
-  return entry.entryType;
-};
-
-export const start_time: typeof $performanceEntry.start_time = (entry) => {
-  return msToDuration(entry.startTime);
-};
-
-export const duration: typeof $performanceEntry.duration = (entry) => {
-  return msToDuration(entry.duration);
-};
-
-export const detail: typeof $performanceEntry.detail = (entry) => {
-  return toResult((entry as PerformanceMark).detail);
+export const info: typeof $performanceEntry.info = (entry) => {
+  return $performanceEntry.Info$Info(
+    entry.name,
+    entry.entryType,
+    msToDuration(entry.startTime),
+    msToDuration(entry.duration),
+    toOption((entry as PerformanceMark).detail),
+  );
 };
 
 export const to_json: typeof $performanceEntry.to_json = (entry) => {

@@ -1,4 +1,5 @@
 import gleam/list
+import gleam/option
 import gleam/order
 import gleam/time/duration
 import gleam/time/timestamp
@@ -19,12 +20,12 @@ pub fn time_origin_test() {
 }
 
 pub fn mark_test() {
-  let entry = performance.mark("test-mark")
-  performance_entry.name(entry) |> should.equal("test-mark")
-  performance_entry.entry_type(entry) |> should.equal("mark")
-  duration.compare(performance_entry.start_time(entry), duration.seconds(0))
+  let info = performance_entry.info(performance.mark("test-mark"))
+  info.name |> should.equal("test-mark")
+  info.entry_type |> should.equal("mark")
+  duration.compare(info.start_time, duration.seconds(0))
   |> should.not_equal(order.Lt)
-  performance_entry.duration(entry) |> should.equal(duration.seconds(0))
+  info.duration |> should.equal(duration.seconds(0))
   performance.clear_marks()
 }
 
@@ -33,9 +34,10 @@ pub fn measure_test() {
   let _ = performance.mark("measure-end")
   let assert Ok(entry) =
     performance.measure("test-measure", "measure-start", "measure-end")
-  performance_entry.name(entry) |> should.equal("test-measure")
-  performance_entry.entry_type(entry) |> should.equal("measure")
-  duration.compare(performance_entry.duration(entry), duration.seconds(0))
+  let info = performance_entry.info(entry)
+  info.name |> should.equal("test-measure")
+  info.entry_type |> should.equal("measure")
+  duration.compare(info.duration, duration.seconds(0))
   |> should.not_equal(order.Lt)
   performance.clear_marks()
   performance.clear_measures()
@@ -90,7 +92,7 @@ pub fn clear_measures_test() {
 
 pub fn performance_entry_detail_test() {
   let entry = performance.mark("detail-mark")
-  performance_entry.detail(entry) |> should.be_error
+  performance_entry.info(entry).detail |> should.equal(option.None)
   performance.clear_marks()
 }
 
