@@ -1,6 +1,6 @@
-import * as $intl from "$/gossamer/gossamer/intl.mjs";
 import * as $dateTimeFormat from "$/gossamer/gossamer/intl/date_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toHourCycle } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
@@ -59,13 +59,6 @@ function toTimeZoneName(
     return "shortGeneric";
   }
   return "longGeneric";
-}
-
-function toHourCycle(cycle: $intl.HourCycle$): "h11" | "h12" | "h23" | "h24" {
-  if ($intl.HourCycle$isH11(cycle)) return "h11";
-  if ($intl.HourCycle$isH12(cycle)) return "h12";
-  if ($intl.HourCycle$isH23(cycle)) return "h23";
-  return "h24";
 }
 
 function toStyle(
