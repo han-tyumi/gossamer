@@ -44,39 +44,23 @@ export const build: typeof $locale.do_build = (
   }
 };
 
-export const base_name: typeof $locale.base_name = (locale) => locale.baseName;
-
-export const language: typeof $locale.language = (locale) => locale.language;
-
-export const script: typeof $locale.script = (locale) =>
-  toOption(locale.script);
-
-export const region: typeof $locale.region = (locale) =>
-  toOption(locale.region);
-
-export const calendar: typeof $locale.calendar = (locale) =>
-  toOption(locale.calendar);
-
-export const case_first: typeof $locale.case_first = (locale) => {
-  const value = locale.caseFirst;
-  if (value === undefined) return toOption(undefined);
-  return toOption(fromCaseFirst(value));
-};
-
-export const collation: typeof $locale.collation = (locale) =>
-  toOption(locale.collation);
-
-export const hour_cycle: typeof $locale.hour_cycle = (locale) => {
-  const value = locale.hourCycle;
-  if (value === undefined) return toOption(undefined);
-  return toOption(fromHourCycle(value));
-};
-
-export const numbering_system: typeof $locale.numbering_system = (locale) =>
-  toOption(locale.numberingSystem);
-
-export const is_numeric: typeof $locale.is_numeric = (locale) =>
-  locale.numeric ?? false;
+export const info: typeof $locale.info = (locale) =>
+  $locale.Info$Info(
+    locale.baseName,
+    locale.language,
+    toOption(locale.script),
+    toOption(locale.region),
+    toOption(locale.calendar),
+    locale.caseFirst === undefined
+      ? toOption(undefined)
+      : toOption(fromCaseFirst(locale.caseFirst)),
+    toOption(locale.collation),
+    locale.hourCycle === undefined
+      ? toOption(undefined)
+      : toOption(fromHourCycle(locale.hourCycle)),
+    toOption(locale.numberingSystem),
+    locale.numeric ?? false,
+  );
 
 export const calendars: typeof $locale.calendars = (locale) =>
   fromArray(locale.getCalendars());
@@ -92,13 +76,13 @@ export const numbering_systems: typeof $locale.numbering_systems = (locale) =>
 
 export const time_zones: typeof $locale.time_zones = (locale) => {
   const zones = locale.getTimeZones();
-  return zones === undefined ? toOption(undefined) : toOption(fromArray(zones));
+  return zones === undefined
+    ? Result$Error(undefined)
+    : Result$Ok(fromArray(zones));
 };
 
-export const text_info: typeof $locale.text_info = (locale) => {
-  const info = locale.getTextInfo();
-  return $locale.TextInfo$TextInfo(fromTextDirection(info.direction ?? "ltr"));
-};
+export const text_direction: typeof $locale.text_direction = (locale) =>
+  fromTextDirection(locale.getTextInfo().direction ?? "ltr");
 
 export const week_info: typeof $locale.week_info = (locale) => {
   const info = locale.getWeekInfo();

@@ -1,8 +1,8 @@
 //// BCP 47 locale-identifier parsing and manipulation via the
 //// JavaScript `Intl.Locale`. Parse a tag with optional extension
-//// subtags, query its components, list the calendars or collations
-//// the locale supports, and convert between maximal and minimal
-//// canonical forms.
+//// subtags, query its components via [`info`](#info), list the
+//// calendars or collations the locale supports, and convert between
+//// maximal and minimal canonical forms.
 
 import gleam/option.{type Option, None, Some}
 import gossamer/intl.{type CaseFirst, type HourCycle}
@@ -15,7 +15,7 @@ import gossamer/intl.{type CaseFirst, type HourCycle}
 pub type Locale
 
 /// The dominant writing direction of a locale's primary script.
-/// Returned by [`text_info`](#text_info).
+/// Returned by [`text_direction`](#text_direction).
 ///
 pub type TextDirection {
   /// Left-to-right (Latin, Cyrillic, etc.).
@@ -25,13 +25,6 @@ pub type TextDirection {
   Rtl
 }
 
-/// Locale-specific text-flow information, returned by
-/// [`text_info`](#text_info).
-///
-pub type TextInfo {
-  TextInfo(direction: TextDirection)
-}
-
 /// Locale-specific calendar-week information, returned by
 /// [`week_info`](#week_info). `first_day` and entries of `weekend`
 /// use ISO 8601 day-of-week numbering — Monday is `1`, Sunday is
@@ -39,6 +32,41 @@ pub type TextInfo {
 ///
 pub type WeekInfo {
   WeekInfo(first_day: Int, weekend: List(Int))
+}
+
+/// A snapshot of a locale's parsed components, returned by
+/// [`info`](#info). Components with no value for the locale are
+/// `None`.
+///
+pub type Info {
+  Info(
+    /// The BCP 47 base name — the language, script (if any), and
+    /// region (if any) joined with hyphens, without extension
+    /// subtags. For `"en-US-u-ca-gregory"`, this is `"en-US"`.
+    base_name: String,
+    /// The language subtag (e.g., `"en"`).
+    language: String,
+    /// The script subtag (e.g., `"Latn"`, `"Hans"`).
+    script: Option(String),
+    /// The region subtag (e.g., `"US"`, `"CN"`).
+    region: Option(String),
+    /// The preferred calendar identifier (e.g., `"gregory"`,
+    /// `"chinese"`).
+    calendar: Option(String),
+    /// The preferred case-first ordering.
+    case_first: Option(CaseFirst),
+    /// The preferred collation identifier (e.g., `"phonebk"`,
+    /// `"pinyin"`).
+    collation: Option(String),
+    /// The preferred hour cycle.
+    hour_cycle: Option(HourCycle),
+    /// The preferred numbering-system identifier (e.g., `"latn"`,
+    /// `"arab"`).
+    numbering_system: Option(String),
+    /// Whether numeric collation is preferred — digit runs compared
+    /// as numbers rather than character by character.
+    is_numeric: Bool,
+  )
 }
 
 /// The configuration for a [`Locale`](#Locale). Constructed from a
@@ -169,62 +197,13 @@ pub fn do_build(
   script: Option(String),
 ) -> Result(Locale, Nil)
 
-/// The BCP 47 base name of the locale — the language, script (if
-/// any), and region (if any) joined with hyphens, without extension
-/// subtags. For `"en-US"`, returns `"en-US"`.
+/// A snapshot of the locale's parsed components — base name,
+/// language, script, region, and Unicode extension subtags
+/// (calendar, case-first, collation, hour cycle, numbering system,
+/// and numeric flag).
 ///
-@external(javascript, "./locale.ffi.mjs", "base_name")
-pub fn base_name(locale: Locale) -> String
-
-/// The language subtag of the locale (e.g., `"en"`).
-///
-@external(javascript, "./locale.ffi.mjs", "language")
-pub fn language(locale: Locale) -> String
-
-/// The script subtag of the locale (e.g., `"Latn"`, `"Hans"`), or
-/// `None` if absent.
-///
-@external(javascript, "./locale.ffi.mjs", "script")
-pub fn script(locale: Locale) -> Option(String)
-
-/// The region subtag of the locale (e.g., `"US"`, `"CN"`), or
-/// `None` if absent.
-///
-@external(javascript, "./locale.ffi.mjs", "region")
-pub fn region(locale: Locale) -> Option(String)
-
-/// The preferred calendar identifier (e.g., `"gregory"`,
-/// `"chinese"`), or `None` if unset.
-///
-@external(javascript, "./locale.ffi.mjs", "calendar")
-pub fn calendar(locale: Locale) -> Option(String)
-
-/// The preferred case-first ordering, or `None` if unset.
-///
-@external(javascript, "./locale.ffi.mjs", "case_first")
-pub fn case_first(locale: Locale) -> Option(CaseFirst)
-
-/// The preferred collation identifier (e.g., `"phonebk"`,
-/// `"pinyin"`), or `None` if unset.
-///
-@external(javascript, "./locale.ffi.mjs", "collation")
-pub fn collation(locale: Locale) -> Option(String)
-
-/// The preferred hour cycle, or `None` if unset.
-///
-@external(javascript, "./locale.ffi.mjs", "hour_cycle")
-pub fn hour_cycle(locale: Locale) -> Option(HourCycle)
-
-/// The preferred numbering-system identifier (e.g., `"latn"`,
-/// `"arab"`), or `None` if unset.
-///
-@external(javascript, "./locale.ffi.mjs", "numbering_system")
-pub fn numbering_system(locale: Locale) -> Option(String)
-
-/// Whether numeric collation is preferred for the locale.
-///
-@external(javascript, "./locale.ffi.mjs", "is_numeric")
-pub fn is_numeric(locale: Locale) -> Bool
+@external(javascript, "./locale.ffi.mjs", "info")
+pub fn info(locale: Locale) -> Info
 
 /// The calendars supported by the locale, in preference order.
 ///
@@ -248,15 +227,15 @@ pub fn hour_cycles(locale: Locale) -> List(HourCycle)
 pub fn numbering_systems(locale: Locale) -> List(String)
 
 /// The IANA time zones associated with the locale's region. Returns
-/// `None` when the locale has no region subtag.
+/// `Error(Nil)` when the locale has no region subtag.
 ///
 @external(javascript, "./locale.ffi.mjs", "time_zones")
-pub fn time_zones(locale: Locale) -> Option(List(String))
+pub fn time_zones(locale: Locale) -> Result(List(String), Nil)
 
-/// Locale-specific text-flow information.
+/// The dominant writing direction of the locale's primary script.
 ///
-@external(javascript, "./locale.ffi.mjs", "text_info")
-pub fn text_info(locale: Locale) -> TextInfo
+@external(javascript, "./locale.ffi.mjs", "text_direction")
+pub fn text_direction(locale: Locale) -> TextDirection
 
 /// Locale-specific calendar-week information.
 ///
