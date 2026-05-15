@@ -18,43 +18,42 @@ pub fn of_language_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Language)
     |> display_names.build
-  display_names.of(formatter, "fr") |> should.equal(Ok("French"))
+  display_names.of(formatter, "fr") |> should.equal("French")
 }
 
 pub fn of_region_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Region)
     |> display_names.build
-  display_names.of(formatter, "US") |> should.equal(Ok("United States"))
+  display_names.of(formatter, "US") |> should.equal("United States")
 }
 
 pub fn of_script_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Script)
     |> display_names.build
-  display_names.of(formatter, "Latn") |> should.equal(Ok("Latin"))
+  display_names.of(formatter, "Latn") |> should.equal("Latin")
 }
 
 pub fn of_currency_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Currency)
     |> display_names.build
-  display_names.of(formatter, "USD") |> should.equal(Ok("US Dollar"))
+  display_names.of(formatter, "USD") |> should.equal("US Dollar")
 }
 
 pub fn of_calendar_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Calendar)
     |> display_names.build
-  display_names.of(formatter, "gregory")
-  |> should.equal(Ok("Gregorian Calendar"))
+  display_names.of(formatter, "gregory") |> should.equal("Gregorian Calendar")
 }
 
 pub fn of_date_time_field_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.DateTimeField)
     |> display_names.build
-  display_names.of(formatter, "year") |> should.equal(Ok("year"))
+  display_names.of(formatter, "year") |> should.equal("year")
 }
 
 pub fn of_short_style_test() {
@@ -62,30 +61,28 @@ pub fn of_short_style_test() {
     display_names.new(["en"], of: display_names.Region)
     |> display_names.with_style(intl.Short)
     |> display_names.build
-  display_names.of(formatter, "US") |> should.equal(Ok("US"))
+  display_names.of(formatter, "US") |> should.equal("US")
 }
 
-pub fn of_fallback_none_unknown_test() {
-  let assert Ok(formatter) =
-    display_names.new(["en"], of: display_names.Language)
-    |> display_names.with_fallback(display_names.FallbackNone)
-    |> display_names.build
-  display_names.of(formatter, "zz") |> should.be_error
-}
-
-pub fn of_fallback_code_unknown_test() {
-  let assert Ok(formatter) =
-    display_names.new(["en"], of: display_names.Language)
-    |> display_names.with_fallback(display_names.FallbackCode)
-    |> display_names.build
-  display_names.of(formatter, "zz") |> should.equal(Ok("zz"))
-}
-
-pub fn of_default_fallback_unknown_test() {
+pub fn of_unknown_falls_back_to_code_test() {
   let assert Ok(formatter) =
     display_names.new(["en"], of: display_names.Language)
     |> display_names.build
-  display_names.of(formatter, "zz") |> should.equal(Ok("zz"))
+  display_names.of(formatter, "zz") |> should.equal("zz")
+}
+
+pub fn find_known_test() {
+  let assert Ok(formatter) =
+    display_names.new(["en"], of: display_names.Language)
+    |> display_names.build
+  display_names.find(formatter, "fr") |> should.equal(Ok("French"))
+}
+
+pub fn find_unknown_test() {
+  let assert Ok(formatter) =
+    display_names.new(["en"], of: display_names.Language)
+    |> display_names.build
+  display_names.find(formatter, "zz") |> should.be_error
 }
 
 pub fn language_display_dialect_test() {
@@ -93,7 +90,7 @@ pub fn language_display_dialect_test() {
     display_names.new(["en"], of: display_names.Language)
     |> display_names.with_language_display(display_names.Dialect)
     |> display_names.build
-  display_names.of(formatter, "en-US") |> should.equal(Ok("American English"))
+  display_names.of(formatter, "en-US") |> should.equal("American English")
 }
 
 pub fn language_display_differs_test() {
@@ -105,8 +102,8 @@ pub fn language_display_differs_test() {
     display_names.new(["en"], of: display_names.Language)
     |> display_names.with_language_display(display_names.Standard)
     |> display_names.build
-  let assert Ok(dialect_name) = display_names.of(dialect, "en-US")
-  let assert Ok(standard_name) = display_names.of(standard, "en-US")
+  let dialect_name = display_names.of(dialect, "en-US")
+  let standard_name = display_names.of(standard, "en-US")
   { dialect_name != standard_name } |> should.be_true
 }
 

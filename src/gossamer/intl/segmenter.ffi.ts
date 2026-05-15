@@ -1,6 +1,7 @@
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $segmenter from "$/gossamer/gossamer/intl/segmenter.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
@@ -35,17 +36,14 @@ export const build: typeof $segmenter.do_build = (locales, granularity) => {
 export const segment: typeof $segmenter.segment = (segmenter, input) => {
   const segments = segmenter.segment(input);
   const jsIterator = segments[Symbol.iterator]();
-  const iter: IterableIterator<$segmenter.Segment$, undefined, undefined> = {
+  const mappedIterator: Iterator<$segmenter.Segment$, undefined, undefined> = {
     next() {
       const result = jsIterator.next();
       if (result.done) return { done: true as const, value: undefined };
       return { done: false as const, value: toSegment(result.value) };
     },
-    [Symbol.iterator]() {
-      return this;
-    },
   };
-  return iter;
+  return jsIteratorAsYielder(mappedIterator);
 };
 
 export const resolved_locale: typeof $segmenter.resolved_locale = (

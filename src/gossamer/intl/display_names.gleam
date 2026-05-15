@@ -39,17 +39,6 @@ pub type Kind {
   DateTimeField
 }
 
-/// What the formatter returns when no display name exists for the
-/// input code. Maps the JavaScript `fallback` option.
-///
-pub type Fallback {
-  /// Return the input code unchanged (the default).
-  FallbackCode
-
-  /// Return `Error(Nil)`.
-  FallbackNone
-}
-
 /// How language display names are rendered when the input combines a
 /// language and a region. Maps the JavaScript `languageDisplay`
 /// option. Only meaningful when [`new`](#new) is called with
@@ -71,7 +60,6 @@ pub opaque type Builder {
     locales: List(String),
     kind: Kind,
     style: Option(LabelStyle),
-    fallback: Option(Fallback),
     language_display: Option(LanguageDisplay),
   )
 }
@@ -82,20 +70,13 @@ pub opaque type Builder {
 /// runtime's default locale.
 ///
 pub fn new(locales: List(String), of kind: Kind) -> Builder {
-  Builder(locales:, kind:, style: None, fallback: None, language_display: None)
+  Builder(locales:, kind:, style: None, language_display: None)
 }
 
 /// Sets the verbosity of the produced display name.
 ///
 pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
   Builder(..builder, style: Some(value))
-}
-
-/// Sets what the formatter returns when no display name exists for
-/// the input code.
-///
-pub fn with_fallback(builder: Builder, value: Fallback) -> Builder {
-  Builder(..builder, fallback: Some(value))
 }
 
 /// Sets how language display names are rendered when the input
@@ -117,7 +98,6 @@ pub fn build(builder: Builder) -> Result(DisplayNames, Nil) {
     builder.locales,
     builder.kind,
     builder.style,
-    builder.fallback,
     builder.language_display,
   )
 }
@@ -128,18 +108,25 @@ pub fn do_build(
   locales: List(String),
   kind: Kind,
   style: Option(LabelStyle),
-  fallback: Option(Fallback),
   language_display: Option(LanguageDisplay),
 ) -> Result(DisplayNames, Nil)
 
-/// Returns the localized name for the given code. Returns
-/// `Error(Nil)` only when [`with_fallback`](#with_fallback) was set
-/// to [`FallbackNone`](#FallbackNone) and no name exists. With the
-/// default fallback of [`FallbackCode`](#FallbackCode), an unknown
-/// code returns `Ok(code)`.
+/// Returns the localized name for the given code, or the code itself
+/// if no name is registered for it in the formatter's locale.
+/// Equivalent to JavaScript's default `fallback: "code"` mode. For a
+/// strict lookup that distinguishes the two cases, use
+/// [`find`](#find).
 ///
 @external(javascript, "./display_names.ffi.mjs", "of")
-pub fn of(formatter: DisplayNames, code: String) -> Result(String, Nil)
+pub fn of(formatter: DisplayNames, code: String) -> String
+
+/// Looks up the localized name for the given code. Returns
+/// `Error(Nil)` if no name is registered for the code in the
+/// formatter's locale. Equivalent to JavaScript's
+/// `fallback: "none"` mode.
+///
+@external(javascript, "./display_names.ffi.mjs", "find")
+pub fn find(formatter: DisplayNames, code: String) -> Result(String, Nil)
 
 /// The BCP 47 locale tag the runtime resolved from the requested
 /// priority list (e.g., `"en-US"`).

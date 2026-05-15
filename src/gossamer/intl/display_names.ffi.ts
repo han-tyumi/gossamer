@@ -13,10 +13,6 @@ function toKind(kind: $displayNames.Kind$): Intl.DisplayNamesType {
   return "dateTimeField";
 }
 
-function toFallback(fallback: $displayNames.Fallback$): "code" | "none" {
-  return $displayNames.Fallback$isFallbackCode(fallback) ? "code" : "none";
-}
-
 function toLanguageDisplay(
   display: $displayNames.LanguageDisplay$,
 ): "dialect" | "standard" {
@@ -29,12 +25,16 @@ export const build: typeof $displayNames.do_build = (
   locales,
   kind,
   style,
-  fallback,
   languageDisplay,
 ) => {
-  const options: Intl.DisplayNamesOptions = { type: toKind(kind) };
+  // The native fallback is fixed to "none" so `of` and `find` can
+  // distinguish "match" from "no match"; `of` then falls back to the
+  // input code on the Gleam side.
+  const options: Intl.DisplayNamesOptions = {
+    type: toKind(kind),
+    fallback: "none",
+  };
   mapIfSome(options, "style", style, toLabelStyle);
-  mapIfSome(options, "fallback", fallback, toFallback);
   mapIfSome(options, "languageDisplay", languageDisplay, toLanguageDisplay);
   try {
     return Result$Ok(new Intl.DisplayNames(toArray(locales), options));
@@ -43,7 +43,10 @@ export const build: typeof $displayNames.do_build = (
   }
 };
 
-export const of: typeof $displayNames.of = (formatter, code) => {
+export const of: typeof $displayNames.of = (formatter, code) =>
+  formatter.of(code) ?? code;
+
+export const find: typeof $displayNames.find = (formatter, code) => {
   const result = formatter.of(code);
   return result === undefined ? Result$Error(undefined) : Result$Ok(result);
 };

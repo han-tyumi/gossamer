@@ -3,7 +3,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
-import gossamer/iteration/iterator.{type Iterator}
+import gleam/yielder.{type Yielder}
 
 /// A configured segmenter that splits a string into graphemes, words,
 /// or sentences using locale-specific rules.
@@ -73,14 +73,11 @@ pub fn do_build(
 ) -> Result(Segmenter, Nil)
 
 /// Splits `input` into segments according to the segmenter's
-/// configured [`Granularity`](#Granularity). The returned iterator
-/// yields each [`Segment`](#Segment) in order.
+/// configured [`Granularity`](#Granularity). The returned yielder
+/// produces each [`Segment`](#Segment) lazily, in order.
 ///
 @external(javascript, "./segmenter.ffi.mjs", "segment")
-pub fn segment(
-  segmenter: Segmenter,
-  input: String,
-) -> Iterator(Segment, Nil, Nil)
+pub fn segment(segmenter: Segmenter, input: String) -> Yielder(Segment)
 
 /// The BCP 47 locale tag the runtime resolved from the requested
 /// priority list (e.g., `"en-US"`).

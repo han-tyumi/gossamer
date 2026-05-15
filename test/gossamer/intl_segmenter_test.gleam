@@ -3,15 +3,12 @@ import gleam/option.{None, Some}
 import gleam/yielder
 import gleeunit/should
 import gossamer/intl/segmenter
-import gossamer/iteration/iterator
 
 fn segments(
   of seg: segmenter.Segmenter,
   in input: String,
 ) -> List(segmenter.Segment) {
-  segmenter.segment(seg, input)
-  |> iterator.to_yielder
-  |> yielder.to_list
+  segmenter.segment(seg, input) |> yielder.to_list
 }
 
 pub fn build_default_test() {
