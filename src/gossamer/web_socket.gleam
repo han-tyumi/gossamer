@@ -221,42 +221,52 @@ pub fn do_build(
   on_close: Option(fn(CloseEvent) -> Nil),
 ) -> Result(WebSocket, WebSocketError)
 
-/// The format binary messages arrive as on this socket.
+/// A snapshot of the static handshake-time fields of a
+/// [`WebSocket`](#WebSocket), returned by [`info`](#info). For the
+/// dynamic fields that change over the connection's lifecycle, use
+/// [`ready_state`](#ready_state) and
+/// [`buffered_amount`](#buffered_amount) directly.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "binary_type")
-pub fn binary_type(socket: WebSocket) -> BinaryType
+pub type Info {
+  Info(
+    /// The URL the socket is connected to.
+    url: String,
+    /// The sub-protocol selected by the server during the handshake,
+    /// or `""` if none was negotiated.
+    protocol: String,
+    /// The extensions selected by the server, or `""` if none.
+    extensions: String,
+    /// The format binary messages arrive as on this socket.
+    binary_type: BinaryType,
+  )
+}
 
-/// The number of bytes of application data (UTF-8 text and binary data)
-/// that have been queued using `send_*` but not yet been transmitted to
-/// the network.
+/// A snapshot of the socket's URL, negotiated sub-protocol, server
+/// extensions, and binary message format. These fields are fixed
+/// once the handshake completes.
 ///
-/// If the WebSocket connection is closed, this attribute's value will only
-/// increase with each call to a `send_*` method. (The number does not reset
-/// to zero once the connection closes.)
-///
-@external(javascript, "./web_socket.ffi.mjs", "buffered_amount")
-pub fn buffered_amount(socket: WebSocket) -> Int
+@external(javascript, "./web_socket.ffi.mjs", "info")
+pub fn info(socket: WebSocket) -> Info
 
-/// The extensions selected by the server, if any.
-///
-@external(javascript, "./web_socket.ffi.mjs", "extensions")
-pub fn extensions(socket: WebSocket) -> String
-
-/// The sub-protocol selected by the server during the handshake, or `""`
-/// if none was negotiated.
-///
-@external(javascript, "./web_socket.ffi.mjs", "protocol")
-pub fn protocol(socket: WebSocket) -> String
-
-/// The current state of the connection.
+/// The current state of the connection. Changes through
+/// `Connecting` → `Open` → `Closing` → `Closed` over the
+/// connection's lifecycle, so re-read this value rather than
+/// caching it.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "ready_state")
 pub fn ready_state(socket: WebSocket) -> ReadyState
 
-/// The URL the socket is connected to.
+/// The number of bytes of application data (UTF-8 text and binary
+/// data) that have been queued using `send_*` but not yet been
+/// transmitted to the network. Changes as messages queue and flush,
+/// so re-read this value rather than caching it.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "url")
-pub fn url(socket: WebSocket) -> String
+/// If the WebSocket connection is closed, this attribute's value
+/// will only increase with each call to a `send_*` method. (The
+/// number does not reset to zero once the connection closes.)
+///
+@external(javascript, "./web_socket.ffi.mjs", "buffered_amount")
+pub fn buffered_amount(socket: WebSocket) -> Int
 
 /// Closes the WebSocket connection with the default code `1000` and
 /// no reason. Does nothing if the connection is already closing or

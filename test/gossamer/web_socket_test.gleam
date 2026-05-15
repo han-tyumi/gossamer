@@ -25,7 +25,7 @@ pub fn build_with_binary_type_test() {
     web_socket.from_url_string("ws://localhost:1")
     |> web_socket.with_binary_type(web_socket.ArrayBuffer)
     |> web_socket.build
-  web_socket.binary_type(ws) |> should.equal(web_socket.ArrayBuffer)
+  web_socket.info(ws).binary_type |> should.equal(web_socket.ArrayBuffer)
   web_socket.close(ws)
 }
 
@@ -56,7 +56,8 @@ pub fn from_uri_parity_test() {
     web_socket.from_url_string(href) |> web_socket.build
   let assert Ok(from_uri) = web_socket.from_uri(u) |> web_socket.build
 
-  web_socket.url(from_string) |> should.equal(web_socket.url(from_uri))
+  web_socket.info(from_string).url
+  |> should.equal(web_socket.info(from_uri).url)
   web_socket.close(from_string)
   web_socket.close(from_uri)
 }

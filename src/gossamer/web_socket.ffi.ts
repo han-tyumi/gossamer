@@ -95,28 +95,21 @@ export const build: typeof $webSocket.do_build = (
   return Result$Ok(ws);
 };
 
-export const binary_type: typeof $webSocket.binary_type = (socket) => {
-  return toBinaryType(socket.binaryType);
-};
-
-export const buffered_amount: typeof $webSocket.buffered_amount = (socket) => {
-  return socket.bufferedAmount;
-};
-
-export const extensions: typeof $webSocket.extensions = (socket) => {
-  return socket.extensions;
-};
-
-export const protocol: typeof $webSocket.protocol = (socket) => {
-  return socket.protocol;
+export const info: typeof $webSocket.info = (socket) => {
+  return $webSocket.Info$Info(
+    socket.url,
+    socket.protocol,
+    socket.extensions,
+    toBinaryType(socket.binaryType),
+  );
 };
 
 export const ready_state: typeof $webSocket.ready_state = (socket) => {
   return toReadyState(socket.readyState);
 };
 
-export const url: typeof $webSocket.url = (socket) => {
-  return socket.url;
+export const buffered_amount: typeof $webSocket.buffered_amount = (socket) => {
+  return socket.bufferedAmount;
 };
 
 export const close: typeof $webSocket.close = (socket) => {
