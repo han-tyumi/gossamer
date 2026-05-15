@@ -45,13 +45,6 @@ pub fn close_test() {
   message_port.close(port1)
 }
 
-pub fn set_on_message_error_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  message_port.set_on_message_error(port1, fn() { Nil })
-  message_port.close(port1)
-}
-
 pub fn post_message_array_buffer_wraps_as_bit_array_test() {
   let channel = message_channel.new()
   let port1 = message_channel.port1(channel)

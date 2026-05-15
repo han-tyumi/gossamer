@@ -2,6 +2,7 @@ import {
   type BitArray,
   BitArray$BitArray,
   BitArray$BitArray$data,
+  BitArray$isBitArray,
   type Result,
 } from "$/prelude.mjs";
 import { pad_to_bytes } from "$/gleam_stdlib/gleam/bit_array.mjs";
@@ -32,6 +33,18 @@ export function toUint8Array(bitArray: BitArray): Uint8Array {
 export function wrapArrayBuffer(value: unknown): unknown {
   if (value instanceof ArrayBuffer) {
     return BitArray$BitArray(new Uint8Array(value));
+  }
+  return value;
+}
+
+/**
+ * Unwraps a `BitArray` to a fresh `ArrayBuffer` of its bytes so it can
+ * be sent through structured-clone APIs without losing the prototype.
+ * Other values pass through unchanged.
+ */
+export function unwrapBitArrayForClone(value: unknown): unknown {
+  if (BitArray$isBitArray(value)) {
+    return toUint8Array(value as BitArray).slice().buffer;
   }
   return value;
 }
