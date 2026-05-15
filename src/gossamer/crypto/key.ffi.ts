@@ -1,5 +1,5 @@
 import * as $crypto from "$/gossamer/gossamer/crypto.mjs";
-import type * as $key from "$/gossamer/gossamer/crypto/key.mjs";
+import * as $key from "$/gossamer/gossamer/crypto/key.mjs";
 import { BitArray$BitArray } from "$/prelude.mjs";
 import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 
@@ -232,18 +232,11 @@ export function toKeyAlgorithm(
   );
 }
 
-export const algorithm: typeof $key.algorithm = (key) => {
-  return toKeyAlgorithm(key.algorithm);
-};
-
-export const is_extractable: typeof $key.is_extractable = (key) => {
-  return key.extractable;
-};
-
-export const kind: typeof $key.kind = (key) => {
-  return toKeyKind(key.type);
-};
-
-export const usages: typeof $key.usages = (key) => {
-  return fromArrayMapped(key.usages, fromKeyUsage);
+export const info: typeof $key.info = (key) => {
+  return $key.Info$Info(
+    toKeyAlgorithm(key.algorithm),
+    toKeyKind(key.type),
+    fromArrayMapped(key.usages, fromKeyUsage),
+    key.extractable,
+  );
 };

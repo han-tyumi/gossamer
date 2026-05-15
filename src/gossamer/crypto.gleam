@@ -162,8 +162,9 @@ pub type KeyKind {
   Secret
 }
 
-/// The algorithm and parameters bound to a `CryptoKey`, read via
-/// `key.algorithm`.
+/// The algorithm and parameters bound to a `CryptoKey`, exposed
+/// via the `algorithm` field on
+/// [`crypto/key.Info`](./crypto/key.html#Info).
 ///
 pub type KeyAlgorithm {
   /// An AES key. `length` is the key size in bits (128, 192, or 256).

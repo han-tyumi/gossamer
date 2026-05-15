@@ -1,6 +1,5 @@
-//// Read-only accessors for a `CryptoKey` — its algorithm, kind,
-//// usages, and extractability. Generate, import, derive, or unwrap
-//// keys via [`gossamer/crypto/subtle`](./subtle.html).
+//// A `CryptoKey` returned by a [`gossamer/crypto/subtle`](./subtle.html)
+//// operation. Access its component data via [`info`](#info).
 
 import gossamer/crypto.{type KeyAlgorithm, type KeyKind, type KeyUsage}
 
@@ -12,26 +11,29 @@ import gossamer/crypto.{type KeyAlgorithm, type KeyKind, type KeyUsage}
 @external(javascript, "./key.type.ts", "CryptoKey$")
 pub type CryptoKey
 
-/// The algorithm and parameters the key is bound to.
+/// A snapshot of a [`CryptoKey`](#CryptoKey)'s parameters, returned
+/// by [`info`](#info). All fields are immutable after key
+/// generation.
 ///
-@external(javascript, "./key.ffi.mjs", "algorithm")
-pub fn algorithm(key: CryptoKey) -> KeyAlgorithm
+pub type Info {
+  Info(
+    /// The algorithm and parameters the key is bound to.
+    algorithm: KeyAlgorithm,
+    /// Whether the key is `Secret` (symmetric), `Public`, or
+    /// `Private`. Equivalent to JavaScript's `CryptoKey.type`.
+    kind: KeyKind,
+    /// The operations the key is permitted for (encrypt, decrypt,
+    /// sign, verify, etc.). `subtle` operations check this list
+    /// before running.
+    usages: List(KeyUsage),
+    /// `True` if the key can be exported via `subtle.export_key` or
+    /// `subtle.export_key_jwk`.
+    is_extractable: Bool,
+  )
+}
 
-/// `True` if `key` can be exported via `subtle.export_key` or
-/// `subtle.export_key_jwk`.
+/// A snapshot of the key's algorithm, kind, usages, and
+/// extractability.
 ///
-@external(javascript, "./key.ffi.mjs", "is_extractable")
-pub fn is_extractable(key: CryptoKey) -> Bool
-
-/// Whether `key` is `Secret` (symmetric), `Public`, or `Private`.
-/// Equivalent to JavaScript's `CryptoKey.type`.
-///
-@external(javascript, "./key.ffi.mjs", "kind")
-pub fn kind(key: CryptoKey) -> KeyKind
-
-/// The operations the key is permitted for (encrypt, decrypt, sign,
-/// verify, etc.). `subtle` operations check this list before
-/// running.
-///
-@external(javascript, "./key.ffi.mjs", "usages")
-pub fn usages(key: CryptoKey) -> List(KeyUsage)
+@external(javascript, "./key.ffi.mjs", "info")
+pub fn info(key: CryptoKey) -> Info

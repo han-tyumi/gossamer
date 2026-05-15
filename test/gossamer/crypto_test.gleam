@@ -39,9 +39,10 @@ pub fn generate_key_and_encrypt_decrypt_test() {
     ]),
   )
   let assert Ok(key) = result
+  let info = key.info(key)
 
-  should.equal(key.is_extractable(key), True)
-  should.equal(key.kind(key), crypto.Secret)
+  should.equal(info.is_extractable, True)
+  should.equal(info.kind, crypto.Secret)
 
   let iv = gleam_crypto.strong_random_bytes(12)
   let plaintext = <<"Hello":utf8>>
@@ -78,8 +79,8 @@ pub fn generate_key_pair_sign_verify_test() {
   let assert Ok(pair) = result
 
   let subtle.CryptoKeyPair(public_key:, private_key:) = pair
-  should.equal(key.kind(public_key), crypto.Public)
-  should.equal(key.kind(private_key), crypto.Private)
+  should.equal(key.info(public_key).kind, crypto.Public)
+  should.equal(key.info(private_key).kind, crypto.Private)
 
   let data = <<1, 2, 3>>
 
@@ -112,9 +113,9 @@ pub fn generate_rsa_key_pair_test() {
   )
   let assert Ok(pair) = result
   let subtle.CryptoKeyPair(public_key:, private_key:) = pair
-  should.equal(key.kind(public_key), crypto.Public)
-  should.equal(key.kind(private_key), crypto.Private)
-  let algo = key.algorithm(private_key)
+  should.equal(key.info(public_key).kind, crypto.Public)
+  should.equal(key.info(private_key).kind, crypto.Private)
+  let algo = key.info(private_key).algorithm
   let assert crypto.Rsa(name:, modulus_length:, ..) = algo
   should.equal(name, crypto.SsaPkcs1V15)
   should.equal(modulus_length, 2048)
@@ -132,7 +133,7 @@ pub fn import_export_key_test() {
   )
   let assert Ok(key) = result
 
-  should.equal(key.is_extractable(key), True)
+  should.equal(key.info(key).is_extractable, True)
 
   use result <- promise.await(subtle.export_key(subtle.Raw, key))
   let assert Ok(exported) = result
@@ -147,7 +148,7 @@ pub fn crypto_key_algorithm_test() {
     ]),
   )
   let assert Ok(key) = result
-  let algo = key.algorithm(key)
+  let algo = key.info(key).algorithm
   should.equal(algo, crypto.Aes(crypto.Gcm, 256))
   promise.resolve(Nil)
 }
@@ -160,8 +161,8 @@ pub fn crypto_key_algorithm_ed25519_test() {
     ]),
   )
   let assert Ok(pair) = result
-  key.algorithm(pair.public_key) |> should.equal(crypto.Ed25519)
-  key.algorithm(pair.private_key) |> should.equal(crypto.Ed25519)
+  key.info(pair.public_key).algorithm |> should.equal(crypto.Ed25519)
+  key.info(pair.private_key).algorithm |> should.equal(crypto.Ed25519)
   promise.resolve(Nil)
 }
 
@@ -170,8 +171,8 @@ pub fn crypto_key_algorithm_x25519_test() {
     subtle.generate_key_pair(subtle.KeyPairGenX25519, True, [crypto.DeriveBits]),
   )
   let assert Ok(pair) = result
-  key.algorithm(pair.public_key) |> should.equal(crypto.X25519)
-  key.algorithm(pair.private_key) |> should.equal(crypto.X25519)
+  key.info(pair.public_key).algorithm |> should.equal(crypto.X25519)
+  key.info(pair.private_key).algorithm |> should.equal(crypto.X25519)
   promise.resolve(Nil)
 }
 
@@ -186,7 +187,7 @@ pub fn crypto_key_algorithm_hkdf_test() {
     ),
   )
   let assert Ok(base_key) = result
-  key.algorithm(base_key) |> should.equal(crypto.Hkdf)
+  key.info(base_key).algorithm |> should.equal(crypto.Hkdf)
   promise.resolve(Nil)
 }
 
@@ -197,7 +198,7 @@ pub fn crypto_key_algorithm_pbkdf2_test() {
     ]),
   )
   let assert Ok(base_key) = result
-  key.algorithm(base_key) |> should.equal(crypto.Pbkdf2)
+  key.info(base_key).algorithm |> should.equal(crypto.Pbkdf2)
   promise.resolve(Nil)
 }
 
@@ -209,7 +210,7 @@ pub fn crypto_key_usages_test() {
     ]),
   )
   let assert Ok(key) = result
-  let usages = key.usages(key)
+  let usages = key.info(key).usages
   should.be_true(list.contains(usages, crypto.Encrypt))
   should.be_true(list.contains(usages, crypto.Decrypt))
   should.equal(list.length(usages), 2)
@@ -254,7 +255,7 @@ pub fn import_key_jwk_test() {
     ]),
   )
   let assert Ok(imported) = result
-  key.kind(imported) |> should.equal(crypto.Secret)
+  key.info(imported).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -300,7 +301,7 @@ pub fn derive_key_test() {
     ),
   )
   let assert Ok(derived) = result
-  key.kind(derived) |> should.equal(crypto.Secret)
+  key.info(derived).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -343,7 +344,7 @@ pub fn wrap_unwrap_key_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  key.kind(unwrapped) |> should.equal(crypto.Secret)
+  key.info(unwrapped).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -384,7 +385,7 @@ pub fn wrap_unwrap_key_jwk_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  key.kind(unwrapped) |> should.equal(crypto.Secret)
+  key.info(unwrapped).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -563,7 +564,7 @@ pub fn wrap_unwrap_key_aes_gcm_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  key.kind(unwrapped) |> should.equal(crypto.Secret)
+  key.info(unwrapped).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -606,7 +607,7 @@ pub fn wrap_unwrap_key_aes_gcm_with_test() {
     ),
   )
   let assert Ok(unwrapped) = result
-  key.kind(unwrapped) |> should.equal(crypto.Secret)
+  key.info(unwrapped).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
 
@@ -628,7 +629,7 @@ pub fn import_ed25519_public_test() {
     ]),
   )
   let assert Ok(imported) = result
-  key.kind(imported) |> should.equal(crypto.Public)
+  key.info(imported).kind |> should.equal(crypto.Public)
   promise.resolve(Nil)
 }
 
@@ -645,7 +646,7 @@ pub fn import_x25519_public_test() {
     subtle.import_key(subtle.Spki, exported, subtle.ImportX25519, True, []),
   )
   let assert Ok(imported) = result
-  key.kind(imported) |> should.equal(crypto.Public)
+  key.info(imported).kind |> should.equal(crypto.Public)
   promise.resolve(Nil)
 }
 
@@ -657,6 +658,6 @@ pub fn import_hkdf_base_key_test() {
     ]),
   )
   let assert Ok(base_key) = result
-  key.kind(base_key) |> should.equal(crypto.Secret)
+  key.info(base_key).kind |> should.equal(crypto.Secret)
   promise.resolve(Nil)
 }
