@@ -40,18 +40,30 @@ pub fn normalize(string: String) -> String
 @external(javascript, "./string_extra.ffi.mjs", "normalize_to")
 pub fn normalize_to(string: String, form form: NormalizationForm) -> String
 
-/// Returns `string` lowercased using the runtime's active locale. This
-/// differs from `gleam/string.lowercase` for locale-specific casing rules
-/// (e.g., Turkish dotted/dotless I).
+/// Returns `string` lowercased using the first supported locale from
+/// `locales` (or the runtime's default locale when the list is empty).
+/// Differs from `gleam/string.lowercase` for locale-specific casing
+/// rules (e.g., Turkish lowercases `"I"` to dotless `"ı"`, not
+/// `"i"`). Returns `Error(Nil)` if any tag in `locales` is
+/// structurally invalid.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "to_locale_lower_case")
-pub fn to_locale_lower_case(string: String) -> String
+pub fn to_locale_lower_case(
+  string: String,
+  in locales: List(String),
+) -> Result(String, Nil)
 
-/// Returns `string` uppercased using the runtime's active locale. This
-/// differs from `gleam/string.uppercase` for locale-specific casing rules.
+/// Returns `string` uppercased using the first supported locale from
+/// `locales` (or the runtime's default locale when the list is empty).
+/// Differs from `gleam/string.uppercase` for locale-specific casing
+/// rules. Returns `Error(Nil)` if any tag in `locales` is
+/// structurally invalid.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "to_locale_upper_case")
-pub fn to_locale_upper_case(string: String) -> String
+pub fn to_locale_upper_case(
+  string: String,
+  in locales: List(String),
+) -> Result(String, Nil)
 
 /// `True` when `string` is a well-formed UTF-16 sequence — every
 /// surrogate is part of a valid pair.
