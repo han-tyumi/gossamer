@@ -28,11 +28,11 @@ canonical types and functions directly:
 | Strong random bytes                        | [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/)            |
 
 gossamer fills the rest: `AbortSignal`, `Blob` / `File`, the Streams API,
-`SubtleCrypto`, `WebSocket`, `TextDecoder` / `TextDecoderStream` /
-`TextEncoderStream`, `CompressionStream` / `DecompressionStream`, `URLPattern`,
-`BigInt`, `Performance`, plus per-module extras (`fetch_extra`,
-`form_data_extra`, `time_extra`, `string_extra`, `regexp_extra`, `symbol_extra`,
-`int_extra`, `float_extra`). See the
+`SubtleCrypto`, `WebSocket`, `Worker`, `Intl` formatters, `TextDecoder` /
+`TextDecoderStream` / `TextEncoderStream`, `CompressionStream` /
+`DecompressionStream`, `URLPattern`, `BigInt`, `Performance`, plus per-module
+extras (`fetch_extra`, `form_data_extra`, `time_extra`, `string_extra`,
+`regexp_extra`, `symbol_extra`, `int_extra`, `float_extra`). See the
 [coverage page](https://hexdocs.pm/gossamer/coverage.html) for the full list.
 
 ## Installation

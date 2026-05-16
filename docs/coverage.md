@@ -27,8 +27,12 @@ Node.js, Bun, and browsers.
   WinterTC minimum)
 - [URL Pattern API](https://urlpattern.spec.whatwg.org/) — URLPattern (outside
   WinterTC minimum)
+- [HTML Living Standard](https://html.spec.whatwg.org/) — Web Workers,
+  MessageChannel, MessagePort (outside WinterTC minimum)
 - [ECMAScript (ECMA-262)](https://tc39.es/ecma262/) — JavaScript language
   built-ins
+- [ECMAScript Internationalization API (ECMA-402)](https://tc39.es/ecma402/) —
+  `Intl.*` formatters and locale-aware operations
 
 ## Web Platform APIs
 
@@ -74,6 +78,19 @@ manipulate the resulting `List(#(String, String))` with
 | Name      | Module                                              |
 | --------- | --------------------------------------------------- |
 | WebSocket | [`gossamer/web_socket`](./gossamer/web_socket.html) |
+
+### Workers & Messaging
+
+| Name           | Module                                                        |
+| -------------- | ------------------------------------------------------------- |
+| Worker         | [`gossamer/worker`](./gossamer/worker.html)                   |
+| MessageChannel | [`gossamer/message_channel`](./gossamer/message_channel.html) |
+| MessagePort    | [`gossamer/message_port`](./gossamer/message_port.html)       |
+
+Gleam worker scripts use [`gossamer/worker_self`](./gossamer/worker_self.html)
+for `post_message` and `set_on_message`; the parent spawns them with
+`worker.from_module("my_app/worker")`. The FFI bridges Web Workers on Deno, Bun,
+and browsers with Node's `worker_threads` so the same script runs on all three.
 
 ### Streams
 
@@ -229,6 +246,24 @@ across `int_extra` and `float_extra` mirroring `gleam/int` / `gleam/float`.
 inspecting or pattern-matching JSON of unknown structure. For typed
 encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 
+### Internationalization (ECMA-402)
+
+| Name                    | Module                                                                            |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| Intl.Collator           | [`gossamer/intl/collator`](./gossamer/intl/collator.html)                         |
+| Intl.DateTimeFormat     | [`gossamer/intl/date_time_format`](./gossamer/intl/date_time_format.html)         |
+| Intl.DisplayNames       | [`gossamer/intl/display_names`](./gossamer/intl/display_names.html)               |
+| Intl.ListFormat         | [`gossamer/intl/list_format`](./gossamer/intl/list_format.html)                   |
+| Intl.Locale             | [`gossamer/intl/locale`](./gossamer/intl/locale.html)                             |
+| Intl.NumberFormat       | [`gossamer/intl/number_format`](./gossamer/intl/number_format.html)               |
+| Intl.PluralRules        | [`gossamer/intl/plural_rules`](./gossamer/intl/plural_rules.html)                 |
+| Intl.RelativeTimeFormat | [`gossamer/intl/relative_time_format`](./gossamer/intl/relative_time_format.html) |
+| Intl.Segmenter          | [`gossamer/intl/segmenter`](./gossamer/intl/segmenter.html)                       |
+
+[`gossamer/intl`](./gossamer/intl.html) hosts shared enums (`LabelStyle`,
+`RangePartSource`, `HourCycle`, `CaseFirst`) used across the formatter
+submodules.
+
 ### Delegated
 
 | Name    | Module                                                                                          |
@@ -240,23 +275,23 @@ Use the upstream bindings directly — gossamer doesn't wrap them.
 
 ## Out of Scope
 
-| Category                                                           | Reason                                                                                |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
-| DOM APIs (document, window, Element, etc.)                         | Browser-only                                                                          |
-| Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets                 |
-| ErrorEvent                                                         | Re-add receive-only when Worker support arrives                                       |
-| PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                                |
-| structuredClone                                                    | Gleam values are immutable; the "break shared references" primitive doesn't translate |
-| WebAssembly                                                        | Warrants its own package                                                              |
-| Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system                               |
-| SharedArrayBuffer, Atomics                                         | Threading; revisit if Workers become cross-runtime                                    |
-| Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                          |
-| Worker, ServiceWorker, SharedWorker, MessageChannel, MessagePort   | APIs diverge across runtimes; revisit when WinterTC stabilizes a common shape         |
-| Intl (`DateTimeFormat`, `NumberFormat`, `Collator`, etc.)          | Deferred; revisit with one builder module per constructor                             |
-| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Revisit when a concrete use case arrives                                              |
-| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | `Uint8Array` covers byte data via the `BitArray` bridge                               |
-| DataView                                                           | Bridge via `Uint8Array` for raw bytes                                                 |
-| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases                       |
+| Category                                                           | Reason                                                                                                        |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| DOM APIs (document, window, Element, etc.)                         | Browser-only                                                                                                  |
+| Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets                                         |
+| ErrorEvent, `on_error` / `on_message_error` handlers               | Gleam code uses `Result` instead of throwing; event handlers for JS throws don't fit                          |
+| MessageEvent                                                       | Receive handlers expose the payload directly; the event's metadata (origin, ports, source) doesn't apply here |
+| PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                                                        |
+| structuredClone                                                    | Gleam values are immutable; the "break shared references" primitive doesn't translate                         |
+| WebAssembly                                                        | Warrants its own package                                                                                      |
+| Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system                                                       |
+| SharedArrayBuffer, Atomics                                         | Cross-thread shared memory; revisit when a concrete cross-runtime use case arrives                            |
+| Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                                                  |
+| ServiceWorker, SharedWorker                                        | Browser-only with no cross-runtime equivalent                                                                 |
+| WeakMap, WeakSet, WeakRef, FinalizationRegistry                    | Revisit when a concrete use case arrives                                                                      |
+| Typed arrays beyond `Uint8Array` (`Int8Array`/`Float64Array`/etc.) | `Uint8Array` covers byte data via the `BitArray` bridge                                                       |
+| DataView                                                           | Bridge via `Uint8Array` for raw bytes                                                                         |
+| ReadableStreamBYOBReader, ReadableByteStreamController             | Default reader and controller cover the cross-runtime use cases                                               |
 
 Several of these unbound APIs exist for JS-specific performance or memory
 characteristics — `WeakMap` / `WeakSet` / `WeakRef` / `FinalizationRegistry` let
