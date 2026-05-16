@@ -55,3 +55,11 @@ pub fn set_timeout(after delay: Duration, run callback: fn() -> a) -> Int
 ///
 @external(javascript, "./gossamer.ffi.mjs", "user_agent")
 pub fn user_agent() -> String
+
+/// Returns the number of logical processors available to the runtime.
+/// Useful for sizing worker pools. Some browsers cap this value for
+/// fingerprinting protection. Equivalent to JavaScript's
+/// `navigator.hardwareConcurrency`.
+///
+@external(javascript, "./gossamer.ffi.mjs", "hardware_concurrency")
+pub fn hardware_concurrency() -> Int

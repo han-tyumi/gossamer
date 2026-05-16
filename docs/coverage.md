@@ -172,17 +172,18 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
 ### Globals
 
-| Name                               | Module                                                            |
-| ---------------------------------- | ----------------------------------------------------------------- |
-| atob (`decode_base64`)             | `gossamer`                                                        |
-| btoa (`encode_base64`)             | `gossamer`                                                        |
-| setTimeout / clearTimeout          | `gossamer`                                                        |
-| setInterval / clearInterval        | `gossamer`                                                        |
-| queueMicrotask                     | `gossamer`                                                        |
-| navigator.userAgent (`user_agent`) | `gossamer`                                                        |
-| console                            | [`gossamer/console`](./gossamer/console.html)                     |
-| Performance                        | [`gossamer/performance`](./gossamer/performance.html)             |
-| PerformanceEntry                   | [`gossamer/performance_entry`](./gossamer/performance_entry.html) |
+| Name                                                   | Module                                                            |
+| ------------------------------------------------------ | ----------------------------------------------------------------- |
+| atob (`decode_base64`)                                 | `gossamer`                                                        |
+| btoa (`encode_base64`)                                 | `gossamer`                                                        |
+| setTimeout / clearTimeout                              | `gossamer`                                                        |
+| setInterval / clearInterval                            | `gossamer`                                                        |
+| queueMicrotask                                         | `gossamer`                                                        |
+| navigator.userAgent (`user_agent`)                     | `gossamer`                                                        |
+| navigator.hardwareConcurrency (`hardware_concurrency`) | `gossamer`                                                        |
+| console                                                | [`gossamer/console`](./gossamer/console.html)                     |
+| Performance                                            | [`gossamer/performance`](./gossamer/performance.html)             |
+| PerformanceEntry                                       | [`gossamer/performance_entry`](./gossamer/performance_entry.html) |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
 no idiomatic use; log via `console.error` instead.

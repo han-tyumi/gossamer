@@ -53,3 +53,8 @@ export const set_timeout: typeof $gossamer.set_timeout = (delay, callback) => {
 export const user_agent: typeof $gossamer.user_agent = () => {
   return globalThis.navigator.userAgent;
 };
+
+export const hardware_concurrency: typeof $gossamer.hardware_concurrency =
+  () => {
+    return globalThis.navigator.hardwareConcurrency;
+  };

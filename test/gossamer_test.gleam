@@ -35,6 +35,11 @@ pub fn user_agent_test() {
   should.be_true(agent != "")
 }
 
+pub fn hardware_concurrency_test() {
+  let count = gossamer.hardware_concurrency()
+  should.be_true(count >= 1)
+}
+
 pub fn set_timeout_and_clear_test() {
   let #(p, resolve) = promise.start()
 
