@@ -1,7 +1,7 @@
 import * as $intl from "$/gossamer/gossamer/intl.mjs";
 import * as $numberFormat from "$/gossamer/gossamer/intl/number_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { fromRangeSource } from "~/utils/intl.ffi.ts";
+import { fromRangeSource, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
@@ -189,6 +189,7 @@ function toRangePart(item: NumberRangeFormatPart): $numberFormat.RangePart$ {
 
 export const build: typeof $numberFormat.do_build = (
   locales,
+  locale_matcher,
   style,
   currency,
   currency_display,
@@ -211,6 +212,7 @@ export const build: typeof $numberFormat.do_build = (
   numbering_system,
 ) => {
   const options: Intl.NumberFormatOptions = {};
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "style", style, toStyle);
   setIfSome(options, "currency", currency);
   mapIfSome(options, "currencyDisplay", currency_display, toCurrencyDisplay);

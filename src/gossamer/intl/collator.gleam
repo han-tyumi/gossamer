@@ -4,7 +4,7 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/order.{type Order}
-import gossamer/intl.{type CaseFirst}
+import gossamer/intl.{type CaseFirst, type LocaleMatcher}
 
 /// A configured comparator that orders strings using a locale-
 /// specific collation.
@@ -49,6 +49,7 @@ pub type Sensitivity {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     usage: Usage,
     sensitivity: Option(Sensitivity),
     ignore_punctuation: Bool,
@@ -65,6 +66,7 @@ pub opaque type Builder {
 pub fn new(locales: List(String)) -> Builder {
   Builder(
     locales:,
+    locale_matcher: None,
     usage: Sort,
     sensitivity: None,
     ignore_punctuation: False,
@@ -72,6 +74,13 @@ pub fn new(locales: List(String)) -> Builder {
     case_first: None,
     collation: None,
   )
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets whether the comparator is tuned for sorting or searching.
@@ -123,6 +132,7 @@ pub fn with_collation(builder: Builder, value: String) -> Builder {
 pub fn build(builder: Builder) -> Result(Collator, Nil) {
   do_build(
     builder.locales,
+    builder.locale_matcher,
     builder.usage,
     builder.sensitivity,
     builder.ignore_punctuation,
@@ -136,6 +146,7 @@ pub fn build(builder: Builder) -> Result(Collator, Nil) {
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   usage: Usage,
   sensitivity: Option(Sensitivity),
   ignore_punctuation: Bool,

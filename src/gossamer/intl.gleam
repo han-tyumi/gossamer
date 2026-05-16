@@ -3,6 +3,21 @@
 //// and top-level helpers like [`get_canonical_locales`](#get_canonical_locales)
 //// and [`supported_values_of`](#supported_values_of).
 
+/// The locale-matching algorithm used to pick a locale from the
+/// requested priority list. Maps the JavaScript `localeMatcher` option
+/// shared by the `Intl.*` formatter and matcher constructors.
+///
+pub type LocaleMatcher {
+  /// Implementation-defined "best fit" heuristic — the runtime
+  /// chooses the closest locale it supports, even when the requested
+  /// tag isn't an exact match. JavaScript's default.
+  BestFit
+
+  /// The BCP 47 Lookup algorithm — strict tag-hierarchy walk that
+  /// stops at the first exact subtag prefix the runtime supports.
+  Lookup
+}
+
 /// Categories of locale-related values that
 /// [`supported_values_of`](#supported_values_of) can enumerate.
 ///

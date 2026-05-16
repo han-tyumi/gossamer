@@ -4,7 +4,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
-import gossamer/intl.{type LabelStyle}
+import gossamer/intl.{type LabelStyle, type LocaleMatcher}
 
 /// A configured formatter that renders relative time spans
 /// (`"in 2 hours"`, `"yesterday"`, etc.) in a locale-specific way.
@@ -92,6 +92,7 @@ pub type PartKind {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     numeric: Option(Numeric),
     style: Option(LabelStyle),
   )
@@ -102,7 +103,14 @@ pub opaque type Builder {
 /// use the runtime's default locale.
 ///
 pub fn new(locales: List(String)) -> Builder {
-  Builder(locales:, numeric: None, style: None)
+  Builder(locales:, locale_matcher: None, numeric: None, style: None)
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets whether the formatter renders numeric values verbatim or
@@ -123,13 +131,19 @@ pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
 /// structurally invalid.
 ///
 pub fn build(builder: Builder) -> Result(RelativeTimeFormat, Nil) {
-  do_build(builder.locales, builder.numeric, builder.style)
+  do_build(
+    builder.locales,
+    builder.locale_matcher,
+    builder.numeric,
+    builder.style,
+  )
 }
 
 @external(javascript, "./relative_time_format.ffi.mjs", "build")
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   numeric: Option(Numeric),
   style: Option(LabelStyle),
 ) -> Result(RelativeTimeFormat, Nil)

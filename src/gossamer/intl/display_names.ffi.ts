@@ -1,6 +1,6 @@
 import * as $displayNames from "$/gossamer/gossamer/intl/display_names.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toLabelStyle } from "~/utils/intl.ffi.ts";
+import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
@@ -23,6 +23,7 @@ function toLanguageDisplay(
 
 export const build: typeof $displayNames.do_build = (
   locales,
+  locale_matcher,
   kind,
   style,
   languageDisplay,
@@ -34,6 +35,7 @@ export const build: typeof $displayNames.do_build = (
     type: toKind(kind),
     fallback: "none",
   };
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "style", style, toLabelStyle);
   mapIfSome(options, "languageDisplay", languageDisplay, toLanguageDisplay);
   try {

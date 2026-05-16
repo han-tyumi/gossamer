@@ -1,7 +1,7 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import * as $collator from "$/gossamer/gossamer/intl/collator.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toCaseFirst } from "~/utils/intl.ffi.ts";
+import { toCaseFirst, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
@@ -20,6 +20,7 @@ function toSensitivity(
 
 export const build: typeof $collator.do_build = (
   locales,
+  locale_matcher,
   usage,
   sensitivity,
   ignore_punctuation,
@@ -32,6 +33,7 @@ export const build: typeof $collator.do_build = (
     ignorePunctuation: ignore_punctuation,
     numeric,
   };
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "sensitivity", sensitivity, toSensitivity);
   mapIfSome(options, "caseFirst", case_first, toCaseFirst);
   setIfSome(options, "collation", collation);

@@ -3,7 +3,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
-import gossamer/intl.{type LabelStyle}
+import gossamer/intl.{type LabelStyle, type LocaleMatcher}
 
 /// A configured list formatter that joins a list of strings using a
 /// locale-specific conjunction or separator.
@@ -50,7 +50,12 @@ pub type PartKind {
 /// The configuration for a [`ListFormat`](#ListFormat).
 ///
 pub opaque type Builder {
-  Builder(locales: List(String), kind: Option(Kind), style: Option(LabelStyle))
+  Builder(
+    locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
+    kind: Option(Kind),
+    style: Option(LabelStyle),
+  )
 }
 
 /// Creates a `Builder` for the given locale priority list. The
@@ -58,7 +63,14 @@ pub opaque type Builder {
 /// to use the runtime's default locale.
 ///
 pub fn new(locales: List(String)) -> Builder {
-  Builder(locales:, kind: None, style: None)
+  Builder(locales:, locale_matcher: None, kind: None, style: None)
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets the kind of join the formatter produces.
@@ -78,13 +90,14 @@ pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
 /// invalid.
 ///
 pub fn build(builder: Builder) -> Result(ListFormat, Nil) {
-  do_build(builder.locales, builder.kind, builder.style)
+  do_build(builder.locales, builder.locale_matcher, builder.kind, builder.style)
 }
 
 @external(javascript, "./list_format.ffi.mjs", "build")
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   kind: Option(Kind),
   style: Option(LabelStyle),
 ) -> Result(ListFormat, Nil)

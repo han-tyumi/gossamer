@@ -2,6 +2,7 @@ import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $segmenter from "$/gossamer/gossamer/intl/segmenter.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
+import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
@@ -23,8 +24,13 @@ function toSegment(data: Intl.SegmentData): $segmenter.Segment$ {
   );
 }
 
-export const build: typeof $segmenter.do_build = (locales, granularity) => {
+export const build: typeof $segmenter.do_build = (
+  locales,
+  locale_matcher,
+  granularity,
+) => {
   const options: Intl.SegmenterOptions = {};
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "granularity", granularity, toGranularity);
   try {
     return Result$Ok(new Intl.Segmenter(toArray(locales), options));

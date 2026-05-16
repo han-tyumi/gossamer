@@ -4,6 +4,7 @@ import {
   fromRangeSource,
   toHourCycle,
   toLabelStyle,
+  toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
@@ -129,6 +130,7 @@ function dateFromUnixSeconds(unixSeconds: number): Date {
 
 export const build: typeof $dateTimeFormat.do_build = (
   locales,
+  locale_matcher,
   calendar,
   numberingSystem,
   hour12,
@@ -149,6 +151,7 @@ export const build: typeof $dateTimeFormat.do_build = (
   timeStyle,
 ) => {
   const options: Intl.DateTimeFormatOptions = {};
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "calendar", calendar, (value) => value);
   mapIfSome(options, "numberingSystem", numberingSystem, (value) => value);
   setIfSome(options, "hour12", hour12);

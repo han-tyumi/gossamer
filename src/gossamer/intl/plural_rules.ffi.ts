@@ -5,6 +5,7 @@ import {
   toRoundingPriority,
   toTrailingZeroDisplay,
 } from "~/gossamer/intl/number_format.ffi.ts";
+import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
@@ -33,6 +34,7 @@ function fromPluralCategory(
 
 export const build: typeof $pluralRules.do_build = (
   locales,
+  locale_matcher,
   kind,
   minimum_integer_digits,
   minimum_fraction_digits,
@@ -45,6 +47,7 @@ export const build: typeof $pluralRules.do_build = (
   trailing_zero_display,
 ) => {
   const options: Intl.PluralRulesOptions = {};
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "type", kind, toKind);
   setIfSome(options, "minimumIntegerDigits", minimum_integer_digits);
   setIfSome(options, "minimumFractionDigits", minimum_fraction_digits);

@@ -13,7 +13,8 @@
 
 import gleam/option.{type Option, None, Some}
 import gossamer/intl.{
-  type RoundingMode, type RoundingPriority, type TrailingZeroDisplay,
+  type LocaleMatcher, type RoundingMode, type RoundingPriority,
+  type TrailingZeroDisplay,
 }
 
 /// A configured plural-rules selector that maps a number to its
@@ -67,6 +68,7 @@ pub type PluralCategory {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     kind: Option(Kind),
     minimum_integer_digits: Option(Int),
     minimum_fraction_digits: Option(Int),
@@ -87,6 +89,7 @@ pub opaque type Builder {
 pub fn new(locales: List(String)) -> Builder {
   Builder(
     locales:,
+    locale_matcher: None,
     kind: None,
     minimum_integer_digits: None,
     minimum_fraction_digits: None,
@@ -98,6 +101,13 @@ pub fn new(locales: List(String)) -> Builder {
     rounding_increment: None,
     trailing_zero_display: None,
   )
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets whether the rules describe cardinal counts or ordinal
@@ -184,6 +194,7 @@ pub fn with_trailing_zero_display(
 pub fn build(builder: Builder) -> Result(PluralRules, Nil) {
   do_build(
     builder.locales,
+    builder.locale_matcher,
     builder.kind,
     builder.minimum_integer_digits,
     builder.minimum_fraction_digits,
@@ -201,6 +212,7 @@ pub fn build(builder: Builder) -> Result(PluralRules, Nil) {
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   kind: Option(Kind),
   minimum_integer_digits: Option(Int),
   minimum_fraction_digits: Option(Int),

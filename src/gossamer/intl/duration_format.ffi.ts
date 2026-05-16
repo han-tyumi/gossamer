@@ -1,6 +1,6 @@
 import * as $durationFormat from "$/gossamer/gossamer/intl/duration_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toLabelStyle } from "~/utils/intl.ffi.ts";
+import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome, toOption } from "~/utils/option.ffi.ts";
 
@@ -92,6 +92,7 @@ function toDuration(
 
 export const build: typeof $durationFormat.do_build = (
   locales,
+  locale_matcher,
   style,
   fractional_digits,
   numbering_system,
@@ -117,6 +118,7 @@ export const build: typeof $durationFormat.do_build = (
   nanoseconds_display,
 ) => {
   const options: Intl.DurationFormatOptions = {};
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "style", style, toStyle);
   mapIfSome(options, "fractionalDigits", fractional_digits, toFractionalDigits);
   setIfSome(options, "numberingSystem", numbering_system);

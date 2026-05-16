@@ -4,6 +4,7 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/yielder.{type Yielder}
+import gossamer/intl.{type LocaleMatcher}
 
 /// A configured segmenter that splits a string into graphemes, words,
 /// or sentences using locale-specific rules.
@@ -40,7 +41,11 @@ pub type Segment {
 /// The configuration for a [`Segmenter`](#Segmenter).
 ///
 pub opaque type Builder {
-  Builder(locales: List(String), granularity: Option(Granularity))
+  Builder(
+    locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
+    granularity: Option(Granularity),
+  )
 }
 
 /// Creates a `Builder` for the given locale priority list. The
@@ -48,7 +53,14 @@ pub opaque type Builder {
 /// use the runtime's default locale.
 ///
 pub fn new(locales: List(String)) -> Builder {
-  Builder(locales:, granularity: None)
+  Builder(locales:, locale_matcher: None, granularity: None)
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets the unit of segmentation.
@@ -62,13 +74,14 @@ pub fn with_granularity(builder: Builder, value: Granularity) -> Builder {
 /// invalid.
 ///
 pub fn build(builder: Builder) -> Result(Segmenter, Nil) {
-  do_build(builder.locales, builder.granularity)
+  do_build(builder.locales, builder.locale_matcher, builder.granularity)
 }
 
 @external(javascript, "./segmenter.ffi.mjs", "build")
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   granularity: Option(Granularity),
 ) -> Result(Segmenter, Nil)
 

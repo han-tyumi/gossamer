@@ -5,7 +5,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
-import gossamer/intl.{type LabelStyle}
+import gossamer/intl.{type LabelStyle, type LocaleMatcher}
 
 /// A configured formatter that maps standard codes (BCP 47 language
 /// tags, ISO 4217 currency codes, ISO 15924 script codes, etc.) to
@@ -58,6 +58,7 @@ pub type LanguageDisplay {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     kind: Kind,
     style: Option(LabelStyle),
     language_display: Option(LanguageDisplay),
@@ -70,7 +71,20 @@ pub opaque type Builder {
 /// runtime's default locale.
 ///
 pub fn new(locales: List(String), of kind: Kind) -> Builder {
-  Builder(locales:, kind:, style: None, language_display: None)
+  Builder(
+    locales:,
+    locale_matcher: None,
+    kind:,
+    style: None,
+    language_display: None,
+  )
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets the verbosity of the produced display name.
@@ -96,6 +110,7 @@ pub fn with_language_display(
 pub fn build(builder: Builder) -> Result(DisplayNames, Nil) {
   do_build(
     builder.locales,
+    builder.locale_matcher,
     builder.kind,
     builder.style,
     builder.language_display,
@@ -106,6 +121,7 @@ pub fn build(builder: Builder) -> Result(DisplayNames, Nil) {
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   kind: Kind,
   style: Option(LabelStyle),
   language_display: Option(LanguageDisplay),

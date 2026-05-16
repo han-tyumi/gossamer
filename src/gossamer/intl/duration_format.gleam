@@ -5,7 +5,7 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/time/duration.{type Duration}
-import gossamer/intl.{type LabelStyle}
+import gossamer/intl.{type LabelStyle, type LocaleMatcher}
 
 /// A configured duration formatter.
 ///
@@ -201,6 +201,7 @@ pub type PartKind {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     style: Option(Style),
     fractional_digits: Option(FractionalDigits),
     numbering_system: Option(String),
@@ -234,6 +235,7 @@ pub opaque type Builder {
 pub fn new(locales: List(String)) -> Builder {
   Builder(
     locales:,
+    locale_matcher: None,
     style: None,
     fractional_digits: None,
     numbering_system: None,
@@ -258,6 +260,13 @@ pub fn new(locales: List(String)) -> Builder {
     microseconds_display: None,
     nanoseconds_display: None,
   )
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets the overall rendering style.
@@ -410,6 +419,7 @@ pub fn with_nanoseconds_display(builder: Builder, value: Display) -> Builder {
 pub fn build(builder: Builder) -> Result(DurationFormat, Nil) {
   do_build(
     builder.locales,
+    builder.locale_matcher,
     builder.style,
     builder.fractional_digits,
     builder.numbering_system,
@@ -440,6 +450,7 @@ pub fn build(builder: Builder) -> Result(DurationFormat, Nil) {
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   style: Option(Style),
   fractional_digits: Option(FractionalDigits),
   numbering_system: Option(String),

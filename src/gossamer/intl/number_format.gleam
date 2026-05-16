@@ -10,8 +10,8 @@
 import gleam/option.{type Option, None, Some}
 import gossamer/big_int.{type BigInt}
 import gossamer/intl.{
-  type RangePartSource, type RoundingMode, type RoundingPriority,
-  type TrailingZeroDisplay,
+  type LocaleMatcher, type RangePartSource, type RoundingMode,
+  type RoundingPriority, type TrailingZeroDisplay,
 }
 
 /// A configured number formatter that produces locale-aware string
@@ -231,6 +231,7 @@ pub type RangePart {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     style: Option(Style),
     currency: Option(String),
     currency_display: Option(CurrencyDisplay),
@@ -261,6 +262,7 @@ pub opaque type Builder {
 pub fn new(locales: List(String)) -> Builder {
   Builder(
     locales:,
+    locale_matcher: None,
     style: None,
     currency: None,
     currency_display: None,
@@ -282,6 +284,13 @@ pub fn new(locales: List(String)) -> Builder {
     trailing_zero_display: None,
     numbering_system: None,
   )
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets the high-level formatting style. Pairs with
@@ -440,6 +449,7 @@ pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
 pub fn build(builder: Builder) -> Result(NumberFormat, Nil) {
   do_build(
     builder.locales,
+    builder.locale_matcher,
     builder.style,
     builder.currency,
     builder.currency_display,
@@ -467,6 +477,7 @@ pub fn build(builder: Builder) -> Result(NumberFormat, Nil) {
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   style: Option(Style),
   currency: Option(String),
   currency_display: Option(CurrencyDisplay),

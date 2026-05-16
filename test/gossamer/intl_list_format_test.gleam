@@ -80,6 +80,24 @@ pub fn resolved_locale_test() {
   list_format.resolved_locale(formatter) |> should.equal("en-US")
 }
 
+pub fn locale_matcher_lookup_test() {
+  let assert Ok(formatter) =
+    list_format.new(["en-US"])
+    |> list_format.with_locale_matcher(intl.Lookup)
+    |> list_format.build
+  list_format.format(formatter, ["apple", "banana", "cherry"])
+  |> should.equal("apple, banana, and cherry")
+}
+
+pub fn locale_matcher_best_fit_test() {
+  let assert Ok(formatter) =
+    list_format.new(["en-US"])
+    |> list_format.with_locale_matcher(intl.BestFit)
+    |> list_format.build
+  list_format.format(formatter, ["apple", "banana", "cherry"])
+  |> should.equal("apple, banana, and cherry")
+}
+
 pub fn supported_locales_of_test() {
   list_format.supported_locales_of(["en-US", "zz-INVALID"])
   |> should.equal(["en-US"])

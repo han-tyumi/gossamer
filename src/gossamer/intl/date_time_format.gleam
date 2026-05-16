@@ -10,7 +10,9 @@
 
 import gleam/option.{type Option, None, Some}
 import gleam/time/timestamp.{type Timestamp}
-import gossamer/intl.{type HourCycle, type LabelStyle, type RangePartSource}
+import gossamer/intl.{
+  type HourCycle, type LabelStyle, type LocaleMatcher, type RangePartSource,
+}
 
 /// A configured formatter that renders a `Timestamp` as a
 /// locale-aware date/time string.
@@ -182,6 +184,7 @@ pub type PartKind {
 pub opaque type Builder {
   Builder(
     locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
     calendar: Option(String),
     numbering_system: Option(String),
     hour12: Option(Bool),
@@ -210,6 +213,7 @@ pub opaque type Builder {
 pub fn new(locales: List(String)) -> Builder {
   Builder(
     locales:,
+    locale_matcher: None,
     calendar: None,
     numbering_system: None,
     hour12: None,
@@ -229,6 +233,13 @@ pub fn new(locales: List(String)) -> Builder {
     date_style: None,
     time_style: None,
   )
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
+  Builder(..builder, locale_matcher: Some(value))
 }
 
 /// Sets the calendar identifier (e.g., `"gregory"`, `"chinese"`,
@@ -369,6 +380,7 @@ pub fn with_time_style(builder: Builder, value: Style) -> Builder {
 pub fn build(builder: Builder) -> Result(DateTimeFormat, Nil) {
   do_build(
     builder.locales,
+    builder.locale_matcher,
     builder.calendar,
     builder.numbering_system,
     builder.hour12,
@@ -394,6 +406,7 @@ pub fn build(builder: Builder) -> Result(DateTimeFormat, Nil) {
 @internal
 pub fn do_build(
   locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
   calendar: Option(String),
   numbering_system: Option(String),
   hour12: Option(Bool),

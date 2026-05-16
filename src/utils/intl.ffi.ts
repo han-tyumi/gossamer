@@ -1,5 +1,11 @@
 import * as $intl from "$/gossamer/gossamer/intl.mjs";
 
+export function toLocaleMatcher(
+  matcher: $intl.LocaleMatcher$,
+): "best fit" | "lookup" {
+  return $intl.LocaleMatcher$isBestFit(matcher) ? "best fit" : "lookup";
+}
+
 export function toHourCycle(
   cycle: $intl.HourCycle$,
 ): "h11" | "h12" | "h23" | "h24" {

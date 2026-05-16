@@ -1,7 +1,7 @@
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $relativeTimeFormat from "$/gossamer/gossamer/intl/relative_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toLabelStyle } from "~/utils/intl.ffi.ts";
+import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
@@ -82,10 +82,12 @@ function toPart(
 
 export const build: typeof $relativeTimeFormat.do_build = (
   locales,
+  locale_matcher,
   numeric,
   style,
 ) => {
   const options: Intl.RelativeTimeFormatOptions = {};
+  mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
   mapIfSome(options, "numeric", numeric, toNumeric);
   mapIfSome(options, "style", style, toLabelStyle);
   try {
