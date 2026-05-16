@@ -1,5 +1,59 @@
 //// Parent module for the Internationalization family — JavaScript's
-//// `Intl.*` constructors. Hosts option enums shared across siblings.
+//// `Intl.*` constructors. Hosts option enums shared across siblings
+//// and top-level helpers like [`get_canonical_locales`](#get_canonical_locales)
+//// and [`supported_values_of`](#supported_values_of).
+
+/// Categories of locale-related values that
+/// [`supported_values_of`](#supported_values_of) can enumerate.
+///
+pub type SupportedValueKey {
+  /// Calendar identifiers (e.g., `"gregory"`, `"buddhist"`).
+  Calendar
+
+  /// Collation identifiers (e.g., `"phonebk"`, `"pinyin"`).
+  Collation
+
+  /// ISO 4217 currency codes (e.g., `"USD"`, `"EUR"`).
+  Currency
+
+  /// Numbering system identifiers (e.g., `"latn"`, `"arab"`).
+  NumberingSystem
+
+  /// IANA time zone identifiers (e.g., `"America/New_York"`).
+  TimeZone
+
+  /// Measurement unit identifiers (e.g., `"meter"`, `"hour"`).
+  Unit
+}
+
+/// Canonicalizes a list of BCP 47 locale tags and removes duplicates.
+/// Returns an error if any tag is malformed.
+///
+/// See [Intl.getCanonicalLocales](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/getCanonicalLocales) on MDN.
+///
+/// ## Examples
+///
+/// ```gleam
+/// assert intl.get_canonical_locales(["EN-US", "Fr"]) == Ok(["en-US", "fr"])
+/// ```
+///
+@external(javascript, "./intl.ffi.mjs", "get_canonical_locales")
+pub fn get_canonical_locales(locales: List(String)) -> Result(List(String), Nil)
+
+/// Returns the values supported by the runtime's `Intl` implementation
+/// for the given category, sorted in ascending order.
+///
+/// See [Intl.supportedValuesOf](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/supportedValuesOf) on MDN.
+///
+/// ## Examples
+///
+/// ```gleam
+/// intl.supported_values_of(intl.TimeZone)
+/// // -> ["Africa/Abidjan", "Africa/Accra", ...]
+/// ```
+///
+@external(javascript, "./intl.ffi.mjs", "supported_values_of")
+pub fn supported_values_of(key: SupportedValueKey) -> List(String)
 
 /// The rounding strategy applied to a formatter's output. Maps the
 /// JavaScript `roundingMode` option.
