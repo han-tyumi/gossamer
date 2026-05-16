@@ -1,0 +1,180 @@
+import * as $durationFormat from "$/gossamer/gossamer/intl/duration_format.mjs";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toLabelStyle } from "~/utils/intl.ffi.ts";
+import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { mapIfSome, setIfSome, toOption } from "~/utils/option.ffi.ts";
+
+function toStyle(
+  style: $durationFormat.Style$,
+): "long" | "short" | "narrow" | "digital" {
+  if ($durationFormat.Style$isStyleLong(style)) return "long";
+  if ($durationFormat.Style$isStyleShort(style)) return "short";
+  if ($durationFormat.Style$isStyleNarrow(style)) return "narrow";
+  return "digital";
+}
+
+function toClockStyle(
+  style: $durationFormat.ClockStyle$,
+): "long" | "short" | "narrow" | "numeric" | "2-digit" {
+  if ($durationFormat.ClockStyle$isClockLong(style)) return "long";
+  if ($durationFormat.ClockStyle$isClockShort(style)) return "short";
+  if ($durationFormat.ClockStyle$isClockNarrow(style)) return "narrow";
+  if ($durationFormat.ClockStyle$isClockNumeric(style)) return "numeric";
+  return "2-digit";
+}
+
+function toSubSecondStyle(
+  style: $durationFormat.SubSecondStyle$,
+): "long" | "short" | "narrow" | "numeric" {
+  if ($durationFormat.SubSecondStyle$isSubSecondLong(style)) return "long";
+  if ($durationFormat.SubSecondStyle$isSubSecondShort(style)) return "short";
+  if ($durationFormat.SubSecondStyle$isSubSecondNarrow(style)) return "narrow";
+  return "numeric";
+}
+
+function toDisplay(
+  display: $durationFormat.Display$,
+): "auto" | "always" {
+  return $durationFormat.Display$isAuto(display) ? "auto" : "always";
+}
+
+function toFractionalDigits(
+  value: $durationFormat.FractionalDigits$,
+): 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 {
+  if ($durationFormat.FractionalDigits$isFractionalDigits0(value)) return 0;
+  if ($durationFormat.FractionalDigits$isFractionalDigits1(value)) return 1;
+  if ($durationFormat.FractionalDigits$isFractionalDigits2(value)) return 2;
+  if ($durationFormat.FractionalDigits$isFractionalDigits3(value)) return 3;
+  if ($durationFormat.FractionalDigits$isFractionalDigits4(value)) return 4;
+  if ($durationFormat.FractionalDigits$isFractionalDigits5(value)) return 5;
+  if ($durationFormat.FractionalDigits$isFractionalDigits6(value)) return 6;
+  if ($durationFormat.FractionalDigits$isFractionalDigits7(value)) return 7;
+  if ($durationFormat.FractionalDigits$isFractionalDigits8(value)) return 8;
+  return 9;
+}
+
+function fromPartKind(type: string): $durationFormat.PartKind$ {
+  if (type === "integer") return $durationFormat.PartKind$Integer();
+  if (type === "literal") return $durationFormat.PartKind$Literal();
+  return $durationFormat.PartKind$Unit();
+}
+
+function toPart(
+  item: { type: string; value: string; unit?: string },
+): $durationFormat.Part$ {
+  return $durationFormat.Part$Part(
+    fromPartKind(item.type),
+    item.value,
+    toOption(item.unit),
+  );
+}
+
+function toDuration(
+  parts: $durationFormat.DurationParts$,
+): Record<string, number> {
+  return {
+    years: $durationFormat.DurationParts$DurationParts$years(parts),
+    months: $durationFormat.DurationParts$DurationParts$months(parts),
+    weeks: $durationFormat.DurationParts$DurationParts$weeks(parts),
+    days: $durationFormat.DurationParts$DurationParts$days(parts),
+    hours: $durationFormat.DurationParts$DurationParts$hours(parts),
+    minutes: $durationFormat.DurationParts$DurationParts$minutes(parts),
+    seconds: $durationFormat.DurationParts$DurationParts$seconds(parts),
+    milliseconds: $durationFormat.DurationParts$DurationParts$milliseconds(
+      parts,
+    ),
+    microseconds: $durationFormat.DurationParts$DurationParts$microseconds(
+      parts,
+    ),
+    nanoseconds: $durationFormat.DurationParts$DurationParts$nanoseconds(parts),
+  };
+}
+
+export const build: typeof $durationFormat.do_build = (
+  locales,
+  style,
+  fractional_digits,
+  numbering_system,
+  years,
+  months,
+  weeks,
+  days,
+  hours,
+  minutes,
+  seconds,
+  milliseconds,
+  microseconds,
+  nanoseconds,
+  years_display,
+  months_display,
+  weeks_display,
+  days_display,
+  hours_display,
+  minutes_display,
+  seconds_display,
+  milliseconds_display,
+  microseconds_display,
+  nanoseconds_display,
+) => {
+  const options: Intl.DurationFormatOptions = {};
+  mapIfSome(options, "style", style, toStyle);
+  mapIfSome(options, "fractionalDigits", fractional_digits, toFractionalDigits);
+  setIfSome(options, "numberingSystem", numbering_system);
+  mapIfSome(options, "years", years, toLabelStyle);
+  mapIfSome(options, "months", months, toLabelStyle);
+  mapIfSome(options, "weeks", weeks, toLabelStyle);
+  mapIfSome(options, "days", days, toLabelStyle);
+  mapIfSome(options, "hours", hours, toClockStyle);
+  mapIfSome(options, "minutes", minutes, toClockStyle);
+  mapIfSome(options, "seconds", seconds, toClockStyle);
+  mapIfSome(options, "milliseconds", milliseconds, toSubSecondStyle);
+  mapIfSome(options, "microseconds", microseconds, toSubSecondStyle);
+  mapIfSome(options, "nanoseconds", nanoseconds, toSubSecondStyle);
+  mapIfSome(options, "yearsDisplay", years_display, toDisplay);
+  mapIfSome(options, "monthsDisplay", months_display, toDisplay);
+  mapIfSome(options, "weeksDisplay", weeks_display, toDisplay);
+  mapIfSome(options, "daysDisplay", days_display, toDisplay);
+  mapIfSome(options, "hoursDisplay", hours_display, toDisplay);
+  mapIfSome(options, "minutesDisplay", minutes_display, toDisplay);
+  mapIfSome(options, "secondsDisplay", seconds_display, toDisplay);
+  mapIfSome(options, "millisecondsDisplay", milliseconds_display, toDisplay);
+  mapIfSome(options, "microsecondsDisplay", microseconds_display, toDisplay);
+  mapIfSome(options, "nanosecondsDisplay", nanoseconds_display, toDisplay);
+  try {
+    return Result$Ok(new Intl.DurationFormat(toArray(locales), options));
+  } catch {
+    return Result$Error(undefined);
+  }
+};
+
+export const format: typeof $durationFormat.format = (formatter, parts) => {
+  try {
+    return Result$Ok(formatter.format(toDuration(parts)));
+  } catch {
+    return Result$Error(undefined);
+  }
+};
+
+export const format_to_parts: typeof $durationFormat.format_to_parts = (
+  formatter,
+  parts,
+) => {
+  try {
+    return Result$Ok(
+      fromArrayMapped(formatter.formatToParts(toDuration(parts)), toPart),
+    );
+  } catch {
+    return Result$Error(undefined);
+  }
+};
+
+export const resolved_locale: typeof $durationFormat.resolved_locale = (
+  formatter,
+) => {
+  return formatter.resolvedOptions().locale;
+};
+
+export const supported_locales_of: typeof $durationFormat.supported_locales_of =
+  (locales) => {
+    return fromArray(Intl.DurationFormat.supportedLocalesOf(toArray(locales)));
+  };
