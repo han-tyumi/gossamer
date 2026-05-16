@@ -63,5 +63,6 @@ await build({
   platform: "neutral",
   target: "esnext",
   bundle: true,
+  external: ["node:*"],
   plugins: [buildImportMapper],
 });
