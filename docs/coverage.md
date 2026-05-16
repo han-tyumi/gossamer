@@ -81,16 +81,21 @@ manipulate the resulting `List(#(String, String))` with
 
 ### Workers & Messaging
 
-| Name           | Module                                                        |
-| -------------- | ------------------------------------------------------------- |
-| Worker         | [`gossamer/worker`](./gossamer/worker.html)                   |
-| MessageChannel | [`gossamer/message_channel`](./gossamer/message_channel.html) |
-| MessagePort    | [`gossamer/message_port`](./gossamer/message_port.html)       |
+| Name             | Module                                                            |
+| ---------------- | ----------------------------------------------------------------- |
+| Worker           | [`gossamer/worker`](./gossamer/worker.html)                       |
+| MessageChannel   | [`gossamer/message_channel`](./gossamer/message_channel.html)     |
+| MessagePort      | [`gossamer/message_port`](./gossamer/message_port.html)           |
+| BroadcastChannel | [`gossamer/broadcast_channel`](./gossamer/broadcast_channel.html) |
 
 Gleam worker scripts use [`gossamer/worker_self`](./gossamer/worker_self.html)
 for `post_message` and `set_on_message`; the parent spawns them with
 `worker.from_module("my_app/worker")`. The FFI bridges Web Workers on Deno, Bun,
 and browsers with Node's `worker_threads` so the same script runs on all three.
+
+[`gossamer/broadcast_channel`](./gossamer/broadcast_channel.html) sends messages
+between every channel of the same name in the same agent — same-origin workers,
+tabs, and iframes.
 
 ### Streams
 
