@@ -52,3 +52,22 @@ pub fn post_message_non_cloneable_test() {
   worker.post_message(w, fn() { Nil }) |> should.be_error
   worker.terminate(w)
 }
+
+pub fn set_on_message_replaces_previous_handler_test() {
+  let #(p, resolve) = promise.start()
+
+  let assert Ok(w) =
+    worker.from_module("gossamer/worker_parent_replace_fixture")
+    |> worker.with_on_message(fn(data) {
+      let assert Ok(value) = decode.run(data, decode.string)
+      resolve(value)
+      Nil
+    })
+    |> worker.build
+
+  let assert Ok(_) = worker.post_message(w, "echoed")
+
+  use value <- promise.map(p)
+  value |> should.equal("echoed")
+  worker.terminate(w)
+}

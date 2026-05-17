@@ -25,7 +25,7 @@ const target: Target = parentPort ?? (globalThis as unknown as Target);
 
 function onMessage(handler: (data: unknown) => void): void {
   if (parentPort) {
-    parentPort.on("message", handler);
+    parentPort.onmessage = (event: MessageEvent) => handler(event.data);
   } else {
     // @ts-expect-error onmessage is a global in a Web Worker scope.
     globalThis.onmessage = (event: MessageEvent) => handler(event.data);
