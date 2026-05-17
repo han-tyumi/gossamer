@@ -2,6 +2,8 @@ import gleam/dynamic
 import gleam/int
 import gleam/javascript/promise
 import gleam/option.{None}
+import gleam/string
+import gleam/yielder
 import gleeunit/should
 import gossamer/abort_signal
 import gossamer/iteration/async_iterator
@@ -15,6 +17,7 @@ import gossamer/stream/transform_stream/default_controller as transform_controll
 import gossamer/stream/writable_stream
 import gossamer/stream/writable_stream/default_controller as writable_controller
 import gossamer/stream/writable_stream/writer
+import runtime
 
 pub fn readable_stream_new_start_throws_test() {
   readable_stream.new()
@@ -611,4 +614,33 @@ pub fn read_bytes_locked_test() {
   use result <- promise.await(readable_stream.read_bytes(stream))
   result |> should.be_error
   promise.resolve(Nil)
+}
+
+/// Bun doesn't implement `ReadableStream.from`. The FFI's `ensureMethod`
+/// guard intercepts the missing-method call and throws a diagnostic
+/// error naming the binding and the upstream issue URL.
+pub fn from_yielder_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  let assert Error(message) =
+    runtime.catch_panic(fn() {
+      readable_stream.from_yielder(yielder.from_list([1, 2, 3]))
+    })
+  message |> string.contains("readable_stream.from_yielder") |> should.be_true
+  message
+  |> string.contains("github.com/oven-sh/bun/issues/3700")
+  |> should.be_true
+}
+
+pub fn from_async_iterator_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  let assert Error(message) =
+    runtime.catch_panic(fn() {
+      readable_stream.from_async_iterator(async_iterator.from_list([1, 2, 3]))
+    })
+  message
+  |> string.contains("readable_stream.from_async_iterator")
+  |> should.be_true
+  message
+  |> string.contains("github.com/oven-sh/bun/issues/3700")
+  |> should.be_true
 }

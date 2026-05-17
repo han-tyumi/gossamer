@@ -42,3 +42,10 @@ pub fn only_on(runtime: Runtime, body: fn() -> a) -> Nil {
     False -> Nil
   }
 }
+
+/// Runs `thunk` and catches any thrown error, returning its message as
+/// `Error(message)`. Use to assert diagnostic-throw behavior at FFI
+/// boundaries (e.g., `ensureMethod` runtime gaps).
+///
+@external(javascript, "./runtime.ffi.mjs", "catch_panic")
+pub fn catch_panic(thunk: fn() -> a) -> Result(a, String)
