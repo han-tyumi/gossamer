@@ -14,10 +14,6 @@ export const post_message: typeof $messagePort.post_message = (port, data) => {
   }
 };
 
-export const start: typeof $messagePort.start = (port) => {
-  port.start();
-};
-
 export const close: typeof $messagePort.close = (port) => {
   port.close();
 };

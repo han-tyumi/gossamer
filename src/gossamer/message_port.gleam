@@ -20,14 +20,6 @@ pub type MessagePort
 @external(javascript, "./message_port.ffi.mjs", "post_message")
 pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, Nil)
 
-/// Starts dispatching messages on the port. Registering a handler with
-/// [`set_on_message`](#set_on_message) starts the port automatically,
-/// so calling `start` is only needed when receiving messages through
-/// `addEventListener` instead.
-///
-@external(javascript, "./message_port.ffi.mjs", "start")
-pub fn start(port: MessagePort) -> Nil
-
 /// Disconnects the port. Subsequent messages sent on the paired port
 /// are discarded.
 ///

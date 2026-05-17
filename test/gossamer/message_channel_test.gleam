@@ -32,13 +32,6 @@ pub fn post_message_test() {
   message_port.close(port2)
 }
 
-pub fn start_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  message_port.start(port1)
-  message_port.close(port1)
-}
-
 pub fn close_test() {
   let channel = message_channel.new()
   let port1 = message_channel.port1(channel)
