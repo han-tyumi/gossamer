@@ -16,7 +16,7 @@ Cross-runtime JavaScript API bindings for [Gleam](https://gleam.run/).
 gossamer covers Web Platform APIs
 ([WinterTC](https://min-common-api.proposal.wintertc.org/)) and ECMAScript
 built-ins that don't have idiomatic Gleam wrappers yet. Bindings work across
-Deno, Node.js, Bun, and browsers without polyfills — the badges above show the
+Node.js, Deno, Bun, and browsers without polyfills — the badges above show the
 minimum versions verified against gossamer's test suite.
 
 ## Reach for ecosystem packages first
@@ -78,39 +78,3 @@ pub fn main() {
 ```
 
 Further documentation lives at <https://hexdocs.pm/gossamer>.
-
-## Contributing
-
-### Prerequisites
-
-- [Deno](https://docs.deno.com/runtime/getting_started/installation/)
-- [Erlang](https://www.erlang.org/downloads)
-- [Gleam](https://gleam.run/install/)
-- [Just](https://just.systems/man/en/installation.html)
-- [Lefthook](https://lefthook.dev/#how-to-install-lefthook)
-- [Rebar3](https://rebar3.org/docs/getting-started/)
-- [Watchexec](https://github.com/watchexec/watchexec#install)
-
-_Tip_: These can also be installed via
-[mise](https://mise.jdx.dev/getting-started.html) or
-[asdf](https://asdf-vm.com/guide/getting-started.html), which read from
-`.tool-versions`.
-
-### Initial Setup
-
-```sh
-just
-```
-
-### Development
-
-```sh
-just watch build test
-```
-
-### Commits & Releases
-
-Commits use [Conventional Commits](https://www.conventionalcommits.org/).
-[knope](https://knope.tech/) reads them to generate the changelog and bump the
-version — see `knope.toml` for the release workflow. Run `knope release` from a
-clean `main` to release.

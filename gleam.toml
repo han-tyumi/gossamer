@@ -18,6 +18,8 @@ allow_net = true
 [documentation]
 pages = [
   { title = "Coverage", path = "coverage.html", source = "./docs/coverage.md" },
+  { title = "Conventions", path = "conventions.html", source = "./docs/conventions.md" },
+  { title = "Runtime gaps", path = "runtime-gaps.html", source = "./docs/runtime-gaps.md" },
 ]
 
 [dependencies]

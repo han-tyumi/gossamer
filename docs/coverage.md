@@ -2,8 +2,8 @@
 
 gossamer targets cross-runtime JavaScript APIs — both Web Platform and
 ECMAScript. This includes APIs with no Gleam equivalent and native JS types that
-complement Gleam's standard library for interop. All APIs must work in Deno,
-Node.js, Bun, and browsers.
+complement Gleam's standard library for interop. All APIs must work in Node.js,
+Deno, Bun, and browsers.
 
 ## Specs
 
@@ -91,8 +91,9 @@ manipulate the resulting `List(#(String, String))` with
 Gleam worker scripts use
 [`gossamer/worker_parent`](./gossamer/worker_parent.html) for `post_message` and
 `set_on_message`; the parent spawns them with
-`worker.from_module("my_app/worker")`. The FFI bridges Web Workers on Deno, Bun,
-and browsers with Node's `worker_threads` so the same script runs on all three.
+`worker.from_module("my_app/worker")`. The FFI uses Node's `worker_threads` on
+Node and Web Workers on Deno, Bun, and browsers, so the same script runs on all
+three.
 
 [`gossamer/broadcast_channel`](./gossamer/broadcast_channel.html) sends messages
 between every channel of the same name in the same agent — same-origin workers,
