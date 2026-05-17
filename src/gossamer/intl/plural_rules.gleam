@@ -250,7 +250,7 @@ pub fn select_float_range(
 /// Selects the [`PluralCategory`](#PluralCategory) for an `Int`
 /// range.
 ///
-@external(javascript, "./plural_rules.ffi.mjs", "select_int_range")
+@external(javascript, "./plural_rules.ffi.mjs", "select_range")
 pub fn select_int_range(
   rules: PluralRules,
   from start: Int,

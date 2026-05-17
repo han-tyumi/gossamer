@@ -553,7 +553,7 @@ pub fn format_float_range(
 
 /// Formats an `Int` range.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_int_range")
+@external(javascript, "./number_format.ffi.mjs", "format_range")
 pub fn format_int_range(
   formatter: NumberFormat,
   from start: Int,
@@ -563,7 +563,7 @@ pub fn format_int_range(
 /// Formats a [`BigInt`](https://hexdocs.pm/gossamer/gossamer/big_int.html#BigInt)
 /// range.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_big_int_range")
+@external(javascript, "./number_format.ffi.mjs", "format_range")
 pub fn format_big_int_range(
   formatter: NumberFormat,
   from start: BigInt,
@@ -583,7 +583,7 @@ pub fn format_float_range_to_parts(
 
 /// Formats an `Int` range as a list of [`RangePart`](#RangePart)s.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_int_range_to_parts")
+@external(javascript, "./number_format.ffi.mjs", "format_range_to_parts")
 pub fn format_int_range_to_parts(
   formatter: NumberFormat,
   from start: Int,
@@ -593,7 +593,7 @@ pub fn format_int_range_to_parts(
 /// Formats a [`BigInt`](https://hexdocs.pm/gossamer/gossamer/big_int.html#BigInt)
 /// range as a list of [`RangePart`](#RangePart)s.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_big_int_range_to_parts")
+@external(javascript, "./number_format.ffi.mjs", "format_range_to_parts")
 pub fn format_big_int_range_to_parts(
   formatter: NumberFormat,
   from start: BigInt,

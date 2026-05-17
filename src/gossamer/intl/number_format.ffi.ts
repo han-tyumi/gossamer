@@ -269,48 +269,8 @@ export const format_range: typeof $numberFormat.format_float_range = (
   return formatter.formatRange(start, end);
 };
 
-export const format_int_range: typeof $numberFormat.format_int_range = (
-  formatter,
-  start,
-  end,
-) => {
-  return formatter.formatRange(start, end);
-};
-
-export const format_big_int_range: typeof $numberFormat.format_big_int_range = (
-  formatter,
-  start,
-  end,
-) => {
-  return formatter.formatRange(start, end);
-};
-
 export const format_range_to_parts:
   typeof $numberFormat.format_float_range_to_parts = (
-    formatter,
-    start,
-    end,
-  ) => {
-    return fromArrayMapped(
-      formatter.formatRangeToParts(start, end),
-      toRangePart,
-    );
-  };
-
-export const format_int_range_to_parts:
-  typeof $numberFormat.format_int_range_to_parts = (
-    formatter,
-    start,
-    end,
-  ) => {
-    return fromArrayMapped(
-      formatter.formatRangeToParts(start, end),
-      toRangePart,
-    );
-  };
-
-export const format_big_int_range_to_parts:
-  typeof $numberFormat.format_big_int_range_to_parts = (
     formatter,
     start,
     end,
