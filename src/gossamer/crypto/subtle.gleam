@@ -60,9 +60,7 @@ pub type DeriveAlgorithm {
   /// `public` key.
   DeriveEcDh(public: CryptoKey)
 
-  /// X25519 key agreement with the given peer `public` key. Returns
-  /// `Error(AlgorithmNotSupported)` on Bun (≤ 1.3.12) — see
-  /// https://github.com/oven-sh/bun/issues/20148.
+  /// X25519 key agreement with the given peer `public` key.
   DeriveX25519(public: CryptoKey)
 }
 

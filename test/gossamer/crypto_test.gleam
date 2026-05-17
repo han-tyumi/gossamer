@@ -8,7 +8,6 @@ import gleeunit/should
 import gossamer/crypto
 import gossamer/crypto/key
 import gossamer/crypto/subtle
-import runtime
 
 pub fn random_uuid_test() {
   let uuid = crypto.random_uuid()
@@ -480,7 +479,6 @@ pub fn sign_verify_ed25519_test() {
 }
 
 pub fn derive_bits_x25519_test() {
-  use <- runtime.skip_on(runtime.Bun)
   use result <- promise.await(
     subtle.generate_key_pair(subtle.KeyPairGenX25519, True, [crypto.DeriveBits]),
   )
@@ -498,31 +496,6 @@ pub fn derive_bits_x25519_test() {
   ))
   let assert Ok(bits) = result
   bit_array.byte_size(bits) |> should.equal(32)
-  promise.resolve(Nil)
-}
-
-/// Bun (≤ 1.3.12) returns `Error(AlgorithmNotSupported)` for X25519
-/// `deriveBits` even though it implements X25519 key generation/import.
-/// Tracked at https://github.com/oven-sh/bun/issues/20148; fix merged
-/// 2026-04-11 but not yet in 1.3.12.
-pub fn derive_bits_x25519_bun_divergence_test() {
-  use <- runtime.only_on(runtime.Bun)
-  use result <- promise.await(
-    subtle.generate_key_pair(subtle.KeyPairGenX25519, True, [crypto.DeriveBits]),
-  )
-  let assert Ok(party_a) = result
-
-  use result <- promise.await(
-    subtle.generate_key_pair(subtle.KeyPairGenX25519, True, [crypto.DeriveBits]),
-  )
-  let assert Ok(party_b) = result
-
-  use result <- promise.await(subtle.derive_bits(
-    subtle.DeriveX25519(party_b.public_key),
-    party_a.private_key,
-    256,
-  ))
-  let assert Error(crypto.AlgorithmNotSupported) = result
   promise.resolve(Nil)
 }
 
