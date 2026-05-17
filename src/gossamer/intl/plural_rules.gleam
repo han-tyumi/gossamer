@@ -5,9 +5,9 @@
 ////
 //// Selection is bound for `Float` and `Int` with matching `*_range`
 //// variants returning [`PluralCategory`](#PluralCategory). `BigInt`
-//// is not supported — Deno's V8 throws `TypeError` on `BigInt`
-//// inputs to `Intl.PluralRules.select` despite the ES2023 spec
-//// allowing them. Convert with
+//// is not supported — Deno, Node, and Bun all throw `TypeError` on
+//// `BigInt` inputs to `Intl.PluralRules.select` despite the ES2023
+//// spec allowing them. Convert with
 //// [`big_int.to_int`](https://hexdocs.pm/gossamer/gossamer/big_int.html#to_int)
 //// first when the value fits in `Int`'s safe range.
 
