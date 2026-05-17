@@ -131,39 +131,39 @@ export function toTrailingZeroDisplay(
 function fromPartKind(type: string): $numberFormat.PartKind$ {
   switch (type) {
     case "literal":
-      return $numberFormat.PartKind$PartLiteral();
+      return $numberFormat.PartKind$Literal();
     case "integer":
-      return $numberFormat.PartKind$PartInteger();
+      return $numberFormat.PartKind$Integer();
     case "decimal":
-      return $numberFormat.PartKind$PartDecimal();
+      return $numberFormat.PartKind$Decimal();
     case "fraction":
-      return $numberFormat.PartKind$PartFraction();
+      return $numberFormat.PartKind$Fraction();
     case "group":
-      return $numberFormat.PartKind$PartGroup();
+      return $numberFormat.PartKind$Group();
     case "minusSign":
-      return $numberFormat.PartKind$PartMinusSign();
+      return $numberFormat.PartKind$MinusSign();
     case "plusSign":
-      return $numberFormat.PartKind$PartPlusSign();
+      return $numberFormat.PartKind$PlusSign();
     case "currency":
-      return $numberFormat.PartKind$PartCurrency();
+      return $numberFormat.PartKind$Currency();
     case "percentSign":
-      return $numberFormat.PartKind$PartPercentSign();
+      return $numberFormat.PartKind$PercentSign();
     case "compact":
-      return $numberFormat.PartKind$PartCompact();
+      return $numberFormat.PartKind$Compact();
     case "exponentInteger":
-      return $numberFormat.PartKind$PartExponentInteger();
+      return $numberFormat.PartKind$ExponentInteger();
     case "exponentMinusSign":
-      return $numberFormat.PartKind$PartExponentMinusSign();
+      return $numberFormat.PartKind$ExponentMinusSign();
     case "exponentSeparator":
-      return $numberFormat.PartKind$PartExponentSeparator();
+      return $numberFormat.PartKind$ExponentSeparator();
     case "infinity":
-      return $numberFormat.PartKind$PartInfinity();
+      return $numberFormat.PartKind$Infinity();
     case "nan":
-      return $numberFormat.PartKind$PartNan();
+      return $numberFormat.PartKind$Nan();
     case "unit":
-      return $numberFormat.PartKind$PartUnit();
+      return $numberFormat.PartKind$Unit();
     default:
-      return $numberFormat.PartKind$PartUnknown(type);
+      return $numberFormat.PartKind$Unknown(type);
   }
 }
 

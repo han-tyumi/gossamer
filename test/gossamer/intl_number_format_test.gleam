@@ -212,7 +212,7 @@ pub fn format_to_parts_test() {
     |> number_format.build
   let parts = number_format.format_float_to_parts(formatter, 1234.5)
   case parts {
-    [first, ..] -> first.kind |> should.equal(number_format.PartCurrency)
+    [first, ..] -> first.kind |> should.equal(number_format.Currency)
     [] -> panic as "expected non-empty parts"
   }
 }

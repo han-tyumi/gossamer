@@ -131,52 +131,52 @@ pub type RangePart {
 ///
 pub type PartKind {
   /// A literal segment (separator characters, connecting words).
-  PartLiteral
+  Literal
 
   /// The era component (`"AD"`, `"Anno Domini"`).
-  PartEra
+  Era
 
   /// The year component (`"2026"`, `"26"`).
-  PartYear
+  Year
 
   /// The Gregorian year that contains the formatted date, emitted
-  /// alongside `PartYearName` for non-Gregorian calendars.
-  PartRelatedYear
+  /// alongside `YearName` for non-Gregorian calendars.
+  RelatedYear
 
   /// The locale-specific year name (e.g., `"丙午"` for Chinese
   /// sexagenary years).
-  PartYearName
+  YearName
 
   /// The month component (`"March"`, `"03"`).
-  PartMonth
+  Month
 
   /// The day-of-month component (`"15"`, `"05"`).
-  PartDay
+  Day
 
   /// The day-of-week component (`"Friday"`, `"Fri"`).
-  PartWeekday
+  Weekday
 
   /// The hour component (`"3"`, `"15"`).
-  PartHour
+  Hour
 
   /// The minute component (`"30"`).
-  PartMinute
+  Minute
 
   /// The second component (`"45"`).
-  PartSecond
+  Second
 
   /// The fractional-seconds component (`"123"`).
-  PartFractionalSecond
+  FractionalSecond
 
   /// The day-period component (`"AM"`, `"in the morning"`).
-  PartDayPeriod
+  DayPeriod
 
   /// The time-zone label (`"PST"`, `"GMT-08:00"`).
-  PartTimeZoneName
+  TimeZoneName
 
   /// Any future part type the binding doesn't recognize, passed
   /// through verbatim.
-  PartUnknown(String)
+  Unknown(String)
 }
 
 /// The configuration for a [`DateTimeFormat`](#DateTimeFormat).

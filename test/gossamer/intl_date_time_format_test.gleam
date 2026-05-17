@@ -271,9 +271,9 @@ pub fn format_to_parts_test() {
   let parts = date_time_format.format_to_parts(fmt, fixed())
   { parts != [] } |> should.be_true
   let kinds = list.map(parts, fn(p) { p.kind })
-  list.contains(kinds, date_time_format.PartMonth) |> should.be_true
-  list.contains(kinds, date_time_format.PartDay) |> should.be_true
-  list.contains(kinds, date_time_format.PartYear) |> should.be_true
+  list.contains(kinds, date_time_format.Month) |> should.be_true
+  list.contains(kinds, date_time_format.Day) |> should.be_true
+  list.contains(kinds, date_time_format.Year) |> should.be_true
 }
 
 pub fn format_to_parts_year_name_test() {
@@ -287,7 +287,7 @@ pub fn format_to_parts_year_name_test() {
   // The Chinese calendar emits a `yearName` segment. Deno and Node
   // additionally emit a `relatedYear`; Bun does not, so this test only
   // asserts the cross-runtime-stable segment.
-  list.contains(kinds, date_time_format.PartYearName) |> should.be_true
+  list.contains(kinds, date_time_format.YearName) |> should.be_true
 }
 
 pub fn format_range_test() {

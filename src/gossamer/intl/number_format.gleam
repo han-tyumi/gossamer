@@ -164,56 +164,56 @@ pub type Part {
 ///
 pub type PartKind {
   /// A literal string (separator words, punctuation, etc.).
-  PartLiteral
+  Literal
 
   /// The integer portion.
-  PartInteger
+  Integer
 
   /// The decimal separator (`"."` or `","` per locale).
-  PartDecimal
+  Decimal
 
   /// The fractional portion.
-  PartFraction
+  Fraction
 
   /// A digit-group separator (`","` or `" "` per locale).
-  PartGroup
+  Group
 
   /// A minus sign.
-  PartMinusSign
+  MinusSign
 
   /// A plus sign.
-  PartPlusSign
+  PlusSign
 
   /// A currency symbol or name.
-  PartCurrency
+  Currency
 
   /// The percent sign.
-  PartPercentSign
+  PercentSign
 
   /// A compact-notation literal (`"K"`, `"thousand"`).
-  PartCompact
+  Compact
 
   /// The integer portion of a scientific or engineering exponent.
-  PartExponentInteger
+  ExponentInteger
 
   /// A minus sign on a scientific or engineering exponent.
-  PartExponentMinusSign
+  ExponentMinusSign
 
   /// The `"E"` separator on a scientific or engineering exponent.
-  PartExponentSeparator
+  ExponentSeparator
 
   /// The literal infinity symbol (`"∞"`).
-  PartInfinity
+  Infinity
 
   /// The literal NaN representation.
-  PartNan
+  Nan
 
   /// A measurement unit name or symbol.
-  PartUnit
+  Unit
 
   /// Any future part kind the binding doesn't recognize, passed
   /// through verbatim.
-  PartUnknown(String)
+  Unknown(String)
 }
 
 /// A single segment of a formatted number range, returned by the

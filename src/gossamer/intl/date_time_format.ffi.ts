@@ -72,35 +72,35 @@ function toStyle(
 function fromPartKind(type: string): $dateTimeFormat.PartKind$ {
   switch (type) {
     case "literal":
-      return $dateTimeFormat.PartKind$PartLiteral();
+      return $dateTimeFormat.PartKind$Literal();
     case "era":
-      return $dateTimeFormat.PartKind$PartEra();
+      return $dateTimeFormat.PartKind$Era();
     case "year":
-      return $dateTimeFormat.PartKind$PartYear();
+      return $dateTimeFormat.PartKind$Year();
     case "relatedYear":
-      return $dateTimeFormat.PartKind$PartRelatedYear();
+      return $dateTimeFormat.PartKind$RelatedYear();
     case "yearName":
-      return $dateTimeFormat.PartKind$PartYearName();
+      return $dateTimeFormat.PartKind$YearName();
     case "month":
-      return $dateTimeFormat.PartKind$PartMonth();
+      return $dateTimeFormat.PartKind$Month();
     case "day":
-      return $dateTimeFormat.PartKind$PartDay();
+      return $dateTimeFormat.PartKind$Day();
     case "weekday":
-      return $dateTimeFormat.PartKind$PartWeekday();
+      return $dateTimeFormat.PartKind$Weekday();
     case "hour":
-      return $dateTimeFormat.PartKind$PartHour();
+      return $dateTimeFormat.PartKind$Hour();
     case "minute":
-      return $dateTimeFormat.PartKind$PartMinute();
+      return $dateTimeFormat.PartKind$Minute();
     case "second":
-      return $dateTimeFormat.PartKind$PartSecond();
+      return $dateTimeFormat.PartKind$Second();
     case "fractionalSecond":
-      return $dateTimeFormat.PartKind$PartFractionalSecond();
+      return $dateTimeFormat.PartKind$FractionalSecond();
     case "dayPeriod":
-      return $dateTimeFormat.PartKind$PartDayPeriod();
+      return $dateTimeFormat.PartKind$DayPeriod();
     case "timeZoneName":
-      return $dateTimeFormat.PartKind$PartTimeZoneName();
+      return $dateTimeFormat.PartKind$TimeZoneName();
     default:
-      return $dateTimeFormat.PartKind$PartUnknown(type);
+      return $dateTimeFormat.PartKind$Unknown(type);
   }
 }
 
