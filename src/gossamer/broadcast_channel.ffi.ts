@@ -5,10 +5,10 @@ import {
   wrapArrayBuffer,
 } from "~/utils/bit_array.ffi.ts";
 
-// Deno's BroadcastChannel internals retain a polling timer after close
-// that can fire as an unhandled rejection during process exit. Silence
-// the narrow case so short-lived scripts exit cleanly; legitimate
-// errors still propagate.
+// Deno's BroadcastChannel posts onto an internal timer that can fire a
+// TypeError("expected i32") as an unhandled rejection after the
+// channel closes. Silence the narrow case so test runs and short-lived
+// scripts exit cleanly; legitimate errors still propagate.
 if (typeof globalThis.Deno !== "undefined") {
   globalThis.addEventListener("unhandledrejection", (event) => {
     const reason = event.reason;

@@ -40,14 +40,6 @@ pub fn post_message(
 /// Closes the channel. Messages posted to other channels of the same
 /// name no longer arrive here.
 ///
-/// > **Note**: on Deno, `close` cancels any
-/// > [`post_message`](#post_message) calls that haven't been
-/// > delivered yet — wait for subscribers to receive before calling
-/// > `close`. Node and browsers deliver queued messages before
-/// > `close` drains. Deno also emits an `expected i32` error when a
-/// > short-lived process exits with a recently-closed channel; the
-/// > FFI silences this narrow case automatically.
-///
 @external(javascript, "./broadcast_channel.ffi.mjs", "close")
 pub fn close(channel: BroadcastChannel) -> Nil
 
