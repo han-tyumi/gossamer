@@ -20,37 +20,37 @@ pub fn canonical_locales_invalid_tag_test() {
   intl.get_canonical_locales(["not_a_locale!"]) |> should.be_error
 }
 
-pub fn supported_values_of_calendar_test() {
-  let calendars = intl.supported_values_of(intl.Calendar)
-  list.contains(calendars, "gregory") |> should.be_true
-  list.contains(calendars, "buddhist") |> should.be_true
+pub fn calendars_test() {
+  let supported = intl.calendars()
+  list.contains(supported, "gregory") |> should.be_true
+  list.contains(supported, "buddhist") |> should.be_true
 }
 
-pub fn supported_values_of_currency_test() {
-  let currencies = intl.supported_values_of(intl.Currency)
-  list.contains(currencies, "USD") |> should.be_true
-  list.contains(currencies, "EUR") |> should.be_true
+pub fn currencies_test() {
+  let supported = intl.currencies()
+  list.contains(supported, "USD") |> should.be_true
+  list.contains(supported, "EUR") |> should.be_true
 }
 
-pub fn supported_values_of_numbering_system_test() {
-  let systems = intl.supported_values_of(intl.NumberingSystem)
-  list.contains(systems, "latn") |> should.be_true
+pub fn numbering_systems_test() {
+  let supported = intl.numbering_systems()
+  list.contains(supported, "latn") |> should.be_true
 }
 
-pub fn supported_values_of_time_zone_test() {
-  let zones = intl.supported_values_of(intl.TimeZone)
-  list.contains(zones, "America/New_York") |> should.be_true
-  list.contains(zones, "Europe/London") |> should.be_true
+pub fn time_zones_test() {
+  let supported = intl.time_zones()
+  list.contains(supported, "America/New_York") |> should.be_true
+  list.contains(supported, "Europe/London") |> should.be_true
 }
 
-pub fn supported_values_of_unit_test() {
-  let units = intl.supported_values_of(intl.Unit)
-  list.contains(units, "meter") |> should.be_true
-  list.contains(units, "hour") |> should.be_true
+pub fn units_test() {
+  let supported = intl.units()
+  list.contains(supported, "meter") |> should.be_true
+  list.contains(supported, "hour") |> should.be_true
 }
 
-pub fn supported_values_of_collation_test() {
-  let collations = intl.supported_values_of(intl.Collation)
-  list.contains(collations, "compat") |> should.be_true
-  list.contains(collations, "phonebk") |> should.be_true
+pub fn collations_test() {
+  let supported = intl.collations()
+  list.contains(supported, "compat") |> should.be_true
+  list.contains(supported, "phonebk") |> should.be_true
 }

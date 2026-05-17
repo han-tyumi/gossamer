@@ -1,7 +1,9 @@
 //// Parent module for the Internationalization family — JavaScript's
 //// `Intl.*` constructors. Hosts option enums shared across siblings
-//// and top-level helpers like [`get_canonical_locales`](#get_canonical_locales)
-//// and [`supported_values_of`](#supported_values_of).
+//// and top-level helpers like
+//// [`get_canonical_locales`](#get_canonical_locales) and the
+//// per-category enumerators ([`calendars`](#calendars),
+//// [`currencies`](#currencies), [`time_zones`](#time_zones), etc.).
 
 /// The locale-matching algorithm used to pick a locale from the
 /// requested priority list. Maps the JavaScript `localeMatcher` option
@@ -18,29 +20,6 @@ pub type LocaleMatcher {
   Lookup
 }
 
-/// Categories of locale-related values that
-/// [`supported_values_of`](#supported_values_of) can enumerate.
-///
-pub type SupportedValueKey {
-  /// Calendar identifiers (e.g., `"gregory"`, `"buddhist"`).
-  Calendar
-
-  /// Collation identifiers (e.g., `"phonebk"`, `"pinyin"`).
-  Collation
-
-  /// ISO 4217 currency codes (e.g., `"USD"`, `"EUR"`).
-  Currency
-
-  /// Numbering system identifiers (e.g., `"latn"`, `"arab"`).
-  NumberingSystem
-
-  /// IANA time zone identifiers (e.g., `"America/New_York"`).
-  TimeZone
-
-  /// Measurement unit identifiers (e.g., `"meter"`, `"hour"`).
-  Unit
-}
-
 /// Canonicalizes a list of BCP 47 locale tags and removes duplicates.
 /// Returns an error if any tag is malformed.
 ///
@@ -55,20 +34,43 @@ pub type SupportedValueKey {
 @external(javascript, "./intl.ffi.mjs", "get_canonical_locales")
 pub fn get_canonical_locales(locales: List(String)) -> Result(List(String), Nil)
 
-/// Returns the values supported by the runtime's `Intl` implementation
-/// for the given category, sorted in ascending order.
+/// The calendar identifiers the runtime's `Intl` implementation
+/// supports (e.g., `"gregory"`, `"buddhist"`), sorted ascending.
 ///
-/// See [Intl.supportedValuesOf](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/supportedValuesOf) on MDN.
+@external(javascript, "./intl.ffi.mjs", "calendars")
+pub fn calendars() -> List(String)
+
+/// The collation identifiers the runtime's `Intl` implementation
+/// supports (e.g., `"phonebk"`, `"pinyin"`), sorted ascending.
 ///
-/// ## Examples
+@external(javascript, "./intl.ffi.mjs", "collations")
+pub fn collations() -> List(String)
+
+/// The ISO 4217 currency codes the runtime's `Intl` implementation
+/// supports (e.g., `"USD"`, `"EUR"`), sorted ascending.
 ///
-/// ```gleam
-/// intl.supported_values_of(intl.TimeZone)
-/// // -> ["Africa/Abidjan", "Africa/Accra", ...]
-/// ```
+@external(javascript, "./intl.ffi.mjs", "currencies")
+pub fn currencies() -> List(String)
+
+/// The numbering-system identifiers the runtime's `Intl`
+/// implementation supports (e.g., `"latn"`, `"arab"`), sorted
+/// ascending.
 ///
-@external(javascript, "./intl.ffi.mjs", "supported_values_of")
-pub fn supported_values_of(key: SupportedValueKey) -> List(String)
+@external(javascript, "./intl.ffi.mjs", "numbering_systems")
+pub fn numbering_systems() -> List(String)
+
+/// The IANA time-zone identifiers the runtime's `Intl` implementation
+/// supports (e.g., `"America/New_York"`), sorted ascending.
+///
+@external(javascript, "./intl.ffi.mjs", "time_zones")
+pub fn time_zones() -> List(String)
+
+/// The measurement-unit identifiers the runtime's `Intl`
+/// implementation supports (e.g., `"meter"`, `"hour"`), sorted
+/// ascending.
+///
+@external(javascript, "./intl.ffi.mjs", "units")
+pub fn units() -> List(String)
 
 /// The rounding strategy applied to a formatter's output. Maps the
 /// JavaScript `roundingMode` option.

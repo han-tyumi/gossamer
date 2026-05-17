@@ -270,11 +270,10 @@ encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 | Intl.Segmenter          | [`gossamer/intl/segmenter`](./gossamer/intl/segmenter.html)                       |
 
 [`gossamer/intl`](./gossamer/intl.html) hosts shared enums (`LabelStyle`,
-`LocaleMatcher`, `RangePartSource`, `HourCycle`, `CaseFirst`,
-`SupportedValueKey`) used across the formatter submodules, plus the top-level
-helpers `get_canonical_locales` (BCP 47 tag canonicalization) and
-`supported_values_of` (enumerate runtime-supported calendars, currencies, time
-zones, etc.).
+`LocaleMatcher`, `RangePartSource`, `HourCycle`, `CaseFirst`) used across the
+formatter submodules, plus `get_canonical_locales` (BCP 47 tag canonicalization)
+and the per-category enumeration helpers `calendars`, `collations`,
+`currencies`, `numbering_systems`, `time_zones`, and `units`.
 
 ### Delegated
 
