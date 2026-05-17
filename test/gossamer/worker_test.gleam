@@ -12,7 +12,7 @@ pub fn round_trip_string_test() {
   let #(p, resolve) = promise.start()
 
   let assert Ok(w) =
-    worker.from_module("gossamer/worker_self_fixture")
+    worker.from_module("gossamer/worker_parent_fixture")
     |> worker.with_on_message(fn(data) {
       let assert Ok(value) = decode.run(data, decode.string)
       resolve(value)
@@ -31,7 +31,7 @@ pub fn round_trip_array_buffer_as_bit_array_test() {
   let #(p, resolve) = promise.start()
 
   let assert Ok(w) =
-    worker.from_module("gossamer/worker_self_fixture")
+    worker.from_module("gossamer/worker_parent_fixture")
     |> worker.with_on_message(fn(data) {
       let assert Ok(bytes) = decode.run(data, decode.bit_array)
       resolve(bytes)

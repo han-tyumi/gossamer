@@ -88,8 +88,9 @@ manipulate the resulting `List(#(String, String))` with
 | MessagePort      | [`gossamer/message_port`](./gossamer/message_port.html)           |
 | BroadcastChannel | [`gossamer/broadcast_channel`](./gossamer/broadcast_channel.html) |
 
-Gleam worker scripts use [`gossamer/worker_self`](./gossamer/worker_self.html)
-for `post_message` and `set_on_message`; the parent spawns them with
+Gleam worker scripts use
+[`gossamer/worker_parent`](./gossamer/worker_parent.html) for `post_message` and
+`set_on_message`; the parent spawns them with
 `worker.from_module("my_app/worker")`. The FFI bridges Web Workers on Deno, Bun,
 and browsers with Node's `worker_threads` so the same script runs on all three.
 

@@ -1,4 +1,4 @@
-import type * as $workerSelf from "$/gossamer/gossamer/worker_self.mjs";
+import type * as $workerParent from "$/gossamer/gossamer/worker_parent.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   unwrapBitArrayForClone,
@@ -32,7 +32,7 @@ function onMessage(handler: (data: unknown) => void): void {
   }
 }
 
-export const post_message: typeof $workerSelf.post_message = (data) => {
+export const post_message: typeof $workerParent.post_message = (data) => {
   try {
     target.postMessage(unwrapBitArrayForClone(data));
     return Result$Ok(undefined);
@@ -41,6 +41,8 @@ export const post_message: typeof $workerSelf.post_message = (data) => {
   }
 };
 
-export const set_on_message: typeof $workerSelf.set_on_message = (handler) => {
+export const set_on_message: typeof $workerParent.set_on_message = (
+  handler,
+) => {
   onMessage((data: unknown) => handler(wrapArrayBuffer(data)));
 };

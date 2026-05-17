@@ -1,7 +1,7 @@
 //// A script running on a separate thread. The canonical path is to
 //// write the worker as a Gleam module exporting `main()`, then spawn
 //// it with [`from_module`](#from_module). Inside the worker script,
-//// use [`gossamer/worker_self`](./worker_self.html) to communicate
+//// use [`gossamer/worker_parent`](./worker_parent.html) to communicate
 //// with the parent thread. For non-Gleam scripts, [`new`](#new)
 //// takes a script URL directly.
 ////
