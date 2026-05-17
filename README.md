@@ -5,10 +5,19 @@ Cross-runtime JavaScript API bindings for [Gleam](https://gleam.run/).
 [![Package Version](https://img.shields.io/hexpm/v/gossamer)](https://hex.pm/packages/gossamer)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/gossamer/)
 
+<!-- floors-badges:start -->
+
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D%2024.0.0-339933?logo=nodedotjs&logoColor=fff)](https://nodejs.org/)
+[![Deno](https://img.shields.io/badge/Deno-%3E%3D%202.6.6-70ffaf?logo=deno&logoColor=fff)](https://deno.com/)
+[![Bun](https://img.shields.io/badge/Bun-%3E%3D%201.3.13-fbf0df?logo=bun&logoColor=fff)](https://bun.sh/)
+
+<!-- floors-badges:end -->
+
 gossamer covers Web Platform APIs
 ([WinterTC](https://min-common-api.proposal.wintertc.org/)) and ECMAScript
 built-ins that don't have idiomatic Gleam wrappers yet. Bindings work across
-Deno, Node.js, Bun, and browsers without polyfills.
+Deno, Node.js, Bun, and browsers without polyfills — the badges above show the
+minimum versions verified against gossamer's test suite.
 
 ## Reach for ecosystem packages first
 

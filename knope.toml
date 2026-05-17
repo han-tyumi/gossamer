@@ -19,6 +19,15 @@ shell = true
 type = "Command"
 command = "just clean build check test examples"
 
+# Re-render runtime-floor badges from runtime.toml and fail if
+# README.md drifted (manual edits to the marker section, etc.). The
+# lefthook hook normally keeps these in sync at commit time; this is
+# the release-gate guardrail.
+[[workflows.steps]]
+type = "Command"
+command = './scripts/render-runtime-floors.sh && { git diff --exit-code README.md || { echo "README runtime-floor badges out of sync — commit the render output" >&2; exit 1; }; }'
+shell = true
+
 [[workflows.steps]]
 type = "PrepareRelease"
 

@@ -30,6 +30,11 @@ pre-commit:
       run: just --fmt
       stage_fixed: true
 
+    floors-render:
+      glob: "runtime.toml"
+      run: ./scripts/render-runtime-floors.sh
+      stage_fixed: true
+
     test:
       glob: "*.{gleam,ts}"
       run: just test
