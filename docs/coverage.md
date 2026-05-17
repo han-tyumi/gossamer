@@ -28,7 +28,7 @@ Node.js, Bun, and browsers.
 - [URL Pattern API](https://urlpattern.spec.whatwg.org/) — URLPattern (outside
   WinterTC minimum)
 - [HTML Living Standard](https://html.spec.whatwg.org/) — Web Workers,
-  MessageChannel, MessagePort (outside WinterTC minimum)
+  MessageChannel, MessagePort, BroadcastChannel (outside WinterTC minimum)
 - [ECMAScript (ECMA-262)](https://tc39.es/ecma262/) — JavaScript language
   built-ins
 - [ECMAScript Internationalization API (ECMA-402)](https://tc39.es/ecma402/) —

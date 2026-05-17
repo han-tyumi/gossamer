@@ -28,12 +28,15 @@ canonical types and functions directly:
 | Strong random bytes                        | [`gleam_crypto`](https://hexdocs.pm/gleam_crypto/)            |
 
 gossamer fills the rest: `AbortSignal`, `Blob` / `File`, the Streams API,
-`SubtleCrypto`, `WebSocket`, `Worker`, `Intl` formatters, `TextDecoder` /
-`TextDecoderStream` / `TextEncoderStream`, `CompressionStream` /
-`DecompressionStream`, `URLPattern`, `BigInt`, `Performance`, plus per-module
-extras (`fetch_extra`, `form_data_extra`, `time_extra`, `string_extra`,
-`regexp_extra`, `symbol_extra`, `int_extra`, `float_extra`). See the
+`SubtleCrypto`, `WebSocket`, `Worker` / `MessageChannel` / `BroadcastChannel`,
+`Intl` formatters, `TextDecoder` / `TextDecoderStream` / `TextEncoderStream`,
+`CompressionStream` / `DecompressionStream`, `URLPattern`, `BigInt`,
+`Performance` / `PerformanceObserver`, plus per-module extras (`fetch_extra`,
+`form_data_extra`, `time_extra`, `string_extra`, `regexp_extra`, `symbol_extra`,
+`int_extra`, `float_extra`). See the
 [coverage page](https://hexdocs.pm/gossamer/coverage.html) for the full list.
+
+Per-binding docs flag cross-runtime gaps where a runtime departs from spec.
 
 ## Installation
 
