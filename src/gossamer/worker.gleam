@@ -78,10 +78,11 @@ pub fn with_on_message(
 }
 
 /// Spawns the worker from the configured `Builder`. Returns an error
-/// if the URL can't be parsed by the runtime. Asynchronous loading
-/// failures (missing script, syntax error in the script, etc.) are
-/// not surfaced — write worker scripts in Gleam to keep them within
-/// the language's Result-driven error model.
+/// if the runtime rejects the URL or the worker constructor fails
+/// synchronously. Asynchronous loading failures (missing script,
+/// syntax error in the script, etc.) are not surfaced — write worker
+/// scripts in Gleam to keep them within the language's Result-driven
+/// error model.
 ///
 pub fn build(builder: Builder) -> Result(Worker, Nil) {
   do_build(builder.url, builder.name, builder.on_message)
