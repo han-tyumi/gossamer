@@ -93,7 +93,7 @@ the `verb` + `verb_with(extra)` pair as a sanctioned exception — currently onl
 
 ## Options and configuration
 
-No `*Init` enum types. No options-list parameters. JS options objects
+No `*Init` wrapper types. No options-list parameters. JS options objects
 (`RequestInit`, `ResponseInit`, `EventInit`, `TextDecoderOption`, etc.) are
 replaced by the builder pattern. See [Builder patterns](./builder-patterns.md).
 

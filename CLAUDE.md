@@ -21,8 +21,8 @@ explicitly out of scope.
   Never use `Result` purely for runtime divergence.
 - **No aliases.** One name per operation. `is_` prefix and `snake_case` are
   mechanical adaptations, not renames.
-- **Builder pattern over init lists.** No `*Init` enum types, no options-list
-  parameters, no `_with_<name>` constructor variants. See
+- **Builder pattern over init lists.** No `*Init` wrapper types, no options-list
+  parameters, no `_with_<name>` suffixes (on either functions or variants). See
   [Builder patterns](./docs/contributing/builder-patterns.md).
 - **Lower-level JS types stay when they add value.** `Uint8Array`,
   `ArrayBuffer`, JS `Array` etc. stay when their semantics aren't expressible in

@@ -91,7 +91,7 @@ data.
 
 ### Per-field setters
 
-Both patterns expose **one setter per field**. Do not use a sum-type enum +
+Both patterns expose **one setter per field**. Do not use a variant type plus a
 `List(Option)` constructor.
 
 ### Event-handler setters — `with_on_<event>` and `set_on_<event>`
