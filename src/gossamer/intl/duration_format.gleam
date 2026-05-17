@@ -149,30 +149,47 @@ pub const zero: DurationParts = DurationParts(0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 /// Decomposes a `gleam/time/duration.Duration` into a `DurationParts`,
 /// filling in hours through nanoseconds. Calendar fields
 /// (years/months/weeks/days) stay zero since `Duration` represents
-/// elapsed time without calendar context.
+/// elapsed time without calendar context. Negative durations decompose
+/// into uniformly-negative fields so the result can be passed straight
+/// to [`format`](#format).
 ///
 pub fn from_duration(value: Duration) -> DurationParts {
   let #(total_seconds, ns_remainder) =
     duration.to_seconds_and_nanoseconds(value)
-  let hours = total_seconds / 3600
-  let after_hours = total_seconds % 3600
+  // `to_seconds_and_nanoseconds` normalizes so `ns_remainder` is in
+  // [0, 1_000_000_000); for negative durations that means a more-
+  // negative seconds count plus a positive nanosecond tail. Rebalance
+  // onto the magnitude, then apply the original sign uniformly so the
+  // fields don't mix signs.
+  let negative = total_seconds < 0
+  let #(abs_seconds, abs_ns) = case negative, ns_remainder {
+    True, 0 -> #(-total_seconds, 0)
+    True, _ -> #(-{ total_seconds + 1 }, 1_000_000_000 - ns_remainder)
+    False, _ -> #(total_seconds, ns_remainder)
+  }
+  let hours = abs_seconds / 3600
+  let after_hours = abs_seconds % 3600
   let minutes = after_hours / 60
   let seconds = after_hours % 60
-  let milliseconds = ns_remainder / 1_000_000
-  let after_ms = ns_remainder % 1_000_000
+  let milliseconds = abs_ns / 1_000_000
+  let after_ms = abs_ns % 1_000_000
   let microseconds = after_ms / 1000
   let nanoseconds = after_ms % 1000
+  let sign = case negative {
+    True -> -1
+    False -> 1
+  }
   DurationParts(
     years: 0,
     months: 0,
     weeks: 0,
     days: 0,
-    hours:,
-    minutes:,
-    seconds:,
-    milliseconds:,
-    microseconds:,
-    nanoseconds:,
+    hours: hours * sign,
+    minutes: minutes * sign,
+    seconds: seconds * sign,
+    milliseconds: milliseconds * sign,
+    microseconds: microseconds * sign,
+    nanoseconds: nanoseconds * sign,
   )
 }
 

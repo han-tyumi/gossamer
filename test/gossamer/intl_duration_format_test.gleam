@@ -199,3 +199,20 @@ pub fn from_duration_with_subseconds_test() {
   parts.seconds |> should.equal(1)
   parts.milliseconds |> should.equal(500)
 }
+
+pub fn from_duration_negative_subseconds_test() {
+  let parts = duration_format.from_duration(duration.milliseconds(-1500))
+  parts.seconds |> should.equal(-1)
+  parts.milliseconds |> should.equal(-500)
+  let assert Ok(formatter) =
+    duration_format.new(["en-US"]) |> duration_format.build
+  duration_format.format(formatter, parts) |> should.be_ok
+}
+
+pub fn from_duration_negative_whole_seconds_test() {
+  let parts = duration_format.from_duration(duration.seconds(-3700))
+  parts.hours |> should.equal(-1)
+  parts.minutes |> should.equal(-1)
+  parts.seconds |> should.equal(-40)
+  parts.milliseconds |> should.equal(0)
+}
