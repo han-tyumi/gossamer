@@ -1,7 +1,7 @@
 //// Asynchronously receive performance entries as the runtime records
 //// them.
 
-import gossamer/performance_entry.{type PerformanceEntry}
+import gossamer/performance_entry.{type EntryType, type PerformanceEntry}
 
 /// A subscription that delivers performance entries to a handler.
 ///
@@ -9,77 +9,6 @@ import gossamer/performance_entry.{type PerformanceEntry}
 ///
 @external(javascript, "./performance_observer.type.ts", "PerformanceObserver$")
 pub type PerformanceObserver
-
-/// The category of entry a [`PerformanceObserver`](#PerformanceObserver)
-/// subscribes to. Maps the JavaScript `entryTypes` / `type` strings;
-/// runtimes only accept a subset (see
-/// [`supported_entry_types`](#supported_entry_types)).
-///
-pub type EntryType {
-  /// `performance.mark`-recorded entries.
-  Mark
-
-  /// `performance.measure`-recorded entries.
-  Measure
-
-  /// Resource-loading entries (Node, Bun, browsers).
-  Resource
-
-  /// Document-navigation entries (browsers).
-  Navigation
-
-  /// Paint timing entries (browsers).
-  Paint
-
-  /// Long-task entries (browsers).
-  LongTask
-
-  /// Generic event-timing entries (browsers).
-  Event
-
-  /// First-input delay entries (browsers).
-  FirstInput
-
-  /// Largest contentful paint entries (browsers).
-  LargestContentfulPaint
-
-  /// Layout-shift entries (browsers).
-  LayoutShift
-
-  /// Task-attribution entries (browsers).
-  TaskAttribution
-
-  /// Visibility-state-change entries (browsers).
-  VisibilityState
-
-  /// Element-timing entries (browsers).
-  Element
-
-  /// Back-forward cache restoration entries (browsers).
-  BackForwardCacheRestoration
-
-  /// DNS-lookup entries (Node).
-  Dns
-
-  /// Function-call entries (Node).
-  Function
-
-  /// Garbage-collection entries (Node).
-  Gc
-
-  /// HTTP-request entries (Node).
-  Http
-
-  /// HTTP/2 stream entries (Node).
-  Http2
-
-  /// Network-socket entries (Node).
-  Net
-
-  /// Any other entry-type string the runtime exposes that this
-  /// binding doesn't recognize.
-  Other(String)
-}
 
 /// Subscribes to performance entries of the given types. The handler
 /// is called with new entries as they're recorded. Call

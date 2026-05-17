@@ -15,6 +15,77 @@ import gleam/time/duration.{type Duration}
 @external(javascript, "./performance_entry.type.ts", "PerformanceEntry$")
 pub type PerformanceEntry
 
+/// The kind of entry a performance timeline records. Maps the
+/// JavaScript `entryType` string set; runtimes only emit a subset
+/// (Deno produces `Mark` and `Measure`; Bun adds `Resource`; Node
+/// adds the full set including `Dns`, `Gc`, `Http`, etc.).
+///
+pub type EntryType {
+  /// `performance.mark`-recorded entries.
+  Mark
+
+  /// `performance.measure`-recorded entries.
+  Measure
+
+  /// Resource-loading entries (Node, Bun, browsers).
+  Resource
+
+  /// Document-navigation entries (browsers).
+  Navigation
+
+  /// Paint timing entries (browsers).
+  Paint
+
+  /// Long-task entries (browsers).
+  LongTask
+
+  /// Generic event-timing entries (browsers).
+  Event
+
+  /// First-input delay entries (browsers).
+  FirstInput
+
+  /// Largest contentful paint entries (browsers).
+  LargestContentfulPaint
+
+  /// Layout-shift entries (browsers).
+  LayoutShift
+
+  /// Task-attribution entries (browsers).
+  TaskAttribution
+
+  /// Visibility-state-change entries (browsers).
+  VisibilityState
+
+  /// Element-timing entries (browsers).
+  Element
+
+  /// Back-forward cache restoration entries (browsers).
+  BackForwardCacheRestoration
+
+  /// DNS-lookup entries (Node).
+  Dns
+
+  /// Function-call entries (Node).
+  Function
+
+  /// Garbage-collection entries (Node).
+  Gc
+
+  /// HTTP-request entries (Node).
+  Http
+
+  /// HTTP/2 stream entries (Node).
+  Http2
+
+  /// Network-socket entries (Node).
+  Net
+
+  /// Any other entry-type string the runtime exposes that this
+  /// binding doesn't recognize.
+  Other(String)
+}
+
 /// A snapshot of a [`PerformanceEntry`](#PerformanceEntry)'s
 /// recorded fields, returned by [`info`](#info). All fields are
 /// immutable once the runtime has recorded the entry.
@@ -24,9 +95,8 @@ pub type Info {
     /// The entry's name (the `name` argument passed to `mark` or
     /// `measure`).
     name: String,
-    /// The entry's type as a string (e.g., `"mark"`, `"measure"`,
-    /// `"resource"`).
-    entry_type: String,
+    /// The entry's category.
+    entry_type: EntryType,
     /// The high-resolution elapsed time since
     /// `performance.time_origin` at which the entry was recorded.
     start_time: Duration,

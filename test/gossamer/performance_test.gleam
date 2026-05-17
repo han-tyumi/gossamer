@@ -22,7 +22,7 @@ pub fn time_origin_test() {
 pub fn mark_test() {
   let info = performance_entry.info(performance.mark("test-mark"))
   info.name |> should.equal("test-mark")
-  info.entry_type |> should.equal("mark")
+  info.entry_type |> should.equal(performance_entry.Mark)
   duration.compare(info.start_time, duration.seconds(0))
   |> should.not_equal(order.Lt)
   info.duration |> should.equal(duration.seconds(0))
@@ -36,7 +36,7 @@ pub fn measure_test() {
     performance.measure("test-measure", "measure-start", "measure-end")
   let info = performance_entry.info(entry)
   info.name |> should.equal("test-measure")
-  info.entry_type |> should.equal("measure")
+  info.entry_type |> should.equal(performance_entry.Measure)
   duration.compare(info.duration, duration.seconds(0))
   |> should.not_equal(order.Lt)
   performance.clear_marks()
