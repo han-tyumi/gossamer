@@ -177,18 +177,19 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
 ### Globals
 
-| Name                                                   | Module                                                            |
-| ------------------------------------------------------ | ----------------------------------------------------------------- |
-| atob (`decode_base64`)                                 | `gossamer`                                                        |
-| btoa (`encode_base64`)                                 | `gossamer`                                                        |
-| setTimeout / clearTimeout                              | `gossamer`                                                        |
-| setInterval / clearInterval                            | `gossamer`                                                        |
-| queueMicrotask                                         | `gossamer`                                                        |
-| navigator.userAgent (`user_agent`)                     | `gossamer`                                                        |
-| navigator.hardwareConcurrency (`hardware_concurrency`) | `gossamer`                                                        |
-| console                                                | [`gossamer/console`](./gossamer/console.html)                     |
-| Performance                                            | [`gossamer/performance`](./gossamer/performance.html)             |
-| PerformanceEntry                                       | [`gossamer/performance_entry`](./gossamer/performance_entry.html) |
+| Name                                                   | Module                                                                  |
+| ------------------------------------------------------ | ----------------------------------------------------------------------- |
+| atob (`decode_base64`)                                 | `gossamer`                                                              |
+| btoa (`encode_base64`)                                 | `gossamer`                                                              |
+| setTimeout / clearTimeout                              | `gossamer`                                                              |
+| setInterval / clearInterval                            | `gossamer`                                                              |
+| queueMicrotask                                         | `gossamer`                                                              |
+| navigator.userAgent (`user_agent`)                     | `gossamer`                                                              |
+| navigator.hardwareConcurrency (`hardware_concurrency`) | `gossamer`                                                              |
+| console                                                | [`gossamer/console`](./gossamer/console.html)                           |
+| Performance                                            | [`gossamer/performance`](./gossamer/performance.html)                   |
+| PerformanceEntry                                       | [`gossamer/performance_entry`](./gossamer/performance_entry.html)       |
+| PerformanceObserver                                    | [`gossamer/performance_observer`](./gossamer/performance_observer.html) |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
 no idiomatic use; log via `console.error` instead.
@@ -259,6 +260,7 @@ encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 | Intl.Collator           | [`gossamer/intl/collator`](./gossamer/intl/collator.html)                         |
 | Intl.DateTimeFormat     | [`gossamer/intl/date_time_format`](./gossamer/intl/date_time_format.html)         |
 | Intl.DisplayNames       | [`gossamer/intl/display_names`](./gossamer/intl/display_names.html)               |
+| Intl.DurationFormat     | [`gossamer/intl/duration_format`](./gossamer/intl/duration_format.html)           |
 | Intl.ListFormat         | [`gossamer/intl/list_format`](./gossamer/intl/list_format.html)                   |
 | Intl.Locale             | [`gossamer/intl/locale`](./gossamer/intl/locale.html)                             |
 | Intl.NumberFormat       | [`gossamer/intl/number_format`](./gossamer/intl/number_format.html)               |
@@ -267,8 +269,11 @@ encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 | Intl.Segmenter          | [`gossamer/intl/segmenter`](./gossamer/intl/segmenter.html)                       |
 
 [`gossamer/intl`](./gossamer/intl.html) hosts shared enums (`LabelStyle`,
-`RangePartSource`, `HourCycle`, `CaseFirst`) used across the formatter
-submodules.
+`LocaleMatcher`, `RangePartSource`, `HourCycle`, `CaseFirst`,
+`SupportedValueKey`) used across the formatter submodules, plus the top-level
+helpers `get_canonical_locales` (BCP 47 tag canonicalization) and
+`supported_values_of` (enumerate runtime-supported calendars, currencies, time
+zones, etc.).
 
 ### Delegated
 
