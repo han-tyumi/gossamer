@@ -21,8 +21,9 @@ export function toBufferSource(bitArray: BitArray): BufferSource {
  * Returns the bytes of a `BitArray` as a `Uint8Array` view. Un-aligned
  * bit arrays are zero-padded to the next byte.
  */
-export function toUint8Array(bitArray: BitArray): Uint8Array {
+export function toUint8Array(bitArray: BitArray): Uint8Array<ArrayBuffer> {
   const view = BitArray$BitArray$data(pad_to_bytes(bitArray));
+  // @ts-expect-error BitArray bytes are always ArrayBuffer
   return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
 }
 

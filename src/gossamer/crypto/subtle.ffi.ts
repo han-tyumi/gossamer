@@ -10,7 +10,7 @@ import {
   toRsaAlgorithm,
 } from "~/gossamer/crypto/key.ffi.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/crypto/jwk.ffi.ts";
-import { toBufferSource, toUint8Array } from "~/utils/bit_array.ffi.ts";
+import { toUint8Array } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 
 const subtle = globalThis.crypto.subtle;
@@ -110,10 +110,10 @@ function toDeriveAlgorithm(
       hash: toHashAlgorithm(
         $subtle.DeriveAlgorithm$DeriveHkdf$hash(algorithm),
       ),
-      info: toBufferSource(
+      info: toUint8Array(
         $subtle.DeriveAlgorithm$DeriveHkdf$info(algorithm),
       ),
-      salt: toBufferSource(
+      salt: toUint8Array(
         $subtle.DeriveAlgorithm$DeriveHkdf$salt(algorithm),
       ),
     };
@@ -125,7 +125,7 @@ function toDeriveAlgorithm(
         $subtle.DeriveAlgorithm$DerivePbkdf2$hash(algorithm),
       ),
       iterations: $subtle.DeriveAlgorithm$DerivePbkdf2$iterations(algorithm),
-      salt: toBufferSource(
+      salt: toUint8Array(
         $subtle.DeriveAlgorithm$DerivePbkdf2$salt(algorithm),
       ),
     };
@@ -172,7 +172,7 @@ function toEncryptAlgorithm(
   if ($subtle.EncryptAlgorithm$isEncryptAesCbc(algorithm)) {
     return {
       name: "AES-CBC",
-      iv: toBufferSource(
+      iv: toUint8Array(
         $subtle.EncryptAlgorithm$EncryptAesCbc$iv(algorithm),
       ),
     };
@@ -180,8 +180,8 @@ function toEncryptAlgorithm(
   if ($subtle.EncryptAlgorithm$isEncryptAesGcm(algorithm)) {
     const params: AesGcmParams = {
       name: "AES-GCM",
-      iv: toBufferSource($subtle.EncryptAlgorithm$EncryptAesGcm$iv(algorithm)),
-      additionalData: toBufferSource(
+      iv: toUint8Array($subtle.EncryptAlgorithm$EncryptAesGcm$iv(algorithm)),
+      additionalData: toUint8Array(
         $subtle.EncryptAlgorithm$EncryptAesGcm$additional_data(algorithm),
       ),
     };
@@ -195,7 +195,7 @@ function toEncryptAlgorithm(
   if ($subtle.EncryptAlgorithm$isEncryptAesCtr(algorithm)) {
     return {
       name: "AES-CTR",
-      counter: toBufferSource(
+      counter: toUint8Array(
         $subtle.EncryptAlgorithm$EncryptAesCtr$counter(algorithm),
       ),
       length: $subtle.EncryptAlgorithm$EncryptAesCtr$length(algorithm),
@@ -203,7 +203,7 @@ function toEncryptAlgorithm(
   }
   return {
     name: "RSA-OAEP",
-    label: toBufferSource(
+    label: toUint8Array(
       $subtle.EncryptAlgorithm$EncryptRsaOaep$label(algorithm),
     ),
   };
@@ -281,7 +281,6 @@ function toKeyPairGenAlgorithm(
       modulusLength: $subtle.KeyPairGenAlgorithm$KeyPairGenRsa$modulus_length(
         algorithm,
       ),
-      // @ts-expect-error denoland/deno#32063 (BigInteger)
       publicExponent: toUint8Array(
         $subtle.KeyPairGenAlgorithm$KeyPairGenRsa$public_exponent(algorithm),
       ),
@@ -341,7 +340,7 @@ function toWrapAlgorithm(
   if ($subtle.WrapAlgorithm$isWrapAesCbc(algorithm)) {
     return {
       name: "AES-CBC",
-      iv: toBufferSource(
+      iv: toUint8Array(
         $subtle.WrapAlgorithm$WrapAesCbc$iv(algorithm),
       ),
     };
@@ -349,7 +348,7 @@ function toWrapAlgorithm(
   if ($subtle.WrapAlgorithm$isWrapAesCtr(algorithm)) {
     return {
       name: "AES-CTR",
-      counter: toBufferSource(
+      counter: toUint8Array(
         $subtle.WrapAlgorithm$WrapAesCtr$counter(algorithm),
       ),
       length: $subtle.WrapAlgorithm$WrapAesCtr$length(algorithm),
@@ -358,8 +357,8 @@ function toWrapAlgorithm(
   if ($subtle.WrapAlgorithm$isWrapAesGcm(algorithm)) {
     const params: AesGcmParams = {
       name: "AES-GCM",
-      iv: toBufferSource($subtle.WrapAlgorithm$WrapAesGcm$iv(algorithm)),
-      additionalData: toBufferSource(
+      iv: toUint8Array($subtle.WrapAlgorithm$WrapAesGcm$iv(algorithm)),
+      additionalData: toUint8Array(
         $subtle.WrapAlgorithm$WrapAesGcm$additional_data(algorithm),
       ),
     };
@@ -373,13 +372,13 @@ function toWrapAlgorithm(
   if ($subtle.WrapAlgorithm$isWrapAesKw(algorithm)) return "AES-KW";
   return {
     name: "RSA-OAEP",
-    label: toBufferSource($subtle.WrapAlgorithm$WrapRsaOaep$label(algorithm)),
+    label: toUint8Array($subtle.WrapAlgorithm$WrapRsaOaep$label(algorithm)),
   };
 }
 
 export const digest: typeof $subtle.digest = (algorithm, data) => {
   return toCryptoBitArrayResult(() =>
-    subtle.digest(toHashAlgorithm(algorithm), toBufferSource(data))
+    subtle.digest(toHashAlgorithm(algorithm), toUint8Array(data))
   );
 };
 
@@ -391,7 +390,7 @@ export const encrypt: typeof $subtle.encrypt = (
   const usageError = checkUsage(key, "encrypt");
   if (usageError) return Promise.resolve(Result$Error(usageError));
   return toCryptoBitArrayResult(() =>
-    subtle.encrypt(toEncryptAlgorithm(algorithm), key, toBufferSource(data))
+    subtle.encrypt(toEncryptAlgorithm(algorithm), key, toUint8Array(data))
   );
 };
 
@@ -403,7 +402,7 @@ export const decrypt: typeof $subtle.decrypt = (
   const usageError = checkUsage(key, "decrypt");
   if (usageError) return Promise.resolve(Result$Error(usageError));
   return toCryptoBitArrayResult(() =>
-    subtle.decrypt(toEncryptAlgorithm(algorithm), key, toBufferSource(data))
+    subtle.decrypt(toEncryptAlgorithm(algorithm), key, toUint8Array(data))
   );
 };
 
@@ -411,7 +410,7 @@ export const sign: typeof $subtle.sign = (algorithm, key, data) => {
   const usageError = checkUsage(key, "sign");
   if (usageError) return Promise.resolve(Result$Error(usageError));
   return toCryptoBitArrayResult(() =>
-    subtle.sign(toSignAlgorithm(algorithm), key, toBufferSource(data))
+    subtle.sign(toSignAlgorithm(algorithm), key, toUint8Array(data))
   );
 };
 
@@ -427,8 +426,8 @@ export const verify: typeof $subtle.verify = (
     subtle.verify(
       toSignAlgorithm(algorithm),
       key,
-      toBufferSource(signature),
-      toBufferSource(data),
+      toUint8Array(signature),
+      toUint8Array(data),
     )
   );
 };
@@ -473,7 +472,7 @@ export const import_key: typeof $subtle.import_key = (
   return toCryptoResult(() =>
     subtle.importKey(
       toKeyFormat(format),
-      toBufferSource(keyData),
+      toUint8Array(keyData),
       toImportAlgorithm(algorithm),
       extractable,
       toKeyUsageArray(usages),
@@ -594,7 +593,7 @@ export const unwrap_key: typeof $subtle.unwrap_key = (
   return toCryptoResult(() =>
     subtle.unwrapKey(
       toKeyFormat(format),
-      toBufferSource(wrappedKey),
+      toUint8Array(wrappedKey),
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),
@@ -617,7 +616,7 @@ export const unwrap_key_jwk: typeof $subtle.unwrap_key_jwk = (
   return toCryptoResult(() =>
     subtle.unwrapKey(
       "jwk",
-      toBufferSource(wrappedKey),
+      toUint8Array(wrappedKey),
       unwrappingKey,
       toWrapAlgorithm(unwrapAlgorithm),
       toImportAlgorithm(unwrappedKeyAlgorithm),
