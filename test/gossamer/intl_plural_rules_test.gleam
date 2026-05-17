@@ -88,8 +88,8 @@ pub fn select_with_rounding_mode_test() {
 
 pub fn select_range_test() {
   let assert Ok(rules) = plural_rules.new(["en-US"]) |> plural_rules.build
-  let assert Ok(category) = plural_rules.select_int_range(rules, from: 1, to: 5)
-  category |> should.equal(plural_rules.Other)
+  plural_rules.select_int_range(rules, from: 1, to: 5)
+  |> should.equal(plural_rules.Other)
 }
 
 pub fn resolved_locale_test() {

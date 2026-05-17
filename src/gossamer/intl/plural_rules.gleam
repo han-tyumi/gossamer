@@ -237,26 +237,25 @@ pub fn select_float(rules: PluralRules, value: Float) -> PluralCategory
 pub fn select_int(rules: PluralRules, value: Int) -> PluralCategory
 
 /// Selects the [`PluralCategory`](#PluralCategory) for a `Float`
-/// range from `start` to `end`. Returns `Error(Nil)` if either
-/// endpoint is `NaN`. Runtimes vary on whether `end < start` throws —
-/// some swap the values and return a category for the reversed range.
+/// range from `start` to `end`. Passing `end < start` selects a
+/// category for the reversed range without erroring.
 ///
 @external(javascript, "./plural_rules.ffi.mjs", "select_range")
 pub fn select_float_range(
   rules: PluralRules,
   from start: Float,
   to end: Float,
-) -> Result(PluralCategory, Nil)
+) -> PluralCategory
 
 /// Selects the [`PluralCategory`](#PluralCategory) for an `Int`
 /// range.
 ///
-@external(javascript, "./plural_rules.ffi.mjs", "select_range")
+@external(javascript, "./plural_rules.ffi.mjs", "select_int_range")
 pub fn select_int_range(
   rules: PluralRules,
   from start: Int,
   to end: Int,
-) -> Result(PluralCategory, Nil)
+) -> PluralCategory
 
 /// The BCP 47 locale tag the runtime resolved from the requested
 /// priority list. The runtime may normalize regional tags to the

@@ -541,65 +541,64 @@ pub fn format_big_int_to_parts(
 ) -> List(Part)
 
 /// Formats a `Float` range from `start` to `end` (e.g., `"$3 – $10"`).
-/// Returns `Error(Nil)` if either endpoint is `NaN`. Runtimes vary on
-/// whether `end < start` throws — some swap the values and produce a
-/// reversed-range result.
+/// Passing `end < start` produces a reversed-range string without
+/// erroring.
 ///
 @external(javascript, "./number_format.ffi.mjs", "format_range")
 pub fn format_float_range(
   formatter: NumberFormat,
   from start: Float,
   to end: Float,
-) -> Result(String, Nil)
+) -> String
 
 /// Formats an `Int` range.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_range")
+@external(javascript, "./number_format.ffi.mjs", "format_int_range")
 pub fn format_int_range(
   formatter: NumberFormat,
   from start: Int,
   to end: Int,
-) -> Result(String, Nil)
+) -> String
 
 /// Formats a [`BigInt`](https://hexdocs.pm/gossamer/gossamer/big_int.html#BigInt)
 /// range.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_range")
+@external(javascript, "./number_format.ffi.mjs", "format_big_int_range")
 pub fn format_big_int_range(
   formatter: NumberFormat,
   from start: BigInt,
   to end: BigInt,
-) -> Result(String, Nil)
+) -> String
 
 /// Formats a `Float` range and returns its decomposition into
 /// [`RangePart`](#RangePart)s, each tagged by which endpoint it
-/// came from. Returns `Error(Nil)` if either endpoint is `NaN`.
+/// came from.
 ///
 @external(javascript, "./number_format.ffi.mjs", "format_range_to_parts")
 pub fn format_float_range_to_parts(
   formatter: NumberFormat,
   from start: Float,
   to end: Float,
-) -> Result(List(RangePart), Nil)
+) -> List(RangePart)
 
 /// Formats an `Int` range as a list of [`RangePart`](#RangePart)s.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_range_to_parts")
+@external(javascript, "./number_format.ffi.mjs", "format_int_range_to_parts")
 pub fn format_int_range_to_parts(
   formatter: NumberFormat,
   from start: Int,
   to end: Int,
-) -> Result(List(RangePart), Nil)
+) -> List(RangePart)
 
 /// Formats a [`BigInt`](https://hexdocs.pm/gossamer/gossamer/big_int.html#BigInt)
 /// range as a list of [`RangePart`](#RangePart)s.
 ///
-@external(javascript, "./number_format.ffi.mjs", "format_range_to_parts")
+@external(javascript, "./number_format.ffi.mjs", "format_big_int_range_to_parts")
 pub fn format_big_int_range_to_parts(
   formatter: NumberFormat,
   from start: BigInt,
   to end: BigInt,
-) -> Result(List(RangePart), Nil)
+) -> List(RangePart)
 
 /// The BCP 47 locale tag the runtime resolved from the requested
 /// priority list (e.g., `"en-US"`).

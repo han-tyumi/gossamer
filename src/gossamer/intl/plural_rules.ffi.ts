@@ -84,11 +84,15 @@ export const select_range: typeof $pluralRules.select_float_range = (
   start,
   end,
 ) => {
-  try {
-    return Result$Ok(fromPluralCategory(rules.selectRange(start, end)));
-  } catch {
-    return Result$Error(undefined);
-  }
+  return fromPluralCategory(rules.selectRange(start, end));
+};
+
+export const select_int_range: typeof $pluralRules.select_int_range = (
+  rules,
+  start,
+  end,
+) => {
+  return fromPluralCategory(rules.selectRange(start, end));
 };
 
 export const resolved_locale: typeof $pluralRules.resolved_locale = (rules) => {

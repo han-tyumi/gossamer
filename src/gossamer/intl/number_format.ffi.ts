@@ -266,11 +266,23 @@ export const format_range: typeof $numberFormat.format_float_range = (
   start,
   end,
 ) => {
-  try {
-    return Result$Ok(formatter.formatRange(start, end));
-  } catch {
-    return Result$Error(undefined);
-  }
+  return formatter.formatRange(start, end);
+};
+
+export const format_int_range: typeof $numberFormat.format_int_range = (
+  formatter,
+  start,
+  end,
+) => {
+  return formatter.formatRange(start, end);
+};
+
+export const format_big_int_range: typeof $numberFormat.format_big_int_range = (
+  formatter,
+  start,
+  end,
+) => {
+  return formatter.formatRange(start, end);
 };
 
 export const format_range_to_parts:
@@ -279,13 +291,34 @@ export const format_range_to_parts:
     start,
     end,
   ) => {
-    try {
-      return Result$Ok(
-        fromArrayMapped(formatter.formatRangeToParts(start, end), toRangePart),
-      );
-    } catch {
-      return Result$Error(undefined);
-    }
+    return fromArrayMapped(
+      formatter.formatRangeToParts(start, end),
+      toRangePart,
+    );
+  };
+
+export const format_int_range_to_parts:
+  typeof $numberFormat.format_int_range_to_parts = (
+    formatter,
+    start,
+    end,
+  ) => {
+    return fromArrayMapped(
+      formatter.formatRangeToParts(start, end),
+      toRangePart,
+    );
+  };
+
+export const format_big_int_range_to_parts:
+  typeof $numberFormat.format_big_int_range_to_parts = (
+    formatter,
+    start,
+    end,
+  ) => {
+    return fromArrayMapped(
+      formatter.formatRangeToParts(start, end),
+      toRangePart,
+    );
   };
 
 export const resolved_locale: typeof $numberFormat.resolved_locale = (

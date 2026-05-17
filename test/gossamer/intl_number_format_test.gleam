@@ -223,14 +223,14 @@ pub fn format_range_test() {
     |> number_format.with_style(number_format.StyleCurrency)
     |> number_format.with_currency("USD")
     |> number_format.build
-  let assert Ok(result) =
-    number_format.format_float_range(formatter, from: 3.0, to: 10.0)
-  result |> should.equal("$3.00 – $10.00")
+  number_format.format_float_range(formatter, from: 3.0, to: 10.0)
+  |> should.equal("$3.00 – $10.00")
 }
 
 pub fn format_int_range_test() {
   let assert Ok(formatter) = number_format.new(["en-US"]) |> number_format.build
-  number_format.format_int_range(formatter, from: 1, to: 5) |> should.be_ok
+  number_format.format_int_range(formatter, from: 1, to: 5)
+  |> should.not_equal("")
 }
 
 pub fn format_big_int_range_test() {
@@ -240,14 +240,13 @@ pub fn format_big_int_range_test() {
     from: big_int.from_int(1),
     to: big_int.from_int(5),
   )
-  |> should.be_ok
+  |> should.not_equal("")
 }
 
 pub fn format_range_to_parts_test() {
   let assert Ok(formatter) = number_format.new(["en-US"]) |> number_format.build
-  let assert Ok(parts) =
+  let parts =
     number_format.format_float_range_to_parts(formatter, from: 1.0, to: 5.0)
-  // First part should be from the start side.
   case parts {
     [first, ..] -> first.source |> should.equal(intl.Start)
     [] -> panic as "expected non-empty parts"
