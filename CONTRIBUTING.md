@@ -34,12 +34,18 @@ Commits use [Conventional Commits](https://www.conventionalcommits.org/).
 version — see `knope.toml` for the release workflow. Run `knope release` from a
 clean `main` to release.
 
+## Conventions for adding bindings
+
+Detailed conventions live under [`docs/contributing/`](./docs/contributing/).
+Each page cross-links to related ones; start anywhere. The user-facing summary
+is [`docs/conventions.md`](./docs/conventions.md).
+
 ## Handling runtime divergence
 
 Web APIs sometimes diverge across Node.js, Deno, Bun, and browsers — a method
 that exists on one runtime is missing on another, a getter returns `undefined`
-where the spec defines a value, etc. gossamer handles these with three patterns
-so the public Gleam API stays clean and divergence is diagnosable rather than
+where the spec defines a value, etc. gossamer handles these with two patterns so
+the public Gleam API stays clean and divergence is diagnosable rather than
 silent.
 
 Spec-defined throws on **all** runtimes are a different concern — those are
@@ -131,19 +137,35 @@ Then add a matching entry under the appropriate runtime in
 [`docs/runtime-gaps.md`](./docs/runtime-gaps.md) so the consolidated catalog
 stays in sync with the per-binding docs.
 
+### Verification process
+
+When applying this policy to a new gap:
+
+1. **Empirically verify** the divergence on every runtime (Deno, Node, Bun) with
+   `deno eval` / `node -e` / `bun -e`. Don't trust spec wording or third-party
+   docs alone.
+2. **Find the upstream tracking issue** (Deno / Bun / Node GitHub repos).
+   Confirm it's open and active. If not, consider removing the binding instead.
+3. **Pick Pattern 1 or 2** based on whether a meaningful spec default exists.
+4. **Add the doc note** on the Gleam binding (see
+   [Documenting the divergence](#documenting-the-divergence) above).
+5. **Add an entry** in [`docs/runtime-gaps.md`](./docs/runtime-gaps.md) under
+   the relevant runtime.
+6. **Write a test** that asserts the documented behavior. Pair `skip_on(<bad>)`
+   with `only_on(<bad>)` asserting the buggy value so the test fails when the
+   upstream fix lands. For Pattern 1, the `only_on` test observes the default;
+   for Pattern 2, it asserts the thrown error's message contains the binding
+   name.
+
 ### What gossamer doesn't do
 
 - **No `Result` wrap purely for runtime divergence.** That would add unwrap
-  noise on every call on every runtime, including spec-compliant ones, and
-  create a breaking change if the gap closed upstream. `Result` is for
-  input-driven spec-defined failures only.
-- **No silent fallback for missing methods.** A missing method is a capability
-  gap, not a value gap. Pattern 2's diagnostic throw fails loudly so the cause
-  is obvious.
-- **No silent default for properties without an honest spec default.** If the
-  property's "real" value is content-derived and the spec gives no meaningful
-  unset value, Pattern 1 doesn't apply — Pattern 2's diagnostic throw is the
-  right answer.
+  noise on every call on every runtime and create a breaking change if the gap
+  closes upstream. `Result` is for input-driven spec-defined failures only.
+- **No silent fallback for missing methods or non-honest defaults.** A
+  capability gap (Pattern 2) or a content-derived field with no meaningful unset
+  value fails loudly via the diagnostic throw rather than masking the
+  divergence.
 
 ## Verifying runtime floors
 
