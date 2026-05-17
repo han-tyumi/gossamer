@@ -1,4 +1,5 @@
 import gleam/option
+import gleam/time/duration
 import gleeunit/should
 import gossamer/intl
 import gossamer/intl/relative_time_format
@@ -131,4 +132,54 @@ pub fn resolved_locale_test() {
 pub fn supported_locales_of_test() {
   relative_time_format.supported_locales_of(["en-US", "zz-INVALID"])
   |> should.equal(["en-US"])
+}
+
+pub fn format_duration_past_test() {
+  let assert Ok(formatter) =
+    relative_time_format.new(["en-US"]) |> relative_time_format.build
+  relative_time_format.format_duration(formatter, duration.hours(-2))
+  |> should.equal("2 hours ago")
+}
+
+pub fn format_duration_future_test() {
+  let assert Ok(formatter) =
+    relative_time_format.new(["en-US"]) |> relative_time_format.build
+  relative_time_format.format_duration(formatter, duration.minutes(5))
+  |> should.equal("in 5 minutes")
+}
+
+pub fn format_duration_sub_second_test() {
+  let assert Ok(formatter) =
+    relative_time_format.new(["en-US"]) |> relative_time_format.build
+  relative_time_format.format_duration(formatter, duration.milliseconds(500))
+  |> should.equal("in 0 seconds")
+}
+
+pub fn format_duration_sub_second_auto_test() {
+  let assert Ok(formatter) =
+    relative_time_format.new(["en-US"])
+    |> relative_time_format.with_numeric(relative_time_format.Auto)
+    |> relative_time_format.build
+  relative_time_format.format_duration(formatter, duration.milliseconds(500))
+  |> should.equal("now")
+}
+
+pub fn format_duration_zero_test() {
+  let assert Ok(formatter) =
+    relative_time_format.new(["en-US"])
+    |> relative_time_format.with_numeric(relative_time_format.Auto)
+    |> relative_time_format.build
+  relative_time_format.format_duration(formatter, duration.seconds(0))
+  |> should.equal("now")
+}
+
+pub fn format_duration_to_parts_test() {
+  let assert Ok(formatter) =
+    relative_time_format.new(["en-US"]) |> relative_time_format.build
+  let parts =
+    relative_time_format.format_duration_to_parts(formatter, duration.hours(-2))
+  case parts {
+    [first, ..] -> first.kind |> should.equal(relative_time_format.Integer)
+    [] -> panic as "expected non-empty parts"
+  }
 }

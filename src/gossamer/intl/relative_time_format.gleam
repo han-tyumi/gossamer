@@ -4,6 +4,7 @@
 //// significantly faster than building one per call.
 
 import gleam/option.{type Option, None, Some}
+import gleam/time/duration.{type Duration}
 import gossamer/intl.{type LabelStyle, type LocaleMatcher}
 
 /// A configured formatter that renders relative time spans
@@ -185,6 +186,47 @@ pub fn format_int_to_parts(
   value: Int,
   in unit: Unit,
 ) -> List(Part)
+
+/// Formats a `gleam/time/duration.Duration` as relative time,
+/// decomposing into the largest applicable unit
+/// (`duration.hours(-2)` → `"2 hours ago"`). Sub-second durations
+/// clamp to `(0, Second)` because `Intl.RelativeTimeFormat` doesn't
+/// accept sub-second units; the rendered phrasing then depends on the
+/// formatter's [`Numeric`](#Numeric) setting.
+///
+pub fn format_duration(formatter: RelativeTimeFormat, value: Duration) -> String {
+  let #(amount, unit) = decompose(value)
+  format_int(formatter, amount, in: unit)
+}
+
+/// Formats a `gleam/time/duration.Duration` and returns its
+/// decomposition into [`Part`](#Part)s. Uses the same unit
+/// decomposition as [`format_duration`](#format_duration).
+///
+pub fn format_duration_to_parts(
+  formatter: RelativeTimeFormat,
+  value: Duration,
+) -> List(Part) {
+  let #(amount, unit) = decompose(value)
+  format_int_to_parts(formatter, amount, in: unit)
+}
+
+fn decompose(value: Duration) -> #(Int, Unit) {
+  let #(amount, unit) = duration.approximate(value)
+  case unit {
+    duration.Nanosecond | duration.Microsecond | duration.Millisecond -> #(
+      0,
+      Second,
+    )
+    duration.Second -> #(amount, Second)
+    duration.Minute -> #(amount, Minute)
+    duration.Hour -> #(amount, Hour)
+    duration.Day -> #(amount, Day)
+    duration.Week -> #(amount, Week)
+    duration.Month -> #(amount, Month)
+    duration.Year -> #(amount, Year)
+  }
+}
 
 /// The BCP 47 locale tag the runtime resolved from the requested
 /// priority list (e.g., `"en-US"`).
