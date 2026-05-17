@@ -76,13 +76,14 @@ pub fn writable(decoder: TextDecoderStream) -> WritableStream(BitArray)
 pub fn encoding(decoder: TextDecoderStream) -> Encoding
 
 /// Whether decoding malformed data emits an error on the stream
-/// instead of substituting it with a replacement character.
+/// instead of substituting it with a replacement character. Equivalent
+/// to JavaScript's `decoder.fatal`.
 ///
 @external(javascript, "./text_decoder_stream.ffi.mjs", "is_fatal")
 pub fn is_fatal(decoder: TextDecoderStream) -> Bool
 
 /// Whether the byte order mark is skipped over rather than included in
-/// the decoded output.
+/// the decoded output. Equivalent to JavaScript's `decoder.ignoreBOM`.
 ///
 @external(javascript, "./text_decoder_stream.ffi.mjs", "is_ignore_bom")
 pub fn is_ignore_bom(decoder: TextDecoderStream) -> Bool

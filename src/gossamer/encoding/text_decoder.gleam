@@ -63,20 +63,22 @@ pub fn do_build(
 pub fn encoding(decoder: TextDecoder) -> Encoding
 
 /// Whether decoding malformed data returns an error instead of
-/// substituting it with a replacement character.
+/// substituting it with a replacement character. Equivalent to
+/// JavaScript's `decoder.fatal`.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "is_fatal")
 pub fn is_fatal(decoder: TextDecoder) -> Bool
 
 /// Whether the byte order mark is skipped over rather than included in
-/// the decoded output.
+/// the decoded output. Equivalent to JavaScript's `decoder.ignoreBOM`.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "is_ignore_bom")
 pub fn is_ignore_bom(decoder: TextDecoder) -> Bool
 
 /// Decodes `input`, keeping state for multi-byte sequences that span
 /// chunks. Returns `MalformedInput` if the decoder is fatal and
-/// `input` contains bytes that don't form a valid sequence.
+/// `input` contains bytes that don't form a valid sequence. Equivalent
+/// to JavaScript's `decoder.decode(input, { stream: true })`.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "decode_chunk")
 pub fn decode_chunk(

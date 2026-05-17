@@ -18,13 +18,15 @@ pub type AbortSignal
 
 /// Returns an `AbortSignal` that is already aborted with the given
 /// `reason`. Useful for short-circuiting operations that accept a
-/// signal without wiring up a full controller.
+/// signal without wiring up a full controller. Equivalent to
+/// JavaScript's static `AbortSignal.abort`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "abort")
 pub fn abort(reason: r) -> AbortSignal
 
 /// Returns an `AbortSignal` that becomes aborted as soon as any of
 /// `signals` does, with the same `reason` as the triggering signal.
+/// Equivalent to JavaScript's static `AbortSignal.any`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "any")
 pub fn any(signals: List(AbortSignal)) -> AbortSignal
@@ -32,12 +34,14 @@ pub fn any(signals: List(AbortSignal)) -> AbortSignal
 /// Creates an `AbortSignal` that aborts automatically after `duration`.
 /// Negative durations are treated as zero. Node enforces an unsigned
 /// 32-bit upper bound on the resolved millisecond value; Deno and Bun
-/// accept values up to `9_007_199_254_740_991`.
+/// accept values up to `9_007_199_254_740_991`. Equivalent to
+/// JavaScript's static `AbortSignal.timeout`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
 pub fn timeout(duration: Duration) -> AbortSignal
 
-/// `True` once the signal has been aborted.
+/// `True` once the signal has been aborted. Equivalent to JavaScript's
+/// `signal.aborted`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool
@@ -52,7 +56,8 @@ pub fn is_aborted(signal: AbortSignal) -> Bool
 pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 
 /// Registers `handler` to run when the signal aborts. If the signal is
-/// already aborted, `handler` is not called.
+/// already aborted, `handler` is not called. Equivalent to JavaScript's
+/// `signal.onabort`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "set_on_abort")
 pub fn set_on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil

@@ -77,7 +77,8 @@ pub fn flags(regexp: Regexp) -> List(RegExpFlag)
 pub fn source(regexp: Regexp) -> String
 
 /// Escapes regex metacharacters in `string` so it can be embedded as a
-/// literal pattern.
+/// literal pattern. Equivalent to JavaScript's static `RegExp.escape`
+/// (ES2025).
 ///
 /// ## Examples
 ///

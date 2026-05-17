@@ -170,7 +170,8 @@ pub fn from_string(
 
 /// Returns `True` if the pattern matches `input`. Pass `Some(base_url)`
 /// to resolve `input` against a base URL before matching. Returns
-/// `False` if `base_url` is `Some` but isn't a valid URL.
+/// `False` if `base_url` is `Some` but isn't a valid URL. Equivalent
+/// to JavaScript's `pattern.test`.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "matches")
 pub fn matches(

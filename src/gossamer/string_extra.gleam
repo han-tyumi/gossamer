@@ -30,12 +30,14 @@ pub type NormalizationForm {
 }
 
 /// Returns the NFC-normalized form of `string`. NFC is the canonical
-/// choice for equivalence comparison.
+/// choice for equivalence comparison. Equivalent to JavaScript's
+/// `String.prototype.normalize()`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "normalize")
 pub fn normalize(string: String) -> String
 
 /// Returns the normalized form of `string` for the given form.
+/// Equivalent to JavaScript's `String.prototype.normalize(form)`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "normalize_to")
 pub fn normalize_to(string: String, form form: NormalizationForm) -> String
@@ -45,7 +47,8 @@ pub fn normalize_to(string: String, form form: NormalizationForm) -> String
 /// Differs from `gleam/string.lowercase` for locale-specific casing
 /// rules (e.g., Turkish lowercases `"I"` to dotless `"ı"`, not
 /// `"i"`). Returns `Error(Nil)` if any tag in `locales` is
-/// structurally invalid.
+/// structurally invalid. Equivalent to JavaScript's
+/// `String.prototype.toLocaleLowerCase`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "to_locale_lower_case")
 pub fn to_locale_lower_case(
@@ -57,7 +60,8 @@ pub fn to_locale_lower_case(
 /// `locales` (or the runtime's default locale when the list is empty).
 /// Differs from `gleam/string.uppercase` for locale-specific casing
 /// rules. Returns `Error(Nil)` if any tag in `locales` is
-/// structurally invalid.
+/// structurally invalid. Equivalent to JavaScript's
+/// `String.prototype.toLocaleUpperCase`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "to_locale_upper_case")
 pub fn to_locale_upper_case(
@@ -66,13 +70,15 @@ pub fn to_locale_upper_case(
 ) -> Result(String, Nil)
 
 /// `True` when `string` is a well-formed UTF-16 sequence — every
-/// surrogate is part of a valid pair.
+/// surrogate is part of a valid pair. Equivalent to JavaScript's
+/// `String.prototype.isWellFormed`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "is_well_formed")
 pub fn is_well_formed(string: String) -> Bool
 
 /// Returns `string` with any lone surrogate replaced by `U+FFFD`
-/// (replacement character).
+/// (replacement character). Equivalent to JavaScript's
+/// `String.prototype.toWellFormed`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "to_well_formed")
 pub fn to_well_formed(string: String) -> String

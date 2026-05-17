@@ -29,6 +29,7 @@ pub fn close(port: MessagePort) -> Nil
 /// Registers a handler invoked with each message's data payload. Decode
 /// the payload with `gleam/dynamic/decode`. `ArrayBuffer` payloads are
 /// exposed as `BitArray`; other values pass through unchanged.
+/// Equivalent to JavaScript's `port.onmessage`.
 ///
 @external(javascript, "./message_port.ffi.mjs", "set_on_message")
 pub fn set_on_message(port: MessagePort, run handler: fn(Dynamic) -> a) -> Nil

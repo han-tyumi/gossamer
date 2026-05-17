@@ -30,12 +30,13 @@ pub type Json {
 /// Parses a JSON string into a `Json` value. Returns an error if the
 /// string is not valid JSON per the
 /// [ECMA-404](https://www.ecma-international.org/publications-and-standards/standards/ecma-404/)
-/// grammar.
+/// grammar. Equivalent to JavaScript's `JSON.parse`.
 ///
 @external(javascript, "./json.ffi.mjs", "parse")
 pub fn parse(text: String) -> Result(Json, Nil)
 
-/// Serializes a `Json` value into a JSON string.
+/// Serializes a `Json` value into a JSON string. Equivalent to
+/// JavaScript's `JSON.stringify`.
 ///
 @external(javascript, "./json.ffi.mjs", "stringify")
 pub fn stringify(json: Json) -> String
