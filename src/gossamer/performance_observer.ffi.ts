@@ -3,14 +3,14 @@ import {
   fromEntryTypeString,
   toEntryTypeString,
 } from "~/gossamer/performance_entry.ffi.ts";
-import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 
 export const observe: typeof $performanceObserver.observe = (
   entryTypes,
   handler,
 ) => {
   const observer = new PerformanceObserver((list) => {
-    handler(fromArrayMapped(list.getEntries(), (e) => e));
+    handler(fromArray(list.getEntries()));
   });
   observer.observe({
     // @ts-expect-error TS narrows entryTypes to a literal union.
@@ -24,7 +24,7 @@ export const observe_buffered: typeof $performanceObserver.observe_buffered = (
   handler,
 ) => {
   const observer = new PerformanceObserver((list) => {
-    handler(fromArrayMapped(list.getEntries(), (e) => e));
+    handler(fromArray(list.getEntries()));
   });
   observer.observe({
     // @ts-expect-error TS narrows type to a literal union.
@@ -43,7 +43,7 @@ export const disconnect: typeof $performanceObserver.disconnect = (
 export const take_records: typeof $performanceObserver.take_records = (
   observer,
 ) => {
-  return fromArrayMapped(observer.takeRecords(), (e) => e);
+  return fromArray(observer.takeRecords());
 };
 
 export const supported_entry_types:
