@@ -1,10 +1,9 @@
-import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $segmenter from "$/gossamer/gossamer/intl/segmenter.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
 import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome } from "~/utils/option.ffi.ts";
+import { mapIfSome, toOption } from "~/utils/option.ffi.ts";
 
 function toGranularity(
   granularity: $segmenter.Granularity$,
@@ -18,9 +17,7 @@ function toSegment(data: Intl.SegmentData): $segmenter.Segment$ {
   return $segmenter.Segment$Segment(
     data.segment,
     data.index,
-    data.isWordLike === undefined
-      ? $option.Option$None()
-      : $option.Option$Some(data.isWordLike),
+    toOption(data.isWordLike),
   );
 }
 

@@ -152,11 +152,11 @@ export const build: typeof $dateTimeFormat.do_build = (
 ) => {
   const options: Intl.DateTimeFormatOptions = {};
   mapIfSome(options, "localeMatcher", locale_matcher, toLocaleMatcher);
-  mapIfSome(options, "calendar", calendar, (value) => value);
-  mapIfSome(options, "numberingSystem", numberingSystem, (value) => value);
+  setIfSome(options, "calendar", calendar);
+  setIfSome(options, "numberingSystem", numberingSystem);
   setIfSome(options, "hour12", hour12);
   mapIfSome(options, "hourCycle", hourCycle, toHourCycle);
-  mapIfSome(options, "timeZone", timeZone, (value) => value);
+  setIfSome(options, "timeZone", timeZone);
   mapIfSome(options, "weekday", weekday, toLabelStyle);
   mapIfSome(options, "era", era, toLabelStyle);
   mapIfSome(options, "year", year, toNumericWidth);
