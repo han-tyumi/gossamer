@@ -25,6 +25,11 @@ pre-commit:
       run: deno fmt {staged_files}
       stage_fixed: true
 
+    just-format:
+      glob: ".justfile"
+      run: just --fmt
+      stage_fixed: true
+
     test:
       glob: "*.{gleam,ts}"
       run: just test
