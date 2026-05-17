@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(just --list)",
+      "Bash(just --version)",
+      "Bash(just bootstrap)",
+      "Bash(just build *)",
+      "Bash(just check *)",
+      "Bash(just clean *)",
+      "Bash(just docs *)",
+      "Bash(just examples *)",
+      "Bash(just format *)",
+      "Bash(just test *)",
+      "Bash(gleam --version)",
+      "Bash(gleam build *)",
+      "Bash(gleam check *)",
+      "Bash(gleam format *)",
+      "Bash(gleam test *)",
+      "Bash(deno --version)",
+      "Bash(deno check *)",
+      "Bash(deno doc *)",
+      "Bash(deno fmt *)",
+      "Bash(deno lint *)",
+      "Bash(bun --version)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git ls-files *)",
+      "Bash(git show *)",
+      "Bash(git status *)"
+    ]
+  }
+}
