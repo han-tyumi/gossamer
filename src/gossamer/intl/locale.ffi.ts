@@ -7,7 +7,12 @@ import {
   toHourCycle,
 } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped } from "~/utils/list.ffi.ts";
-import { mapIfSome, setIfSome, toOption } from "~/utils/option.ffi.ts";
+import {
+  mapIfSome,
+  mapOption,
+  setIfSome,
+  toOption,
+} from "~/utils/option.ffi.ts";
 
 function fromTextDirection(value: string): $locale.TextDirection$ {
   return value === "rtl"
@@ -51,13 +56,9 @@ export const info: typeof $locale.info = (locale) =>
     toOption(locale.script),
     toOption(locale.region),
     toOption(locale.calendar),
-    locale.caseFirst === undefined
-      ? toOption(undefined)
-      : toOption(fromCaseFirst(locale.caseFirst)),
+    mapOption(locale.caseFirst, fromCaseFirst),
     toOption(locale.collation),
-    locale.hourCycle === undefined
-      ? toOption(undefined)
-      : toOption(fromHourCycle(locale.hourCycle)),
+    mapOption(locale.hourCycle, fromHourCycle),
     toOption(locale.numberingSystem),
     locale.numeric ?? false,
   );

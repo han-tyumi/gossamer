@@ -13,6 +13,21 @@ export function toOption<T>(value: T | null | undefined): Option$<T> {
 }
 
 /**
+ * Wraps a transformed value as `Some` when the source is non-null and
+ * non-undefined; returns `None` otherwise. Useful when the JS value
+ * needs a Gleam-side conversion before becoming the `Option`'s inner
+ * value.
+ */
+export function mapOption<T, U>(
+  value: T | null | undefined,
+  transform: (value: T) => U,
+): Option$<U> {
+  return value === null || value === undefined
+    ? Option$None()
+    : Option$Some(transform(value));
+}
+
+/**
  * Assigns `target[key]` from `option` when `option` is `Some`. Use when
  * the option's inner type matches the target field exactly.
  */

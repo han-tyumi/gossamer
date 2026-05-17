@@ -1,9 +1,8 @@
-import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $relativeTimeFormat from "$/gossamer/gossamer/intl/relative_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome } from "~/utils/option.ffi.ts";
+import { mapIfSome, mapOption } from "~/utils/option.ffi.ts";
 
 function toNumeric(numeric: $relativeTimeFormat.Numeric$): "always" | "auto" {
   return $relativeTimeFormat.Numeric$isAlways(numeric) ? "always" : "auto";
@@ -74,9 +73,7 @@ function toPart(
   return $relativeTimeFormat.Part$Part(
     fromPartKind(item.type),
     item.value,
-    item.unit === undefined
-      ? $option.Option$None()
-      : $option.Option$Some(fromUnit(item.unit)),
+    mapOption(item.unit, fromUnit),
   );
 }
 
