@@ -6,6 +6,8 @@ import {
   List$NonEmpty$rest,
 } from "$/prelude.mjs";
 import {
+  asyncYielderAsJsAsyncIterator,
+  jsAsyncIteratorAsAsyncYielder,
   toCallbackResultPromise,
   toIteratorResult,
 } from "~/gossamer/iteration.ffi.ts";
@@ -63,6 +65,12 @@ export const to_list: typeof $asyncIterator.to_list = <T>(
     return fromArray(values);
   })());
 };
+
+export const from_async_yielder: typeof $asyncIterator.from_async_yielder =
+  asyncYielderAsJsAsyncIterator;
+
+export const to_async_yielder: typeof $asyncIterator.to_async_yielder =
+  jsAsyncIteratorAsAsyncYielder;
 
 export const each: typeof $asyncIterator.each = <
   T,

@@ -9,6 +9,7 @@ import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option}
 import gossamer/iteration.{type IteratorResult}
+import gossamer/iteration/async_yielder.{type AsyncYielder}
 
 /// A pull-based iterator that yields values asynchronously. Each call
 /// to `next` returns a promise. `a` is the yielded value type,
@@ -41,6 +42,26 @@ pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
 pub fn to_list(
   iterator: AsyncIterator(a, return, next),
 ) -> Promise(Result(List(a), Dynamic))
+
+/// Creates an async iterator from an
+/// [`AsyncYielder`](async_yielder.html#AsyncYielder). The yielder is
+/// consumed lazily as values are pulled from the iterator.
+///
+@external(javascript, "./async_iterator.ffi.mjs", "from_async_yielder")
+pub fn from_async_yielder(
+  yielder: AsyncYielder(a),
+) -> AsyncIterator(a, Nil, Nil)
+
+/// Wraps the iterator as an
+/// [`AsyncYielder`](async_yielder.html#AsyncYielder). The iterator is
+/// consumed lazily as values are pulled from the yielder; pair with
+/// [`async_yielder.to_list`](async_yielder.html#to_list) for eager
+/// materialization.
+///
+@external(javascript, "./async_iterator.ffi.mjs", "to_async_yielder")
+pub fn to_async_yielder(
+  iterator: AsyncIterator(a, return, next),
+) -> AsyncYielder(a)
 
 /// Consumes the iterator, calling `fun` on each yielded value. Returns
 /// the thrown value or rejection reason if the iterator or `fun` throws
