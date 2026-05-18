@@ -432,6 +432,118 @@ pub fn transform_async_test() {
   should.equal(result, Ok([1, 3, 6]))
 }
 
+pub fn take_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5])
+    |> async_yielder.take(up_to: 3)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3]))
+}
+
+pub fn take_more_than_length_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.take(up_to: 10)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn take_zero_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.take(up_to: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([]))
+}
+
+pub fn take_negative_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.take(up_to: -5)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([]))
+}
+
+pub fn drop_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5])
+    |> async_yielder.drop(up_to: 2)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([3, 4, 5]))
+}
+
+pub fn drop_more_than_length_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.drop(up_to: 10)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([]))
+}
+
+pub fn drop_zero_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.drop(up_to: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn drop_negative_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.drop(up_to: -5)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn take_while_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 1])
+    |> async_yielder.take_while(satisfying: fn(x) { x < 3 })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn take_while_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.take_while_async(satisfying: fn(x) {
+      promise.resolve(x < 3)
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn drop_while_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 1])
+    |> async_yielder.drop_while(satisfying: fn(x) { x < 3 })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([3, 4, 1]))
+}
+
+pub fn drop_while_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.drop_while_async(satisfying: fn(x) {
+      promise.resolve(x < 3)
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([3, 4]))
+}
+
 pub fn unfold_async_propagates_rejection_test() {
   let rejecting =
     async_yielder.unfold_async(from: 0, with: fn(_) {

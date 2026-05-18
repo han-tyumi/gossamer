@@ -503,6 +503,158 @@ fn transform_async_loop(
   }
 }
 
+/// Yields the first `desired` values of `yielder`, then stops. If
+/// `desired` is non-positive, yields nothing.
+///
+pub fn take(
+  from yielder: AsyncYielder(a),
+  up_to desired: Int,
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    case desired > 0 {
+      False -> promise.resolve(Done)
+      True -> {
+        use step <- promise.map(yielder.pull())
+        case step {
+          Done -> Done
+          Next(value, rest) -> Next(value, take(rest, desired - 1))
+        }
+      }
+    }
+  })
+}
+
+/// Skips the first `desired` values of `yielder`, then yields the
+/// rest. If `desired` is non-positive, yields all values.
+///
+pub fn drop(
+  from yielder: AsyncYielder(a),
+  up_to desired: Int,
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { drop_loop(yielder, desired) })
+}
+
+fn drop_loop(
+  yielder: AsyncYielder(a),
+  desired: Int,
+) -> Promise(Step(a, AsyncYielder(a))) {
+  case desired > 0 {
+    False -> yielder.pull()
+    True -> {
+      use step <- promise.await(yielder.pull())
+      case step {
+        Done -> promise.resolve(Done)
+        Next(_, rest) -> drop_loop(rest, desired - 1)
+      }
+    }
+  }
+}
+
+/// Yields values from `yielder` while `predicate` returns `True`, then
+/// stops at the first value for which it returns `False`.
+///
+pub fn take_while(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Bool,
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { take_while_loop(yielder, predicate) })
+}
+
+fn take_while_loop(
+  yielder: AsyncYielder(a),
+  predicate: fn(a) -> Bool,
+) -> Promise(Step(a, AsyncYielder(a))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) ->
+      case predicate(value) {
+        True -> promise.resolve(Next(value, take_while(rest, predicate)))
+        False -> promise.resolve(Done)
+      }
+  }
+}
+
+/// Like [`take_while`](#take_while) but `predicate` returns a
+/// `Promise`. Each call is awaited before the next.
+///
+pub fn take_while_async(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Promise(Bool),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { take_while_async_loop(yielder, predicate) })
+}
+
+fn take_while_async_loop(
+  yielder: AsyncYielder(a),
+  predicate: fn(a) -> Promise(Bool),
+) -> Promise(Step(a, AsyncYielder(a))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) -> {
+      use keep <- promise.await(predicate(value))
+      case keep {
+        True -> promise.resolve(Next(value, take_while_async(rest, predicate)))
+        False -> promise.resolve(Done)
+      }
+    }
+  }
+}
+
+/// Skips values from `yielder` while `predicate` returns `True`, then
+/// yields the rest starting from the first value for which it returns
+/// `False`.
+///
+pub fn drop_while(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Bool,
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { drop_while_loop(yielder, predicate) })
+}
+
+fn drop_while_loop(
+  yielder: AsyncYielder(a),
+  predicate: fn(a) -> Bool,
+) -> Promise(Step(a, AsyncYielder(a))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) ->
+      case predicate(value) {
+        True -> drop_while_loop(rest, predicate)
+        False -> promise.resolve(Next(value, rest))
+      }
+  }
+}
+
+/// Like [`drop_while`](#drop_while) but `predicate` returns a
+/// `Promise`. Each call is awaited before the next.
+///
+pub fn drop_while_async(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Promise(Bool),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { drop_while_async_loop(yielder, predicate) })
+}
+
+fn drop_while_async_loop(
+  yielder: AsyncYielder(a),
+  predicate: fn(a) -> Promise(Bool),
+) -> Promise(Step(a, AsyncYielder(a))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) -> {
+      use drop_it <- promise.await(predicate(value))
+      case drop_it {
+        True -> drop_while_async_loop(rest, predicate)
+        False -> promise.resolve(Next(value, rest))
+      }
+    }
+  }
+}
+
 /// Drains the yielder, collecting all yielded values into a list.
 /// Returns the rejection reason if any pull rejects.
 ///
