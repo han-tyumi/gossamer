@@ -5,13 +5,13 @@ import gossamer/iteration/async_yielder
 pub fn from_list_to_list_test() {
   let yielder = async_yielder.from_list([1, 2, 3])
   use result <- promise.map(async_yielder.to_list(yielder))
-  should.equal(result, Ok([1, 2, 3]))
+  should.equal(result, [1, 2, 3])
 }
 
 pub fn empty_to_list_test() {
   let yielder = async_yielder.empty()
   use result <- promise.map(async_yielder.to_list(yielder))
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn map_test() {
@@ -20,7 +20,7 @@ pub fn map_test() {
     |> async_yielder.map(with: fn(x) { x * 2 })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([2, 4, 6]))
+  should.equal(result, [2, 4, 6])
 }
 
 pub fn filter_test() {
@@ -29,7 +29,7 @@ pub fn filter_test() {
     |> async_yielder.filter(keeping: fn(x) { x > 2 })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([3, 4, 5]))
+  should.equal(result, [3, 4, 5])
 }
 
 pub fn map_then_filter_test() {
@@ -39,7 +39,7 @@ pub fn map_then_filter_test() {
     |> async_yielder.filter(keeping: fn(x) { x > 4 })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([6, 8, 10]))
+  should.equal(result, [6, 8, 10])
 }
 
 pub fn step_advances_test() {
@@ -74,7 +74,7 @@ pub fn map_async_test() {
     |> async_yielder.map_async(with: fn(x) { promise.resolve(x * 2) })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([2, 4, 6]))
+  should.equal(result, [2, 4, 6])
 }
 
 pub fn filter_async_test() {
@@ -83,7 +83,7 @@ pub fn filter_async_test() {
     |> async_yielder.filter_async(keeping: fn(x) { promise.resolve(x > 2) })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([3, 4, 5]))
+  should.equal(result, [3, 4, 5])
 }
 
 pub fn each_test() {
@@ -91,7 +91,7 @@ pub fn each_test() {
     async_yielder.from_list([1, 2, 3])
     |> async_yielder.each(with: fn(_) { Nil })
   use result <- promise.map(result)
-  should.equal(result, Ok(Nil))
+  should.equal(result, Nil)
 }
 
 pub fn each_async_test() {
@@ -99,7 +99,7 @@ pub fn each_async_test() {
     async_yielder.from_list([1, 2, 3])
     |> async_yielder.each_async(with: fn(_) { promise.resolve(Nil) })
   use result <- promise.map(result)
-  should.equal(result, Ok(Nil))
+  should.equal(result, Nil)
 }
 
 pub fn single_test() {
@@ -107,7 +107,7 @@ pub fn single_test() {
     async_yielder.single(42)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([42]))
+  should.equal(result, [42])
 }
 
 pub fn once_test() {
@@ -115,7 +115,7 @@ pub fn once_test() {
     async_yielder.once(fn() { 7 })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([7]))
+  should.equal(result, [7])
 }
 
 pub fn once_async_test() {
@@ -123,7 +123,7 @@ pub fn once_async_test() {
     async_yielder.once_async(fn() { promise.resolve(7) })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([7]))
+  should.equal(result, [7])
 }
 
 pub fn range_ascending_test() {
@@ -131,7 +131,7 @@ pub fn range_ascending_test() {
     async_yielder.range(from: 1, to: 4)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3, 4]))
+  should.equal(result, [1, 2, 3, 4])
 }
 
 pub fn range_descending_test() {
@@ -139,7 +139,7 @@ pub fn range_descending_test() {
     async_yielder.range(from: 3, to: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([3, 2, 1, 0]))
+  should.equal(result, [3, 2, 1, 0])
 }
 
 pub fn range_eq_test() {
@@ -147,7 +147,7 @@ pub fn range_eq_test() {
     async_yielder.range(from: 5, to: 5)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([5]))
+  should.equal(result, [5])
 }
 
 pub fn unfold_test() {
@@ -160,7 +160,7 @@ pub fn unfold_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([0, 1, 2]))
+  should.equal(result, [0, 1, 2])
 }
 
 pub fn unfold_async_test() {
@@ -173,7 +173,7 @@ pub fn unfold_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([0, 1, 2]))
+  should.equal(result, [0, 1, 2])
 }
 
 pub fn yield_test() {
@@ -181,7 +181,7 @@ pub fn yield_test() {
     async_yielder.yield(1, fn() { async_yielder.from_list([2, 3]) })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3]))
+  should.equal(result, [1, 2, 3])
 }
 
 pub fn yield_async_test() {
@@ -191,7 +191,7 @@ pub fn yield_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3]))
+  should.equal(result, [1, 2, 3])
 }
 
 pub fn prepend_test() {
@@ -200,7 +200,7 @@ pub fn prepend_test() {
     |> async_yielder.prepend(1)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3]))
+  should.equal(result, [1, 2, 3])
 }
 
 pub fn append_test() {
@@ -211,7 +211,7 @@ pub fn append_test() {
     )
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3, 4]))
+  should.equal(result, [1, 2, 3, 4])
 }
 
 pub fn append_empty_first_test() {
@@ -222,7 +222,7 @@ pub fn append_empty_first_test() {
     )
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn append_empty_second_test() {
@@ -233,7 +233,7 @@ pub fn append_empty_second_test() {
     )
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn flatten_test() {
@@ -245,7 +245,7 @@ pub fn flatten_test() {
     |> async_yielder.flatten
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3, 4]))
+  should.equal(result, [1, 2, 3, 4])
 }
 
 pub fn flatten_with_empty_inner_test() {
@@ -258,7 +258,7 @@ pub fn flatten_with_empty_inner_test() {
     |> async_yielder.flatten
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn concat_test() {
@@ -269,7 +269,7 @@ pub fn concat_test() {
     ])
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3, 4]))
+  should.equal(result, [1, 2, 3, 4])
 }
 
 pub fn concat_empty_test() {
@@ -277,7 +277,7 @@ pub fn concat_empty_test() {
     async_yielder.concat([])
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn flat_map_test() {
@@ -288,7 +288,7 @@ pub fn flat_map_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 10, 2, 20, 3, 30]))
+  should.equal(result, [1, 10, 2, 20, 3, 30])
 }
 
 pub fn flat_map_async_test() {
@@ -299,7 +299,7 @@ pub fn flat_map_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 10, 2, 20]))
+  should.equal(result, [1, 10, 2, 20])
 }
 
 pub fn filter_map_test() {
@@ -313,7 +313,7 @@ pub fn filter_map_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([20, 40]))
+  should.equal(result, [20, 40])
 }
 
 pub fn filter_map_async_test() {
@@ -327,7 +327,7 @@ pub fn filter_map_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([20, 40]))
+  should.equal(result, [20, 40])
 }
 
 pub fn scan_test() {
@@ -336,7 +336,7 @@ pub fn scan_test() {
     |> async_yielder.scan(from: 0, with: fn(acc, x) { acc + x })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 3, 6, 10]))
+  should.equal(result, [1, 3, 6, 10])
 }
 
 pub fn scan_empty_test() {
@@ -345,7 +345,7 @@ pub fn scan_empty_test() {
     |> async_yielder.scan(from: 0, with: fn(acc, x) { acc + x })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn scan_async_test() {
@@ -356,7 +356,7 @@ pub fn scan_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 3, 6]))
+  should.equal(result, [1, 3, 6])
 }
 
 pub fn index_test() {
@@ -365,7 +365,7 @@ pub fn index_test() {
     |> async_yielder.index
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([#("a", 0), #("b", 1), #("c", 2)]))
+  should.equal(result, [#("a", 0), #("b", 1), #("c", 2)])
 }
 
 pub fn intersperse_test() {
@@ -374,7 +374,7 @@ pub fn intersperse_test() {
     |> async_yielder.intersperse(with: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 0, 2, 0, 3]))
+  should.equal(result, [1, 0, 2, 0, 3])
 }
 
 pub fn intersperse_empty_test() {
@@ -383,7 +383,7 @@ pub fn intersperse_empty_test() {
     |> async_yielder.intersperse(with: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn intersperse_single_test() {
@@ -392,7 +392,7 @@ pub fn intersperse_single_test() {
     |> async_yielder.intersperse(with: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([42]))
+  should.equal(result, [42])
 }
 
 pub fn transform_test() {
@@ -403,7 +403,7 @@ pub fn transform_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 3, 6]))
+  should.equal(result, [1, 3, 6])
 }
 
 pub fn transform_early_done_test() {
@@ -418,7 +418,7 @@ pub fn transform_early_done_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 3]))
+  should.equal(result, [1, 3])
 }
 
 pub fn transform_async_test() {
@@ -429,7 +429,7 @@ pub fn transform_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 3, 6]))
+  should.equal(result, [1, 3, 6])
 }
 
 pub fn take_test() {
@@ -438,7 +438,7 @@ pub fn take_test() {
     |> async_yielder.take(up_to: 3)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2, 3]))
+  should.equal(result, [1, 2, 3])
 }
 
 pub fn take_more_than_length_test() {
@@ -447,7 +447,7 @@ pub fn take_more_than_length_test() {
     |> async_yielder.take(up_to: 10)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn take_zero_test() {
@@ -456,7 +456,7 @@ pub fn take_zero_test() {
     |> async_yielder.take(up_to: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn take_negative_test() {
@@ -465,7 +465,7 @@ pub fn take_negative_test() {
     |> async_yielder.take(up_to: -5)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn drop_test() {
@@ -474,7 +474,7 @@ pub fn drop_test() {
     |> async_yielder.drop(up_to: 2)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([3, 4, 5]))
+  should.equal(result, [3, 4, 5])
 }
 
 pub fn drop_more_than_length_test() {
@@ -483,7 +483,7 @@ pub fn drop_more_than_length_test() {
     |> async_yielder.drop(up_to: 10)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([]))
+  should.equal(result, [])
 }
 
 pub fn drop_zero_test() {
@@ -492,7 +492,7 @@ pub fn drop_zero_test() {
     |> async_yielder.drop(up_to: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn drop_negative_test() {
@@ -501,7 +501,7 @@ pub fn drop_negative_test() {
     |> async_yielder.drop(up_to: -5)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn take_while_test() {
@@ -510,7 +510,7 @@ pub fn take_while_test() {
     |> async_yielder.take_while(satisfying: fn(x) { x < 3 })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn take_while_async_test() {
@@ -521,7 +521,7 @@ pub fn take_while_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([1, 2]))
+  should.equal(result, [1, 2])
 }
 
 pub fn drop_while_test() {
@@ -530,7 +530,7 @@ pub fn drop_while_test() {
     |> async_yielder.drop_while(satisfying: fn(x) { x < 3 })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([3, 4, 1]))
+  should.equal(result, [3, 4, 1])
 }
 
 pub fn drop_while_async_test() {
@@ -541,26 +541,5 @@ pub fn drop_while_async_test() {
     })
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, Ok([3, 4]))
-}
-
-pub fn unfold_async_propagates_rejection_test() {
-  let rejecting =
-    async_yielder.unfold_async(from: 0, with: fn(_) {
-      use _ <- promise.await(promise.resolve(Nil))
-      panic as "boom"
-    })
-  use result <- promise.map(async_yielder.to_list(rejecting))
-  should.be_error(result)
-}
-
-pub fn map_propagates_rejection_test() {
-  let rejecting =
-    async_yielder.unfold_async(from: 0, with: fn(_) {
-      use _ <- promise.await(promise.resolve(Nil))
-      panic as "boom"
-    })
-  let doubled = async_yielder.map(rejecting, with: fn(x) { x * 2 })
-  use result <- promise.map(async_yielder.to_list(doubled))
-  should.be_error(result)
+  should.equal(result, [3, 4])
 }

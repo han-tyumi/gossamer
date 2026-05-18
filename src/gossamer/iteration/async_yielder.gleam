@@ -5,13 +5,11 @@
 //// Callback-taking operations come in paired sync (`map`, `filter`,
 //// `each`, …) and async (`map_async`, `filter_async`, `each_async`, …)
 //// twins; the `_async` twin accepts a `Promise`-returning callback.
-//// Promise rejections propagate through transforms; terminals surface
-//// them as `Promise(Result(_, Dynamic))`.
+//// Fallible operations should be expressed via `Result` inside the
+//// promise, following gleam_javascript convention.
 
-import gleam/dynamic.{type Dynamic}
 import gleam/int
 import gleam/javascript/promise.{type Promise}
-import gleam/list
 import gleam/order
 
 /// A pull-based async iterator. Each pull returns a promise for the
@@ -656,41 +654,30 @@ fn drop_while_async_loop(
 }
 
 /// Drains the yielder, collecting all yielded values into a list.
-/// Returns the rejection reason if any pull rejects.
 ///
-pub fn to_list(yielder: AsyncYielder(a)) -> Promise(Result(List(a), Dynamic)) {
-  use reason <- promise.rescue(promise.map(to_list_loop(yielder, []), Ok))
-  Error(reason)
-}
-
-fn to_list_loop(yielder: AsyncYielder(a), acc: List(a)) -> Promise(List(a)) {
+pub fn to_list(yielder: AsyncYielder(a)) -> Promise(List(a)) {
   use step <- promise.await(yielder.pull())
   case step {
-    Done -> promise.resolve(list.reverse(acc))
-    Next(value, rest) -> to_list_loop(rest, [value, ..acc])
+    Done -> promise.resolve([])
+    Next(value, rest) -> {
+      use rest_list <- promise.map(to_list(rest))
+      [value, ..rest_list]
+    }
   }
 }
 
-/// Drains the yielder, calling `fun` on each yielded value. Returns
-/// the rejection reason if the yielder or `fun` rejects.
+/// Drains the yielder, calling `fun` on each yielded value.
 ///
 pub fn each(
   over yielder: AsyncYielder(a),
   with fun: fn(a) -> b,
-) -> Promise(Result(Nil, Dynamic)) {
-  use reason <- promise.rescue(
-    promise.map(each_loop(yielder, fun), fn(_) { Ok(Nil) }),
-  )
-  Error(reason)
-}
-
-fn each_loop(yielder: AsyncYielder(a), fun: fn(a) -> b) -> Promise(Nil) {
+) -> Promise(Nil) {
   use step <- promise.await(yielder.pull())
   case step {
     Done -> promise.resolve(Nil)
     Next(value, rest) -> {
       fun(value)
-      each_loop(rest, fun)
+      each(rest, fun)
     }
   }
 }
@@ -701,23 +688,13 @@ fn each_loop(yielder: AsyncYielder(a), fun: fn(a) -> b) -> Promise(Nil) {
 pub fn each_async(
   over yielder: AsyncYielder(a),
   with fun: fn(a) -> Promise(b),
-) -> Promise(Result(Nil, Dynamic)) {
-  use reason <- promise.rescue(
-    promise.map(each_async_loop(yielder, fun), fn(_) { Ok(Nil) }),
-  )
-  Error(reason)
-}
-
-fn each_async_loop(
-  yielder: AsyncYielder(a),
-  fun: fn(a) -> Promise(b),
 ) -> Promise(Nil) {
   use step <- promise.await(yielder.pull())
   case step {
     Done -> promise.resolve(Nil)
     Next(value, rest) -> {
       use _ <- promise.await(fun(value))
-      each_async_loop(rest, fun)
+      each_async(rest, fun)
     }
   }
 }
