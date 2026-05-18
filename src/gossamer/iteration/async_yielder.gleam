@@ -164,6 +164,41 @@ pub fn prepend(yielder: AsyncYielder(a), element: a) -> AsyncYielder(a) {
   yielder
 }
 
+/// Concatenates two yielders: yields all of `first`'s values, then all
+/// of `second`'s.
+///
+pub fn append(
+  to first: AsyncYielder(a),
+  suffix second: AsyncYielder(a),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.await(first.pull())
+    case step {
+      Done -> second.pull()
+      Next(value, rest) -> promise.resolve(Next(value, append(rest, second)))
+    }
+  })
+}
+
+/// Flattens a yielder of yielders into a single yielder, yielding all
+/// of each inner yielder's values in order.
+///
+pub fn flatten(yielder: AsyncYielder(AsyncYielder(a))) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use outer_step <- promise.await(yielder.pull())
+    case outer_step {
+      Done -> promise.resolve(Done)
+      Next(inner, outer_rest) -> append(inner, flatten(outer_rest)).pull()
+    }
+  })
+}
+
+/// Concatenates a list of yielders into a single yielder.
+///
+pub fn concat(yielders: List(AsyncYielder(a))) -> AsyncYielder(a) {
+  flatten(from_list(yielders))
+}
+
 /// Applies `fun` to each value of `yielder` as it's pulled.
 ///
 pub fn map(

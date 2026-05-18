@@ -203,6 +203,83 @@ pub fn prepend_test() {
   should.equal(result, Ok([1, 2, 3]))
 }
 
+pub fn append_test() {
+  let result =
+    async_yielder.append(
+      to: async_yielder.from_list([1, 2]),
+      suffix: async_yielder.from_list([3, 4]),
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3, 4]))
+}
+
+pub fn append_empty_first_test() {
+  let result =
+    async_yielder.append(
+      to: async_yielder.empty(),
+      suffix: async_yielder.from_list([1, 2]),
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn append_empty_second_test() {
+  let result =
+    async_yielder.append(
+      to: async_yielder.from_list([1, 2]),
+      suffix: async_yielder.empty(),
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn flatten_test() {
+  let result =
+    async_yielder.from_list([
+      async_yielder.from_list([1, 2]),
+      async_yielder.from_list([3, 4]),
+    ])
+    |> async_yielder.flatten
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3, 4]))
+}
+
+pub fn flatten_with_empty_inner_test() {
+  let result =
+    async_yielder.from_list([
+      async_yielder.from_list([1]),
+      async_yielder.empty(),
+      async_yielder.from_list([2]),
+    ])
+    |> async_yielder.flatten
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2]))
+}
+
+pub fn concat_test() {
+  let result =
+    async_yielder.concat([
+      async_yielder.from_list([1, 2]),
+      async_yielder.from_list([3, 4]),
+    ])
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3, 4]))
+}
+
+pub fn concat_empty_test() {
+  let result =
+    async_yielder.concat([])
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([]))
+}
+
 pub fn unfold_async_propagates_rejection_test() {
   let rejecting =
     async_yielder.unfold_async(from: 0, with: fn(_) {
