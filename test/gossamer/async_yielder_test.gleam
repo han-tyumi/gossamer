@@ -280,6 +280,158 @@ pub fn concat_empty_test() {
   should.equal(result, Ok([]))
 }
 
+pub fn flat_map_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.flat_map(with: fn(x) {
+      async_yielder.from_list([x, x * 10])
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 10, 2, 20, 3, 30]))
+}
+
+pub fn flat_map_async_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.flat_map_async(with: fn(x) {
+      promise.resolve(async_yielder.from_list([x, x * 10]))
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 10, 2, 20]))
+}
+
+pub fn filter_map_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.filter_map(keeping_with: fn(x) {
+      case x % 2 == 0 {
+        True -> Ok(x * 10)
+        False -> Error(Nil)
+      }
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([20, 40]))
+}
+
+pub fn filter_map_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.filter_map_async(keeping_with: fn(x) {
+      case x % 2 == 0 {
+        True -> promise.resolve(Ok(x * 10))
+        False -> promise.resolve(Error(Nil))
+      }
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([20, 40]))
+}
+
+pub fn scan_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.scan(from: 0, with: fn(acc, x) { acc + x })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 3, 6, 10]))
+}
+
+pub fn scan_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.scan(from: 0, with: fn(acc, x) { acc + x })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([]))
+}
+
+pub fn scan_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.scan_async(from: 0, with: fn(acc, x) {
+      promise.resolve(acc + x)
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 3, 6]))
+}
+
+pub fn index_test() {
+  let result =
+    async_yielder.from_list(["a", "b", "c"])
+    |> async_yielder.index
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([#("a", 0), #("b", 1), #("c", 2)]))
+}
+
+pub fn intersperse_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.intersperse(with: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 0, 2, 0, 3]))
+}
+
+pub fn intersperse_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.intersperse(with: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([]))
+}
+
+pub fn intersperse_single_test() {
+  let result =
+    async_yielder.from_list([42])
+    |> async_yielder.intersperse(with: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([42]))
+}
+
+pub fn transform_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.transform(from: 0, with: fn(acc, x) {
+      async_yielder.Next(acc + x, acc + x)
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 3, 6]))
+}
+
+pub fn transform_early_done_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5])
+    |> async_yielder.transform(from: 0, with: fn(acc, x) {
+      let sum = acc + x
+      case sum > 5 {
+        True -> async_yielder.Done
+        False -> async_yielder.Next(sum, sum)
+      }
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 3]))
+}
+
+pub fn transform_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.transform_async(from: 0, with: fn(acc, x) {
+      promise.resolve(async_yielder.Next(acc + x, acc + x))
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 3, 6]))
+}
+
 pub fn unfold_async_propagates_rejection_test() {
   let rejecting =
     async_yielder.unfold_async(from: 0, with: fn(_) {

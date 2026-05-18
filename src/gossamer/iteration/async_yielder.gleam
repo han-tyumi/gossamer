@@ -285,6 +285,224 @@ fn filter_async_loop(
   }
 }
 
+/// Applies `fun` to each value of `yielder` and flattens the resulting
+/// yielders.
+///
+pub fn flat_map(
+  over yielder: AsyncYielder(a),
+  with fun: fn(a) -> AsyncYielder(b),
+) -> AsyncYielder(b) {
+  yielder
+  |> map(fun)
+  |> flatten
+}
+
+/// Like [`flat_map`](#flat_map) but `fun` returns a `Promise`. Each
+/// call is awaited before the next.
+///
+pub fn flat_map_async(
+  over yielder: AsyncYielder(a),
+  with fun: fn(a) -> Promise(AsyncYielder(b)),
+) -> AsyncYielder(b) {
+  yielder
+  |> map_async(fun)
+  |> flatten
+}
+
+/// Applies `fun` to each value of `yielder`, keeping the `Ok` results
+/// and dropping the `Error`s.
+///
+pub fn filter_map(
+  yielder: AsyncYielder(a),
+  keeping_with fun: fn(a) -> Result(b, c),
+) -> AsyncYielder(b) {
+  AsyncYielder(pull: fn() { filter_map_loop(yielder, fun) })
+}
+
+fn filter_map_loop(
+  yielder: AsyncYielder(a),
+  fun: fn(a) -> Result(b, c),
+) -> Promise(Step(b, AsyncYielder(b))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) ->
+      case fun(value) {
+        Ok(mapped) -> promise.resolve(Next(mapped, filter_map(rest, fun)))
+        Error(_) -> filter_map_loop(rest, fun)
+      }
+  }
+}
+
+/// Like [`filter_map`](#filter_map) but `fun` returns a `Promise`.
+/// Each call is awaited before the next.
+///
+pub fn filter_map_async(
+  yielder: AsyncYielder(a),
+  keeping_with fun: fn(a) -> Promise(Result(b, c)),
+) -> AsyncYielder(b) {
+  AsyncYielder(pull: fn() { filter_map_async_loop(yielder, fun) })
+}
+
+fn filter_map_async_loop(
+  yielder: AsyncYielder(a),
+  fun: fn(a) -> Promise(Result(b, c)),
+) -> Promise(Step(b, AsyncYielder(b))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) -> {
+      use result <- promise.await(fun(value))
+      case result {
+        Ok(mapped) -> promise.resolve(Next(mapped, filter_map_async(rest, fun)))
+        Error(_) -> filter_map_async_loop(rest, fun)
+      }
+    }
+  }
+}
+
+/// Yields the running accumulation of `fun(acc, value)` starting from
+/// `initial`. Empty source yields nothing (the initial value is not
+/// emitted alone).
+///
+pub fn scan(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> acc,
+) -> AsyncYielder(acc) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.map(yielder.pull())
+    case step {
+      Done -> Done
+      Next(value, rest) -> {
+        let new_acc = fun(initial, value)
+        Next(new_acc, scan(rest, new_acc, fun))
+      }
+    }
+  })
+}
+
+/// Like [`scan`](#scan) but `fun` returns a `Promise`. Each call is
+/// awaited before the next.
+///
+pub fn scan_async(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Promise(acc),
+) -> AsyncYielder(acc) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.await(yielder.pull())
+    case step {
+      Done -> promise.resolve(Done)
+      Next(value, rest) -> {
+        use new_acc <- promise.map(fun(initial, value))
+        Next(new_acc, scan_async(rest, new_acc, fun))
+      }
+    }
+  })
+}
+
+/// Yields each value of `yielder` paired with its zero-based index.
+///
+pub fn index(over yielder: AsyncYielder(a)) -> AsyncYielder(#(a, Int)) {
+  index_loop(yielder, 0)
+}
+
+fn index_loop(yielder: AsyncYielder(a), next: Int) -> AsyncYielder(#(a, Int)) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.map(yielder.pull())
+    case step {
+      Done -> Done
+      Next(value, rest) -> Next(#(value, next), index_loop(rest, next + 1))
+    }
+  })
+}
+
+/// Yields each value of `yielder` with `elem` inserted between
+/// consecutive values. No trailing `elem`.
+///
+pub fn intersperse(
+  over yielder: AsyncYielder(a),
+  with elem: a,
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.map(yielder.pull())
+    case step {
+      Done -> Done
+      Next(value, rest) -> Next(value, intersperse_loop(rest, elem))
+    }
+  })
+}
+
+fn intersperse_loop(yielder: AsyncYielder(a), elem: a) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.map(yielder.pull())
+    case step {
+      Done -> Done
+      Next(value, rest) ->
+        Next(elem, yield(value, fn() { intersperse_loop(rest, elem) }))
+    }
+  })
+}
+
+/// Stateful map: threads `initial` through `fun(acc, value)`, which
+/// returns the next [`Step`](#Step). `Next(emit, new_acc)` yields
+/// `emit` and continues with `new_acc`; `Done` ends the yielder early.
+///
+pub fn transform(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Step(b, acc),
+) -> AsyncYielder(b) {
+  AsyncYielder(pull: fn() { transform_loop(yielder, initial, fun) })
+}
+
+fn transform_loop(
+  yielder: AsyncYielder(a),
+  initial: acc,
+  fun: fn(acc, a) -> Step(b, acc),
+) -> Promise(Step(b, AsyncYielder(b))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) ->
+      case fun(initial, value) {
+        Done -> promise.resolve(Done)
+        Next(emit, new_acc) ->
+          promise.resolve(Next(emit, transform(rest, new_acc, fun)))
+      }
+  }
+}
+
+/// Like [`transform`](#transform) but `fun` returns a `Promise`. Each
+/// call is awaited before the next.
+///
+pub fn transform_async(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Promise(Step(b, acc)),
+) -> AsyncYielder(b) {
+  AsyncYielder(pull: fn() { transform_async_loop(yielder, initial, fun) })
+}
+
+fn transform_async_loop(
+  yielder: AsyncYielder(a),
+  initial: acc,
+  fun: fn(acc, a) -> Promise(Step(b, acc)),
+) -> Promise(Step(b, AsyncYielder(b))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Done)
+    Next(value, rest) -> {
+      use transform_step <- promise.map(fun(initial, value))
+      case transform_step {
+        Done -> Done
+        Next(emit, new_acc) -> Next(emit, transform_async(rest, new_acc, fun))
+      }
+    }
+  }
+}
+
 /// Drains the yielder, collecting all yielded values into a list.
 /// Returns the rejection reason if any pull rejects.
 ///
