@@ -33,15 +33,15 @@ pub fn new(label: String) -> Builder {
 /// Sets whether decoding malformed data emits an error on the stream
 /// instead of substituting it with a replacement character.
 ///
-pub fn with_fatal(builder: Builder, value: Bool) -> Builder {
-  Builder(..builder, fatal: value)
+pub fn with_fatal(builder: Builder, fatal: Bool) -> Builder {
+  Builder(..builder, fatal:)
 }
 
 /// Sets whether the [byte order mark](https://www.w3.org/International/questions/qa-byte-order-mark)
 /// is included in the decoded output (`False`) or skipped over (`True`).
 ///
-pub fn with_ignore_bom(builder: Builder, value: Bool) -> Builder {
-  Builder(..builder, ignore_bom: value)
+pub fn with_ignore_bom(builder: Builder, ignore_bom: Bool) -> Builder {
+  Builder(..builder, ignore_bom:)
 }
 
 /// Constructs a `TextDecoderStream` from the configured `Builder`.

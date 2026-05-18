@@ -108,59 +108,62 @@ pub fn new(tag: String) -> Builder {
 /// Overrides the calendar identifier (e.g., `"gregory"`,
 /// `"chinese"`).
 ///
-pub fn with_calendar(builder: Builder, value: String) -> Builder {
-  Builder(..builder, calendar: Some(value))
+pub fn with_calendar(builder: Builder, calendar: String) -> Builder {
+  Builder(..builder, calendar: Some(calendar))
 }
 
 /// Overrides the case-first preference.
 ///
-pub fn with_case_first(builder: Builder, value: CaseFirst) -> Builder {
-  Builder(..builder, case_first: Some(value))
+pub fn with_case_first(builder: Builder, case_first: CaseFirst) -> Builder {
+  Builder(..builder, case_first: Some(case_first))
 }
 
 /// Overrides the collation identifier (e.g., `"phonebk"`,
 /// `"pinyin"`).
 ///
-pub fn with_collation(builder: Builder, value: String) -> Builder {
-  Builder(..builder, collation: Some(value))
+pub fn with_collation(builder: Builder, collation: String) -> Builder {
+  Builder(..builder, collation: Some(collation))
 }
 
 /// Overrides the preferred hour cycle.
 ///
-pub fn with_hour_cycle(builder: Builder, value: HourCycle) -> Builder {
-  Builder(..builder, hour_cycle: Some(value))
+pub fn with_hour_cycle(builder: Builder, hour_cycle: HourCycle) -> Builder {
+  Builder(..builder, hour_cycle: Some(hour_cycle))
 }
 
 /// Overrides the language subtag (e.g., `"en"`, `"fr"`).
 ///
-pub fn with_language(builder: Builder, value: String) -> Builder {
-  Builder(..builder, language: Some(value))
+pub fn with_language(builder: Builder, language: String) -> Builder {
+  Builder(..builder, language: Some(language))
 }
 
 /// Overrides the numbering-system identifier (e.g., `"latn"`,
 /// `"arab"`).
 ///
-pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
-  Builder(..builder, numbering_system: Some(value))
+pub fn with_numbering_system(
+  builder: Builder,
+  numbering_system: String,
+) -> Builder {
+  Builder(..builder, numbering_system: Some(numbering_system))
 }
 
 /// Overrides whether numeric collation is preferred (digit runs
 /// compared as numbers rather than character by character).
 ///
-pub fn with_numeric(builder: Builder, value: Bool) -> Builder {
-  Builder(..builder, numeric: Some(value))
+pub fn with_numeric(builder: Builder, numeric: Bool) -> Builder {
+  Builder(..builder, numeric: Some(numeric))
 }
 
 /// Overrides the region subtag (e.g., `"US"`, `"CN"`).
 ///
-pub fn with_region(builder: Builder, value: String) -> Builder {
-  Builder(..builder, region: Some(value))
+pub fn with_region(builder: Builder, region: String) -> Builder {
+  Builder(..builder, region: Some(region))
 }
 
 /// Overrides the script subtag (e.g., `"Latn"`, `"Hans"`).
 ///
-pub fn with_script(builder: Builder, value: String) -> Builder {
-  Builder(..builder, script: Some(value))
+pub fn with_script(builder: Builder, script: String) -> Builder {
+  Builder(..builder, script: Some(script))
 }
 
 /// Constructs a [`Locale`](#Locale) from the configured builder.

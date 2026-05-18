@@ -79,50 +79,56 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets whether the comparator is tuned for sorting or searching.
 ///
-pub fn with_usage(builder: Builder, value: Usage) -> Builder {
-  Builder(..builder, usage: value)
+pub fn with_usage(builder: Builder, usage: Usage) -> Builder {
+  Builder(..builder, usage:)
 }
 
 /// Sets which differences between strings produce a non-zero comparison
 /// result. When unset, derived from the configured [`Usage`](#Usage)
 /// and locale.
 ///
-pub fn with_sensitivity(builder: Builder, value: Sensitivity) -> Builder {
-  Builder(..builder, sensitivity: Some(value))
+pub fn with_sensitivity(builder: Builder, sensitivity: Sensitivity) -> Builder {
+  Builder(..builder, sensitivity: Some(sensitivity))
 }
 
 /// Sets whether punctuation is skipped during comparison.
 ///
-pub fn with_ignore_punctuation(builder: Builder, value: Bool) -> Builder {
-  Builder(..builder, ignore_punctuation: value)
+pub fn with_ignore_punctuation(
+  builder: Builder,
+  ignore_punctuation: Bool,
+) -> Builder {
+  Builder(..builder, ignore_punctuation:)
 }
 
 /// Sets whether numeric substrings (e.g. `"foo10"` vs `"foo2"`) are
 /// compared as numbers rather than character by character.
 ///
-pub fn with_numeric(builder: Builder, value: Bool) -> Builder {
-  Builder(..builder, numeric: value)
+pub fn with_numeric(builder: Builder, numeric: Bool) -> Builder {
+  Builder(..builder, numeric:)
 }
 
 /// Sets how case influences sort order. When unset, derived from the
 /// locale.
 ///
-pub fn with_case_first(builder: Builder, value: CaseFirst) -> Builder {
-  Builder(..builder, case_first: Some(value))
+pub fn with_case_first(builder: Builder, case_first: CaseFirst) -> Builder {
+  Builder(..builder, case_first: Some(case_first))
 }
 
 /// Sets a specific collation variant (e.g., `"pinyin"` for Chinese,
 /// `"phonebk"` for German). When unset, the locale's default collation
 /// is used. Values not supported by the locale are silently ignored.
 ///
-pub fn with_collation(builder: Builder, value: String) -> Builder {
-  Builder(..builder, collation: Some(value))
+pub fn with_collation(builder: Builder, collation: String) -> Builder {
+  Builder(..builder, collation: Some(collation))
 }
 
 /// Constructs a [`Collator`](#Collator) from the configured builder.

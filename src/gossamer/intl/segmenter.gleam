@@ -59,14 +59,17 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets the unit of segmentation.
 ///
-pub fn with_granularity(builder: Builder, value: Granularity) -> Builder {
-  Builder(..builder, granularity: Some(value))
+pub fn with_granularity(builder: Builder, granularity: Granularity) -> Builder {
+  Builder(..builder, granularity: Some(granularity))
 }
 
 /// Constructs a [`Segmenter`](#Segmenter) from the configured

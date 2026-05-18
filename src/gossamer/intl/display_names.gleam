@@ -83,14 +83,17 @@ pub fn new(locales: List(String), of kind: Kind) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets the verbosity of the produced display name.
 ///
-pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, style: Some(value))
+pub fn with_style(builder: Builder, style: LabelStyle) -> Builder {
+  Builder(..builder, style: Some(style))
 }
 
 /// Sets how language display names are rendered when the input
@@ -98,9 +101,9 @@ pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
 ///
 pub fn with_language_display(
   builder: Builder,
-  value: LanguageDisplay,
+  language_display: LanguageDisplay,
 ) -> Builder {
-  Builder(..builder, language_display: Some(value))
+  Builder(..builder, language_display: Some(language_display))
 }
 
 /// Constructs a [`DisplayNames`](#DisplayNames) from the configured

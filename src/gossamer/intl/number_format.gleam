@@ -289,8 +289,11 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets the high-level formatting style. Pairs with
@@ -298,93 +301,117 @@ pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
 /// for the corresponding [`StyleCurrency`](#StyleCurrency) and
 /// [`StyleUnit`](#StyleUnit) cases.
 ///
-pub fn with_style(builder: Builder, value: Style) -> Builder {
-  Builder(..builder, style: Some(value))
+pub fn with_style(builder: Builder, style: Style) -> Builder {
+  Builder(..builder, style: Some(style))
 }
 
 /// Sets the ISO 4217 currency code (e.g., `"USD"`, `"EUR"`). Used
 /// when the style is [`StyleCurrency`](#StyleCurrency).
 ///
-pub fn with_currency(builder: Builder, value: String) -> Builder {
-  Builder(..builder, currency: Some(value))
+pub fn with_currency(builder: Builder, currency: String) -> Builder {
+  Builder(..builder, currency: Some(currency))
 }
 
 /// Sets how the currency is presented.
 ///
 pub fn with_currency_display(
   builder: Builder,
-  value: CurrencyDisplay,
+  currency_display: CurrencyDisplay,
 ) -> Builder {
-  Builder(..builder, currency_display: Some(value))
+  Builder(..builder, currency_display: Some(currency_display))
 }
 
 /// Sets how negative currency amounts are presented.
 ///
-pub fn with_currency_sign(builder: Builder, value: CurrencySign) -> Builder {
-  Builder(..builder, currency_sign: Some(value))
+pub fn with_currency_sign(
+  builder: Builder,
+  currency_sign: CurrencySign,
+) -> Builder {
+  Builder(..builder, currency_sign: Some(currency_sign))
 }
 
 /// Sets the measurement unit identifier (e.g., `"meter"`,
 /// `"kilometer-per-hour"`). Used when the style is
 /// [`StyleUnit`](#StyleUnit).
 ///
-pub fn with_unit(builder: Builder, value: String) -> Builder {
-  Builder(..builder, unit: Some(value))
+pub fn with_unit(builder: Builder, unit: String) -> Builder {
+  Builder(..builder, unit: Some(unit))
 }
 
 /// Sets how the unit is presented.
 ///
-pub fn with_unit_display(builder: Builder, value: UnitDisplay) -> Builder {
-  Builder(..builder, unit_display: Some(value))
+pub fn with_unit_display(
+  builder: Builder,
+  unit_display: UnitDisplay,
+) -> Builder {
+  Builder(..builder, unit_display: Some(unit_display))
 }
 
 /// Sets whether and when grouping separators are inserted.
 ///
-pub fn with_use_grouping(builder: Builder, value: UseGrouping) -> Builder {
-  Builder(..builder, use_grouping: Some(value))
+pub fn with_use_grouping(
+  builder: Builder,
+  use_grouping: UseGrouping,
+) -> Builder {
+  Builder(..builder, use_grouping: Some(use_grouping))
 }
 
 /// Sets the minimum number of integer digits. Values below the
 /// minimum are zero-padded.
 ///
-pub fn with_minimum_integer_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, minimum_integer_digits: Some(value))
+pub fn with_minimum_integer_digits(
+  builder: Builder,
+  minimum_integer_digits: Int,
+) -> Builder {
+  Builder(..builder, minimum_integer_digits: Some(minimum_integer_digits))
 }
 
 /// Sets the minimum number of fraction digits.
 ///
-pub fn with_minimum_fraction_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, minimum_fraction_digits: Some(value))
+pub fn with_minimum_fraction_digits(
+  builder: Builder,
+  minimum_fraction_digits: Int,
+) -> Builder {
+  Builder(..builder, minimum_fraction_digits: Some(minimum_fraction_digits))
 }
 
 /// Sets the maximum number of fraction digits.
 ///
-pub fn with_maximum_fraction_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, maximum_fraction_digits: Some(value))
+pub fn with_maximum_fraction_digits(
+  builder: Builder,
+  maximum_fraction_digits: Int,
+) -> Builder {
+  Builder(..builder, maximum_fraction_digits: Some(maximum_fraction_digits))
 }
 
 /// Sets the minimum number of significant digits.
 ///
 pub fn with_minimum_significant_digits(
   builder: Builder,
-  value: Int,
+  minimum_significant_digits: Int,
 ) -> Builder {
-  Builder(..builder, minimum_significant_digits: Some(value))
+  Builder(
+    ..builder,
+    minimum_significant_digits: Some(minimum_significant_digits),
+  )
 }
 
 /// Sets the maximum number of significant digits.
 ///
 pub fn with_maximum_significant_digits(
   builder: Builder,
-  value: Int,
+  maximum_significant_digits: Int,
 ) -> Builder {
-  Builder(..builder, maximum_significant_digits: Some(value))
+  Builder(
+    ..builder,
+    maximum_significant_digits: Some(maximum_significant_digits),
+  )
 }
 
 /// Sets the numeric notation.
 ///
-pub fn with_notation(builder: Builder, value: Notation) -> Builder {
-  Builder(..builder, notation: Some(value))
+pub fn with_notation(builder: Builder, notation: Notation) -> Builder {
+  Builder(..builder, notation: Some(notation))
 }
 
 /// Sets the compact-notation label form. Only applies when the
@@ -392,22 +419,28 @@ pub fn with_notation(builder: Builder, value: Notation) -> Builder {
 ///
 pub fn with_compact_display(
   builder: Builder,
-  value: CompactDisplay,
+  compact_display: CompactDisplay,
 ) -> Builder {
-  Builder(..builder, compact_display: Some(value))
+  Builder(..builder, compact_display: Some(compact_display))
 }
 
 /// Sets when explicit signs are rendered.
 ///
-pub fn with_sign_display(builder: Builder, value: SignDisplay) -> Builder {
-  Builder(..builder, sign_display: Some(value))
+pub fn with_sign_display(
+  builder: Builder,
+  sign_display: SignDisplay,
+) -> Builder {
+  Builder(..builder, sign_display: Some(sign_display))
 }
 
 /// Sets the rounding strategy applied when the formatter discards
 /// digits past the configured precision.
 ///
-pub fn with_rounding_mode(builder: Builder, value: RoundingMode) -> Builder {
-  Builder(..builder, rounding_mode: Some(value))
+pub fn with_rounding_mode(
+  builder: Builder,
+  rounding_mode: RoundingMode,
+) -> Builder {
+  Builder(..builder, rounding_mode: Some(rounding_mode))
 }
 
 /// Sets how rounding interacts when both significant-digit and
@@ -415,9 +448,9 @@ pub fn with_rounding_mode(builder: Builder, value: RoundingMode) -> Builder {
 ///
 pub fn with_rounding_priority(
   builder: Builder,
-  value: RoundingPriority,
+  rounding_priority: RoundingPriority,
 ) -> Builder {
-  Builder(..builder, rounding_priority: Some(value))
+  Builder(..builder, rounding_priority: Some(rounding_priority))
 }
 
 /// Sets the rounding increment — the formatter rounds to the nearest
@@ -426,8 +459,11 @@ pub fn with_rounding_priority(
 /// `2500`, and `5000`; other values cause [`build`](#build) to
 /// return `Error(Nil)`.
 ///
-pub fn with_rounding_increment(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, rounding_increment: Some(value))
+pub fn with_rounding_increment(
+  builder: Builder,
+  rounding_increment: Int,
+) -> Builder {
+  Builder(..builder, rounding_increment: Some(rounding_increment))
 }
 
 /// Sets whether trailing fraction zeros are stripped from integer
@@ -435,17 +471,20 @@ pub fn with_rounding_increment(builder: Builder, value: Int) -> Builder {
 ///
 pub fn with_trailing_zero_display(
   builder: Builder,
-  value: TrailingZeroDisplay,
+  trailing_zero_display: TrailingZeroDisplay,
 ) -> Builder {
-  Builder(..builder, trailing_zero_display: Some(value))
+  Builder(..builder, trailing_zero_display: Some(trailing_zero_display))
 }
 
 /// Sets the numbering system identifier (e.g., `"arab"`, `"hans"`,
 /// `"latn"`). When unset, the locale's default numbering system is
 /// used.
 ///
-pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
-  Builder(..builder, numbering_system: Some(value))
+pub fn with_numbering_system(
+  builder: Builder,
+  numbering_system: String,
+) -> Builder {
+  Builder(..builder, numbering_system: Some(numbering_system))
 }
 
 /// Constructs a [`NumberFormat`](#NumberFormat) from the configured

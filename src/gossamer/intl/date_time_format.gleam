@@ -238,22 +238,28 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets the calendar identifier (e.g., `"gregory"`, `"chinese"`,
 /// `"hebrew"`).
 ///
-pub fn with_calendar(builder: Builder, value: String) -> Builder {
-  Builder(..builder, calendar: Some(value))
+pub fn with_calendar(builder: Builder, calendar: String) -> Builder {
+  Builder(..builder, calendar: Some(calendar))
 }
 
 /// Sets the numbering-system identifier (e.g., `"latn"`, `"arab"`,
 /// `"hans"`).
 ///
-pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
-  Builder(..builder, numbering_system: Some(value))
+pub fn with_numbering_system(
+  builder: Builder,
+  numbering_system: String,
+) -> Builder {
+  Builder(..builder, numbering_system: Some(numbering_system))
 }
 
 /// Sets whether time is rendered with a 12-hour clock (when `True`)
@@ -264,92 +270,95 @@ pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
 /// [`with_hour_cycle`](#with_hour_cycle) alone to pick a specific
 /// cycle.
 ///
-pub fn with_hour12(builder: Builder, value: Bool) -> Builder {
-  Builder(..builder, hour12: Some(value))
+pub fn with_hour12(builder: Builder, hour12: Bool) -> Builder {
+  Builder(..builder, hour12: Some(hour12))
 }
 
 /// Sets the clock format directly. Ignored when
 /// [`with_hour12`](#with_hour12) is also set.
 ///
-pub fn with_hour_cycle(builder: Builder, value: HourCycle) -> Builder {
-  Builder(..builder, hour_cycle: Some(value))
+pub fn with_hour_cycle(builder: Builder, hour_cycle: HourCycle) -> Builder {
+  Builder(..builder, hour_cycle: Some(hour_cycle))
 }
 
 /// Sets the time-zone identifier (e.g., `"UTC"`,
 /// `"America/Los_Angeles"`).
 ///
-pub fn with_time_zone(builder: Builder, value: String) -> Builder {
-  Builder(..builder, time_zone: Some(value))
+pub fn with_time_zone(builder: Builder, time_zone: String) -> Builder {
+  Builder(..builder, time_zone: Some(time_zone))
 }
 
 /// Sets the format of the day-of-week component.
 ///
-pub fn with_weekday(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, weekday: Some(value))
+pub fn with_weekday(builder: Builder, weekday: LabelStyle) -> Builder {
+  Builder(..builder, weekday: Some(weekday))
 }
 
 /// Sets the format of the era component.
 ///
-pub fn with_era(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, era: Some(value))
+pub fn with_era(builder: Builder, era: LabelStyle) -> Builder {
+  Builder(..builder, era: Some(era))
 }
 
 /// Sets the format of the year component.
 ///
-pub fn with_year(builder: Builder, value: NumericWidth) -> Builder {
-  Builder(..builder, year: Some(value))
+pub fn with_year(builder: Builder, year: NumericWidth) -> Builder {
+  Builder(..builder, year: Some(year))
 }
 
 /// Sets the format of the month component.
 ///
-pub fn with_month(builder: Builder, value: Month) -> Builder {
-  Builder(..builder, month: Some(value))
+pub fn with_month(builder: Builder, month: Month) -> Builder {
+  Builder(..builder, month: Some(month))
 }
 
 /// Sets the format of the day-of-month component.
 ///
-pub fn with_day(builder: Builder, value: NumericWidth) -> Builder {
-  Builder(..builder, day: Some(value))
+pub fn with_day(builder: Builder, day: NumericWidth) -> Builder {
+  Builder(..builder, day: Some(day))
 }
 
 /// Sets the format of the hour component.
 ///
-pub fn with_hour(builder: Builder, value: NumericWidth) -> Builder {
-  Builder(..builder, hour: Some(value))
+pub fn with_hour(builder: Builder, hour: NumericWidth) -> Builder {
+  Builder(..builder, hour: Some(hour))
 }
 
 /// Sets the format of the minute component.
 ///
-pub fn with_minute(builder: Builder, value: NumericWidth) -> Builder {
-  Builder(..builder, minute: Some(value))
+pub fn with_minute(builder: Builder, minute: NumericWidth) -> Builder {
+  Builder(..builder, minute: Some(minute))
 }
 
 /// Sets the format of the second component.
 ///
-pub fn with_second(builder: Builder, value: NumericWidth) -> Builder {
-  Builder(..builder, second: Some(value))
+pub fn with_second(builder: Builder, second: NumericWidth) -> Builder {
+  Builder(..builder, second: Some(second))
 }
 
 /// Sets the number of digits in the fractional-seconds component.
 ///
 pub fn with_fractional_second_digits(
   builder: Builder,
-  value: FractionalSecondDigits,
+  fractional_second_digits: FractionalSecondDigits,
 ) -> Builder {
-  Builder(..builder, fractional_second_digits: Some(value))
+  Builder(..builder, fractional_second_digits: Some(fractional_second_digits))
 }
 
 /// Sets the format of the time-zone label.
 ///
-pub fn with_time_zone_name(builder: Builder, value: TimeZoneName) -> Builder {
-  Builder(..builder, time_zone_name: Some(value))
+pub fn with_time_zone_name(
+  builder: Builder,
+  time_zone_name: TimeZoneName,
+) -> Builder {
+  Builder(..builder, time_zone_name: Some(time_zone_name))
 }
 
 /// Sets the format of the day-period component (e.g., `"AM"` /
 /// `"in the morning"`).
 ///
-pub fn with_day_period(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, day_period: Some(value))
+pub fn with_day_period(builder: Builder, day_period: LabelStyle) -> Builder {
+  Builder(..builder, day_period: Some(day_period))
 }
 
 /// Sets a date verbosity preset. Cannot be combined with the
@@ -357,8 +366,8 @@ pub fn with_day_period(builder: Builder, value: LabelStyle) -> Builder {
 /// [`with_month`](#with_month), etc.); doing so causes
 /// [`build`](#build) to return `Error(Nil)`.
 ///
-pub fn with_date_style(builder: Builder, value: Style) -> Builder {
-  Builder(..builder, date_style: Some(value))
+pub fn with_date_style(builder: Builder, date_style: Style) -> Builder {
+  Builder(..builder, date_style: Some(date_style))
 }
 
 /// Sets a time verbosity preset. Cannot be combined with the
@@ -366,8 +375,8 @@ pub fn with_date_style(builder: Builder, value: Style) -> Builder {
 /// [`with_minute`](#with_minute), etc.); doing so causes
 /// [`build`](#build) to return `Error(Nil)`.
 ///
-pub fn with_time_style(builder: Builder, value: Style) -> Builder {
-  Builder(..builder, time_style: Some(value))
+pub fn with_time_style(builder: Builder, time_style: Style) -> Builder {
+  Builder(..builder, time_style: Some(time_style))
 }
 
 /// Constructs a [`DateTimeFormat`](#DateTimeFormat) from the

@@ -56,8 +56,8 @@ pub fn from_module(name: String) -> Builder
 /// Sets the worker name, used by debugging tools to identify the
 /// thread. Empty by default.
 ///
-pub fn with_name(builder: Builder, value: String) -> Builder {
-  Builder(..builder, name: value)
+pub fn with_name(builder: Builder, name: String) -> Builder {
+  Builder(..builder, name:)
 }
 
 /// Registers a handler invoked for each message the worker sends back.

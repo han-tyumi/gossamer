@@ -69,20 +69,23 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets the kind of join the formatter produces.
 ///
-pub fn with_kind(builder: Builder, value: Kind) -> Builder {
-  Builder(..builder, kind: Some(value))
+pub fn with_kind(builder: Builder, kind: Kind) -> Builder {
+  Builder(..builder, kind: Some(kind))
 }
 
 /// Sets the verbosity of the joining words and separators.
 ///
-pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, style: Some(value))
+pub fn with_style(builder: Builder, style: LabelStyle) -> Builder {
+  Builder(..builder, style: Some(style))
 }
 
 /// Constructs a [`ListFormat`](#ListFormat) from the configured

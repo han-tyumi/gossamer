@@ -75,56 +75,56 @@ pub fn new() -> Builder {
 
 /// Sets the protocol pattern (the URL scheme, e.g. `"https"`).
 ///
-pub fn with_protocol(builder: Builder, value: String) -> Builder {
-  Builder(..builder, protocol: Some(value))
+pub fn with_protocol(builder: Builder, protocol: String) -> Builder {
+  Builder(..builder, protocol: Some(protocol))
 }
 
 /// Sets the username pattern.
 ///
-pub fn with_username(builder: Builder, value: String) -> Builder {
-  Builder(..builder, username: Some(value))
+pub fn with_username(builder: Builder, username: String) -> Builder {
+  Builder(..builder, username: Some(username))
 }
 
 /// Sets the password pattern.
 ///
-pub fn with_password(builder: Builder, value: String) -> Builder {
-  Builder(..builder, password: Some(value))
+pub fn with_password(builder: Builder, password: String) -> Builder {
+  Builder(..builder, password: Some(password))
 }
 
 /// Sets the hostname pattern (e.g. `"example.com"`).
 ///
-pub fn with_hostname(builder: Builder, value: String) -> Builder {
-  Builder(..builder, hostname: Some(value))
+pub fn with_hostname(builder: Builder, hostname: String) -> Builder {
+  Builder(..builder, hostname: Some(hostname))
 }
 
 /// Sets the port pattern (e.g. `"8080"`).
 ///
-pub fn with_port(builder: Builder, value: String) -> Builder {
-  Builder(..builder, port: Some(value))
+pub fn with_port(builder: Builder, port: String) -> Builder {
+  Builder(..builder, port: Some(port))
 }
 
 /// Sets the pathname pattern (e.g. `"/users/:id"`).
 ///
-pub fn with_pathname(builder: Builder, value: String) -> Builder {
-  Builder(..builder, pathname: Some(value))
+pub fn with_pathname(builder: Builder, pathname: String) -> Builder {
+  Builder(..builder, pathname: Some(pathname))
 }
 
 /// Sets the search pattern (the query string, without the leading `?`).
 ///
-pub fn with_search(builder: Builder, value: String) -> Builder {
-  Builder(..builder, search: Some(value))
+pub fn with_search(builder: Builder, search: String) -> Builder {
+  Builder(..builder, search: Some(search))
 }
 
 /// Sets the hash pattern (the fragment, without the leading `#`).
 ///
-pub fn with_hash(builder: Builder, value: String) -> Builder {
-  Builder(..builder, hash: Some(value))
+pub fn with_hash(builder: Builder, hash: String) -> Builder {
+  Builder(..builder, hash: Some(hash))
 }
 
 /// Sets the base URL used to resolve relative components.
 ///
-pub fn with_base_url(builder: Builder, value: String) -> Builder {
-  Builder(..builder, base_url: Some(value))
+pub fn with_base_url(builder: Builder, base_url: String) -> Builder {
+  Builder(..builder, base_url: Some(base_url))
 }
 
 /// Constructs a `UrlPattern` from the configured `Builder`. Returns

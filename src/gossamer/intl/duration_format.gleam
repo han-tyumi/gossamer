@@ -282,14 +282,17 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets the overall rendering style.
 ///
-pub fn with_style(builder: Builder, value: Style) -> Builder {
-  Builder(..builder, style: Some(value))
+pub fn with_style(builder: Builder, style: Style) -> Builder {
+  Builder(..builder, style: Some(style))
 }
 
 /// Sets the number of fractional digits shown on the smallest rendered
@@ -297,136 +300,166 @@ pub fn with_style(builder: Builder, value: Style) -> Builder {
 ///
 pub fn with_fractional_digits(
   builder: Builder,
-  value: FractionalDigits,
+  fractional_digits: FractionalDigits,
 ) -> Builder {
-  Builder(..builder, fractional_digits: Some(value))
+  Builder(..builder, fractional_digits: Some(fractional_digits))
 }
 
 /// Sets the numbering system used for digits (e.g., `"latn"`,
 /// `"arab"`).
 ///
-pub fn with_numbering_system(builder: Builder, value: String) -> Builder {
-  Builder(..builder, numbering_system: Some(value))
+pub fn with_numbering_system(
+  builder: Builder,
+  numbering_system: String,
+) -> Builder {
+  Builder(..builder, numbering_system: Some(numbering_system))
 }
 
 /// Sets the rendering style for years.
 ///
-pub fn with_years(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, years: Some(value))
+pub fn with_years(builder: Builder, years: LabelStyle) -> Builder {
+  Builder(..builder, years: Some(years))
 }
 
 /// Sets the rendering style for months.
 ///
-pub fn with_months(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, months: Some(value))
+pub fn with_months(builder: Builder, months: LabelStyle) -> Builder {
+  Builder(..builder, months: Some(months))
 }
 
 /// Sets the rendering style for weeks.
 ///
-pub fn with_weeks(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, weeks: Some(value))
+pub fn with_weeks(builder: Builder, weeks: LabelStyle) -> Builder {
+  Builder(..builder, weeks: Some(weeks))
 }
 
 /// Sets the rendering style for days.
 ///
-pub fn with_days(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, days: Some(value))
+pub fn with_days(builder: Builder, days: LabelStyle) -> Builder {
+  Builder(..builder, days: Some(days))
 }
 
 /// Sets the rendering style for hours.
 ///
-pub fn with_hours(builder: Builder, value: ClockStyle) -> Builder {
-  Builder(..builder, hours: Some(value))
+pub fn with_hours(builder: Builder, hours: ClockStyle) -> Builder {
+  Builder(..builder, hours: Some(hours))
 }
 
 /// Sets the rendering style for minutes.
 ///
-pub fn with_minutes(builder: Builder, value: ClockStyle) -> Builder {
-  Builder(..builder, minutes: Some(value))
+pub fn with_minutes(builder: Builder, minutes: ClockStyle) -> Builder {
+  Builder(..builder, minutes: Some(minutes))
 }
 
 /// Sets the rendering style for seconds.
 ///
-pub fn with_seconds(builder: Builder, value: ClockStyle) -> Builder {
-  Builder(..builder, seconds: Some(value))
+pub fn with_seconds(builder: Builder, seconds: ClockStyle) -> Builder {
+  Builder(..builder, seconds: Some(seconds))
 }
 
 /// Sets the rendering style for milliseconds.
 ///
-pub fn with_milliseconds(builder: Builder, value: SubSecondStyle) -> Builder {
-  Builder(..builder, milliseconds: Some(value))
+pub fn with_milliseconds(
+  builder: Builder,
+  milliseconds: SubSecondStyle,
+) -> Builder {
+  Builder(..builder, milliseconds: Some(milliseconds))
 }
 
 /// Sets the rendering style for microseconds.
 ///
-pub fn with_microseconds(builder: Builder, value: SubSecondStyle) -> Builder {
-  Builder(..builder, microseconds: Some(value))
+pub fn with_microseconds(
+  builder: Builder,
+  microseconds: SubSecondStyle,
+) -> Builder {
+  Builder(..builder, microseconds: Some(microseconds))
 }
 
 /// Sets the rendering style for nanoseconds.
 ///
-pub fn with_nanoseconds(builder: Builder, value: SubSecondStyle) -> Builder {
-  Builder(..builder, nanoseconds: Some(value))
+pub fn with_nanoseconds(
+  builder: Builder,
+  nanoseconds: SubSecondStyle,
+) -> Builder {
+  Builder(..builder, nanoseconds: Some(nanoseconds))
 }
 
 /// Sets whether zero years should be shown.
 ///
-pub fn with_years_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, years_display: Some(value))
+pub fn with_years_display(builder: Builder, years_display: Display) -> Builder {
+  Builder(..builder, years_display: Some(years_display))
 }
 
 /// Sets whether zero months should be shown.
 ///
-pub fn with_months_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, months_display: Some(value))
+pub fn with_months_display(
+  builder: Builder,
+  months_display: Display,
+) -> Builder {
+  Builder(..builder, months_display: Some(months_display))
 }
 
 /// Sets whether zero weeks should be shown.
 ///
-pub fn with_weeks_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, weeks_display: Some(value))
+pub fn with_weeks_display(builder: Builder, weeks_display: Display) -> Builder {
+  Builder(..builder, weeks_display: Some(weeks_display))
 }
 
 /// Sets whether zero days should be shown.
 ///
-pub fn with_days_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, days_display: Some(value))
+pub fn with_days_display(builder: Builder, days_display: Display) -> Builder {
+  Builder(..builder, days_display: Some(days_display))
 }
 
 /// Sets whether zero hours should be shown.
 ///
-pub fn with_hours_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, hours_display: Some(value))
+pub fn with_hours_display(builder: Builder, hours_display: Display) -> Builder {
+  Builder(..builder, hours_display: Some(hours_display))
 }
 
 /// Sets whether zero minutes should be shown.
 ///
-pub fn with_minutes_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, minutes_display: Some(value))
+pub fn with_minutes_display(
+  builder: Builder,
+  minutes_display: Display,
+) -> Builder {
+  Builder(..builder, minutes_display: Some(minutes_display))
 }
 
 /// Sets whether zero seconds should be shown.
 ///
-pub fn with_seconds_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, seconds_display: Some(value))
+pub fn with_seconds_display(
+  builder: Builder,
+  seconds_display: Display,
+) -> Builder {
+  Builder(..builder, seconds_display: Some(seconds_display))
 }
 
 /// Sets whether zero milliseconds should be shown.
 ///
-pub fn with_milliseconds_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, milliseconds_display: Some(value))
+pub fn with_milliseconds_display(
+  builder: Builder,
+  milliseconds_display: Display,
+) -> Builder {
+  Builder(..builder, milliseconds_display: Some(milliseconds_display))
 }
 
 /// Sets whether zero microseconds should be shown.
 ///
-pub fn with_microseconds_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, microseconds_display: Some(value))
+pub fn with_microseconds_display(
+  builder: Builder,
+  microseconds_display: Display,
+) -> Builder {
+  Builder(..builder, microseconds_display: Some(microseconds_display))
 }
 
 /// Sets whether zero nanoseconds should be shown.
 ///
-pub fn with_nanoseconds_display(builder: Builder, value: Display) -> Builder {
-  Builder(..builder, nanoseconds_display: Some(value))
+pub fn with_nanoseconds_display(
+  builder: Builder,
+  nanoseconds_display: Display,
+) -> Builder {
+  Builder(..builder, nanoseconds_display: Some(nanoseconds_display))
 }
 
 /// Constructs a [`DurationFormat`](#DurationFormat) from the configured

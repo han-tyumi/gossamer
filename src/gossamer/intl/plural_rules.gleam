@@ -106,53 +106,80 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets whether the rules describe cardinal counts or ordinal
 /// positions.
 ///
-pub fn with_kind(builder: Builder, value: Kind) -> Builder {
-  Builder(..builder, kind: Some(value))
+pub fn with_kind(builder: Builder, kind: Kind) -> Builder {
+  Builder(..builder, kind: Some(kind))
 }
 
 /// Sets the minimum number of integer digits. Values below the
 /// minimum are zero-padded for plural-rule selection purposes.
 ///
-pub fn with_minimum_integer_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, minimum_integer_digits: Some(value))
+pub fn with_minimum_integer_digits(
+  builder: Builder,
+  minimum_integer_digits: Int,
+) -> Builder {
+  Builder(..builder, minimum_integer_digits: Some(minimum_integer_digits))
 }
 
 /// Sets the minimum number of fraction digits.
 ///
-pub fn with_minimum_fraction_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, minimum_fraction_digits: Some(value))
+pub fn with_minimum_fraction_digits(
+  builder: Builder,
+  minimum_fraction_digits: Int,
+) -> Builder {
+  Builder(..builder, minimum_fraction_digits: Some(minimum_fraction_digits))
 }
 
 /// Sets the maximum number of fraction digits.
 ///
-pub fn with_maximum_fraction_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, maximum_fraction_digits: Some(value))
+pub fn with_maximum_fraction_digits(
+  builder: Builder,
+  maximum_fraction_digits: Int,
+) -> Builder {
+  Builder(..builder, maximum_fraction_digits: Some(maximum_fraction_digits))
 }
 
 /// Sets the minimum number of significant digits.
 ///
-pub fn with_minimum_significant_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, minimum_significant_digits: Some(value))
+pub fn with_minimum_significant_digits(
+  builder: Builder,
+  minimum_significant_digits: Int,
+) -> Builder {
+  Builder(
+    ..builder,
+    minimum_significant_digits: Some(minimum_significant_digits),
+  )
 }
 
 /// Sets the maximum number of significant digits.
 ///
-pub fn with_maximum_significant_digits(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, maximum_significant_digits: Some(value))
+pub fn with_maximum_significant_digits(
+  builder: Builder,
+  maximum_significant_digits: Int,
+) -> Builder {
+  Builder(
+    ..builder,
+    maximum_significant_digits: Some(maximum_significant_digits),
+  )
 }
 
 /// Sets the rounding strategy applied when the formatter discards
 /// digits past the configured precision.
 ///
-pub fn with_rounding_mode(builder: Builder, value: RoundingMode) -> Builder {
-  Builder(..builder, rounding_mode: Some(value))
+pub fn with_rounding_mode(
+  builder: Builder,
+  rounding_mode: RoundingMode,
+) -> Builder {
+  Builder(..builder, rounding_mode: Some(rounding_mode))
 }
 
 /// Sets how rounding interacts when both significant-digit and
@@ -160,9 +187,9 @@ pub fn with_rounding_mode(builder: Builder, value: RoundingMode) -> Builder {
 ///
 pub fn with_rounding_priority(
   builder: Builder,
-  value: RoundingPriority,
+  rounding_priority: RoundingPriority,
 ) -> Builder {
-  Builder(..builder, rounding_priority: Some(value))
+  Builder(..builder, rounding_priority: Some(rounding_priority))
 }
 
 /// Sets the rounding increment — the value is rounded to the nearest
@@ -171,8 +198,11 @@ pub fn with_rounding_priority(
 /// `500`, `1000`, `2000`, `2500`, and `5000`; other values cause
 /// [`build`](#build) to return `Error(Nil)`.
 ///
-pub fn with_rounding_increment(builder: Builder, value: Int) -> Builder {
-  Builder(..builder, rounding_increment: Some(value))
+pub fn with_rounding_increment(
+  builder: Builder,
+  rounding_increment: Int,
+) -> Builder {
+  Builder(..builder, rounding_increment: Some(rounding_increment))
 }
 
 /// Sets whether trailing fraction zeros are stripped from integer
@@ -180,9 +210,9 @@ pub fn with_rounding_increment(builder: Builder, value: Int) -> Builder {
 ///
 pub fn with_trailing_zero_display(
   builder: Builder,
-  value: TrailingZeroDisplay,
+  trailing_zero_display: TrailingZeroDisplay,
 ) -> Builder {
-  Builder(..builder, trailing_zero_display: Some(value))
+  Builder(..builder, trailing_zero_display: Some(trailing_zero_display))
 }
 
 /// Constructs a [`PluralRules`](#PluralRules) from the configured

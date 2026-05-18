@@ -34,27 +34,27 @@ pub fn from_blob(blob: Blob, named name: String) -> File
 /// pass through [`set_mime_type`](#set_mime_type) to adopt the blob's
 /// type instead.
 ///
-pub fn set_blob(file: File, value: Blob) -> File {
-  File(..file, blob: value)
+pub fn set_blob(file: File, blob: Blob) -> File {
+  File(..file, blob:)
 }
 
 /// Sets the filename used by `gleam/fetch/form_data.append_file`'s
 /// multipart `Content-Disposition` header.
 ///
-pub fn set_name(file: File, value: String) -> File {
-  File(..file, name: value)
+pub fn set_name(file: File, name: String) -> File {
+  File(..file, name:)
 }
 
 /// Sets the MIME type.
 ///
-pub fn set_mime_type(file: File, value: String) -> File {
-  File(..file, mime_type: value)
+pub fn set_mime_type(file: File, mime_type: String) -> File {
+  File(..file, mime_type:)
 }
 
 /// Sets the last-modified timestamp.
 ///
-pub fn set_last_modified(file: File, value: Timestamp) -> File {
-  File(..file, last_modified: value)
+pub fn set_last_modified(file: File, last_modified: Timestamp) -> File {
+  File(..file, last_modified:)
 }
 
 /// The size of the file's contents in bytes.

@@ -110,21 +110,24 @@ pub fn new(locales: List(String)) -> Builder {
 /// Sets the locale-matching algorithm used to pick a locale from the
 /// priority list.
 ///
-pub fn with_locale_matcher(builder: Builder, value: LocaleMatcher) -> Builder {
-  Builder(..builder, locale_matcher: Some(value))
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
 }
 
 /// Sets whether the formatter renders numeric values verbatim or
 /// substitutes locale-specific wording for special values.
 ///
-pub fn with_numeric(builder: Builder, value: Numeric) -> Builder {
-  Builder(..builder, numeric: Some(value))
+pub fn with_numeric(builder: Builder, numeric: Numeric) -> Builder {
+  Builder(..builder, numeric: Some(numeric))
 }
 
 /// Sets the verbosity of the unit labels.
 ///
-pub fn with_style(builder: Builder, value: LabelStyle) -> Builder {
-  Builder(..builder, style: Some(value))
+pub fn with_style(builder: Builder, style: LabelStyle) -> Builder {
+  Builder(..builder, style: Some(style))
 }
 
 /// Constructs a [`RelativeTimeFormat`](#RelativeTimeFormat) from the

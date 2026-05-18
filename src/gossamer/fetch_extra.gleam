@@ -69,12 +69,8 @@ pub type ResponseType {
   ResponseOpaqueRedirect
 }
 
-/// A builder for fetch options. Construct with `options` and chain
-/// setters; pass to `send` (or its variants) via the `with` label.
-///
-/// Fields with spec-default empty values (`integrity: ""`,
-/// `keepalive: False`) carry those values directly. Enum and reference
-/// fields are `Option`; unset means the runtime applies its default.
+/// Configuration for `send` and its variants. Unset fields use the
+/// runtime's default behavior.
 ///
 pub type FetchOptions {
   FetchOptions(
@@ -233,56 +229,59 @@ pub fn options() -> FetchOptions {
 /// Sets the cache mode, controlling how the request interacts with the
 /// HTTP cache.
 ///
-pub fn set_cache(opts: FetchOptions, value: Cache) -> FetchOptions {
-  FetchOptions(..opts, cache: Some(value))
+pub fn set_cache(opts: FetchOptions, cache: Cache) -> FetchOptions {
+  FetchOptions(..opts, cache: Some(cache))
 }
 
 /// Sets the credentials policy, controlling whether cookies and HTTP auth
 /// are sent with cross-origin requests.
 ///
-pub fn set_credentials(opts: FetchOptions, value: Credentials) -> FetchOptions {
-  FetchOptions(..opts, credentials: Some(value))
+pub fn set_credentials(
+  opts: FetchOptions,
+  credentials: Credentials,
+) -> FetchOptions {
+  FetchOptions(..opts, credentials: Some(credentials))
 }
 
 /// Sets a [subresource integrity](https://www.w3.org/TR/SRI/) hash that
 /// the response must match; the fetch fails if the body doesn't hash to
 /// the given value.
 ///
-pub fn set_integrity(opts: FetchOptions, value: String) -> FetchOptions {
-  FetchOptions(..opts, integrity: value)
+pub fn set_integrity(opts: FetchOptions, integrity: String) -> FetchOptions {
+  FetchOptions(..opts, integrity:)
 }
 
 /// Sets the keepalive flag, allowing the request to outlive its
 /// originating context (subject to per-origin size limits).
 ///
-pub fn set_keepalive(opts: FetchOptions, value: Bool) -> FetchOptions {
-  FetchOptions(..opts, keepalive: value)
+pub fn set_keepalive(opts: FetchOptions, keepalive: Bool) -> FetchOptions {
+  FetchOptions(..opts, keepalive:)
 }
 
 /// Sets the CORS mode, controlling how cross-origin requests are handled.
 ///
-pub fn set_mode(opts: FetchOptions, value: Mode) -> FetchOptions {
-  FetchOptions(..opts, mode: Some(value))
+pub fn set_mode(opts: FetchOptions, mode: Mode) -> FetchOptions {
+  FetchOptions(..opts, mode: Some(mode))
 }
 
 /// Sets the priority hint, indicating relative importance compared to
 /// other requests.
 ///
-pub fn set_priority(opts: FetchOptions, value: Priority) -> FetchOptions {
-  FetchOptions(..opts, priority: Some(value))
+pub fn set_priority(opts: FetchOptions, priority: Priority) -> FetchOptions {
+  FetchOptions(..opts, priority: Some(priority))
 }
 
 /// Sets how the request handles redirects.
 ///
-pub fn set_redirect(opts: FetchOptions, value: Redirect) -> FetchOptions {
-  FetchOptions(..opts, redirect: Some(value))
+pub fn set_redirect(opts: FetchOptions, redirect: Redirect) -> FetchOptions {
+  FetchOptions(..opts, redirect: Some(redirect))
 }
 
 /// Sets the referrer URL. Use `"about:client"` for the default behavior
 /// or `""` to omit the `Referer` header entirely.
 ///
-pub fn set_referrer(opts: FetchOptions, value: String) -> FetchOptions {
-  FetchOptions(..opts, referrer: Some(value))
+pub fn set_referrer(opts: FetchOptions, referrer: String) -> FetchOptions {
+  FetchOptions(..opts, referrer: Some(referrer))
 }
 
 /// Sets the referrer policy, controlling what URL is sent in the
@@ -290,16 +289,16 @@ pub fn set_referrer(opts: FetchOptions, value: String) -> FetchOptions {
 ///
 pub fn set_referrer_policy(
   opts: FetchOptions,
-  value: ReferrerPolicy,
+  referrer_policy: ReferrerPolicy,
 ) -> FetchOptions {
-  FetchOptions(..opts, referrer_policy: Some(value))
+  FetchOptions(..opts, referrer_policy: Some(referrer_policy))
 }
 
 /// Sets the abort signal, allowing the request to be cancelled
 /// imperatively or after a timeout.
 ///
-pub fn set_signal(opts: FetchOptions, value: AbortSignal) -> FetchOptions {
-  FetchOptions(..opts, signal: Some(value))
+pub fn set_signal(opts: FetchOptions, signal: AbortSignal) -> FetchOptions {
+  FetchOptions(..opts, signal: Some(signal))
 }
 
 /// `True` when the status code is in the 200-299 range. Derived from

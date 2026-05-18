@@ -62,27 +62,36 @@ pub fn pipe_options() -> PipeOptions {
 /// Sets whether errors in the destination should propagate back to
 /// abort the source.
 ///
-pub fn set_prevent_abort(opts: PipeOptions, value: Bool) -> PipeOptions {
-  PipeOptions(..opts, prevent_abort: value)
+pub fn set_prevent_abort(
+  opts: PipeOptions,
+  prevent_abort: Bool,
+) -> PipeOptions {
+  PipeOptions(..opts, prevent_abort:)
 }
 
 /// Sets whether errors in the source should propagate forward to
 /// cancel the destination.
 ///
-pub fn set_prevent_cancel(opts: PipeOptions, value: Bool) -> PipeOptions {
-  PipeOptions(..opts, prevent_cancel: value)
+pub fn set_prevent_cancel(
+  opts: PipeOptions,
+  prevent_cancel: Bool,
+) -> PipeOptions {
+  PipeOptions(..opts, prevent_cancel:)
 }
 
 /// Sets whether closing the source should also close the destination.
 ///
-pub fn set_prevent_close(opts: PipeOptions, value: Bool) -> PipeOptions {
-  PipeOptions(..opts, prevent_close: value)
+pub fn set_prevent_close(
+  opts: PipeOptions,
+  prevent_close: Bool,
+) -> PipeOptions {
+  PipeOptions(..opts, prevent_close:)
 }
 
 /// Sets an abort signal that, when triggered, aborts the pipe.
 ///
-pub fn set_signal(opts: PipeOptions, value: AbortSignal) -> PipeOptions {
-  PipeOptions(..opts, signal: Some(value))
+pub fn set_signal(opts: PipeOptions, signal: AbortSignal) -> PipeOptions {
+  PipeOptions(..opts, signal: Some(signal))
 }
 
 /// Creates a `Builder` with no underlying-source callbacks set.
