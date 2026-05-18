@@ -659,3 +659,125 @@ pub fn reduce_async_test() {
   use result <- promise.map(result)
   should.equal(result, Ok(6))
 }
+
+pub fn any_true_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.any(satisfying: fn(x) { x > 3 })
+  use result <- promise.map(result)
+  should.equal(result, True)
+}
+
+pub fn any_false_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.any(satisfying: fn(x) { x > 10 })
+  use result <- promise.map(result)
+  should.equal(result, False)
+}
+
+pub fn any_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.any(satisfying: fn(_) { True })
+  use result <- promise.map(result)
+  should.equal(result, False)
+}
+
+pub fn any_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.any_async(satisfying: fn(x) { promise.resolve(x > 3) })
+  use result <- promise.map(result)
+  should.equal(result, True)
+}
+
+pub fn all_true_test() {
+  let result =
+    async_yielder.from_list([2, 4, 6])
+    |> async_yielder.all(satisfying: fn(x) { x % 2 == 0 })
+  use result <- promise.map(result)
+  should.equal(result, True)
+}
+
+pub fn all_false_test() {
+  let result =
+    async_yielder.from_list([2, 3, 4])
+    |> async_yielder.all(satisfying: fn(x) { x % 2 == 0 })
+  use result <- promise.map(result)
+  should.equal(result, False)
+}
+
+pub fn all_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.all(satisfying: fn(_) { False })
+  use result <- promise.map(result)
+  should.equal(result, True)
+}
+
+pub fn all_async_test() {
+  let result =
+    async_yielder.from_list([2, 4, 6])
+    |> async_yielder.all_async(satisfying: fn(x) { promise.resolve(x % 2 == 0) })
+  use result <- promise.map(result)
+  should.equal(result, True)
+}
+
+pub fn find_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.find(one_that: fn(x) { x > 2 })
+  use result <- promise.map(result)
+  should.equal(result, Ok(3))
+}
+
+pub fn find_not_found_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.find(one_that: fn(x) { x > 10 })
+  use result <- promise.map(result)
+  should.equal(result, Error(Nil))
+}
+
+pub fn find_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.find_async(one_that: fn(x) { promise.resolve(x > 2) })
+  use result <- promise.map(result)
+  should.equal(result, Ok(3))
+}
+
+pub fn find_map_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.find_map(one_that: fn(x) {
+      case x > 2 {
+        True -> Ok(x * 10)
+        False -> Error(Nil)
+      }
+    })
+  use result <- promise.map(result)
+  should.equal(result, Ok(30))
+}
+
+pub fn find_map_not_found_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.find_map(one_that: fn(_) { Error(Nil) })
+  use result <- promise.map(result)
+  should.equal(result, Error(Nil))
+}
+
+pub fn find_map_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.find_map_async(one_that: fn(x) {
+      case x > 2 {
+        True -> promise.resolve(Ok(x * 10))
+        False -> promise.resolve(Error(Nil))
+      }
+    })
+  use result <- promise.map(result)
+  should.equal(result, Ok(30))
+}

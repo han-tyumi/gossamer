@@ -764,6 +764,158 @@ pub fn at(
   |> first
 }
 
+/// Returns `True` if `predicate` returns `True` for any value of
+/// `yielder`. Stops at the first match.
+///
+pub fn any(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Bool,
+) -> Promise(Bool) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(False)
+    Next(value, rest) ->
+      case predicate(value) {
+        True -> promise.resolve(True)
+        False -> any(rest, predicate)
+      }
+  }
+}
+
+/// Like [`any`](#any) but `predicate` returns a `Promise`. Each call
+/// is awaited before the next.
+///
+pub fn any_async(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Promise(Bool),
+) -> Promise(Bool) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(False)
+    Next(value, rest) -> {
+      use matched <- promise.await(predicate(value))
+      case matched {
+        True -> promise.resolve(True)
+        False -> any_async(rest, predicate)
+      }
+    }
+  }
+}
+
+/// Returns `True` if `predicate` returns `True` for every value of
+/// `yielder`. Stops at the first non-match.
+///
+pub fn all(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Bool,
+) -> Promise(Bool) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(True)
+    Next(value, rest) ->
+      case predicate(value) {
+        False -> promise.resolve(False)
+        True -> all(rest, predicate)
+      }
+  }
+}
+
+/// Like [`all`](#all) but `predicate` returns a `Promise`. Each call
+/// is awaited before the next.
+///
+pub fn all_async(
+  in yielder: AsyncYielder(a),
+  satisfying predicate: fn(a) -> Promise(Bool),
+) -> Promise(Bool) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(True)
+    Next(value, rest) -> {
+      use matched <- promise.await(predicate(value))
+      case matched {
+        False -> promise.resolve(False)
+        True -> all_async(rest, predicate)
+      }
+    }
+  }
+}
+
+/// Returns the first value of `haystack` for which `is_desired`
+/// returns `True`, or `Error(Nil)` if none match.
+///
+pub fn find(
+  in haystack: AsyncYielder(a),
+  one_that is_desired: fn(a) -> Bool,
+) -> Promise(Result(a, Nil)) {
+  use step <- promise.await(haystack.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(value, rest) ->
+      case is_desired(value) {
+        True -> promise.resolve(Ok(value))
+        False -> find(rest, is_desired)
+      }
+  }
+}
+
+/// Like [`find`](#find) but `is_desired` returns a `Promise`. Each
+/// call is awaited before the next.
+///
+pub fn find_async(
+  in haystack: AsyncYielder(a),
+  one_that is_desired: fn(a) -> Promise(Bool),
+) -> Promise(Result(a, Nil)) {
+  use step <- promise.await(haystack.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(value, rest) -> {
+      use found <- promise.await(is_desired(value))
+      case found {
+        True -> promise.resolve(Ok(value))
+        False -> find_async(rest, is_desired)
+      }
+    }
+  }
+}
+
+/// Returns the first `Ok` result of applying `is_desired` to values
+/// of `haystack`, or `Error(Nil)` if every call returns `Error`.
+///
+pub fn find_map(
+  in haystack: AsyncYielder(a),
+  one_that is_desired: fn(a) -> Result(b, c),
+) -> Promise(Result(b, Nil)) {
+  use step <- promise.await(haystack.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(value, rest) ->
+      case is_desired(value) {
+        Ok(mapped) -> promise.resolve(Ok(mapped))
+        Error(_) -> find_map(rest, is_desired)
+      }
+  }
+}
+
+/// Like [`find_map`](#find_map) but `is_desired` returns a `Promise`.
+/// Each call is awaited before the next.
+///
+pub fn find_map_async(
+  in haystack: AsyncYielder(a),
+  one_that is_desired: fn(a) -> Promise(Result(b, c)),
+) -> Promise(Result(b, Nil)) {
+  use step <- promise.await(haystack.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(value, rest) -> {
+      use result <- promise.await(is_desired(value))
+      case result {
+        Ok(mapped) -> promise.resolve(Ok(mapped))
+        Error(_) -> find_map_async(rest, is_desired)
+      }
+    }
+  }
+}
+
 /// Drains the yielder, collecting all yielded values into a list.
 ///
 pub fn to_list(yielder: AsyncYielder(a)) -> Promise(List(a)) {
