@@ -653,6 +653,117 @@ fn drop_while_async_loop(
   }
 }
 
+/// Reduces the yielder to a single value by repeatedly applying
+/// `fun` to an accumulator and each yielded value, starting with
+/// `initial`.
+///
+pub fn fold(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> acc,
+) -> Promise(acc) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(initial)
+    Next(value, rest) -> fold(rest, fun(initial, value), fun)
+  }
+}
+
+/// Like [`fold`](#fold) but `fun` returns a `Promise`. Each call is
+/// awaited before the next.
+///
+pub fn fold_async(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Promise(acc),
+) -> Promise(acc) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(initial)
+    Next(value, rest) -> {
+      use new_acc <- promise.await(fun(initial, value))
+      fold_async(rest, new_acc, fun)
+    }
+  }
+}
+
+/// Drains the yielder, discarding all values.
+///
+pub fn run(yielder: AsyncYielder(a)) -> Promise(Nil) {
+  fold(yielder, Nil, fn(_, _) { Nil })
+}
+
+/// Counts the elements in the yielder by draining it.
+///
+pub fn length(over yielder: AsyncYielder(a)) -> Promise(Int) {
+  fold(yielder, 0, fn(count, _) { count + 1 })
+}
+
+/// Returns the first value of the yielder, or `Error(Nil)` if it's
+/// empty.
+///
+pub fn first(from yielder: AsyncYielder(a)) -> Promise(Result(a, Nil)) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(value, _) -> promise.resolve(Ok(value))
+  }
+}
+
+/// Reduces the yielder to a single value by repeatedly applying
+/// `fun` to two values, starting with the first two. Returns
+/// `Error(Nil)` if the yielder is empty.
+///
+pub fn reduce(
+  over yielder: AsyncYielder(a),
+  with fun: fn(a, a) -> a,
+) -> Promise(Result(a, Nil)) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(first, rest) -> {
+      use folded <- promise.map(fold(rest, first, fun))
+      Ok(folded)
+    }
+  }
+}
+
+/// Like [`reduce`](#reduce) but `fun` returns a `Promise`. Each call
+/// is awaited before the next.
+///
+pub fn reduce_async(
+  over yielder: AsyncYielder(a),
+  with fun: fn(a, a) -> Promise(a),
+) -> Promise(Result(a, Nil)) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Error(Nil))
+    Next(first, rest) -> {
+      use folded <- promise.map(fold_async(rest, first, fun))
+      Ok(folded)
+    }
+  }
+}
+
+/// Returns the last value of the yielder, or `Error(Nil)` if it's
+/// empty. Drains the yielder.
+///
+pub fn last(yielder: AsyncYielder(a)) -> Promise(Result(a, Nil)) {
+  reduce(yielder, fn(_, elem) { elem })
+}
+
+/// Returns the value at zero-based `index`, or `Error(Nil)` if the
+/// yielder has fewer than `index + 1` values.
+///
+pub fn at(
+  in yielder: AsyncYielder(a),
+  get index: Int,
+) -> Promise(Result(a, Nil)) {
+  yielder
+  |> drop(up_to: index)
+  |> first
+}
+
 /// Drains the yielder, collecting all yielded values into a list.
 ///
 pub fn to_list(yielder: AsyncYielder(a)) -> Promise(List(a)) {

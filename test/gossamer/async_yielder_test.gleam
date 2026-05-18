@@ -543,3 +543,119 @@ pub fn drop_while_async_test() {
   use result <- promise.map(result)
   should.equal(result, [3, 4])
 }
+
+pub fn fold_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.fold(from: 0, with: fn(acc, x) { acc + x })
+  use result <- promise.map(result)
+  should.equal(result, 10)
+}
+
+pub fn fold_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.fold(from: 42, with: fn(acc, x) { acc + x })
+  use result <- promise.map(result)
+  should.equal(result, 42)
+}
+
+pub fn fold_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.fold_async(from: 0, with: fn(acc, x) {
+      promise.resolve(acc + x)
+    })
+  use result <- promise.map(result)
+  should.equal(result, 10)
+}
+
+pub fn run_test() {
+  let result = async_yielder.run(async_yielder.from_list([1, 2, 3]))
+  use result <- promise.map(result)
+  should.equal(result, Nil)
+}
+
+pub fn length_test() {
+  let result = async_yielder.length(async_yielder.from_list([1, 2, 3, 4, 5]))
+  use result <- promise.map(result)
+  should.equal(result, 5)
+}
+
+pub fn length_empty_test() {
+  let result = async_yielder.length(async_yielder.empty())
+  use result <- promise.map(result)
+  should.equal(result, 0)
+}
+
+pub fn first_test() {
+  let result = async_yielder.first(from: async_yielder.from_list([1, 2, 3]))
+  use result <- promise.map(result)
+  should.equal(result, Ok(1))
+}
+
+pub fn first_empty_test() {
+  let result = async_yielder.first(from: async_yielder.empty())
+  use result <- promise.map(result)
+  should.equal(result, Error(Nil))
+}
+
+pub fn last_test() {
+  let result = async_yielder.last(async_yielder.from_list([1, 2, 3]))
+  use result <- promise.map(result)
+  should.equal(result, Ok(3))
+}
+
+pub fn last_empty_test() {
+  let result = async_yielder.last(async_yielder.empty())
+  use result <- promise.map(result)
+  should.equal(result, Error(Nil))
+}
+
+pub fn at_test() {
+  let result =
+    async_yielder.from_list(["a", "b", "c", "d"])
+    |> async_yielder.at(get: 2)
+  use result <- promise.map(result)
+  should.equal(result, Ok("c"))
+}
+
+pub fn at_zero_test() {
+  let result =
+    async_yielder.from_list(["a", "b"])
+    |> async_yielder.at(get: 0)
+  use result <- promise.map(result)
+  should.equal(result, Ok("a"))
+}
+
+pub fn at_out_of_range_test() {
+  let result =
+    async_yielder.from_list(["a", "b"])
+    |> async_yielder.at(get: 5)
+  use result <- promise.map(result)
+  should.equal(result, Error(Nil))
+}
+
+pub fn reduce_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.reduce(with: fn(a, b) { a + b })
+  use result <- promise.map(result)
+  should.equal(result, Ok(10))
+}
+
+pub fn reduce_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.reduce(with: fn(a, b) { a + b })
+  use result <- promise.map(result)
+  should.equal(result, Error(Nil))
+}
+
+pub fn reduce_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.reduce_async(with: fn(a, b) { promise.resolve(a + b) })
+  use result <- promise.map(result)
+  should.equal(result, Ok(6))
+}
