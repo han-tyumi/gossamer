@@ -2,7 +2,11 @@ import * as $readableStream from "$/gossamer/gossamer/stream/readable_stream.mjs
 import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
-import { yielderAsJsIterator } from "~/gossamer/iteration.ffi.ts";
+import {
+  asyncYielderAsJsAsyncIterator,
+  jsAsyncIteratorAsAsyncYielder,
+  yielderAsJsIterator,
+} from "~/gossamer/iteration.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { fromQueuingStrategy } from "~/utils/queuing_strategy.ffi.ts";
@@ -74,16 +78,16 @@ export const from_yielder: typeof $readableStream.from_yielder = (yielder) => {
   return ReadableStream.from(yielderAsJsIterator(yielder));
 };
 
-export const from_async_iterator: typeof $readableStream.from_async_iterator = (
-  iterator,
+export const from_async_yielder: typeof $readableStream.from_async_yielder = (
+  yielder,
 ) => {
   ensureMethod(
     ReadableStream,
     "from",
-    "readable_stream.from_async_iterator",
+    "readable_stream.from_async_yielder",
     BUN_STREAM_FROM_ISSUE,
   );
-  return ReadableStream.from(iterator);
+  return ReadableStream.from(asyncYielderAsJsAsyncIterator(yielder));
 };
 
 export const is_locked: typeof $readableStream.is_locked = (
@@ -159,10 +163,10 @@ export const tee: typeof $readableStream.tee = (stream: ReadableStream) => {
   }
 };
 
-export const async_iterator: typeof $readableStream.async_iterator = <T>(
+export const async_yielder: typeof $readableStream.async_yielder = <T>(
   stream: ReadableStream<T>,
 ) => {
-  return stream.values();
+  return jsAsyncIteratorAsAsyncYielder(stream.values());
 };
 
 export const read_text: typeof $readableStream.read_text = async (stream) => {

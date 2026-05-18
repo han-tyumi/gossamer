@@ -1,6 +1,6 @@
 //// The source side of the Streams API. Build one from a pull-based
 //// source via the `Builder`, or bridge from a Gleam `Yielder` /
-//// `AsyncIterator`. Reads happen through a [`Reader`](./readable_stream/reader.html)
+//// `AsyncYielder`. Reads happen through a [`Reader`](./readable_stream/reader.html)
 //// acquired with [`get_reader`](#get_reader).
 
 import gleam/dynamic.{type Dynamic}
@@ -8,7 +8,7 @@ import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gleam/yielder.{type Yielder}
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/iteration/async_iterator.{type AsyncIterator}
+import gossamer/iteration/async_yielder.{type AsyncYielder}
 import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
 import gossamer/stream/readable_stream/default_controller.{
   type DefaultController,
@@ -188,14 +188,14 @@ pub fn from_pull(
 @external(javascript, "./readable_stream.ffi.mjs", "from_yielder")
 pub fn from_yielder(yielder: Yielder(a)) -> ReadableStream(a)
 
-/// Creates a `ReadableStream` from an `AsyncIterator`. Equivalent to
-/// JavaScript's `ReadableStream.from` with an async iterable. Panics
-/// on Bun — see https://github.com/oven-sh/bun/issues/3700.
+/// Creates a `ReadableStream` from an
+/// [`AsyncYielder`](../iteration/async_yielder.html#AsyncYielder).
+/// Equivalent to JavaScript's `ReadableStream.from` with an async
+/// iterable. Panics on Bun — see
+/// https://github.com/oven-sh/bun/issues/3700.
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "from_async_iterator")
-pub fn from_async_iterator(
-  iterator: AsyncIterator(a, r, n),
-) -> ReadableStream(a)
+@external(javascript, "./readable_stream.ffi.mjs", "from_async_yielder")
+pub fn from_async_yielder(yielder: AsyncYielder(a)) -> ReadableStream(a)
 
 /// Checks whether the stream is locked to a reader.
 ///
@@ -251,13 +251,14 @@ pub fn tee(
   stream: ReadableStream(a),
 ) -> Result(#(ReadableStream(a), ReadableStream(a)), StreamLifecycleError)
 
-/// Returns an `AsyncIterator` that reads from the stream. The iterator
-/// locks the stream until reading completes. Equivalent to
-/// JavaScript's `ReadableStream.values` (or
-/// `stream[Symbol.asyncIterator]()`).
+/// Returns an
+/// [`AsyncYielder`](../iteration/async_yielder.html#AsyncYielder)
+/// that reads from the stream. The yielder locks the stream until
+/// reading completes. Equivalent to JavaScript's
+/// `ReadableStream.values` (or `stream[Symbol.asyncIterator]()`).
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "async_iterator")
-pub fn async_iterator(stream: ReadableStream(a)) -> AsyncIterator(a, Nil, Nil)
+@external(javascript, "./readable_stream.ffi.mjs", "async_yielder")
+pub fn async_yielder(stream: ReadableStream(a)) -> AsyncYielder(a)
 
 /// Consumes a byte stream and decodes the assembled bytes as UTF-8.
 /// Invalid bytes are replaced with U+FFFD. Returns `Locked` if the

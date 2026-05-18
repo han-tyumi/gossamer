@@ -6,7 +6,6 @@ import gleam/string
 import gleam/yielder
 import gleeunit/should
 import gossamer/abort_signal
-import gossamer/iteration/async_iterator
 import gossamer/iteration/async_yielder
 import gossamer/stream
 import gossamer/stream/readable_stream
@@ -545,9 +544,9 @@ pub fn transform_controller_terminate_test() {
   promise.resolve(Nil)
 }
 
-// ReadableStream.async_iterator test
+// ReadableStream.async_yielder test
 
-pub fn readable_stream_async_iterator_test() {
+pub fn readable_stream_async_yielder_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
       let _ = default_controller.enqueue(controller, 1)
@@ -557,8 +556,7 @@ pub fn readable_stream_async_iterator_test() {
     })
 
   let result =
-    readable_stream.async_iterator(stream)
-    |> async_iterator.to_async_yielder
+    readable_stream.async_yielder(stream)
     |> async_yielder.to_list
 
   use result <- promise.await(result)
@@ -635,17 +633,14 @@ pub fn from_yielder_bun_divergence_test() {
   |> should.be_true
 }
 
-pub fn from_async_iterator_bun_divergence_test() {
+pub fn from_async_yielder_bun_divergence_test() {
   use <- runtime.only_on(runtime.Bun)
   let assert Error(message) =
     runtime.catch_panic(fn() {
-      let iter =
-        async_yielder.from_list([1, 2, 3])
-        |> async_iterator.from_async_yielder
-      readable_stream.from_async_iterator(iter)
+      readable_stream.from_async_yielder(async_yielder.from_list([1, 2, 3]))
     })
   message
-  |> string.contains("readable_stream.from_async_iterator")
+  |> string.contains("readable_stream.from_async_yielder")
   |> should.be_true
   message
   |> string.contains("github.com/oven-sh/bun/issues/3700")
