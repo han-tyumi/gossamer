@@ -93,3 +93,125 @@ pub fn each_async_test() {
   use result <- promise.map(result)
   should.equal(result, Ok(Nil))
 }
+
+pub fn single_test() {
+  let result =
+    async_yielder.single(42)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([42]))
+}
+
+pub fn once_test() {
+  let result =
+    async_yielder.once(fn() { 7 })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([7]))
+}
+
+pub fn once_async_test() {
+  let result =
+    async_yielder.once_async(fn() { promise.resolve(7) })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([7]))
+}
+
+pub fn range_ascending_test() {
+  let result =
+    async_yielder.range(from: 1, to: 4)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3, 4]))
+}
+
+pub fn range_descending_test() {
+  let result =
+    async_yielder.range(from: 3, to: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([3, 2, 1, 0]))
+}
+
+pub fn range_eq_test() {
+  let result =
+    async_yielder.range(from: 5, to: 5)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([5]))
+}
+
+pub fn unfold_test() {
+  let result =
+    async_yielder.unfold(from: 0, with: fn(n) {
+      case n < 3 {
+        True -> async_yielder.Next(n, n + 1)
+        False -> async_yielder.Done
+      }
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([0, 1, 2]))
+}
+
+pub fn unfold_async_test() {
+  let result =
+    async_yielder.unfold_async(from: 0, with: fn(n) {
+      case n < 3 {
+        True -> promise.resolve(async_yielder.Next(n, n + 1))
+        False -> promise.resolve(async_yielder.Done)
+      }
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([0, 1, 2]))
+}
+
+pub fn yield_test() {
+  let result =
+    async_yielder.yield(1, fn() { async_yielder.from_list([2, 3]) })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3]))
+}
+
+pub fn yield_async_test() {
+  let result =
+    async_yielder.yield_async(1, fn() {
+      promise.resolve(async_yielder.from_list([2, 3]))
+    })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3]))
+}
+
+pub fn prepend_test() {
+  let result =
+    async_yielder.from_list([2, 3])
+    |> async_yielder.prepend(1)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, Ok([1, 2, 3]))
+}
+
+pub fn unfold_async_propagates_rejection_test() {
+  let rejecting =
+    async_yielder.unfold_async(from: 0, with: fn(_) {
+      use _ <- promise.await(promise.resolve(Nil))
+      panic as "boom"
+    })
+  use result <- promise.map(async_yielder.to_list(rejecting))
+  should.be_error(result)
+}
+
+pub fn map_propagates_rejection_test() {
+  let rejecting =
+    async_yielder.unfold_async(from: 0, with: fn(_) {
+      use _ <- promise.await(promise.resolve(Nil))
+      panic as "boom"
+    })
+  let doubled = async_yielder.map(rejecting, with: fn(x) { x * 2 })
+  use result <- promise.map(async_yielder.to_list(doubled))
+  should.be_error(result)
+}

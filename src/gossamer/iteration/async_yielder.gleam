@@ -9,28 +9,33 @@
 //// them as `Promise(Result(_, Dynamic))`.
 
 import gleam/dynamic.{type Dynamic}
+import gleam/int
 import gleam/javascript/promise.{type Promise}
 import gleam/list
+import gleam/order
 
 /// A pull-based async iterator. Each pull returns a promise for the
 /// next [`Step`](#Step).
 ///
 pub opaque type AsyncYielder(a) {
-  AsyncYielder(pull: fn() -> Promise(Step(a)))
+  AsyncYielder(pull: fn() -> Promise(Step(a, AsyncYielder(a))))
 }
 
-/// One step of an [`AsyncYielder`](#AsyncYielder): either the next
-/// `value` paired with the rest of the yielder, or `Done` when the
-/// yielder is exhausted.
+/// One step of iteration: either the next `element` paired with an
+/// `accumulator` to feed into the next step, or `Done` to halt.
 ///
-pub type Step(a) {
-  Next(value: a, rest: AsyncYielder(a))
+/// When returned from [`step`](#step), `accumulator` is the next
+/// [`AsyncYielder`](#AsyncYielder). When passed to [`unfold`](#unfold),
+/// `accumulator` is the user's state.
+///
+pub type Step(element, accumulator) {
+  Next(element: element, accumulator: accumulator)
   Done
 }
 
 /// Pulls the next [`Step`](#Step) from `yielder`.
 ///
-pub fn step(yielder: AsyncYielder(a)) -> Promise(Step(a)) {
+pub fn step(yielder: AsyncYielder(a)) -> Promise(Step(a, AsyncYielder(a))) {
   yielder.pull()
 }
 
@@ -50,6 +55,113 @@ pub fn from_list(list: List(a)) -> AsyncYielder(a) {
       [first, ..rest] -> promise.resolve(Next(first, from_list(rest)))
     }
   })
+}
+
+/// An async yielder that yields exactly `elem`, then stops.
+///
+pub fn single(elem: a) -> AsyncYielder(a) {
+  once(fn() { elem })
+}
+
+/// An async yielder that yields the result of `fun()`, then stops.
+///
+pub fn once(fun: fn() -> a) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { promise.resolve(Next(fun(), empty())) })
+}
+
+/// Like [`once`](#once) but `fun` returns a `Promise`. The promise is
+/// awaited when the yielder is first pulled.
+///
+pub fn once_async(fun: fn() -> Promise(a)) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use value <- promise.map(fun())
+    Next(value, empty())
+  })
+}
+
+/// An async yielder of integers from `start` up to (or down to) `stop`,
+/// inclusive on both ends.
+///
+pub fn range(from start: Int, to stop: Int) -> AsyncYielder(Int) {
+  case int.compare(start, stop) {
+    order.Eq -> once(fn() { start })
+    order.Gt ->
+      unfold(from: start, with: fn(current) {
+        case current < stop {
+          False -> Next(current, current - 1)
+          True -> Done
+        }
+      })
+    order.Lt ->
+      unfold(from: start, with: fn(current) {
+        case current > stop {
+          False -> Next(current, current + 1)
+          True -> Done
+        }
+      })
+  }
+}
+
+/// Constructs an async yielder by repeatedly calling `fun` with an
+/// accumulator, starting with `initial`. Each `Next(element,
+/// accumulator)` yields the element and feeds the new accumulator into
+/// the next call; `Done` stops the yielder.
+///
+pub fn unfold(
+  from initial: acc,
+  with fun: fn(acc) -> Step(a, acc),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    case fun(initial) {
+      Done -> promise.resolve(Done)
+      Next(element, accumulator) ->
+        promise.resolve(Next(element, unfold(accumulator, fun)))
+    }
+  })
+}
+
+/// Like [`unfold`](#unfold) but `fun` returns a `Promise`. Each call is
+/// awaited before the next.
+///
+pub fn unfold_async(
+  from initial: acc,
+  with fun: fn(acc) -> Promise(Step(a, acc)),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use next_step <- promise.map(fun(initial))
+    case next_step {
+      Done -> Done
+      Next(element, accumulator) ->
+        Next(element, unfold_async(accumulator, fun))
+    }
+  })
+}
+
+/// Yields `element` followed by whatever `next()` produces. `next()` is
+/// only called when the yielder is first pulled.
+///
+pub fn yield(element: a, next: fn() -> AsyncYielder(a)) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { promise.resolve(Next(element, next())) })
+}
+
+/// Like [`yield`](#yield) but `next` returns a `Promise`. The promise
+/// is awaited when the yielder is first pulled.
+///
+pub fn yield_async(
+  element: a,
+  next: fn() -> Promise(AsyncYielder(a)),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() {
+    use rest <- promise.map(next())
+    Next(element, rest)
+  })
+}
+
+/// Adds `element` to the front of `yielder`.
+///
+pub fn prepend(yielder: AsyncYielder(a), element: a) -> AsyncYielder(a) {
+  use <- yield(element)
+  yielder
 }
 
 /// Applies `fun` to each value of `yielder` as it's pulled.
@@ -99,7 +211,7 @@ pub fn filter(
 fn filter_loop(
   yielder: AsyncYielder(a),
   predicate: fn(a) -> Bool,
-) -> Promise(Step(a)) {
+) -> Promise(Step(a, AsyncYielder(a))) {
   use step <- promise.await(yielder.pull())
   case step {
     Done -> promise.resolve(Done)
@@ -124,7 +236,7 @@ pub fn filter_async(
 fn filter_async_loop(
   yielder: AsyncYielder(a),
   predicate: fn(a) -> Promise(Bool),
-) -> Promise(Step(a)) {
+) -> Promise(Step(a, AsyncYielder(a))) {
   use step <- promise.await(yielder.pull())
   case step {
     Done -> promise.resolve(Done)
