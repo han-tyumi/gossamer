@@ -4,13 +4,6 @@ import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
-function wrapBinary(value: unknown): unknown {
-  if (value instanceof ArrayBuffer) {
-    return BitArray$BitArray(new Uint8Array(value));
-  }
-  return value;
-}
-
 function isValidWebSocketUrl(url: string): boolean {
   let parsed: URL;
   try {
@@ -31,14 +24,19 @@ function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
   );
 }
 
-function toBinaryType(value: BinaryType | string): $webSocket.BinaryType$ {
-  if (value === "arraybuffer") return $webSocket.BinaryType$ArrayBuffer();
-  return $webSocket.BinaryType$Blob();
-}
-
-function fromBinaryType(value: $webSocket.BinaryType$): BinaryType {
-  if ($webSocket.BinaryType$isArrayBuffer(value)) return "arraybuffer";
-  return "blob";
+function toMessageEvent(data: unknown): $webSocket.WebSocketEvent$ {
+  if (typeof data === "string") {
+    return $webSocket.WebSocketEvent$Text(data);
+  }
+  if (data instanceof ArrayBuffer) {
+    return $webSocket.WebSocketEvent$Binary(
+      BitArray$BitArray(new Uint8Array(data)),
+    );
+  }
+  // Defensive fallback for runtimes that ignore binaryType: convert
+  // any other value (e.g. a Blob) to an empty BitArray. Pinning
+  // binaryType = "arraybuffer" below should prevent this path.
+  return $webSocket.WebSocketEvent$Binary(BitArray$BitArray(new Uint8Array()));
 }
 
 function toReadyState(value: number): $webSocket.ReadyState$ {
@@ -59,11 +57,7 @@ function toReadyState(value: number): $webSocket.ReadyState$ {
 export const build: typeof $webSocket.do_build = (
   url,
   protocolsList,
-  binary_type,
-  on_open,
-  on_message,
-  on_error,
-  on_close,
+  on_event,
 ) => {
   if (!isValidWebSocketUrl(url)) {
     return Result$Error($webSocket.WebSocketError$InvalidUrl());
@@ -76,21 +70,19 @@ export const build: typeof $webSocket.do_build = (
     return Result$Error($webSocket.WebSocketError$InvalidProtocols());
   }
 
-  mapIfSome(ws, "binaryType", binary_type, fromBinaryType);
-  mapIfSome(ws, "onopen", on_open, (handler) => () => handler());
-  mapIfSome(
-    ws,
-    "onmessage",
-    on_message,
-    (handler) => (event) => handler(wrapBinary(event.data)),
-  );
-  mapIfSome(ws, "onerror", on_error, (handler) => () => handler());
-  mapIfSome(
-    ws,
-    "onclose",
-    on_close,
-    (handler) => (event) => handler(toCloseEvent(event)),
-  );
+  ws.binaryType = "arraybuffer";
+  mapIfSome(ws, "onopen", on_event, (handler) => () => {
+    handler(ws, $webSocket.WebSocketEvent$Opened());
+  });
+  mapIfSome(ws, "onmessage", on_event, (handler) => (event) => {
+    handler(ws, toMessageEvent(event.data));
+  });
+  mapIfSome(ws, "onerror", on_event, (handler) => () => {
+    handler(ws, $webSocket.WebSocketEvent$Errored());
+  });
+  mapIfSome(ws, "onclose", on_event, (handler) => (event) => {
+    handler(ws, $webSocket.WebSocketEvent$Disconnected(toCloseEvent(event)));
+  });
 
   return Result$Ok(ws);
 };
@@ -100,7 +92,6 @@ export const info: typeof $webSocket.info = (socket) => {
     socket.url,
     socket.protocol,
     socket.extensions,
-    toBinaryType(socket.binaryType),
   );
 };
 
@@ -143,13 +134,13 @@ export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
   return Result$Ok(undefined);
 };
 
-export const send_bytes: typeof $webSocket.send_bytes = (socket, data) => {
+export const send_binary: typeof $webSocket.send_binary = (socket, data) => {
   if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
   socket.send(toBufferSource(data));
   return Result$Ok(undefined);
 };
 
-export const send_string: typeof $webSocket.send_string = (socket, data) => {
+export const send_text: typeof $webSocket.send_text = (socket, data) => {
   if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
   socket.send(data);
   return Result$Ok(undefined);

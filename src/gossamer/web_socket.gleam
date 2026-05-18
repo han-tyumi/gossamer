@@ -1,11 +1,8 @@
 //// Bidirectional, message-oriented WebSocket connections (`ws:` and
-//// `wss:`). Construct via [`from_url_string`](#from_url_string) or
-//// [`from_uri`](#from_uri). Send messages with
-//// [`send_string`](#send_string), [`send_bytes`](#send_bytes), or
-//// [`send_blob`](#send_blob); close with [`close`](#close) or
-//// [`close_with`](#close_with).
+//// `wss:`). Construct via [`from_uri`](#from_uri); lifecycle events
+//// arrive on the [`WebSocketEvent`](#WebSocketEvent) sum, dispatched
+//// by the handler registered via [`with_on_event`](#with_on_event).
 
-import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
 import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}
@@ -40,17 +37,29 @@ pub type WebSocketError {
 /// The data carried by a WebSocket close event.
 ///
 pub type CloseEvent {
-  CloseEvent(code: Int, reason: String, was_clean: Bool)
+  CloseEvent(code: Int, reason: String, clean: Bool)
 }
 
-/// The format binary messages arrive as on a `WebSocket`.
+/// An event delivered to the handler registered via
+/// [`with_on_event`](#with_on_event).
 ///
-pub type BinaryType {
-  /// Binary messages arrive as `ArrayBuffer`.
-  ArrayBuffer
+pub type WebSocketEvent {
+  /// The connection was established and is ready to send and receive.
+  Opened
 
-  /// Binary messages arrive as `Blob`.
-  Blob
+  /// A text message arrived from the server.
+  Text(String)
+
+  /// A binary message arrived from the server.
+  Binary(BitArray)
+
+  /// A transport-level failure occurred. The WebSocket `error` event
+  /// carries no usable payload per spec.
+  Errored
+
+  /// The connection closed. The event carries the close code, the
+  /// reason string, and whether the close was clean.
+  Disconnected(event: CloseEvent)
 }
 
 /// The state of a `WebSocket` connection.
@@ -82,111 +91,39 @@ pub opaque type Builder {
   Builder(
     url: String,
     protocols: List(String),
-    binary_type: Option(BinaryType),
-    on_open: Option(fn() -> Nil),
-    on_message: Option(fn(Dynamic) -> Nil),
-    on_error: Option(fn() -> Nil),
-    on_close: Option(fn(CloseEvent) -> Nil),
-  )
-}
-
-/// Creates a `Builder` for a WebSocket connection to the URL given as a
-/// string. Protocols default to `[]` (no negotiation), and the binary
-/// type and listeners are unset.
-///
-pub fn from_url_string(url: String) -> Builder {
-  Builder(
-    url:,
-    protocols: [],
-    binary_type: None,
-    on_open: None,
-    on_message: None,
-    on_error: None,
-    on_close: None,
+    on_event: Option(fn(WebSocket, WebSocketEvent) -> Nil),
   )
 }
 
 /// Creates a `Builder` for a WebSocket connection to `uri`. Protocols
-/// default to `[]` (no negotiation), and the binary type and listeners
-/// are unset.
+/// default to `[]` (no negotiation), and the event handler is unset.
 ///
 pub fn from_uri(uri: Uri) -> Builder {
-  from_url_string(uri.to_string(uri))
+  Builder(url: uri.to_string(uri), protocols: [], on_event: None)
 }
 
 /// Sets the sub-protocols offered during the WebSocket handshake. Pass
 /// `[]` to skip protocol negotiation.
 ///
-pub fn with_protocols(builder: Builder, value: List(String)) -> Builder {
-  Builder(..builder, protocols: value)
+pub fn with_protocols(builder: Builder, protocols: List(String)) -> Builder {
+  Builder(..builder, protocols:)
 }
 
-/// Sets the format binary messages arrive as on the socket. Defaults to
-/// the runtime's default (`Blob` in browsers, `ArrayBuffer` elsewhere).
+/// Registers a handler invoked for every connection event:
+/// [`Opened`](#WebSocketEvent), [`Text`](#WebSocketEvent),
+/// [`Binary`](#WebSocketEvent), [`Errored`](#WebSocketEvent),
+/// [`Disconnected`](#WebSocketEvent). The handler receives the
+/// [`WebSocket`](#WebSocket) so it can reply via `send_*` while
+/// dispatching on the [`WebSocketEvent`](#WebSocketEvent).
 ///
-pub fn with_binary_type(builder: Builder, value: BinaryType) -> Builder {
-  Builder(..builder, binary_type: Some(value))
-}
-
-/// Registers a handler invoked when the connection opens. Equivalent
-/// to JavaScript's `WebSocket.onopen` (or
-/// `addEventListener("open", ...)`).
-///
-pub fn with_on_open(builder: Builder, run handler: fn() -> a) -> Builder {
-  Builder(
-    ..builder,
-    on_open: Some(fn() {
-      handler()
-      Nil
-    }),
-  )
-}
-
-/// Registers a handler invoked for each incoming message. The handler
-/// receives the message payload directly: text messages arrive as
-/// `String`, binary messages as `BitArray` or `Blob` depending on the
-/// configured `binary_type`. Equivalent to JavaScript's
-/// `WebSocket.onmessage` (or `addEventListener("message", ...)`).
-///
-pub fn with_on_message(
+pub fn with_on_event(
   builder: Builder,
-  run handler: fn(Dynamic) -> a,
+  run handler: fn(WebSocket, WebSocketEvent) -> a,
 ) -> Builder {
   Builder(
     ..builder,
-    on_message: Some(fn(data) {
-      handler(data)
-      Nil
-    }),
-  )
-}
-
-/// Registers a handler invoked when the connection encounters an
-/// error. Equivalent to JavaScript's `WebSocket.onerror` (or
-/// `addEventListener("error", ...)`).
-///
-pub fn with_on_error(builder: Builder, run handler: fn() -> a) -> Builder {
-  Builder(
-    ..builder,
-    on_error: Some(fn() {
-      handler()
-      Nil
-    }),
-  )
-}
-
-/// Registers a handler invoked when the connection closes. Equivalent
-/// to JavaScript's `WebSocket.onclose` (or
-/// `addEventListener("close", ...)`).
-///
-pub fn with_on_close(
-  builder: Builder,
-  run handler: fn(CloseEvent) -> a,
-) -> Builder {
-  Builder(
-    ..builder,
-    on_close: Some(fn(event) {
-      handler(event)
+    on_event: Some(fn(socket, event) {
+      handler(socket, event)
       Nil
     }),
   )
@@ -198,15 +135,7 @@ pub fn with_on_close(
 /// list has duplicates or non-token entries.
 ///
 pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError) {
-  do_build(
-    builder.url,
-    builder.protocols,
-    builder.binary_type,
-    builder.on_open,
-    builder.on_message,
-    builder.on_error,
-    builder.on_close,
-  )
+  do_build(builder.url, builder.protocols, builder.on_event)
 }
 
 @external(javascript, "./web_socket.ffi.mjs", "build")
@@ -214,14 +143,10 @@ pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError) {
 pub fn do_build(
   url: String,
   protocols: List(String),
-  binary_type: Option(BinaryType),
-  on_open: Option(fn() -> Nil),
-  on_message: Option(fn(Dynamic) -> Nil),
-  on_error: Option(fn() -> Nil),
-  on_close: Option(fn(CloseEvent) -> Nil),
+  on_event: Option(fn(WebSocket, WebSocketEvent) -> Nil),
 ) -> Result(WebSocket, WebSocketError)
 
-/// A snapshot of the static handshake-time fields of a
+/// A snapshot of the handshake-time fields of a
 /// [`WebSocket`](#WebSocket), returned by [`info`](#info). For the
 /// dynamic fields that change over the connection's lifecycle, use
 /// [`ready_state`](#ready_state) and
@@ -236,14 +161,11 @@ pub type Info {
     protocol: String,
     /// The extensions selected by the server, or `""` if none.
     extensions: String,
-    /// The format binary messages arrive as on this socket.
-    binary_type: BinaryType,
   )
 }
 
-/// A snapshot of the socket's URL, negotiated sub-protocol, server
-/// extensions, and binary message format. These fields are fixed
-/// once the handshake completes.
+/// A snapshot of the socket's URL, negotiated sub-protocol, and server
+/// extensions. These fields are fixed once the handshake completes.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "info")
 pub fn info(socket: WebSocket) -> Info
@@ -300,24 +222,25 @@ pub fn send_blob(
   data data: Blob,
 ) -> Result(Nil, WebSocketError)
 
-/// Sends binary data through the WebSocket. Returns `Error(NotOpen)` if
-/// the connection is still `Connecting`. Data sent after the connection
-/// is `Closing` or `Closed` is silently discarded per spec. Equivalent
-/// to JavaScript's `WebSocket.send` with an `ArrayBuffer` argument.
+/// Sends a binary frame through the WebSocket. Returns `Error(NotOpen)`
+/// if the connection is still `Connecting`. Data sent after the
+/// connection is `Closing` or `Closed` is silently discarded per spec.
+/// Equivalent to JavaScript's `WebSocket.send` with an `ArrayBuffer`
+/// argument.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "send_bytes")
-pub fn send_bytes(
+@external(javascript, "./web_socket.ffi.mjs", "send_binary")
+pub fn send_binary(
   to socket: WebSocket,
   data data: BitArray,
 ) -> Result(Nil, WebSocketError)
 
-/// Sends a string through the WebSocket. Returns `Error(NotOpen)` if the
-/// connection is still `Connecting`. Data sent after the connection is
-/// `Closing` or `Closed` is silently discarded per spec. Equivalent to
-/// JavaScript's `WebSocket.send` with a `String` argument.
+/// Sends a text frame through the WebSocket. Returns `Error(NotOpen)` if
+/// the connection is still `Connecting`. Data sent after the connection
+/// is `Closing` or `Closed` is silently discarded per spec. Equivalent
+/// to JavaScript's `WebSocket.send` with a `String` argument.
 ///
-@external(javascript, "./web_socket.ffi.mjs", "send_string")
-pub fn send_string(
+@external(javascript, "./web_socket.ffi.mjs", "send_text")
+pub fn send_text(
   to socket: WebSocket,
   data data: String,
 ) -> Result(Nil, WebSocketError)
