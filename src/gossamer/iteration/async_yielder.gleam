@@ -10,6 +10,7 @@
 
 import gleam/int
 import gleam/javascript/promise.{type Promise}
+import gleam/list
 import gleam/order
 
 /// A pull-based async iterator. Each pull returns a promise for the
@@ -762,6 +763,87 @@ pub fn at(
   yielder
   |> drop(up_to: index)
   |> first
+}
+
+/// Like [`fold`](#fold) but `fun` can stop the iteration early by
+/// returning `list.Stop(acc)`; `list.Continue(acc)` proceeds with the
+/// new accumulator.
+///
+pub fn fold_until(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> list.ContinueOrStop(acc),
+) -> Promise(acc) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(initial)
+    Next(value, rest) ->
+      case fun(initial, value) {
+        list.Continue(new_acc) -> fold_until(rest, new_acc, fun)
+        list.Stop(final_acc) -> promise.resolve(final_acc)
+      }
+  }
+}
+
+/// Like [`fold_until`](#fold_until) but `fun` returns a `Promise`.
+/// Each call is awaited before the next.
+///
+pub fn fold_until_async(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Promise(list.ContinueOrStop(acc)),
+) -> Promise(acc) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(initial)
+    Next(value, rest) -> {
+      use decision <- promise.await(fun(initial, value))
+      case decision {
+        list.Continue(new_acc) -> fold_until_async(rest, new_acc, fun)
+        list.Stop(final_acc) -> promise.resolve(final_acc)
+      }
+    }
+  }
+}
+
+/// Like [`fold`](#fold) but `fun` returns a `Result`; an `Error`
+/// halts iteration and surfaces as the overall `Error`.
+///
+pub fn try_fold(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Result(acc, err),
+) -> Promise(Result(acc, err)) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Ok(initial))
+    Next(value, rest) ->
+      case fun(initial, value) {
+        Ok(new_acc) -> try_fold(rest, new_acc, fun)
+        Error(e) -> promise.resolve(Error(e))
+      }
+  }
+}
+
+/// Like [`try_fold`](#try_fold) but `fun` returns a `Promise`. Each
+/// call is awaited before the next.
+///
+pub fn try_fold_async(
+  over yielder: AsyncYielder(a),
+  from initial: acc,
+  with fun: fn(acc, a) -> Promise(Result(acc, err)),
+) -> Promise(Result(acc, err)) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Ok(initial))
+    Next(value, rest) -> {
+      use result <- promise.await(fun(initial, value))
+      case result {
+        Ok(new_acc) -> try_fold_async(rest, new_acc, fun)
+        Error(e) -> promise.resolve(Error(e))
+      }
+    }
+  }
 }
 
 /// Returns `True` if `predicate` returns `True` for any value of

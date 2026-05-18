@@ -1,4 +1,5 @@
 import gleam/javascript/promise
+import gleam/list
 import gleeunit/should
 import gossamer/iteration/async_yielder
 
@@ -780,4 +781,73 @@ pub fn find_map_async_test() {
     })
   use result <- promise.map(result)
   should.equal(result, Ok(30))
+}
+
+pub fn fold_until_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5])
+    |> async_yielder.fold_until(from: 0, with: fn(acc, x) {
+      let sum = acc + x
+      case sum > 5 {
+        True -> list.Stop(sum)
+        False -> list.Continue(sum)
+      }
+    })
+  use result <- promise.map(result)
+  should.equal(result, 6)
+}
+
+pub fn fold_until_runs_to_done_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.fold_until(from: 0, with: fn(acc, x) {
+      list.Continue(acc + x)
+    })
+  use result <- promise.map(result)
+  should.equal(result, 6)
+}
+
+pub fn fold_until_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5])
+    |> async_yielder.fold_until_async(from: 0, with: fn(acc, x) {
+      let sum = acc + x
+      case sum > 5 {
+        True -> promise.resolve(list.Stop(sum))
+        False -> promise.resolve(list.Continue(sum))
+      }
+    })
+  use result <- promise.map(result)
+  should.equal(result, 6)
+}
+
+pub fn try_fold_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.try_fold(from: 0, with: fn(acc, x) { Ok(acc + x) })
+  use result <- promise.map(result)
+  should.equal(result, Ok(10))
+}
+
+pub fn try_fold_stops_on_error_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.try_fold(from: 0, with: fn(acc, x) {
+      case x > 2 {
+        True -> Error("too big")
+        False -> Ok(acc + x)
+      }
+    })
+  use result <- promise.map(result)
+  should.equal(result, Error("too big"))
+}
+
+pub fn try_fold_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.try_fold_async(from: 0, with: fn(acc, x) {
+      promise.resolve(Ok(acc + x))
+    })
+  use result <- promise.map(result)
+  should.equal(result, Ok(6))
 }
