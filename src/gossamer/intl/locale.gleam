@@ -65,7 +65,7 @@ pub type Info {
     numbering_system: Option(String),
     /// Whether numeric collation is preferred — digit runs compared
     /// as numbers rather than character by character.
-    is_numeric: Bool,
+    numeric: Bool,
   )
 }
 

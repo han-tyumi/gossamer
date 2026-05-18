@@ -85,12 +85,12 @@ pub fn info_numbering_system_absent_test() {
   locale.info(at("en-US")).numbering_system |> should.equal(None)
 }
 
-pub fn info_is_numeric_true_test() {
-  locale.info(at("en-US-u-kn-true")).is_numeric |> should.be_true
+pub fn info_numeric_true_test() {
+  locale.info(at("en-US-u-kn-true")).numeric |> should.be_true
 }
 
-pub fn info_is_numeric_default_test() {
-  locale.info(at("en-US")).is_numeric |> should.be_false
+pub fn info_numeric_default_test() {
+  locale.info(at("en-US")).numeric |> should.be_false
 }
 
 pub fn calendars_test() {

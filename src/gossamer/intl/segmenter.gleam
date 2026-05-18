@@ -31,11 +31,11 @@ pub type Granularity {
 
 /// A single segment from a segmented string. `value` is the
 /// substring, `index` is the UTF-16 code-unit position within the
-/// input, and `is_word_like` is `Some` only when the segmenter was
+/// input, and `word_like` is `Some` only when the segmenter was
 /// configured with [`Word`](#Word) granularity.
 ///
 pub type Segment {
-  Segment(value: String, index: Int, is_word_like: Option(Bool))
+  Segment(value: String, index: Int, word_like: Option(Bool))
 }
 
 /// The configuration for a [`Segmenter`](#Segmenter).

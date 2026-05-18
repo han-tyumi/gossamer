@@ -28,7 +28,7 @@ pub type Info {
     usages: List(KeyUsage),
     /// `True` if the key can be exported via `subtle.export_key` or
     /// `subtle.export_key_jwk`.
-    is_extractable: Bool,
+    extractable: Bool,
   )
 }
 

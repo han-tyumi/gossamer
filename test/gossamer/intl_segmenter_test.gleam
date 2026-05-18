@@ -55,43 +55,43 @@ pub fn segment_index_test() {
   |> should.equal([0, 1, 2])
 }
 
-pub fn is_word_like_some_for_word_test() {
+pub fn word_like_some_for_word_test() {
   let assert Ok(seg) =
     segmenter.new(["en"])
     |> segmenter.with_granularity(segmenter.Word)
     |> segmenter.build
   let parts = segments(of: seg, in: "Hello, world!")
   case parts {
-    [first, ..] -> first.is_word_like |> should.equal(Some(True))
+    [first, ..] -> first.word_like |> should.equal(Some(True))
     [] -> panic as "expected non-empty segments"
   }
 }
 
-pub fn is_word_like_distinguishes_punctuation_test() {
+pub fn word_like_distinguishes_punctuation_test() {
   let assert Ok(seg) =
     segmenter.new(["en"])
     |> segmenter.with_granularity(segmenter.Word)
     |> segmenter.build
   segments(of: seg, in: "Hi,")
-  |> list.map(fn(s) { s.is_word_like })
+  |> list.map(fn(s) { s.word_like })
   |> should.equal([Some(True), Some(False)])
 }
 
-pub fn is_word_like_none_for_grapheme_test() {
+pub fn word_like_none_for_grapheme_test() {
   let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
   case segments(of: seg, in: "abc") {
-    [first, ..] -> first.is_word_like |> should.equal(None)
+    [first, ..] -> first.word_like |> should.equal(None)
     [] -> panic as "expected non-empty segments"
   }
 }
 
-pub fn is_word_like_none_for_sentence_test() {
+pub fn word_like_none_for_sentence_test() {
   let assert Ok(seg) =
     segmenter.new(["en"])
     |> segmenter.with_granularity(segmenter.Sentence)
     |> segmenter.build
   case segments(of: seg, in: "Hi.") {
-    [first, ..] -> first.is_word_like |> should.equal(None)
+    [first, ..] -> first.word_like |> should.equal(None)
     [] -> panic as "expected non-empty segments"
   }
 }

@@ -40,7 +40,7 @@ pub fn generate_key_and_encrypt_decrypt_test() {
   let assert Ok(key) = result
   let info = key.info(key)
 
-  should.equal(info.is_extractable, True)
+  should.equal(info.extractable, True)
   should.equal(info.kind, crypto.Secret)
 
   let iv = gleam_crypto.strong_random_bytes(12)
@@ -132,7 +132,7 @@ pub fn import_export_key_test() {
   )
   let assert Ok(key) = result
 
-  should.equal(key.info(key).is_extractable, True)
+  should.equal(key.info(key).extractable, True)
 
   use result <- promise.await(subtle.export_key(subtle.Raw, key))
   let assert Ok(exported) = result
