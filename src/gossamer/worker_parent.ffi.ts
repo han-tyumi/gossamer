@@ -5,23 +5,24 @@ import {
   wrapArrayBuffer,
 } from "~/utils/bit_array.ffi.ts";
 
+interface Target {
+  postMessage(data: unknown): void;
+  onmessage?: ((event: MessageEvent) => void) | null;
+}
+
 // On Deno, Bun, and Node, `node:worker_threads` is reachable (Deno and
 // Bun ship a compatibility shim). `parentPort` is non-null inside a
 // worker thread on all three. In browsers, the import fails -- fall
 // back to the Web Worker globals on `self`.
-// deno-lint-ignore no-explicit-any
-let parentPort: any = null;
+let parentPort: Target | null = null;
 try {
   parentPort = (await import("node:worker_threads")).parentPort;
 } catch {
   parentPort = null;
 }
 
-interface Target {
-  postMessage(data: unknown): void;
-}
-
-const target: Target = parentPort ?? (globalThis as unknown as Target);
+// @ts-expect-error globalThis is a Web Worker scope when parentPort is null
+const target: Target = parentPort ?? globalThis;
 
 function onMessage(handler: (data: unknown) => void): void {
   if (parentPort) {

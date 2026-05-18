@@ -3,7 +3,7 @@
 //// and controllers. Hosts `StreamLifecycleError`, the shared error
 //// type returned by stream operations that fail because of the
 //// stream's current state, and `QueuingStrategy`, the shared
-//// backpressure-tuning enum applied via stream builders.
+//// backpressure-tuning type applied via stream builders.
 
 import gleam/dynamic.{type Dynamic}
 

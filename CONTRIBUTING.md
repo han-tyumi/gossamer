@@ -64,8 +64,8 @@ acknowledges it)?
 ├── no  → consider removing the binding if support isn't majority.
 └── yes → continue.
 
-Does the property have a meaningful spec default (enum, String, Bool,
-or numeric)?
+Does the property have a meaningful spec default (a named variant,
+`String`, `Bool`, or numeric)?
 ├── yes → Pattern 1: substitute the spec default in the FFI converter.
 └── no  → continue.
 
@@ -81,9 +81,10 @@ stays current.
 
 ### Pattern 1 — Spec default at the FFI boundary
 
-When the spec defines a meaningful default for an unset property (enum default,
-`""`, `false`, etc.), the FFI converter substitutes the spec default when the
-runtime returns `undefined`. The Gleam binding's type signature stays clean.
+When the spec defines a meaningful default for an unset property (a named
+variant, `""`, `false`, etc.), the FFI converter substitutes the spec default
+when the runtime returns `undefined`. The Gleam binding's type signature stays
+clean.
 
 Example: `request.referrer` defaults to `"about:client"` per spec; some runtimes
 return `undefined` instead. The FFI substitutes:

@@ -19,7 +19,7 @@ pub type RegExpFlag {
   /// `s` — `.` matches newline characters.
   DotAll
   /// `u` — Unicode mode: surrogate pairs treated as single code points,
-  /// `\u{...}` escapes recognised.
+  /// `\u{...}` escapes recognized.
   Unicode
   /// `v` — extended Unicode set features. Mutually exclusive with `Unicode`.
   UnicodeSets

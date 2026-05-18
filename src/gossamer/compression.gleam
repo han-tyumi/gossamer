@@ -1,6 +1,6 @@
 //// Parent module for the compression family — `CompressionStream`
-//// and `DecompressionStream`. Hosts `CompressionFormat`, the shared
-//// format enum.
+//// and `DecompressionStream`. Hosts the shared
+//// [`CompressionFormat`](#CompressionFormat) type.
 
 /// Compression algorithms supported by `CompressionStream` and
 /// `DecompressionStream`.

@@ -1,7 +1,8 @@
 //// Parent module for the text-encoding family — `TextDecoder`,
 //// `TextDecoderStream`, and `TextEncoderStream`. Hosts the shared
-//// `Encoding` enum and the `DecoderError` returned from
-//// decoder-side operations.
+//// [`Encoding`](#Encoding) type and the
+//// [`DecoderError`](#DecoderError) returned from decoder-side
+//// operations.
 
 /// A text encoding, used by `TextEncoder` and `TextDecoder`.
 ///
