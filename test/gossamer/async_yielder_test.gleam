@@ -1,3 +1,4 @@
+import gleam/dict
 import gleam/javascript/promise
 import gleam/list
 import gleeunit/should
@@ -850,4 +851,93 @@ pub fn try_fold_async_test() {
     })
   use result <- promise.map(result)
   should.equal(result, Ok(6))
+}
+
+pub fn chunk_test() {
+  let result =
+    async_yielder.from_list([1, 1, 2, 2, 2, 3])
+    |> async_yielder.chunk(by: fn(x) { x })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [[1, 1], [2, 2, 2], [3]])
+}
+
+pub fn chunk_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.chunk(by: fn(x) { x })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [])
+}
+
+pub fn chunk_async_test() {
+  let result =
+    async_yielder.from_list([1, 1, 2, 2, 3])
+    |> async_yielder.chunk_async(by: fn(x) { promise.resolve(x) })
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [[1, 1], [2, 2], [3]])
+}
+
+pub fn sized_chunk_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5, 6])
+    |> async_yielder.sized_chunk(into: 2)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [[1, 2], [3, 4], [5, 6]])
+}
+
+pub fn sized_chunk_partial_last_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5])
+    |> async_yielder.sized_chunk(into: 2)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [[1, 2], [3, 4], [5]])
+}
+
+pub fn sized_chunk_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.sized_chunk(into: 3)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [])
+}
+
+pub fn sized_chunk_zero_test() {
+  let result =
+    async_yielder.from_list([1, 2])
+    |> async_yielder.sized_chunk(into: 0)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [])
+}
+
+pub fn group_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4, 5, 6])
+    |> async_yielder.group(by: fn(x) { x % 2 })
+  use grouped <- promise.map(result)
+  should.equal(dict.get(grouped, 0), Ok([2, 4, 6]))
+  should.equal(dict.get(grouped, 1), Ok([1, 3, 5]))
+}
+
+pub fn group_empty_test() {
+  let result =
+    async_yielder.empty()
+    |> async_yielder.group(by: fn(x) { x })
+  use grouped <- promise.map(result)
+  should.equal(dict.size(grouped), 0)
+}
+
+pub fn group_async_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3, 4])
+    |> async_yielder.group_async(by: fn(x) { promise.resolve(x % 2) })
+  use grouped <- promise.map(result)
+  should.equal(dict.get(grouped, 0), Ok([2, 4]))
+  should.equal(dict.get(grouped, 1), Ok([1, 3]))
 }

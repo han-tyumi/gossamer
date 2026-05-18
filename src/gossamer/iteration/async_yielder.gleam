@@ -8,9 +8,11 @@
 //// Fallible operations should be expressed via `Result` inside the
 //// promise, following gleam_javascript convention.
 
+import gleam/dict.{type Dict}
 import gleam/int
 import gleam/javascript/promise.{type Promise}
 import gleam/list
+import gleam/option.{None, Some}
 import gleam/order
 
 /// A pull-based async iterator. Each pull returns a promise for the
@@ -996,6 +998,176 @@ pub fn find_map_async(
       }
     }
   }
+}
+
+/// Groups consecutive values of `yielder` that share the same key
+/// (computed by `fun`) into lists.
+///
+pub fn chunk(
+  over yielder: AsyncYielder(a),
+  by fun: fn(a) -> key,
+) -> AsyncYielder(List(a)) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.await(yielder.pull())
+    case step {
+      Done -> promise.resolve(Done)
+      Next(first_value, rest) ->
+        chunk_loop(rest, fun, fun(first_value), [first_value])
+    }
+  })
+}
+
+fn chunk_loop(
+  yielder: AsyncYielder(a),
+  fun: fn(a) -> key,
+  current_key: key,
+  current_chunk: List(a),
+) -> Promise(Step(List(a), AsyncYielder(List(a)))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Next(list.reverse(current_chunk), empty()))
+    Next(value, rest) -> {
+      let value_key = fun(value)
+      case value_key == current_key {
+        True -> chunk_loop(rest, fun, current_key, [value, ..current_chunk])
+        False ->
+          promise.resolve(Next(
+            list.reverse(current_chunk),
+            AsyncYielder(pull: fn() {
+              chunk_loop(rest, fun, value_key, [value])
+            }),
+          ))
+      }
+    }
+  }
+}
+
+/// Like [`chunk`](#chunk) but `fun` returns a `Promise`. Each call is
+/// awaited before the next.
+///
+pub fn chunk_async(
+  over yielder: AsyncYielder(a),
+  by fun: fn(a) -> Promise(key),
+) -> AsyncYielder(List(a)) {
+  AsyncYielder(pull: fn() {
+    use step <- promise.await(yielder.pull())
+    case step {
+      Done -> promise.resolve(Done)
+      Next(first_value, rest) -> {
+        use first_key <- promise.await(fun(first_value))
+        chunk_async_loop(rest, fun, first_key, [first_value])
+      }
+    }
+  })
+}
+
+fn chunk_async_loop(
+  yielder: AsyncYielder(a),
+  fun: fn(a) -> Promise(key),
+  current_key: key,
+  current_chunk: List(a),
+) -> Promise(Step(List(a), AsyncYielder(List(a)))) {
+  use step <- promise.await(yielder.pull())
+  case step {
+    Done -> promise.resolve(Next(list.reverse(current_chunk), empty()))
+    Next(value, rest) -> {
+      use value_key <- promise.await(fun(value))
+      case value_key == current_key {
+        True ->
+          chunk_async_loop(rest, fun, current_key, [value, ..current_chunk])
+        False ->
+          promise.resolve(Next(
+            list.reverse(current_chunk),
+            AsyncYielder(pull: fn() {
+              chunk_async_loop(rest, fun, value_key, [value])
+            }),
+          ))
+      }
+    }
+  }
+}
+
+/// Splits `yielder` into fixed-size lists. The final list may be
+/// shorter than `count`. If `count` is non-positive, yields nothing.
+///
+pub fn sized_chunk(
+  over yielder: AsyncYielder(a),
+  into count: Int,
+) -> AsyncYielder(List(a)) {
+  case count > 0 {
+    False -> empty()
+    True ->
+      AsyncYielder(pull: fn() { sized_chunk_loop(yielder, count, [], count) })
+  }
+}
+
+fn sized_chunk_loop(
+  yielder: AsyncYielder(a),
+  count: Int,
+  current_chunk: List(a),
+  remaining: Int,
+) -> Promise(Step(List(a), AsyncYielder(List(a)))) {
+  case remaining {
+    0 ->
+      promise.resolve(Next(
+        list.reverse(current_chunk),
+        AsyncYielder(pull: fn() { sized_chunk_loop(yielder, count, [], count) }),
+      ))
+    _ -> {
+      use step <- promise.await(yielder.pull())
+      case step {
+        Done ->
+          case current_chunk {
+            [] -> promise.resolve(Done)
+            _ -> promise.resolve(Next(list.reverse(current_chunk), empty()))
+          }
+        Next(value, rest) ->
+          sized_chunk_loop(rest, count, [value, ..current_chunk], remaining - 1)
+      }
+    }
+  }
+}
+
+/// Drains the yielder and groups its values into a [`Dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html)
+/// keyed by `key(value)`, with each key's values in the order they
+/// were yielded.
+///
+pub fn group(
+  in yielder: AsyncYielder(a),
+  by key: fn(a) -> key,
+) -> Promise(Dict(key, List(a))) {
+  use grouped <- promise.map(
+    fold(yielder, dict.new(), fn(acc, value) {
+      dict.upsert(acc, key(value), fn(existing) {
+        case existing {
+          Some(values) -> [value, ..values]
+          None -> [value]
+        }
+      })
+    }),
+  )
+  dict.map_values(grouped, fn(_, values) { list.reverse(values) })
+}
+
+/// Like [`group`](#group) but `key` returns a `Promise`. Each call is
+/// awaited before the next.
+///
+pub fn group_async(
+  in yielder: AsyncYielder(a),
+  by key: fn(a) -> Promise(key),
+) -> Promise(Dict(key, List(a))) {
+  use grouped <- promise.map(
+    fold_async(yielder, dict.new(), fn(acc, value) {
+      use k <- promise.map(key(value))
+      dict.upsert(acc, k, fn(existing) {
+        case existing {
+          Some(values) -> [value, ..values]
+          None -> [value]
+        }
+      })
+    }),
+  )
+  dict.map_values(grouped, fn(_, values) { list.reverse(values) })
 }
 
 /// Drains the yielder, collecting all yielded values into a list.
