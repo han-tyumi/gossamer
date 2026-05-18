@@ -215,9 +215,9 @@ No `from_array` because Gleam users prefer `List`. Users who have a
 ### `readable_stream.from_*` — two variants only
 
 - `from_yielder(Yielder(a))`
-- `from_async_iterator(AsyncIterator(a, r, n))`
+- `from_async_yielder(AsyncYielder(a))`
 
-`Yielder` and `AsyncIterator` are fundamentally different types (criterion 1).
+`Yielder` and `AsyncYielder` are fundamentally different types (criterion 1).
 Other sources (`List`, `Array`, `Uint8Array`) convert through existing methods —
 chaining is acceptable since streaming a fixed collection is uncommon.
 

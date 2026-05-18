@@ -236,8 +236,10 @@ return them while the canonical Gleam type stays preferred. `ArrayBuffer` /
 `Uint8Array` bridge to `BitArray`; `Iterator` bridges to
 [`gleam_yielder.Yielder`](https://hexdocs.pm/gleam_yielder/); `Map` / `Set`
 bridge to [`gleam/dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html) /
-[`gleam/set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html). `AsyncIterator`
-has no canonical Gleam counterpart — consume it via the binding's own helpers.
+[`gleam/set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html); `AsyncIterator`
+bridges to
+[`gossamer/iteration/async_yielder`](./gossamer/iteration/async_yielder.html),
+gossamer's pure-Gleam async iteration type.
 [`gossamer/iteration`](./gossamer/iteration.html) hosts the shared
 `IteratorResult` type used by both `iterator` and `async_iterator`.
 

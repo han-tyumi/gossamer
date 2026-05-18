@@ -9,7 +9,7 @@ versions than those are considered unsupported.
 
 ## Bun
 
-- **`readable_stream.from_yielder` / `from_async_iterator`** — panics via the
+- **`readable_stream.from_yielder` / `from_async_yielder`** — panics via the
   FFI's `ensureMethod` guard. `ReadableStream.from` is not implemented on Bun.
   Tracked at [oven-sh/bun#3700](https://github.com/oven-sh/bun/issues/3700).
 - **`compression_stream.new(compression.Brotli)` /
