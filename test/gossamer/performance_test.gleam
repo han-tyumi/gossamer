@@ -48,27 +48,27 @@ pub fn measure_invalid_test() {
   |> should.be_error
 }
 
-pub fn get_entries_test() {
+pub fn entries_test() {
   performance.clear_marks()
   performance.clear_measures()
   let _ = performance.mark("entries-mark")
-  let entries = performance.get_entries()
+  let entries = performance.entries()
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
 }
 
-pub fn get_entries_by_name_test() {
+pub fn entries_by_name_test() {
   performance.clear_marks()
   let _ = performance.mark("named-mark")
-  let entries = performance.get_entries_by_name("named-mark")
+  let entries = performance.entries_by_name("named-mark")
   should.equal(list.length(entries), 1)
   performance.clear_marks()
 }
 
-pub fn get_entries_by_type_test() {
+pub fn entries_by_type_test() {
   performance.clear_marks()
   let _ = performance.mark("typed-mark")
-  let entries = performance.get_entries_by_type("mark")
+  let entries = performance.entries_by_type("mark")
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
 }
@@ -76,7 +76,7 @@ pub fn get_entries_by_type_test() {
 pub fn clear_marks_test() {
   let _ = performance.mark("to-clear")
   performance.clear_marks()
-  let entries = performance.get_entries_by_name("to-clear")
+  let entries = performance.entries_by_name("to-clear")
   should.equal(list.length(entries), 0)
 }
 
@@ -85,7 +85,7 @@ pub fn clear_measures_test() {
   let _ = performance.mark("cm-end")
   let assert Ok(_) = performance.measure("to-clear-m", "cm-start", "cm-end")
   performance.clear_measures()
-  let entries = performance.get_entries_by_name("to-clear-m")
+  let entries = performance.entries_by_name("to-clear-m")
   should.equal(list.length(entries), 0)
   performance.clear_marks()
 }

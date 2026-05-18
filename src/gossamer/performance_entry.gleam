@@ -2,7 +2,7 @@
 //// another runtime-recorded metric. Returned by
 //// [`gossamer/performance.mark`](../performance.html#mark),
 //// [`measure`](../performance.html#measure), and the various
-//// `get_entries_*` queries.
+//// `entries_*` queries.
 
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option}

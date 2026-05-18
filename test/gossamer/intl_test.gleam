@@ -3,21 +3,21 @@ import gleeunit/should
 import gossamer/intl
 
 pub fn canonical_locales_normalizes_case_test() {
-  intl.get_canonical_locales(["EN-US", "Fr"])
+  intl.canonical_locales(["EN-US", "Fr"])
   |> should.equal(Ok(["en-US", "fr"]))
 }
 
 pub fn canonical_locales_dedupes_test() {
-  intl.get_canonical_locales(["en-US", "EN-us", "en-US"])
+  intl.canonical_locales(["en-US", "EN-us", "en-US"])
   |> should.equal(Ok(["en-US"]))
 }
 
 pub fn canonical_locales_empty_test() {
-  intl.get_canonical_locales([]) |> should.equal(Ok([]))
+  intl.canonical_locales([]) |> should.equal(Ok([]))
 }
 
 pub fn canonical_locales_invalid_tag_test() {
-  intl.get_canonical_locales(["not_a_locale!"]) |> should.be_error
+  intl.canonical_locales(["not_a_locale!"]) |> should.be_error
 }
 
 pub fn calendars_test() {

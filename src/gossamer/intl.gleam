@@ -1,7 +1,7 @@
 //// Parent module for the Internationalization family — JavaScript's
-//// `Intl.*` constructors. Hosts option enums shared across siblings
+//// `Intl.*` constructors. Hosts option types shared across siblings
 //// and top-level helpers like
-//// [`get_canonical_locales`](#get_canonical_locales) and the
+//// [`canonical_locales`](#canonical_locales) and the
 //// per-category enumerators ([`calendars`](#calendars),
 //// [`currencies`](#currencies), [`time_zones`](#time_zones), etc.).
 
@@ -28,11 +28,11 @@ pub type LocaleMatcher {
 /// ## Examples
 ///
 /// ```gleam
-/// assert intl.get_canonical_locales(["EN-US", "Fr"]) == Ok(["en-US", "fr"])
+/// assert intl.canonical_locales(["EN-US", "Fr"]) == Ok(["en-US", "fr"])
 /// ```
 ///
-@external(javascript, "./intl.ffi.mjs", "get_canonical_locales")
-pub fn get_canonical_locales(locales: List(String)) -> Result(List(String), Nil)
+@external(javascript, "./intl.ffi.mjs", "canonical_locales")
+pub fn canonical_locales(locales: List(String)) -> Result(List(String), Nil)
 
 /// The calendar identifiers the runtime's `Intl` implementation
 /// supports (e.g., `"gregory"`, `"buddhist"`), sorted ascending.

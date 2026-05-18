@@ -49,20 +49,20 @@ pub fn clear_measures() -> Nil
 
 /// Returns every entry on the performance timeline.
 ///
-@external(javascript, "./performance.ffi.mjs", "get_entries")
-pub fn get_entries() -> List(PerformanceEntry)
+@external(javascript, "./performance.ffi.mjs", "entries")
+pub fn entries() -> List(PerformanceEntry)
 
 /// Returns the entries on the performance timeline whose name matches
 /// `name`.
 ///
-@external(javascript, "./performance.ffi.mjs", "get_entries_by_name")
-pub fn get_entries_by_name(name: String) -> List(PerformanceEntry)
+@external(javascript, "./performance.ffi.mjs", "entries_by_name")
+pub fn entries_by_name(name: String) -> List(PerformanceEntry)
 
 /// Returns the entries on the performance timeline whose type matches
 /// `entry_type` (e.g., `"mark"`, `"measure"`).
 ///
-@external(javascript, "./performance.ffi.mjs", "get_entries_by_type")
-pub fn get_entries_by_type(entry_type: String) -> List(PerformanceEntry)
+@external(javascript, "./performance.ffi.mjs", "entries_by_type")
+pub fn entries_by_type(entry_type: String) -> List(PerformanceEntry)
 
 /// Returns a JSON-serializable snapshot of the performance object as
 /// a `Dynamic`. Pass to `gleam/json.encode_dynamic` (or any

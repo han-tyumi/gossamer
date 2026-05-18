@@ -2,7 +2,7 @@ import type * as $intl from "$/gossamer/gossamer/intl.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 
-export const get_canonical_locales: typeof $intl.get_canonical_locales = (
+export const canonical_locales: typeof $intl.canonical_locales = (
   locales,
 ) => {
   try {
