@@ -176,7 +176,7 @@ pub type PartKind {
 
   /// Any future part type the binding doesn't recognize, passed
   /// through verbatim.
-  Unknown(String)
+  Other(String)
 }
 
 /// The configuration for a [`DateTimeFormat`](#DateTimeFormat).

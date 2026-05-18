@@ -163,7 +163,7 @@ function fromPartKind(type: string): $numberFormat.PartKind$ {
     case "unit":
       return $numberFormat.PartKind$Unit();
     default:
-      return $numberFormat.PartKind$Unknown(type);
+      return $numberFormat.PartKind$Other(type);
   }
 }
 

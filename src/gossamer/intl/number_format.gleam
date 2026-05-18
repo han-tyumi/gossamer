@@ -213,7 +213,7 @@ pub type PartKind {
 
   /// Any future part kind the binding doesn't recognize, passed
   /// through verbatim.
-  Unknown(String)
+  Other(String)
 }
 
 /// A single segment of a formatted number range, returned by the
@@ -365,13 +365,19 @@ pub fn with_maximum_fraction_digits(builder: Builder, value: Int) -> Builder {
 
 /// Sets the minimum number of significant digits.
 ///
-pub fn with_minimum_significant_digits(builder: Builder, value: Int) -> Builder {
+pub fn with_minimum_significant_digits(
+  builder: Builder,
+  value: Int,
+) -> Builder {
   Builder(..builder, minimum_significant_digits: Some(value))
 }
 
 /// Sets the maximum number of significant digits.
 ///
-pub fn with_maximum_significant_digits(builder: Builder, value: Int) -> Builder {
+pub fn with_maximum_significant_digits(
+  builder: Builder,
+  value: Int,
+) -> Builder {
   Builder(..builder, maximum_significant_digits: Some(value))
 }
 
@@ -384,7 +390,10 @@ pub fn with_notation(builder: Builder, value: Notation) -> Builder {
 /// Sets the compact-notation label form. Only applies when the
 /// notation is [`NotationCompact`](#NotationCompact).
 ///
-pub fn with_compact_display(builder: Builder, value: CompactDisplay) -> Builder {
+pub fn with_compact_display(
+  builder: Builder,
+  value: CompactDisplay,
+) -> Builder {
   Builder(..builder, compact_display: Some(value))
 }
 

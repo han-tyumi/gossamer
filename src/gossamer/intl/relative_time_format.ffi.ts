@@ -63,7 +63,7 @@ function fromPartKind(type: string): $relativeTimeFormat.PartKind$ {
     case "nan":
       return $relativeTimeFormat.PartKind$Nan();
     default:
-      return $relativeTimeFormat.PartKind$Unknown(type);
+      return $relativeTimeFormat.PartKind$Other(type);
   }
 }
 

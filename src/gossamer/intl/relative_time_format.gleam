@@ -84,7 +84,7 @@ pub type PartKind {
 
   /// Any future part kind the binding doesn't recognize, passed
   /// through verbatim.
-  Unknown(String)
+  Other(String)
 }
 
 /// The configuration for a
@@ -194,7 +194,10 @@ pub fn format_int_to_parts(
 /// accept sub-second units; the rendered phrasing then depends on the
 /// formatter's [`Numeric`](#Numeric) setting.
 ///
-pub fn format_duration(formatter: RelativeTimeFormat, value: Duration) -> String {
+pub fn format_duration(
+  formatter: RelativeTimeFormat,
+  value: Duration,
+) -> String {
   let #(amount, unit) = decompose(value)
   format_int(formatter, amount, in: unit)
 }

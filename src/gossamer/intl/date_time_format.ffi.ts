@@ -100,7 +100,7 @@ function fromPartKind(type: string): $dateTimeFormat.PartKind$ {
     case "timeZoneName":
       return $dateTimeFormat.PartKind$TimeZoneName();
     default:
-      return $dateTimeFormat.PartKind$Unknown(type);
+      return $dateTimeFormat.PartKind$Other(type);
   }
 }
 
