@@ -1,11 +1,15 @@
 //// JavaScript `AsyncIterator` binding for interop with APIs that
 //// produce or consume async iterators. Treated as a transit type:
-//// pass an async iterator across the FFI boundary and consume from
-//// Gleam via [`each`](#each) or [`to_list`](#to_list). The iterator
-//// protocol (`next`, `return`, `throw`) is intentionally not exposed
-//// publicly — observable mutation lives on the JavaScript side.
+//// pass an async iterator across the FFI boundary and bridge to
+//// `AsyncYielder` for Gleam-side iteration via
+//// [`to_async_yielder`](#to_async_yielder). The iterator protocol
+//// (`next`, `return`, `throw`) is intentionally not exposed publicly —
+//// observable mutation lives on the JavaScript side.
+////
+//// Rejections from the underlying iterator's `next()` propagate as
+//// promise rejections; use [`promise.rescue`](https://hexdocs.pm/gleam_javascript/gleam/javascript/promise.html#rescue)
+//// at the call site if you need to handle them.
 
-import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option}
 import gossamer/iteration.{type IteratorResult}
@@ -29,20 +33,6 @@ pub fn new(
   next: fn(Option(next)) -> Promise(IteratorResult(a, return)),
 ) -> AsyncIterator(a, return, next)
 
-/// Creates an async iterator from a Gleam list.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "from_list")
-pub fn from_list(list: List(a)) -> AsyncIterator(a, Nil, Nil)
-
-/// Collects all values from an async iterator into a list. Consumes
-/// the iterator. Returns the rejection reason if any `next` call
-/// rejects.
-///
-@external(javascript, "./async_iterator.ffi.mjs", "to_list")
-pub fn to_list(
-  iterator: AsyncIterator(a, return, next),
-) -> Promise(Result(List(a), Dynamic))
-
 /// Creates an async iterator from an
 /// [`AsyncYielder`](async_yielder.html#AsyncYielder). The yielder is
 /// consumed lazily as values are pulled from the iterator.
@@ -63,12 +53,11 @@ pub fn to_async_yielder(
   iterator: AsyncIterator(a, return, next),
 ) -> AsyncYielder(a)
 
-/// Consumes the iterator, calling `fun` on each yielded value. Returns
-/// the thrown value or rejection reason if the iterator or `fun` throws
-/// or rejects. Equivalent to JavaScript's `for await...of` loop.
+/// Consumes the iterator, calling `fun` on each yielded value.
+/// Equivalent to JavaScript's `for await...of` loop.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "each")
 pub fn each(
   in iterator: AsyncIterator(a, return, next),
   run fun: fn(a) -> any,
-) -> Promise(Result(Nil, Dynamic))
+) -> Promise(Nil)

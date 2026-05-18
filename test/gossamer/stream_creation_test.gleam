@@ -7,6 +7,7 @@ import gleam/yielder
 import gleeunit/should
 import gossamer/abort_signal
 import gossamer/iteration/async_iterator
+import gossamer/iteration/async_yielder
 import gossamer/stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
@@ -555,10 +556,13 @@ pub fn readable_stream_async_iterator_test() {
       Nil
     })
 
-  let iter = readable_stream.async_iterator(stream)
+  let result =
+    readable_stream.async_iterator(stream)
+    |> async_iterator.to_async_yielder
+    |> async_yielder.to_list
 
-  use result <- promise.await(async_iterator.to_list(iter))
-  should.equal(result, Ok([1, 2]))
+  use result <- promise.await(result)
+  should.equal(result, [1, 2])
   promise.resolve(Nil)
 }
 
@@ -635,7 +639,10 @@ pub fn from_async_iterator_bun_divergence_test() {
   use <- runtime.only_on(runtime.Bun)
   let assert Error(message) =
     runtime.catch_panic(fn() {
-      readable_stream.from_async_iterator(async_iterator.from_list([1, 2, 3]))
+      let iter =
+        async_yielder.from_list([1, 2, 3])
+        |> async_iterator.from_async_yielder
+      readable_stream.from_async_iterator(iter)
     })
   message
   |> string.contains("readable_stream.from_async_iterator")
