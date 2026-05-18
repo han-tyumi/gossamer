@@ -86,6 +86,14 @@ pub fn filter_async_test() {
   should.equal(result, Ok([3, 4, 5]))
 }
 
+pub fn each_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.each(with: fn(_) { Nil })
+  use result <- promise.map(result)
+  should.equal(result, Ok(Nil))
+}
+
 pub fn each_async_test() {
   let result =
     async_yielder.from_list([1, 2, 3])
