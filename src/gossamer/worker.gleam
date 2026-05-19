@@ -22,7 +22,11 @@ pub type Worker
 /// The configuration for a [`Worker`](#Worker).
 ///
 pub opaque type Builder {
-  Builder(url: String, name: String, on_message: Option(fn(Dynamic) -> Nil))
+  Builder(
+    url: String,
+    name: String,
+    on_message: Option(fn(Worker, Dynamic) -> Nil),
+  )
 }
 
 /// Creates a `Builder` for a worker that runs the ECMAScript module
@@ -61,17 +65,19 @@ pub fn with_name(builder: Builder, name: String) -> Builder {
 }
 
 /// Registers a handler invoked for each message the worker sends back.
-/// `ArrayBuffer` payloads are exposed as `BitArray`; other values pass
-/// through unchanged. Decode the payload with `gleam/dynamic/decode`.
+/// The handler receives the [`Worker`](#Worker) so it can reply via
+/// [`post_message`](#post_message). `ArrayBuffer` payloads are exposed
+/// as `BitArray`; other values pass through unchanged. Decode the
+/// payload with `gleam/dynamic/decode`.
 ///
 pub fn with_on_message(
   builder: Builder,
-  run handler: fn(Dynamic) -> a,
+  run handler: fn(Worker, Dynamic) -> a,
 ) -> Builder {
   Builder(
     ..builder,
-    on_message: Some(fn(data) {
-      handler(data)
+    on_message: Some(fn(worker, data) {
+      handler(worker, data)
       Nil
     }),
   )
@@ -93,7 +99,7 @@ pub fn build(builder: Builder) -> Result(Worker, Nil) {
 pub fn do_build(
   url: String,
   name: String,
-  on_message: Option(fn(Dynamic) -> Nil),
+  on_message: Option(fn(Worker, Dynamic) -> Nil),
 ) -> Result(Worker, Nil)
 
 /// Sends `data` to the worker. Returns an error if `data` can't be
