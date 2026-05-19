@@ -51,8 +51,7 @@ pub fn new() -> Builder(input, output) {
 
 /// Registers the `start` callback that runs once at construction. Use
 /// to enqueue initial chunks or set up state. If the callback returns
-/// a `Promise`, the stream waits for it before any transforms run;
-/// synchronous returns proceed immediately.
+/// a `Promise`, the stream waits for it before any transforms run.
 ///
 pub fn with_start(
   builder: Builder(input, output),

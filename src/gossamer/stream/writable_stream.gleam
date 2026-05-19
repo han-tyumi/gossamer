@@ -49,7 +49,7 @@ pub fn new() -> Builder(a) {
 /// Registers the `start` callback that runs once at construction. Use
 /// to acquire resources or set up state. If the callback returns a
 /// `Promise`, the stream waits for it to resolve before accepting
-/// writes; synchronous returns proceed immediately.
+/// writes.
 ///
 pub fn with_start(
   builder: Builder(a),

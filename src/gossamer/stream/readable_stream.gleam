@@ -103,9 +103,9 @@ pub fn new() -> Builder(a) {
 }
 
 /// Registers the `start` callback that runs once at construction. Use
-/// to enqueue initial chunks or set up state. If the callback returns a
-/// `Promise`, the stream waits for it to resolve before any pulls
-/// occur; synchronous returns proceed immediately.
+/// to enqueue initial chunks or set up state. If the callback returns
+/// a `Promise`, the stream waits for it to resolve before any pulls
+/// occur.
 ///
 pub fn with_start(
   builder: Builder(a),
@@ -116,8 +116,7 @@ pub fn with_start(
 
 /// Registers the `pull` callback that runs whenever the consumer
 /// requests more chunks. If the callback returns a `Promise`, the
-/// stream waits for it to resolve before pulling again; synchronous
-/// returns proceed immediately.
+/// stream waits for it to resolve before pulling again.
 ///
 pub fn with_pull(
   builder: Builder(a),
@@ -129,7 +128,7 @@ pub fn with_pull(
 /// Registers the `cancel` callback that runs when the consumer aborts.
 /// Receives the cancellation reason. If the callback returns a
 /// `Promise`, the stream waits for it before considering the cancel
-/// complete; synchronous returns proceed immediately.
+/// complete.
 ///
 pub fn with_cancel(
   builder: Builder(a),

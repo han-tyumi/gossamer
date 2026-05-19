@@ -12,7 +12,7 @@ export const as_promise: typeof $stream.as_promise = (value) => {
     "then" in value &&
     typeof value.then === "function"
   ) {
-    return value as Promise<void>;
+    return value;
   }
   return Promise.resolve(undefined);
 };

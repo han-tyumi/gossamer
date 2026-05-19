@@ -1,6 +1,6 @@
 //// Bidirectional, message-oriented WebSocket connections (`ws:` and
-//// `wss:`). Construct via [`new`](#new); lifecycle events arrive on
-//// the [`WebSocketEvent`](#WebSocketEvent) sum, dispatched by the
+//// `wss:`). Construct via [`new`](#new); lifecycle events arrive as
+//// [`WebSocketEvent`](#WebSocketEvent) variants, dispatched by the
 //// handler registered via [`with_on_event`](#with_on_event).
 
 import gleam/option.{type Option, None, Some}

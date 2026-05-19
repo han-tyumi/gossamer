@@ -239,7 +239,7 @@ pub fn close(socket: WebSocket) -> Nil
 ```
 
 The `with_on_event` handler also receives the `WebSocket` so it can call
-`send_*` from inside while pattern-matching on the `WebSocketEvent` sum. Handler
+`send_*` from inside while pattern-matching on the `WebSocketEvent`. Handler
 argument order is data-first, self-last (`fn(event, socket)`) to match the
 `mist.websocket` / `glisten` convention.
 

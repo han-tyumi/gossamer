@@ -159,7 +159,7 @@ Mixed payload rule:
 
 The variants mirror the JS spec's failure modes (`NotSupportedError`,
 `InvalidAccessError`, `OperationError`, etc.) wrapped as Gleam constructors,
-each one a closed sum.
+each closed to a fixed set.
 
 This follows
 [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
