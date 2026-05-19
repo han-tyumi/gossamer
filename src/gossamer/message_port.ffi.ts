@@ -22,5 +22,5 @@ export const set_on_message: typeof $messagePort.set_on_message = (
   port,
   handler,
 ) => {
-  port.onmessage = (event) => handler(wrapArrayBuffer(event.data));
+  port.onmessage = (event) => handler(wrapArrayBuffer(event.data), port);
 };

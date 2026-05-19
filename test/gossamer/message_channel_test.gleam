@@ -18,7 +18,7 @@ pub fn post_message_test() {
 
   let #(p, resolve) = promise.start()
 
-  message_port.set_on_message(port2, fn(data) {
+  message_port.set_on_message(port2, fn(data, _port) {
     let assert Ok(value) = decode.run(data, decode.string)
     resolve(value)
     Nil
@@ -45,7 +45,7 @@ pub fn post_message_array_buffer_wraps_as_bit_array_test() {
 
   let #(p, resolve) = promise.start()
 
-  message_port.set_on_message(port2, fn(data) {
+  message_port.set_on_message(port2, fn(data, _port) {
     let assert Ok(bytes) = decode.run(data, decode.bit_array)
     resolve(bytes)
     Nil

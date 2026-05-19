@@ -26,10 +26,15 @@ pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, Nil)
 @external(javascript, "./message_port.ffi.mjs", "close")
 pub fn close(port: MessagePort) -> Nil
 
-/// Registers a handler invoked with each message's data payload. Decode
-/// the payload with `gleam/dynamic/decode`. `ArrayBuffer` payloads are
+/// Registers a handler invoked with each message's data payload. The
+/// handler also receives the [`MessagePort`](#MessagePort) so it can
+/// reply via [`post_message`](#post_message) from inside. Decode the
+/// payload with `gleam/dynamic/decode`. `ArrayBuffer` payloads are
 /// exposed as `BitArray`; other values pass through unchanged.
 /// Equivalent to JavaScript's `port.onmessage`.
 ///
 @external(javascript, "./message_port.ffi.mjs", "set_on_message")
-pub fn set_on_message(port: MessagePort, run handler: fn(Dynamic) -> a) -> Nil
+pub fn set_on_message(
+  port: MessagePort,
+  run handler: fn(Dynamic, MessagePort) -> a,
+) -> Nil
