@@ -28,7 +28,7 @@ pub fn build_with_protocols_test() {
 pub fn build_with_on_event_test() {
   let assert Ok(ws) =
     web_socket.from_uri(ws("ws://localhost:1"))
-    |> web_socket.with_on_event(fn(_socket, event) {
+    |> web_socket.with_on_event(fn(event, _socket) {
       case event {
         web_socket.Opened -> Nil
         web_socket.Text(_) -> Nil

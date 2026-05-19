@@ -72,16 +72,16 @@ export const build: typeof $webSocket.do_build = (
 
   ws.binaryType = "arraybuffer";
   mapIfSome(ws, "onopen", on_event, (handler) => () => {
-    handler(ws, $webSocket.WebSocketEvent$Opened());
+    handler($webSocket.WebSocketEvent$Opened(), ws);
   });
   mapIfSome(ws, "onmessage", on_event, (handler) => (event) => {
-    handler(ws, toMessageEvent(event.data));
+    handler(toMessageEvent(event.data), ws);
   });
   mapIfSome(ws, "onerror", on_event, (handler) => () => {
-    handler(ws, $webSocket.WebSocketEvent$Errored());
+    handler($webSocket.WebSocketEvent$Errored(), ws);
   });
   mapIfSome(ws, "onclose", on_event, (handler) => (event) => {
-    handler(ws, $webSocket.WebSocketEvent$Disconnected(toCloseEvent(event)));
+    handler($webSocket.WebSocketEvent$Disconnected(toCloseEvent(event)), ws);
   });
 
   return Result$Ok(ws);

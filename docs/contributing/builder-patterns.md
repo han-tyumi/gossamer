@@ -227,7 +227,7 @@ pub fn from_uri(uri: Uri) -> Builder
 pub fn with_protocols(builder: Builder, protocols: List(String)) -> Builder
 pub fn with_on_event(
   builder: Builder,
-  run handler: fn(WebSocket, WebSocketEvent) -> a,
+  run handler: fn(WebSocketEvent, WebSocket) -> a,
 ) -> Builder
 pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError)
 
@@ -238,8 +238,10 @@ pub fn send_text(
 pub fn close(socket: WebSocket) -> Nil
 ```
 
-The `with_on_event` handler receives the `WebSocket` so it can call `send_*`
-from inside while pattern-matching on the `WebSocketEvent` sum.
+The `with_on_event` handler also receives the `WebSocket` so it can call
+`send_*` from inside while pattern-matching on the `WebSocketEvent` sum. Handler
+argument order is data-first, self-last (`fn(event, socket)`) to match the
+`mist.websocket` / `glisten` convention.
 
 ### `File` — record builder
 

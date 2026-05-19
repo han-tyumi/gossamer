@@ -91,7 +91,7 @@ pub opaque type Builder {
   Builder(
     url: String,
     protocols: List(String),
-    on_event: Option(fn(WebSocket, WebSocketEvent) -> Nil),
+    on_event: Option(fn(WebSocketEvent, WebSocket) -> Nil),
   )
 }
 
@@ -112,18 +112,18 @@ pub fn with_protocols(builder: Builder, protocols: List(String)) -> Builder {
 /// Registers a handler invoked for every connection event:
 /// [`Opened`](#WebSocketEvent), [`Text`](#WebSocketEvent),
 /// [`Binary`](#WebSocketEvent), [`Errored`](#WebSocketEvent),
-/// [`Disconnected`](#WebSocketEvent). The handler receives the
+/// [`Disconnected`](#WebSocketEvent). The handler also receives the
 /// [`WebSocket`](#WebSocket) so it can reply via `send_*` while
 /// dispatching on the [`WebSocketEvent`](#WebSocketEvent).
 ///
 pub fn with_on_event(
   builder: Builder,
-  run handler: fn(WebSocket, WebSocketEvent) -> a,
+  run handler: fn(WebSocketEvent, WebSocket) -> a,
 ) -> Builder {
   Builder(
     ..builder,
-    on_event: Some(fn(socket, event) {
-      handler(socket, event)
+    on_event: Some(fn(event, socket) {
+      handler(event, socket)
       Nil
     }),
   )
@@ -143,7 +143,7 @@ pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError) {
 pub fn do_build(
   url: String,
   protocols: List(String),
-  on_event: Option(fn(WebSocket, WebSocketEvent) -> Nil),
+  on_event: Option(fn(WebSocketEvent, WebSocket) -> Nil),
 ) -> Result(WebSocket, WebSocketError)
 
 /// A snapshot of the handshake-time fields of a
