@@ -13,7 +13,7 @@ pub fn round_trip_string_test() {
 
   let assert Ok(w) =
     worker.new("gossamer/worker_parent_fixture")
-    |> worker.with_on_message(fn(_worker, data) {
+    |> worker.with_on_message(fn(data, _worker) {
       let assert Ok(value) = decode.run(data, decode.string)
       resolve(value)
       Nil
@@ -32,7 +32,7 @@ pub fn round_trip_array_buffer_as_bit_array_test() {
 
   let assert Ok(w) =
     worker.new("gossamer/worker_parent_fixture")
-    |> worker.with_on_message(fn(_worker, data) {
+    |> worker.with_on_message(fn(data, _worker) {
       let assert Ok(bytes) = decode.run(data, decode.bit_array)
       resolve(bytes)
       Nil
@@ -59,7 +59,7 @@ pub fn set_on_message_replaces_previous_handler_test() {
 
   let assert Ok(w) =
     worker.new("gossamer/worker_parent_replace_fixture")
-    |> worker.with_on_message(fn(_worker, data) {
+    |> worker.with_on_message(fn(data, _worker) {
       let assert Ok(value) = decode.run(data, decode.string)
       resolve(value)
       Nil

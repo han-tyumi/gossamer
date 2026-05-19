@@ -44,7 +44,7 @@ pub fn cross_worker_fanout_test() {
   let #(p2_echo, r2_echo) = promise.start()
 
   let handler = fn(ready_resolve, echo_resolve) {
-    fn(_worker, data) {
+    fn(data, _worker) {
       let assert Ok(msg) = decode.run(data, decode.string)
       case msg {
         "ready" -> ready_resolve(Nil)

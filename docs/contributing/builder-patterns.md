@@ -157,7 +157,7 @@ Gossamer-side examples:
 - `web_socket.with_on_event(builder, run handler:)` — `Builder` setter; the
   handler receives the `WebSocket` so it can reply via `send_*`.
 - `worker.with_on_message(builder, run handler:)` — `Builder` setter; the
-  handler receives the `Worker` so it can reply via `post_message`.
+  handler also receives the `Worker` so it can reply via `post_message`.
 - `readable_stream.with_pull(builder, run callback:)` — not an event handler;
   keeps unprefixed `with_<field>`.
 

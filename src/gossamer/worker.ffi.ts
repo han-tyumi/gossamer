@@ -59,7 +59,7 @@ function unwrap<T>(option: Option$<T>): T | null {
 
 function wireMessage(
   worker: UnifiedWorker,
-  option: Option$<(worker: UnifiedWorker, data: unknown) => void>,
+  option: Option$<(data: unknown, worker: UnifiedWorker) => void>,
 ) {
   const handler = unwrap(option);
   if (!handler) return;
@@ -67,12 +67,12 @@ function wireMessage(
     // @ts-expect-error Node's Worker uses EventEmitter `on('message', ...)`.
     worker.on(
       "message",
-      (data: unknown) => handler(worker, wrapArrayBuffer(data)),
+      (data: unknown) => handler(wrapArrayBuffer(data), worker),
     );
   } else {
     // @ts-expect-error globalThis.Worker has onmessage; UnifiedWorker doesn't expose it.
     worker.onmessage = (event: MessageEvent) =>
-      handler(worker, wrapArrayBuffer(event.data));
+      handler(wrapArrayBuffer(event.data), worker);
   }
 }
 
