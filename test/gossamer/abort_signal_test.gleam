@@ -43,20 +43,20 @@ pub fn reason_on_null_aborted_signal_test() {
   |> should.equal(Ok(None))
 }
 
-pub fn set_on_abort_test() {
+pub fn on_abort_resolves_when_aborted_test() {
   let #(signal, abort) = abort_signal.new()
-
-  let #(p, resolve) = promise.start()
-
-  abort_signal.set_on_abort(signal, fn(_signal) {
-    resolve("aborted")
-    Nil
-  })
-
-  abort(Nil)
-
-  use value <- promise.map(p)
+  let on_abort = abort_signal.on_abort(signal)
+  abort("aborted")
+  use reason <- promise.map(on_abort)
+  let assert Ok(value) = decode.run(reason, decode.string)
   should.equal(value, "aborted")
+}
+
+pub fn on_abort_resolves_immediately_when_already_aborted_test() {
+  let signal = abort_signal.abort("already")
+  use reason <- promise.map(abort_signal.on_abort(signal))
+  let assert Ok(value) = decode.run(reason, decode.string)
+  should.equal(value, "already")
 }
 
 pub fn any_test() {

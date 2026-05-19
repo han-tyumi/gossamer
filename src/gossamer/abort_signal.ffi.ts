@@ -34,9 +34,11 @@ export const reason: typeof $abortSignal.reason = (signal) => {
   return Result$Ok(signal.reason);
 };
 
-export const set_on_abort: typeof $abortSignal.set_on_abort = (
-  signal,
-  handler,
-) => {
-  signal.onabort = () => handler(signal);
+export const on_abort: typeof $abortSignal.on_abort = (signal) => {
+  if (signal.aborted) return Promise.resolve(signal.reason);
+  return new Promise((resolve) => {
+    signal.addEventListener("abort", () => resolve(signal.reason), {
+      once: true,
+    });
+  });
 };

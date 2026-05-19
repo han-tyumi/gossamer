@@ -1,12 +1,13 @@
 //// Accept an `AbortSignal` in cancelable operations like
 //// `fetch_extra.send`, then observe its state via
-//// [`is_aborted`](#is_aborted) / [`reason`](#reason) or react to
-//// cancellation via [`set_on_abort`](#set_on_abort). Signals are
-//// produced by [`new`](#new) (paired with an abort function) or by
-//// the static constructors [`abort`](#abort), [`any`](#any), and
+//// [`is_aborted`](#is_aborted) / [`reason`](#reason) or await
+//// cancellation via [`on_abort`](#on_abort). Signals are produced by
+//// [`new`](#new) (paired with an abort function) or by the static
+//// constructors [`abort`](#abort), [`any`](#any), and
 //// [`timeout`](#timeout).
 
 import gleam/dynamic.{type Dynamic}
+import gleam/javascript/promise.{type Promise}
 import gleam/time/duration.{type Duration}
 
 /// A signal that communicates when an operation should be aborted.
@@ -64,14 +65,11 @@ pub fn is_aborted(signal: AbortSignal) -> Bool
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
 pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 
-/// Registers `handler` to run when the signal aborts. The handler
-/// receives the signal so it can read [`reason`](#reason) inline.
-/// Fires once; calling `set_on_abort` again replaces the previous
-/// handler. If the signal is already aborted, `handler` is not called.
-/// Equivalent to JavaScript's `signal.onabort`.
+/// Resolves with the abort reason when `signal` aborts, or
+/// immediately if `signal` is already aborted. Each call returns an
+/// independent `Promise`, so multiple awaiters can each receive the
+/// notification. Equivalent to listening once for JavaScript's `abort`
+/// event and reading `signal.reason`.
 ///
-@external(javascript, "./abort_signal.ffi.mjs", "set_on_abort")
-pub fn set_on_abort(
-  signal: AbortSignal,
-  run handler: fn(AbortSignal) -> a,
-) -> Nil
+@external(javascript, "./abort_signal.ffi.mjs", "on_abort")
+pub fn on_abort(signal: AbortSignal) -> Promise(Dynamic)
