@@ -6,7 +6,9 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
-import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
+import gossamer/stream.{
+  type QueuingStrategy, type StreamLifecycleError, as_promise,
+}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/transform_stream/default_controller.{
   type DefaultController,
@@ -25,7 +27,7 @@ pub type TransformStream(input, output)
 ///
 pub opaque type Builder(input, output) {
   Builder(
-    start: Option(fn(DefaultController(output)) -> Nil),
+    start: Option(fn(DefaultController(output)) -> Promise(Nil)),
     transform: Option(fn(input, DefaultController(output)) -> Promise(Nil)),
     flush: Option(fn(DefaultController(output)) -> Promise(Nil)),
     cancel: Option(fn(Dynamic) -> Promise(Nil)),
@@ -47,50 +49,53 @@ pub fn new() -> Builder(input, output) {
   )
 }
 
-/// Registers the `start` callback that runs once at construction. Use to
-/// enqueue initial chunks or set up state.
+/// Registers the `start` callback that runs once at construction. Use
+/// to enqueue initial chunks or set up state. If the callback returns
+/// a `Promise`, the stream waits for it before any transforms run;
+/// synchronous returns proceed immediately.
 ///
 pub fn with_start(
   builder: Builder(input, output),
-  run callback: fn(DefaultController(output)) -> a,
+  run callback: fn(DefaultController(output)) -> b,
 ) -> Builder(input, output) {
-  Builder(
-    ..builder,
-    start: Some(fn(controller) {
-      callback(controller)
-      Nil
-    }),
-  )
+  Builder(..builder, start: Some(fn(c) { as_promise(callback(c)) }))
 }
 
-/// Registers the `transform` callback that runs for each input chunk. Use
-/// to map input chunks to output chunks.
+/// Registers the `transform` callback that runs for each input chunk.
+/// Use to map input chunks to output chunks. If the callback returns a
+/// `Promise`, the stream waits for it before accepting the next chunk.
 ///
 pub fn with_transform(
   builder: Builder(input, output),
-  run callback: fn(input, DefaultController(output)) -> Promise(Nil),
+  run callback: fn(input, DefaultController(output)) -> b,
 ) -> Builder(input, output) {
-  Builder(..builder, transform: Some(callback))
+  Builder(
+    ..builder,
+    transform: Some(fn(chunk, c) { as_promise(callback(chunk, c)) }),
+  )
 }
 
-/// Registers the `flush` callback that runs once after the writable side
-/// closes. Use to emit any buffered output.
+/// Registers the `flush` callback that runs once after the writable
+/// side closes. Use to emit any buffered output. If the callback
+/// returns a `Promise`, the stream waits for it before resolving the
+/// close.
 ///
 pub fn with_flush(
   builder: Builder(input, output),
-  run callback: fn(DefaultController(output)) -> Promise(Nil),
+  run callback: fn(DefaultController(output)) -> b,
 ) -> Builder(input, output) {
-  Builder(..builder, flush: Some(callback))
+  Builder(..builder, flush: Some(fn(c) { as_promise(callback(c)) }))
 }
 
-/// Registers the `cancel` callback that runs when either side is aborted.
-/// Receives the cancellation reason.
+/// Registers the `cancel` callback that runs when either side is
+/// aborted. Receives the cancellation reason. If the callback returns
+/// a `Promise`, the stream waits for it before resolving the cancel.
 ///
 pub fn with_cancel(
   builder: Builder(input, output),
-  run callback: fn(Dynamic) -> Promise(Nil),
+  run callback: fn(Dynamic) -> b,
 ) -> Builder(input, output) {
-  Builder(..builder, cancel: Some(callback))
+  Builder(..builder, cancel: Some(fn(r) { as_promise(callback(r)) }))
 }
 
 /// Sets the queuing strategy for the writable side of the transform.
@@ -136,7 +141,7 @@ pub fn build(
 @external(javascript, "./transform_stream.ffi.mjs", "build")
 @internal
 pub fn do_build(
-  start: Option(fn(DefaultController(output)) -> Nil),
+  start: Option(fn(DefaultController(output)) -> Promise(Nil)),
   transform: Option(fn(input, DefaultController(output)) -> Promise(Nil)),
   flush: Option(fn(DefaultController(output)) -> Promise(Nil)),
   cancel: Option(fn(Dynamic) -> Promise(Nil)),
@@ -145,10 +150,19 @@ pub fn do_build(
 ) -> Result(TransformStream(input, output), StreamLifecycleError)
 
 /// Creates a `TransformStream` from only a `transform` callback — use
-/// when the transformer just maps input chunks to output chunks.
+/// when the transformer just maps input chunks to output chunks. If
+/// the callback returns a `Promise`, the stream waits for it before
+/// accepting the next chunk.
 ///
-@external(javascript, "./transform_stream.ffi.mjs", "from_transform")
 pub fn from_transform(
+  transform: fn(input, DefaultController(output)) -> b,
+) -> TransformStream(input, output) {
+  do_from_transform(fn(chunk, c) { as_promise(transform(chunk, c)) })
+}
+
+@external(javascript, "./transform_stream.ffi.mjs", "from_transform")
+@internal
+pub fn do_from_transform(
   transform: fn(input, DefaultController(output)) -> Promise(Nil),
 ) -> TransformStream(input, output)
 

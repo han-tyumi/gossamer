@@ -6,6 +6,7 @@
 //// backpressure-tuning type applied via stream builders.
 
 import gleam/dynamic.{type Dynamic}
+import gleam/javascript/promise.{type Promise}
 
 /// The backpressure threshold applied to a stream's internal queue.
 ///
@@ -46,3 +47,7 @@ pub type StreamLifecycleError {
   /// if `abort()` was called with no argument.
   Aborted(reason: Dynamic)
 }
+
+@external(javascript, "./stream.ffi.mjs", "as_promise")
+@internal
+pub fn as_promise(value: a) -> Promise(Nil)

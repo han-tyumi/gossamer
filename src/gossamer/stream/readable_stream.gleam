@@ -9,7 +9,9 @@ import gleam/option.{type Option, None, Some}
 import gleam/yielder.{type Yielder}
 import gossamer/abort_signal.{type AbortSignal}
 import gossamer/iteration/async_yielder.{type AsyncYielder}
-import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
+import gossamer/stream.{
+  type QueuingStrategy, type StreamLifecycleError, as_promise,
+}
 import gossamer/stream/readable_stream/default_controller.{
   type DefaultController,
 }
@@ -28,7 +30,7 @@ pub type ReadableStream(a)
 ///
 pub opaque type Builder(a) {
   Builder(
-    start: Option(fn(DefaultController(a)) -> Nil),
+    start: Option(fn(DefaultController(a)) -> Promise(Nil)),
     pull: Option(fn(DefaultController(a)) -> Promise(Nil)),
     cancel: Option(fn(Dynamic) -> Promise(Nil)),
     queuing_strategy: Option(QueuingStrategy),
@@ -100,40 +102,40 @@ pub fn new() -> Builder(a) {
   Builder(start: None, pull: None, cancel: None, queuing_strategy: None)
 }
 
-/// Registers the `start` callback that runs once at construction. Use to
-/// enqueue initial chunks or set up state.
+/// Registers the `start` callback that runs once at construction. Use
+/// to enqueue initial chunks or set up state. If the callback returns a
+/// `Promise`, the stream waits for it to resolve before any pulls
+/// occur; synchronous returns proceed immediately.
 ///
 pub fn with_start(
   builder: Builder(a),
   run callback: fn(DefaultController(a)) -> b,
 ) -> Builder(a) {
-  Builder(
-    ..builder,
-    start: Some(fn(controller) {
-      callback(controller)
-      Nil
-    }),
-  )
+  Builder(..builder, start: Some(fn(c) { as_promise(callback(c)) }))
 }
 
-/// Registers the `pull` callback that runs whenever the consumer requests
-/// more chunks.
+/// Registers the `pull` callback that runs whenever the consumer
+/// requests more chunks. If the callback returns a `Promise`, the
+/// stream waits for it to resolve before pulling again; synchronous
+/// returns proceed immediately.
 ///
 pub fn with_pull(
   builder: Builder(a),
-  run callback: fn(DefaultController(a)) -> Promise(Nil),
+  run callback: fn(DefaultController(a)) -> b,
 ) -> Builder(a) {
-  Builder(..builder, pull: Some(callback))
+  Builder(..builder, pull: Some(fn(c) { as_promise(callback(c)) }))
 }
 
 /// Registers the `cancel` callback that runs when the consumer aborts.
-/// Receives the cancellation reason.
+/// Receives the cancellation reason. If the callback returns a
+/// `Promise`, the stream waits for it before considering the cancel
+/// complete; synchronous returns proceed immediately.
 ///
 pub fn with_cancel(
   builder: Builder(a),
-  run callback: fn(Dynamic) -> Promise(Nil),
+  run callback: fn(Dynamic) -> b,
 ) -> Builder(a) {
-  Builder(..builder, cancel: Some(callback))
+  Builder(..builder, cancel: Some(fn(r) { as_promise(callback(r)) }))
 }
 
 /// Sets the queuing strategy controlling backpressure on the stream's
@@ -165,15 +167,16 @@ pub fn build(
 @external(javascript, "./readable_stream.ffi.mjs", "build")
 @internal
 pub fn do_build(
-  start: Option(fn(DefaultController(a)) -> Nil),
+  start: Option(fn(DefaultController(a)) -> Promise(Nil)),
   pull: Option(fn(DefaultController(a)) -> Promise(Nil)),
   cancel: Option(fn(Dynamic) -> Promise(Nil)),
   queuing_strategy: Option(QueuingStrategy),
 ) -> Result(ReadableStream(a), StreamLifecycleError)
 
-/// Creates a `ReadableStream` from only a `start` callback — use when all
-/// chunks can be enqueued up front. Returns `Errored` if `start` throws
-/// synchronously.
+/// Creates a `ReadableStream` from only a `start` callback — use when
+/// all chunks can be enqueued up front. If the callback returns a
+/// `Promise`, the stream waits for it to resolve before any pulls
+/// occur. Returns `Errored` if `start` throws synchronously.
 ///
 pub fn from_start(
   start: fn(DefaultController(a)) -> b,
@@ -181,11 +184,17 @@ pub fn from_start(
   new() |> with_start(run: start) |> build
 }
 
-/// Creates a `ReadableStream` from only a `pull` callback — use when chunks
-/// are produced on demand.
+/// Creates a `ReadableStream` from only a `pull` callback — use when
+/// chunks are produced on demand. If the callback returns a `Promise`,
+/// the stream waits for it to resolve before pulling again.
 ///
+pub fn from_pull(pull: fn(DefaultController(a)) -> b) -> ReadableStream(a) {
+  do_from_pull(fn(c) { as_promise(pull(c)) })
+}
+
 @external(javascript, "./readable_stream.ffi.mjs", "from_pull")
-pub fn from_pull(
+@internal
+pub fn do_from_pull(
   pull: fn(DefaultController(a)) -> Promise(Nil),
 ) -> ReadableStream(a)
 

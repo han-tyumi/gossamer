@@ -6,7 +6,9 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
-import gossamer/stream.{type QueuingStrategy, type StreamLifecycleError}
+import gossamer/stream.{
+  type QueuingStrategy, type StreamLifecycleError, as_promise,
+}
 import gossamer/stream/writable_stream/default_controller.{
   type DefaultController,
 }
@@ -24,7 +26,7 @@ pub type WritableStream(a)
 ///
 pub opaque type Builder(a) {
   Builder(
-    start: Option(fn(DefaultController) -> Nil),
+    start: Option(fn(DefaultController) -> Promise(Nil)),
     write: Option(fn(a, DefaultController) -> Promise(Nil)),
     close: Option(fn() -> Promise(Nil)),
     abort: Option(fn(Dynamic) -> Promise(Nil)),
@@ -44,50 +46,49 @@ pub fn new() -> Builder(a) {
   )
 }
 
-/// Registers the `start` callback that runs once at construction. Use to
-/// acquire resources or set up state.
+/// Registers the `start` callback that runs once at construction. Use
+/// to acquire resources or set up state. If the callback returns a
+/// `Promise`, the stream waits for it to resolve before accepting
+/// writes; synchronous returns proceed immediately.
 ///
 pub fn with_start(
   builder: Builder(a),
   run callback: fn(DefaultController) -> b,
 ) -> Builder(a) {
-  Builder(
-    ..builder,
-    start: Some(fn(controller) {
-      callback(controller)
-      Nil
-    }),
-  )
+  Builder(..builder, start: Some(fn(c) { as_promise(callback(c)) }))
 }
 
-/// Registers the `write` callback that runs for each chunk written to the
-/// sink.
+/// Registers the `write` callback that runs for each chunk written to
+/// the sink. If the callback returns a `Promise`, the stream waits for
+/// it before accepting the next chunk.
 ///
 pub fn with_write(
   builder: Builder(a),
-  run callback: fn(a, DefaultController) -> Promise(Nil),
+  run callback: fn(a, DefaultController) -> b,
 ) -> Builder(a) {
-  Builder(..builder, write: Some(callback))
+  Builder(
+    ..builder,
+    write: Some(fn(chunk, c) { as_promise(callback(chunk, c)) }),
+  )
 }
 
 /// Registers the `close` callback that runs once after all writes
-/// complete.
+/// complete. If the callback returns a `Promise`, the stream waits for
+/// it before resolving the close.
 ///
-pub fn with_close(
-  builder: Builder(a),
-  run callback: fn() -> Promise(Nil),
-) -> Builder(a) {
-  Builder(..builder, close: Some(callback))
+pub fn with_close(builder: Builder(a), run callback: fn() -> b) -> Builder(a) {
+  Builder(..builder, close: Some(fn() { as_promise(callback()) }))
 }
 
 /// Registers the `abort` callback that runs if the stream is aborted.
-/// Receives the abort reason.
+/// Receives the abort reason. If the callback returns a `Promise`, the
+/// stream waits for it before resolving the abort.
 ///
 pub fn with_abort(
   builder: Builder(a),
-  run callback: fn(Dynamic) -> Promise(Nil),
+  run callback: fn(Dynamic) -> b,
 ) -> Builder(a) {
-  Builder(..builder, abort: Some(callback))
+  Builder(..builder, abort: Some(fn(r) { as_promise(callback(r)) }))
 }
 
 /// Sets the queuing strategy controlling backpressure on the stream's
@@ -120,18 +121,25 @@ pub fn build(
 @external(javascript, "./writable_stream.ffi.mjs", "build")
 @internal
 pub fn do_build(
-  start: Option(fn(DefaultController) -> Nil),
+  start: Option(fn(DefaultController) -> Promise(Nil)),
   write: Option(fn(a, DefaultController) -> Promise(Nil)),
   close: Option(fn() -> Promise(Nil)),
   abort: Option(fn(Dynamic) -> Promise(Nil)),
   queuing_strategy: Option(QueuingStrategy),
 ) -> Result(WritableStream(a), StreamLifecycleError)
 
-/// Creates a `WritableStream` from only a `write` callback — use when the
-/// sink just needs to handle incoming chunks.
+/// Creates a `WritableStream` from only a `write` callback — use when
+/// the sink just needs to handle incoming chunks. If the callback
+/// returns a `Promise`, the stream waits for it before accepting the
+/// next chunk.
 ///
+pub fn from_write(write: fn(a, DefaultController) -> b) -> WritableStream(a) {
+  do_from_write(fn(chunk, c) { as_promise(write(chunk, c)) })
+}
+
 @external(javascript, "./writable_stream.ffi.mjs", "from_write")
-pub fn from_write(
+@internal
+pub fn do_from_write(
   write: fn(a, DefaultController) -> Promise(Nil),
 ) -> WritableStream(a)
 

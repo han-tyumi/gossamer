@@ -86,7 +86,7 @@ pub fn writable_stream_from_write_test() {
   let stream =
     writable_stream.from_write(fn(chunk, _controller) {
       should.equal(chunk, "hello")
-      promise.resolve(Nil)
+      Nil
     })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
@@ -101,7 +101,7 @@ pub fn writable_stream_build_test() {
     writable_stream.new()
     |> writable_stream.with_write(run: fn(chunk, _controller) {
       should.equal(chunk, "test")
-      promise.resolve(Nil)
+      Nil
     })
     |> writable_stream.build
 
@@ -116,7 +116,7 @@ pub fn transform_stream_from_transform_test() {
   let transform =
     transform_stream.from_transform(fn(chunk: Int, controller) {
       let _ = transform_controller.enqueue(controller, int.to_string(chunk))
-      promise.resolve(Nil)
+      Nil
     })
 
   let assert Ok(readable) =
@@ -164,7 +164,7 @@ pub fn readable_pipe_to_writable_test() {
     writable_stream.from_write(fn(chunk, _controller) {
       // Can't mutate chunks in Gleam, just verify type works.
       let _ = [chunk, ..chunks]
-      promise.resolve(Nil)
+      Nil
     })
 
   use _ <- promise.await(readable_stream.pipe_to(
@@ -250,7 +250,7 @@ pub fn readable_stream_from_pull_test() {
     readable_stream.from_pull(fn(controller) {
       let _ = default_controller.enqueue(controller, 42)
       let _ = default_controller.close(controller)
-      promise.resolve(Nil)
+      Nil
     })
 
   let assert Ok(r) = readable_stream.get_reader(stream)
@@ -415,7 +415,7 @@ pub fn writable_controller_signal_test() {
     writable_stream.new()
     |> writable_stream.with_write(run: fn(_chunk, controller) {
       let _signal = writable_controller.signal(controller)
-      promise.resolve(Nil)
+      Nil
     })
     |> writable_stream.build
 
@@ -431,7 +431,7 @@ pub fn writable_controller_error_test() {
     writable_stream.new()
     |> writable_stream.with_write(run: fn(_chunk, controller) {
       writable_controller.error(controller, dynamic.string("fail"))
-      promise.resolve(Nil)
+      Nil
     })
     |> writable_stream.build
 
@@ -449,7 +449,7 @@ pub fn transform_controller_desired_size_test() {
     |> transform_stream.with_transform(run: fn(_chunk: String, controller) {
       let _size = transform_controller.desired_size(controller)
       let _ = transform_controller.enqueue(controller, "out")
-      promise.resolve(Nil)
+      Nil
     })
     |> transform_stream.build
 
@@ -481,7 +481,7 @@ pub fn transform_controller_error_test() {
     transform_stream.new()
     |> transform_stream.with_transform(run: fn(_chunk: String, controller) {
       transform_controller.error(controller, dynamic.string("transform error"))
-      promise.resolve(Nil)
+      Nil
     })
     |> transform_stream.build
 
@@ -516,7 +516,7 @@ pub fn transform_controller_terminate_test() {
     transform_stream.new()
     |> transform_stream.with_transform(run: fn(_chunk: String, controller) {
       let _ = transform_controller.terminate(controller)
-      promise.resolve(Nil)
+      Nil
     })
     |> transform_stream.build
 
