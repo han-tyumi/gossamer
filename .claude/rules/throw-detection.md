@@ -9,8 +9,8 @@ paths:
 
 LLM extension for `docs/contributing/throw-detection.md`. Read that contributor
 doc first — it has the checklist, the reliable sources, Promise handling, the
-verification process, typed error sums, and the no-clipping rationale. This file
-adds process notes the human doc deliberately omits.
+verification process, typed error variants, and the no-clipping rationale. This
+file adds process notes the human doc deliberately omits.
 
 ## Authoring new bindings
 

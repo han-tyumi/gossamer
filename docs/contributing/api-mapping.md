@@ -97,10 +97,10 @@ No `*Init` wrapper types. No options-list parameters. JS options objects
 (`RequestInit`, `ResponseInit`, `EventInit`, `TextDecoderOption`, etc.) are
 replaced by the builder pattern. See [Builder patterns](./builder-patterns.md).
 
-## Enum-like string parameters
+## Closed-set string parameters
 
-Well-defined string enums become Gleam variant types in their own module (see
-[Module organization](./module-organization.md)).
+Well-defined sets of JavaScript string values become Gleam variant types in
+their own module (see [Module organization](./module-organization.md)).
 
 ```gleam
 pub type CompressionFormat {
@@ -144,7 +144,7 @@ Callback parameters are always last (for `use` syntax compatibility).
 | Promise resolves (safe) | `Promise(a)`                      | Can't reject by design                              |
 | Promise can reject      | `Promise(Result(a, ModuleError))` | `response.text(r) -> Promise(Result(_, BodyError))` |
 
-Per-binding typed error sums. See [Throw detection](./throw-detection.md).
+Per-binding typed error variants. See [Throw detection](./throw-detection.md).
 
 ## Gleam-friendly helpers (additive)
 

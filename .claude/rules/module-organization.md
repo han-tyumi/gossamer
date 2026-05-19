@@ -13,7 +13,7 @@ file adds process notes the human doc deliberately omits.
 
 ## Common mistakes when generating bindings
 
-- **Splitting prematurely.** A two-variant enum used by one consumer does not
+- **Splitting prematurely.** A two-variant type used by one consumer does not
   need its own module. Inline.
 - **Sibling-owned types.** If `module_a` and `module_b` are siblings and one
   owns a type the other imports, that's asymmetric coupling. If there's a family

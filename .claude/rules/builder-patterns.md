@@ -15,13 +15,12 @@ omits.
 
 ## Authoring new bindings
 
-When binding a new configurable JS type, walk the decision criteria from the
-human doc against the spec / MDN — count "no" answers to the Pattern 1
-conditions, default to Pattern 2 on any "no" or any throwing constructor.
-
-The Pattern 1 trap: a public record lets users direct-construct invalid records,
-forcing `Result` onto the primary operation. If the JS constructor throws, reach
-for Pattern 2 so validation lives in `build`.
+When binding a new configurable JS type, walk the decision tree in the human doc
+against the spec / MDN. Default to the **opaque builder** whenever the JS
+constructor throws or any field has a meaningful default — those are the cases
+where letting users direct-construct a record forces `Result` onto the primary
+operation. A record builder only fits when the type is a plain Gleam record with
+no opaque underlying state and every field is independently observable.
 
 ## Sanctioned exceptions
 

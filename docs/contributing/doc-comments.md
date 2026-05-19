@@ -46,8 +46,8 @@ Stronger rules layered on top of "always at least one sentence":
    in the spec), that's a signal the function may be over-wrapped — investigate
    per [Throw detection](./throw-detection.md) rather than inventing a cause.
 
-2. **Mutation, runtime-specific behavior, or enum fallback semantics (e.g.,
-   `Other(String)`)** → call out the nuance explicitly.
+2. **Mutation, runtime-specific behavior, or `Other(_)`-variant fallback
+   semantics** → call out the nuance explicitly.
 
 3. **Spec terminology or non-obvious conceptual behavior** → add a paragraph
    beyond the one-sentence default and link to the relevant MDN page or spec
@@ -167,8 +167,9 @@ Inline, not a separate section. Idioms:
   `///` line (don't merge into one block).
 
 Not every function needs an example. Add one when the prose can't fully convey
-the shape — especially for functions taking enum parameters, functions with
-non-obvious pipeline patterns, or where the example saves a user from guessing.
+the shape — especially for functions taking variant-type parameters, functions
+with non-obvious pipeline patterns, or where the example saves a user from
+guessing.
 
 ## Cross-references
 
@@ -193,7 +194,7 @@ module:
 
 **Anchor case follows the identifier case:**
 
-- Function: ``[`build`](#build)``, ``[`from_uri`](#from_uri)``.
+- Function: ``[`build`](#build)``, ``[`from_string`](#from_string)``.
 - Type: ``[`Builder`](#Builder)``, ``[`ReadyState`](#ReadyState)``.
 - Variant: ``[`Connecting`](#Connecting)``.
 
@@ -313,7 +314,7 @@ The anchor type carries the bulk of the conceptual framing for the binding:
 - **Optional**: a small usage example or constructor pointer if the constructor
   surface isn't obvious.
 
-### Multi-variant types (enums, outcomes)
+### Multi-variant types (states, outcomes)
 
 Pattern: type-level doc plus per-variant docs:
 
@@ -344,7 +345,7 @@ document it briefly. Otherwise the conceptual opener is enough.
 
 ### Satellite types
 
-Records, options enums, and outcomes that live in the anchor module and have no
+Records, option types, and outcomes that live in the anchor module and have no
 independent identity usually need only the one-sentence opener plus per-variant
 docs. The parent module's framing carries them.
 
@@ -493,7 +494,7 @@ Documenting the wrapped JS behavior is fine (_"`JSON.stringify` throws
     @external(javascript, "./response.type.ts", "Response$")
     pub type Response
 
-### Multi-variant enum with per-variant docs
+### Multi-variant type with per-variant docs
 
     /// The state of a `WebSocket` connection.
     ///
@@ -511,7 +512,7 @@ Documenting the wrapped JS behavior is fine (_"`JSON.stringify` throws
       Closed
     }
 
-### Getter with enum fallback semantics
+### Getter with `Other(_)`-variant fallback
 
     /// The HTTP status of the response. Well-known codes return a
     /// matching `HttpStatus` variant; other codes return

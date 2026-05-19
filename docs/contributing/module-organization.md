@@ -27,8 +27,8 @@ Confirmed empirically across the ecosystem:
 - `gleam_time` — `Month` (12 bare variants) and `Date` / `TimeOfDay` records
   live in `gleam/time/calendar.gleam`. `Unit` (10 bare variants) lives in
   `gleam/time/duration.gleam` with `Duration`.
-- `plinth` — small enums like `Position` (4 variants) live inline with their
-  primary type.
+- `plinth` — small variant types like `Position` (4 variants) live inline with
+  their primary type.
 - `gleam_fetch` — `FetchError` lives in `gleam/fetch.gleam` with the four
   `Fetch*` types.
 - `gleam_stdlib` — `ContinueOrStop` lives in `gleam/list`.
@@ -56,8 +56,8 @@ If none of these apply: keep the type in its consumer.
 These categories are useful when reasoning about types but do **not** determine
 module placement.
 
-**Enum** — A type whose variants represent distinct states, modes, or
-selections.
+**Bare-variant type** — A type whose variants represent distinct states, modes,
+or selections, each carrying no payload (or a uniform payload).
 
 ```gleam
 pub type ReadyState { Connecting  Open  Closing  Closed }
@@ -103,8 +103,8 @@ submodules anchor distinct interface types under a shared namespace.
 ## Family-level parent modules
 
 When two or more sibling modules in one domain share a type (often an error type
-or core enum), use a parent module to host it. Submodules import on equal
-footing.
+or core variant type), use a parent module to host it. Submodules import on
+equal footing.
 
 Examples in gossamer:
 
@@ -112,13 +112,13 @@ Examples in gossamer:
   plus their readers, writers, and controllers) share `StreamLifecycleError`.
   Structure: `gossamer/stream.gleam` + `gossamer/stream/*`.
 - **encoding** — 3 sibling submodules (`text_decoder` + `text_decoder_stream` +
-  `text_encoder_stream`) share the `Encoding` enum and `DecoderError`.
+  `text_encoder_stream`) share the `Encoding` type and `DecoderError`.
   Structure: `gossamer/encoding.gleam` + `gossamer/encoding/*`.
 - **compression** — 2 sibling submodules (`compression_stream` +
-  `decompression_stream`) share the `CompressionFormat` enum. Structure:
+  `decompression_stream`) share the `CompressionFormat` type. Structure:
   `gossamer/compression.gleam` + `gossamer/compression/*`.
 - **crypto** — `crypto/key`, `crypto/subtle`, `crypto/jwk` share `KeyUsage`,
-  `CryptoError`, and the algorithm enums. Structure: `gossamer/crypto.gleam` +
+  `CryptoError`, and the algorithm types. Structure: `gossamer/crypto.gleam` +
   `gossamer/crypto/*`.
 - **iteration** — `iterator` + `async_iterator` share `IteratorResult`.
   Structure: `gossamer/iteration.gleam` + `gossamer/iteration/*`.
@@ -133,16 +133,16 @@ the ecosystem doesn't have). Parent-submodule structure resolves both problems
 even at small family sizes.
 
 **No-shared-type families flatten to top-level.** When a family has no shared
-type or enum (only sibling modules grouped by domain), the parent module
-disappears and the siblings move to the top level. `array_buffer` and
-`uint8_array` are both byte-buffer bindings, but neither hosts a shared type the
-other needs — they live as `gossamer/array_buffer` and `gossamer/uint8_array`,
-not under a `buffer/` subdirectory.
+type (only sibling modules grouped by domain), the parent module disappears and
+the siblings move to the top level. `array_buffer` and `uint8_array` are both
+byte-buffer bindings, but neither hosts a shared type the other needs — they
+live as `gossamer/array_buffer` and `gossamer/uint8_array`, not under a
+`buffer/` subdirectory.
 
 ## Constraints
 
 **Constructor uniqueness:** Gleam requires all constructor names in a module to
-be unique. If merging two enums into one module produces a collision, rename one
+be unique. If merging two types into one module produces a collision, rename one
 of the colliding variants. The most common collision source is `Other(String)` —
 handle by renaming (`OtherMethod(String)` vs `OtherStatus(Int)`) or by
 separating the types into their own modules per the "non-trivial API" rule

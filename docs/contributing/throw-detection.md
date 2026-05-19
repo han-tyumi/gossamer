@@ -103,10 +103,9 @@ Test before believing.
 
 When a function has a throw condition, apply these in order:
 
-**1. Type-prevent** where the valid inputs form an enumerable set.
+**1. Type-prevent** where the valid inputs form a closed set.
 
-- `compression_stream.new` accepts `CompressionFormat` enum (only valid
-  formats).
+- `compression_stream.new` accepts a `CompressionFormat` (only valid formats).
 - `readable_stream.from_yielder` accepts a `Yielder` (can't be non-iterable).
 - Applies at the API shape level — no runtime checks.
 
@@ -126,10 +125,10 @@ Type-prevention is separate from clipping — it's a design-time choice (stronge
 types), not a runtime silent fix. Type-prevention is encouraged. Clipping is
 not.
 
-## Typed error sums
+## Typed error variants
 
 `Result`-returning bindings declare per-binding (or per-domain) typed error
-sums. `gossamer/crypto.CryptoError` is the canonical in-repo example, covering
+types. `gossamer/crypto.CryptoError` is the canonical in-repo example, covering
 the Web Crypto family:
 
 ```gleam
@@ -154,8 +153,8 @@ pub fn derive_bits(
 Mixed payload rule:
 
 - **Tag-only** when the variant identifies one specific cause.
-- **Typed payload** (`String`, enum) when the variant covers multiple cases
-  within a category.
+- **Typed payload** (`String`, a sibling variant type) when the variant covers
+  multiple cases within a category.
 
 The variants mirror the JS spec's failure modes (`NotSupportedError`,
 `InvalidAccessError`, `OperationError`, etc.) wrapped as Gleam constructors,
