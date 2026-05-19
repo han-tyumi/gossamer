@@ -30,4 +30,4 @@ pub fn signal(controller: AbortController) -> AbortSignal
 /// `abort_signal.reason`.
 ///
 @external(javascript, "./abort_controller.ffi.mjs", "abort")
-pub fn abort(controller: AbortController, reason reason: r) -> Nil
+pub fn abort(controller: AbortController, reason: r) -> Nil

@@ -30,5 +30,5 @@ export const set_on_abort: typeof $abortSignal.set_on_abort = (
   signal,
   handler,
 ) => {
-  signal.onabort = () => handler();
+  signal.onabort = () => handler(signal);
 };
