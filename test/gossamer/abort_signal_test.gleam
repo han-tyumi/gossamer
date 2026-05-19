@@ -3,7 +3,6 @@ import gleam/javascript/promise
 import gleam/option.{None}
 import gleam/time/duration
 import gleeunit/should
-import gossamer/abort_controller
 import gossamer/abort_signal.{type AbortSignal}
 
 @external(javascript, "./abort_signal_test.ffi.mjs", "null_aborted_signal")
@@ -45,8 +44,7 @@ pub fn reason_on_null_aborted_signal_test() {
 }
 
 pub fn set_on_abort_test() {
-  let controller = abort_controller.new()
-  let signal = abort_controller.signal(controller)
+  let #(signal, abort) = abort_signal.new()
 
   let #(p, resolve) = promise.start()
 
@@ -55,7 +53,7 @@ pub fn set_on_abort_test() {
     Nil
   })
 
-  abort_controller.abort(controller, Nil)
+  abort(Nil)
 
   use value <- promise.map(p)
   should.equal(value, "aborted")
@@ -68,18 +66,16 @@ pub fn any_test() {
   abort_signal.is_aborted(combined) |> should.be_true
 }
 
-pub fn controller_abort_test() {
-  let controller = abort_controller.new()
-  let signal = abort_controller.signal(controller)
+pub fn new_aborts_signal_test() {
+  let #(signal, abort) = abort_signal.new()
   abort_signal.is_aborted(signal) |> should.be_false
-  abort_controller.abort(controller, Nil)
+  abort(Nil)
   abort_signal.is_aborted(signal) |> should.be_true
 }
 
-pub fn controller_abort_with_test() {
-  let controller = abort_controller.new()
-  let signal = abort_controller.signal(controller)
-  abort_controller.abort(controller, "custom reason")
+pub fn new_with_reason_test() {
+  let #(signal, abort) = abort_signal.new()
+  abort("custom reason")
   abort_signal.is_aborted(signal) |> should.be_true
   let assert Ok(reason) = abort_signal.reason(signal)
   let assert Ok(value) = decode.run(reason, decode.string)

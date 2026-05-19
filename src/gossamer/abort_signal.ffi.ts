@@ -3,6 +3,14 @@ import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { toArray } from "~/utils/list.ffi.ts";
 import { durationToMs } from "~/utils/time.ffi.ts";
 
+export const new_: typeof $abortSignal.new$ = () => {
+  const controller = new AbortController();
+  return [controller.signal, (reason) => {
+    controller.abort(reason);
+    return undefined;
+  }];
+};
+
 export const abort: typeof $abortSignal.abort = (reason) => {
   return AbortSignal.abort(reason);
 };

@@ -172,10 +172,9 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
 ### Cancellation
 
-| Name            | Module                                                          |
-| --------------- | --------------------------------------------------------------- |
-| AbortController | [`gossamer/abort_controller`](./gossamer/abort_controller.html) |
-| AbortSignal     | [`gossamer/abort_signal`](./gossamer/abort_signal.html)         |
+| Name                         | Module                                                  |
+| ---------------------------- | ------------------------------------------------------- |
+| AbortSignal, AbortController | [`gossamer/abort_signal`](./gossamer/abort_signal.html) |
 
 ### Globals
 

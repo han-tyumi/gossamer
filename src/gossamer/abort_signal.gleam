@@ -1,9 +1,10 @@
-//// The read side of the abort-signal pair. Accept a signal in
-//// cancelable operations like `fetch_extra.send`, then observe its
-//// state via [`is_aborted`](#is_aborted) / [`reason`](#reason) or
-//// react to cancellation via [`set_on_abort`](#set_on_abort).
-//// `AbortSignal` values are produced by an `abort_controller` or by
-//// the constructors below.
+//// Accept an `AbortSignal` in cancelable operations like
+//// `fetch_extra.send`, then observe its state via
+//// [`is_aborted`](#is_aborted) / [`reason`](#reason) or react to
+//// cancellation via [`set_on_abort`](#set_on_abort). Signals are
+//// produced by [`new`](#new) (paired with an abort function) or by
+//// the static constructors [`abort`](#abort), [`any`](#any), and
+//// [`timeout`](#timeout).
 
 import gleam/dynamic.{type Dynamic}
 import gleam/time/duration.{type Duration}
@@ -15,6 +16,15 @@ import gleam/time/duration.{type Duration}
 ///
 @external(javascript, "./abort_signal.type.ts", "AbortSignal$")
 pub type AbortSignal
+
+/// Returns a fresh `AbortSignal` paired with a function that aborts
+/// it. Pass the signal to cancelable operations; call the abort
+/// function (with a `reason`, or `Nil` for the default `AbortError`)
+/// when it's time to cancel. Equivalent to constructing a JavaScript
+/// `AbortController` and exposing its `signal` and `abort` method.
+///
+@external(javascript, "./abort_signal.ffi.mjs", "new_")
+pub fn new() -> #(AbortSignal, fn(r) -> Nil)
 
 /// Returns an `AbortSignal` that is already aborted with the given
 /// `reason`. Useful for short-circuiting operations that accept a
