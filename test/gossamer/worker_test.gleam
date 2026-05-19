@@ -5,14 +5,14 @@ import gossamer/array_buffer
 import gossamer/worker
 
 pub fn new_default_builder_test() {
-  let _ = worker.new("data:application/javascript,")
+  let _ = worker.new("gossamer/worker_parent_fixture")
 }
 
 pub fn round_trip_string_test() {
   let #(p, resolve) = promise.start()
 
   let assert Ok(w) =
-    worker.from_module("gossamer/worker_parent_fixture")
+    worker.new("gossamer/worker_parent_fixture")
     |> worker.with_on_message(fn(_worker, data) {
       let assert Ok(value) = decode.run(data, decode.string)
       resolve(value)
@@ -31,7 +31,7 @@ pub fn round_trip_array_buffer_as_bit_array_test() {
   let #(p, resolve) = promise.start()
 
   let assert Ok(w) =
-    worker.from_module("gossamer/worker_parent_fixture")
+    worker.new("gossamer/worker_parent_fixture")
     |> worker.with_on_message(fn(_worker, data) {
       let assert Ok(bytes) = decode.run(data, decode.bit_array)
       resolve(bytes)
@@ -48,7 +48,8 @@ pub fn round_trip_array_buffer_as_bit_array_test() {
 }
 
 pub fn post_message_non_cloneable_test() {
-  let assert Ok(w) = worker.new("data:application/javascript,") |> worker.build
+  let assert Ok(w) =
+    worker.new("gossamer/worker_parent_fixture") |> worker.build
   worker.post_message(w, fn() { Nil }) |> should.be_error
   worker.terminate(w)
 }
@@ -57,7 +58,7 @@ pub fn set_on_message_replaces_previous_handler_test() {
   let #(p, resolve) = promise.start()
 
   let assert Ok(w) =
-    worker.from_module("gossamer/worker_parent_replace_fixture")
+    worker.new("gossamer/worker_parent_replace_fixture")
     |> worker.with_on_message(fn(_worker, data) {
       let assert Ok(value) = decode.run(data, decode.string)
       resolve(value)

@@ -1,9 +1,13 @@
-//// A script running on a separate thread. The canonical path is to
-//// write the worker as a Gleam module exporting `main()`, then spawn
-//// it with [`from_module`](#from_module). Inside the worker script,
-//// use [`gossamer/worker_parent`](./worker_parent.html) to communicate
-//// with the parent thread. For non-Gleam scripts, [`new`](#new)
-//// takes a script URL directly.
+//// A script running on a separate thread. Write the worker as a Gleam
+//// module exporting `main()`, then spawn it with [`new`](#new). Inside
+//// the worker script, use
+//// [`gossamer/worker_parent`](./worker_parent.html) to communicate
+//// with the parent thread.
+////
+//// Wrap third-party JavaScript workers in a Gleam module via FFI and
+//// spawn them through `new` — gossamer doesn't expose a raw-URL
+//// constructor because non-Gleam workers don't fit gossamer's
+//// `Result`-driven error model.
 ////
 //// Send messages to a running worker with
 //// [`post_message`](#post_message) and stop it with
@@ -29,16 +33,8 @@ pub opaque type Builder {
   )
 }
 
-/// Creates a `Builder` for a worker that runs the ECMAScript module
-/// at `url`. The name defaults to `""` and no message handler is
-/// attached.
-///
-pub fn new(url: String) -> Builder {
-  Builder(url:, name: "", on_message: None)
-}
-
 /// Creates a `Builder` for a worker that runs the `main()` function of
-/// the named Gleam module. `name` is the qualified Gleam module name
+/// the named Gleam module. `module` is the qualified Gleam module name
 /// — the same name used in `import` statements (for example,
 /// `"my_app/worker"`). The first path segment is taken as the package
 /// name, matching Gleam's JavaScript build layout where modules live
@@ -49,13 +45,20 @@ pub fn new(url: String) -> Builder {
 /// ```gleam
 /// // For `my_app/worker.gleam` in package `my_app`:
 /// let assert Ok(w) =
-///   worker.from_module("my_app/worker")
-///   |> worker.with_on_message(handle_message)
+///   worker.new("my_app/worker")
+///   |> worker.with_on_message(fn(worker, data) {
+///     // can reply via `worker.post_message(worker, ...)`
+///   })
 ///   |> worker.build
 /// ```
 ///
-@external(javascript, "./worker.ffi.mjs", "from_module")
-pub fn from_module(name: String) -> Builder
+pub fn new(module: String) -> Builder {
+  Builder(url: module_url(module), name: "", on_message: None)
+}
+
+@external(javascript, "./worker.ffi.mjs", "module_url")
+@internal
+pub fn module_url(module: String) -> String
 
 /// Sets the worker name, used by debugging tools to identify the
 /// thread. Empty by default.

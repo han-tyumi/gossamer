@@ -1,4 +1,4 @@
-import * as $worker from "$/gossamer/gossamer/worker.mjs";
+import type * as $worker from "$/gossamer/gossamer/worker.mjs";
 import {
   type Option$,
   Option$isNone,
@@ -32,16 +32,14 @@ const WorkerCtor: WorkerCtor = isNode
 // parent's parent is the build root.
 const BUILD_ROOT = new URL("../..", import.meta.url);
 
-export const from_module: typeof $worker.from_module = (name) => {
-  const slash = name.indexOf("/");
-  const packageName = slash === -1 ? name : name.slice(0, slash);
-  const moduleUrl = new URL(`./${packageName}/${name}.mjs`, BUILD_ROOT).href;
+export const module_url: typeof $worker.module_url = (module) => {
+  const slash = module.indexOf("/");
+  const packageName = slash === -1 ? module : module.slice(0, slash);
+  const moduleUrl = new URL(`./${packageName}/${module}.mjs`, BUILD_ROOT).href;
   const bootstrap = `import { main } from ${
     JSON.stringify(moduleUrl)
   };\nmain();`;
-  return $worker.new$(
-    `data:application/javascript,${encodeURIComponent(bootstrap)}`,
-  );
+  return `data:application/javascript,${encodeURIComponent(bootstrap)}`;
 };
 
 // Node's Worker constructor accepts a relative/absolute path string or a

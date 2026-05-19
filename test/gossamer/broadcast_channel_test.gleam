@@ -55,12 +55,12 @@ pub fn cross_worker_fanout_test() {
   }
 
   let assert Ok(w1) =
-    worker.from_module("gossamer/broadcast_channel_fixture")
+    worker.new("gossamer/broadcast_channel_fixture")
     |> worker.with_on_message(handler(r1_ready, r1_echo))
     |> worker.build
 
   let assert Ok(w2) =
-    worker.from_module("gossamer/broadcast_channel_fixture")
+    worker.new("gossamer/broadcast_channel_fixture")
     |> worker.with_on_message(handler(r2_ready, r2_echo))
     |> worker.build
 
