@@ -47,9 +47,9 @@ Deno, Bun, and browsers.
 [`gleam_http`](https://hexdocs.pm/gleam_http/). The underlying fetch call and
 the `FormData` type come from [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/).
 
-[`gossamer/fetch_extra`](./gossamer/fetch_extra.html) adds the Fetch-spec init
-dict as a `FetchOptions` builder, plus `send` variants that consume it. Errors
-come from
+[`gossamer/fetch_extra`](./gossamer/fetch_extra.html) adds the Fetch-spec
+options as a `FetchOptions` builder, plus `send` variants that consume it.
+Errors come from
 [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError);
 inspect aborts via `gossamer/abort_signal` on the signal you passed to
 `set_signal`.
@@ -272,7 +272,7 @@ encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 | Intl.RelativeTimeFormat | [`gossamer/intl/relative_time_format`](./gossamer/intl/relative_time_format.html) |
 | Intl.Segmenter          | [`gossamer/intl/segmenter`](./gossamer/intl/segmenter.html)                       |
 
-[`gossamer/intl`](./gossamer/intl.html) hosts shared enums (`LabelStyle`,
+[`gossamer/intl`](./gossamer/intl.html) hosts shared types (`LabelStyle`,
 `LocaleMatcher`, `RangePartSource`, `HourCycle`, `CaseFirst`) used across the
 formatter submodules, plus `get_canonical_locales` (BCP 47 tag canonicalization)
 and the per-category enumeration helpers `calendars`, `collations`,

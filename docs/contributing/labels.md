@@ -16,7 +16,7 @@ links the parameter to the action.
   `close(stream)`.
 - **Predicates:** `is_locked(stream)`, `can_parse(url)`.
 - **Constructors and static methods:** `resolve(value)`, `new(url)`.
-- **Record-field setters** (Pattern 1): positional, no labels.
+- **Record-field setters** (record-builder shape): positional, no labels.
   `set_host(req: Request(body), host: String)` mirrors `gleam_http`.
 
 ## Label patterns for multi-arg functions

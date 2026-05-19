@@ -193,7 +193,7 @@ module:
 
 **Anchor case follows the identifier case:**
 
-- Function: ``[`build`](#build)``, ``[`from_url_string`](#from_url_string)``.
+- Function: ``[`build`](#build)``, ``[`from_uri`](#from_uri)``.
 - Type: ``[`Builder`](#Builder)``, ``[`ReadyState`](#ReadyState)``.
 - Variant: ``[`Connecting`](#Connecting)``.
 

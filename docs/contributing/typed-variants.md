@@ -77,8 +77,8 @@ different from the base.
 ### Typed-input variants
 
 ```gleam
-web_socket.send_string(socket, data: String)
-web_socket.send_bytes(socket, data: BitArray)
+web_socket.send_text(socket, data: String)
+web_socket.send_binary(socket, data: BitArray)
 web_socket.send_blob(socket, data: Blob)
 ```
 
@@ -142,10 +142,10 @@ encoding, or structured value), use a compound descriptor so the name is
 unambiguous:
 
 ```gleam
-web_socket.from_url_string(url: String)
+big_int.from_string(value: String) -> Result(BigInt, BigIntError)
 ```
 
-Paired with the typed version: `web_socket.from_uri(uri: Uri)`.
+Paired with the typed version: `big_int.from_int(value: Int) -> BigInt`.
 
 ## What we don't do
 
@@ -223,20 +223,15 @@ chaining is acceptable since streaming a fixed collection is uncommon.
 
 ### `web_socket.send_*` — typed sender variants
 
-- `send_string`, `send_bytes`, `send_blob`.
+- `send_text`, `send_binary`, `send_blob`.
 
 Each names the kind of payload. No "default" — every send is typed.
 
-### `web_socket.from_url_string` / `from_uri` — typed URL alternatives
+### `performance.entries_by_*` — criterion variants
 
-Two ways to identify the endpoint. `String` for ad-hoc construction, `Uri` (from
-`gleam_stdlib`) for canonical-typed URLs.
-
-### `performance.get_entries_by_*` — criterion variants
-
-- `get_entries()`
-- `get_entries_by_name(name)`
-- `get_entries_by_type(entry_type)`
+- `entries()`
+- `entries_by_name(name)`
+- `entries_by_type(entry_type)`
 
 The base returns everything; each `_by_<criterion>` narrows by a specific
 attribute.

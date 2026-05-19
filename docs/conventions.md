@@ -4,37 +4,29 @@ A handful of patterns recur across gossamer's API. None are novel — they follo
 established Gleam ecosystem idioms — but knowing the conventions makes the
 binding catalog easier to navigate.
 
-## Builder pattern over options lists
+## Construction shapes
 
-Configurable types use chained setters rather than a `List(SomeOption)`
-constructor argument:
+Configurable bindings take one of three shapes, picked by the argument profile
+and what the underlying type allows:
 
-```gleam
-let request =
-  request.new()
-  |> request.set_method(http.Post)
-  |> request.set_header("content-type", "application/json")
-  |> request.set_body(json_payload)
-```
-
-Two flavors, named for the Gleam ecosystem precedent:
-
-- **Record builders (`gleam_http` style)** — the type IS a Gleam record. Setters
-  use `set_<field>(record, value)`. Example: `fetch_extra.options()` /
-  `set_cache` / `set_signal`.
-- **Opaque builders (`glisten` / `mist` style)** — the configured thing is an
-  opaque JS reference; a separate `Builder` record accumulates required and
-  optional fields, then a finalizer realises it. Setters use
-  `with_<field>(builder, value)`. Example: `text_decoder.new(label)` /
-  `with_fatal` / `build`.
+- **Single function** — when every argument is essential (no defaults, no
+  skippable options). Example: `subtle.encrypt(algorithm, key, data)`.
+- **Record builder (`gleam_http` style)** — when the type is a Gleam record
+  carrying stable, reusable identity. Setters use `set_<field>(record, field)`.
+  Example: `fetch_extra.options() |> fetch_extra.set_cache(_)`.
+- **Opaque builder (`glisten` / `mist` style)** — when the configured thing is
+  an opaque JS reference with a mix of required and optional fields. A separate
+  `Builder` record accumulates fields; a finalizer realizes it. Setters use
+  `with_<field>(builder, field)`. Example:
+  `web_socket.from_uri(uri) |> web_socket.with_on_event(handler) |> web_socket.build`.
 
 See [`gleam_http`](https://hexdocs.pm/gleam_http/) for the canonical
 record-builder precedent.
 
 ## Per-binding typed errors
 
-`Result`-returning functions declare a typed error sum specific to their domain.
-Pattern match concrete variants rather than inspecting a generic dynamic
+`Result`-returning functions declare a typed error type specific to their
+domain. Pattern match concrete variants rather than inspecting a generic dynamic
 payload:
 
 ```gleam
@@ -47,8 +39,8 @@ case subtle.derive_bits(algorithm, key, length) {
 ```
 
 The variants mirror the JS spec's failure modes (`NotSupportedError`,
-`InvalidAccessError`, `OperationError`, etc.) wrapped as Gleam constructors,
-each one a closed sum.
+`InvalidAccessError`, `OperationError`, etc.) as named Gleam variants, each type
+a closed set.
 
 This follows
 [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
