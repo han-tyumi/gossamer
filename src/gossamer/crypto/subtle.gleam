@@ -64,14 +64,15 @@ pub type DeriveAlgorithm {
   DeriveX25519(public: CryptoKey)
 }
 
-/// The target key type for `derive_key`.
+/// Symmetric-key parameters shared by [`generate_key`](#generate_key)
+/// and [`derive_key`](#derive_key) to describe the key to produce.
 ///
-pub type DerivedKeyKind {
-  /// Derive an AES key of `length` bits.
-  DerivedKeyAes(name: AesAlgorithm, length: Int)
+pub type SymmetricKeyParams {
+  /// An AES key of `length` bits.
+  Aes(name: AesAlgorithm, length: Int)
 
-  /// Derive an HMAC key bound to `hash`.
-  DerivedKeyHmac(hash: HashAlgorithm)
+  /// An HMAC key bound to `hash`.
+  Hmac(hash: HashAlgorithm)
 }
 
 /// Algorithm parameters for `encrypt` and `decrypt`.
@@ -126,16 +127,6 @@ pub type ImportAlgorithm {
 
   /// Import a PBKDF2 base key for password-based derivation.
   ImportPbkdf2
-}
-
-/// Algorithm parameters for `generate_key` (symmetric keys).
-///
-pub type KeyGenAlgorithm {
-  /// Generate an AES key of `length` bits.
-  KeyGenAes(name: AesAlgorithm, length: Int)
-
-  /// Generate an HMAC key bound to `hash`.
-  KeyGenHmac(hash: HashAlgorithm)
 }
 
 /// Algorithm parameters for `generate_key_pair` (asymmetric keys).
@@ -276,7 +267,7 @@ pub fn verify(
 ///
 @external(javascript, "./subtle.ffi.mjs", "generate_key")
 pub fn generate_key(
-  algorithm algorithm: KeyGenAlgorithm,
+  algorithm algorithm: SymmetricKeyParams,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))
@@ -365,7 +356,7 @@ pub fn derive_bits(
 pub fn derive_key(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
-  derived_key_type kind: DerivedKeyKind,
+  derived_key_type derived_key_type: SymmetricKeyParams,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))

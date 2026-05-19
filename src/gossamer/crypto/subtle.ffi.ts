@@ -142,22 +142,23 @@ function toDeriveAlgorithm(
   };
 }
 
-function toDerivedKeyKind(
-  derivedKeyKind: $subtle.DerivedKeyKind$,
-): AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams {
-  if ($subtle.DerivedKeyKind$isDerivedKeyAes(derivedKeyKind)) {
+function toSymmetricKeyParams(
+  params: $subtle.SymmetricKeyParams$,
+):
+  | AlgorithmIdentifier
+  | AesKeyGenParams
+  | AesDerivedKeyParams
+  | HmacKeyGenParams
+  | HmacImportParams {
+  if ($subtle.SymmetricKeyParams$isAes(params)) {
     return {
-      name: toAesAlgorithm(
-        $subtle.DerivedKeyKind$DerivedKeyAes$name(derivedKeyKind),
-      ),
-      length: $subtle.DerivedKeyKind$DerivedKeyAes$length(derivedKeyKind),
+      name: toAesAlgorithm($subtle.SymmetricKeyParams$Aes$name(params)),
+      length: $subtle.SymmetricKeyParams$Aes$length(params),
     };
   }
   return {
     name: "HMAC",
-    hash: toHashAlgorithm(
-      $subtle.DerivedKeyKind$DerivedKeyHmac$hash(derivedKeyKind),
-    ),
+    hash: toHashAlgorithm($subtle.SymmetricKeyParams$Hmac$hash(params)),
   };
 }
 
@@ -251,23 +252,6 @@ function toImportAlgorithm(
   if ($subtle.ImportAlgorithm$isImportX25519(algorithm)) return "X25519";
   if ($subtle.ImportAlgorithm$isImportHkdf(algorithm)) return "HKDF";
   return "PBKDF2";
-}
-
-function toKeyGenAlgorithm(
-  algorithm: $subtle.KeyGenAlgorithm$,
-): AlgorithmIdentifier | AesKeyGenParams | HmacKeyGenParams {
-  if ($subtle.KeyGenAlgorithm$isKeyGenAes(algorithm)) {
-    return {
-      name: toAesAlgorithm($subtle.KeyGenAlgorithm$KeyGenAes$name(algorithm)),
-      length: $subtle.KeyGenAlgorithm$KeyGenAes$length(algorithm),
-    };
-  }
-  return {
-    name: "HMAC",
-    hash: toHashAlgorithm(
-      $subtle.KeyGenAlgorithm$KeyGenHmac$hash(algorithm),
-    ),
-  };
 }
 
 function toKeyPairGenAlgorithm(
@@ -439,7 +423,7 @@ export const generate_key: typeof $subtle.generate_key = (
 ) => {
   return toCryptoResult(() =>
     subtle.generateKey(
-      toKeyGenAlgorithm(algorithm),
+      toSymmetricKeyParams(algorithm),
       extractable,
       toKeyUsageArray(usages),
     ) as Promise<CryptoKey>
@@ -528,7 +512,7 @@ export const derive_bits: typeof $subtle.derive_bits = (
 export const derive_key: typeof $subtle.derive_key = (
   algorithm,
   baseKey,
-  derivedKeyKind,
+  derived_key_type,
   extractable,
   usages,
 ) => {
@@ -538,7 +522,7 @@ export const derive_key: typeof $subtle.derive_key = (
     subtle.deriveKey(
       toDeriveAlgorithm(algorithm),
       baseKey,
-      toDerivedKeyKind(derivedKeyKind),
+      toSymmetricKeyParams(derived_key_type),
       extractable,
       toKeyUsageArray(usages),
     )
