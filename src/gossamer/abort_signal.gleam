@@ -9,7 +9,7 @@ import gleam/dynamic.{type Dynamic}
 import gleam/time/duration.{type Duration}
 
 /// A signal that communicates when an operation should be aborted.
-/// Used with `fetch`, streams, and other cancellable operations.
+/// Used with `fetch`, streams, and other cancelable operations.
 ///
 /// See [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) on MDN.
 ///
@@ -46,18 +46,18 @@ pub fn timeout(duration: Duration) -> AbortSignal
 @external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
 pub fn is_aborted(signal: AbortSignal) -> Bool
 
-/// The reason the signal was aborted with. Returns `Error(Nil)` if
-/// the signal has not been aborted. A default-aborted signal carries
-/// an `AbortError` `DOMException`; a controller aborted with an
-/// explicit reason holds that value. JavaScript-side
-/// `controller.abort(null)` surfaces as `Ok` of a dynamic `null`.
+/// The reason the signal was aborted with. Returns `Error(Nil)` while
+/// the signal has not been aborted. Once aborted, returns `Ok(reason)`
+/// carrying whatever value the abort site supplied, including the
+/// spec default `AbortError` `DOMException` when no reason was given.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "reason")
 pub fn reason(signal: AbortSignal) -> Result(Dynamic, Nil)
 
-/// Registers `handler` to run when the signal aborts. If the signal is
-/// already aborted, `handler` is not called. Equivalent to JavaScript's
-/// `signal.onabort`.
+/// Registers `handler` to run when the signal aborts. Fires once;
+/// calling `set_on_abort` again replaces the previous handler. If the
+/// signal is already aborted, `handler` is not called. Equivalent to
+/// JavaScript's `signal.onabort`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "set_on_abort")
 pub fn set_on_abort(signal: AbortSignal, run handler: fn() -> a) -> Nil

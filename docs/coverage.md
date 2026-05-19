@@ -291,6 +291,7 @@ Use the upstream bindings directly — gossamer doesn't wrap them.
 
 | Category                                                           | Reason                                                                                                        |
 | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| `throwIfAborted` and other throw-for-state-check APIs              | Gleam returns `Result`; pattern-match on the relevant predicate (`is_aborted`, `reason`, etc.) instead        |
 | DOM APIs (document, window, Element, etc.)                         | Browser-only                                                                                                  |
 | Event, EventTarget, CustomEvent                                    | Use a typed Gleam dispatcher; FFI for interop with JS-library targets                                         |
 | ErrorEvent, `on_error` / `on_message_error` handlers               | Gleam code uses `Result` instead of throwing; event handlers for JS throws don't fit                          |
