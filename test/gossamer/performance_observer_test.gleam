@@ -13,7 +13,10 @@ pub fn supported_entry_types_test() {
 
 pub fn take_records_test() {
   let observer =
-    performance_observer.observe([performance_entry.Mark], fn(_) { Nil })
+    performance_observer.observe(
+      [performance_entry.Mark],
+      fn(_entries, _observer) { Nil },
+    )
   let _ = performance.mark("test-take-records-mark")
   let records = performance_observer.take_records(observer)
   performance_observer.disconnect(observer)
@@ -23,10 +26,13 @@ pub fn take_records_test() {
 pub fn observe_mark_test() {
   let #(p, resolve) = promise.start()
   let observer =
-    performance_observer.observe([performance_entry.Mark], fn(entries) {
-      resolve(entries)
-      Nil
-    })
+    performance_observer.observe(
+      [performance_entry.Mark],
+      fn(entries, _observer) {
+        resolve(entries)
+        Nil
+      },
+    )
   let _ = performance.mark("test-observer-mark")
   use entries <- promise.map(p)
   performance_observer.disconnect(observer)
@@ -36,10 +42,13 @@ pub fn observe_mark_test() {
 pub fn observe_measure_test() {
   let #(p, resolve) = promise.start()
   let observer =
-    performance_observer.observe([performance_entry.Measure], fn(entries) {
-      resolve(entries)
-      Nil
-    })
+    performance_observer.observe(
+      [performance_entry.Measure],
+      fn(entries, _observer) {
+        resolve(entries)
+        Nil
+      },
+    )
   let _ = performance.mark("obs-measure-start")
   let _ = performance.mark("obs-measure-end")
   let assert Ok(_) =
@@ -57,10 +66,13 @@ pub fn observe_buffered_test() {
   let _ = performance.mark("test-buffered-pre")
   let #(p, resolve) = promise.start()
   let observer =
-    performance_observer.observe_buffered(performance_entry.Mark, fn(entries) {
-      resolve(entries)
-      Nil
-    })
+    performance_observer.observe_buffered(
+      performance_entry.Mark,
+      fn(entries, _observer) {
+        resolve(entries)
+        Nil
+      },
+    )
   use entries <- promise.map(p)
   performance_observer.disconnect(observer)
   list.is_empty(entries) |> should.be_false

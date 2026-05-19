@@ -10,7 +10,7 @@ export const observe: typeof $performanceObserver.observe = (
   handler,
 ) => {
   const observer = new PerformanceObserver((list) => {
-    handler(fromArray(list.getEntries()));
+    handler(fromArray(list.getEntries()), observer);
   });
   observer.observe({
     // @ts-expect-error TS narrows entryTypes to a literal union.
@@ -24,7 +24,7 @@ export const observe_buffered: typeof $performanceObserver.observe_buffered = (
   handler,
 ) => {
   const observer = new PerformanceObserver((list) => {
-    handler(fromArray(list.getEntries()));
+    handler(fromArray(list.getEntries()), observer);
   });
   observer.observe({
     // @ts-expect-error TS narrows type to a literal union.

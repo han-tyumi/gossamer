@@ -11,10 +11,12 @@ import gossamer/performance_entry.{type EntryType, type PerformanceEntry}
 pub type PerformanceObserver
 
 /// Subscribes to performance entries of the given types. The handler
-/// is called with new entries as they're recorded. Call
-/// [`disconnect`](#disconnect) on the returned observer to stop.
-/// Equivalent to constructing a JavaScript `PerformanceObserver` and
-/// calling `observer.observe({ entryTypes: [...] })`.
+/// is called with each batch of new entries and the
+/// [`PerformanceObserver`](#PerformanceObserver) so it can call
+/// [`disconnect`](#disconnect) or [`take_records`](#take_records) from
+/// inside (e.g., auto-disconnect after the first batch). Equivalent
+/// to constructing a JavaScript `PerformanceObserver` and calling
+/// `observer.observe({ entryTypes: [...] })`.
 ///
 /// Entry-type support differs across runtimes — see
 /// [`supported_entry_types`](#supported_entry_types).
@@ -22,20 +24,22 @@ pub type PerformanceObserver
 @external(javascript, "./performance_observer.ffi.mjs", "observe")
 pub fn observe(
   for entry_types: List(EntryType),
-  run handler: fn(List(PerformanceEntry)) -> a,
+  run handler: fn(List(PerformanceEntry), PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
 /// Subscribes to a single entry type and replays any entries the
 /// runtime has already buffered for that type. Useful when the
-/// observer attaches after some entries were recorded. Call
-/// [`disconnect`](#disconnect) to stop. Equivalent to constructing a
-/// JavaScript `PerformanceObserver` and calling
+/// observer attaches after some entries were recorded. The handler
+/// also receives the [`PerformanceObserver`](#PerformanceObserver) so
+/// it can call [`disconnect`](#disconnect) or
+/// [`take_records`](#take_records) from inside. Equivalent to
+/// constructing a JavaScript `PerformanceObserver` and calling
 /// `observer.observe({ type: ..., buffered: true })`.
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "observe_buffered")
 pub fn observe_buffered(
   for entry_type: EntryType,
-  run handler: fn(List(PerformanceEntry)) -> a,
+  run handler: fn(List(PerformanceEntry), PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
 /// Stops the observer from receiving further entries. Any pending
