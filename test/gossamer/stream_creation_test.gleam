@@ -185,7 +185,8 @@ pub fn pipe_to_aborted_signal_yields_aborted_test() {
   let writable =
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
-  let signal = abort_signal.abort("stop the pipe")
+  let signal =
+    abort_signal.abort(abort_signal.Reason(dynamic.string("stop the pipe")))
   let opts =
     readable_stream.pipe_options() |> readable_stream.set_signal(signal)
 

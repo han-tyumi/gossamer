@@ -19,15 +19,15 @@ Each API module has two parts:
 Example — `src/gossamer/abort_signal.gleam`:
 
 ```gleam
-@external(javascript, "./abort_signal.ffi.mjs", "abort")
-pub fn abort(reason: r) -> AbortSignal
+@external(javascript, "./abort_signal.ffi.mjs", "is_aborted")
+pub fn is_aborted(signal: AbortSignal) -> Bool
 ```
 
 Corresponding `src/gossamer/abort_signal.ffi.ts`:
 
 ```typescript
-export const abort: typeof $abortSignal.abort = (reason) => {
-  return AbortSignal.abort(reason);
+export const is_aborted: typeof $abortSignal.is_aborted = (signal) => {
+  return signal.aborted;
 };
 ```
 

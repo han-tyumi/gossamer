@@ -1,3 +1,4 @@
+import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/fetch.{type FetchBody}
 import gleam/fetch/form_data
@@ -47,9 +48,9 @@ pub fn is_response_ok_polymorphic_test() {
 
 fn assert_signal_aborted_with_reason(signal: AbortSignal, expected: String) {
   abort_signal.is_aborted(signal) |> should.be_true
-  let assert Ok(reason) = abort_signal.reason(signal)
-  let assert Ok(value) = decode.run(reason, decode.string)
-  should.equal(value, expected)
+  let assert Ok(abort_signal.Reason(value)) = abort_signal.reason(signal)
+  let assert Ok(message) = decode.run(value, decode.string)
+  should.equal(message, expected)
 }
 
 pub fn send_with_aborted_signal_test() {
@@ -59,7 +60,8 @@ pub fn send_with_aborted_signal_test() {
     |> request.set_host("example.com")
     |> request.set_path("/")
 
-  let signal = abort_signal.abort("pre-aborted")
+  let signal =
+    abort_signal.abort(abort_signal.Reason(dynamic.string("pre-aborted")))
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send(req, with: opts))
@@ -76,7 +78,8 @@ pub fn send_bits_with_aborted_signal_test() {
     |> request.set_path("/")
     |> request.set_body(<<"payload">>)
 
-  let signal = abort_signal.abort("pre-aborted")
+  let signal =
+    abort_signal.abort(abort_signal.Reason(dynamic.string("pre-aborted")))
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_bits(req, with: opts))
@@ -94,7 +97,8 @@ pub fn send_form_data_with_aborted_signal_test() {
     |> request.set_path("/")
     |> request.set_body(body)
 
-  let signal = abort_signal.abort("pre-aborted")
+  let signal =
+    abort_signal.abort(abort_signal.Reason(dynamic.string("pre-aborted")))
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_form_data(req, with: opts))
@@ -117,7 +121,8 @@ pub fn send_stream_with_aborted_signal_test() {
     |> request.set_path("/")
     |> request.set_body(stream)
 
-  let signal = abort_signal.abort("pre-aborted")
+  let signal =
+    abort_signal.abort(abort_signal.Reason(dynamic.string("pre-aborted")))
   let opts = fetch_extra.options() |> fetch_extra.set_signal(signal)
 
   use result <- promise.await(fetch_extra.send_stream(req, with: opts))
