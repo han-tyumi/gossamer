@@ -8,7 +8,7 @@ import gossamer/worker_parent
 
 pub fn main() {
   let channel = broadcast_channel.new("test-channel-fanout")
-  broadcast_channel.set_on_message(channel, fn(data) {
+  broadcast_channel.set_on_message(channel, fn(data, _channel) {
     let _ = worker_parent.post_message(data)
     Nil
   })

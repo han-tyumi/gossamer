@@ -17,7 +17,7 @@ pub fn round_trip_test() {
 
   let #(p, resolve) = promise.start()
 
-  broadcast_channel.set_on_message(receiver, fn(data) {
+  broadcast_channel.set_on_message(receiver, fn(data, _channel) {
     let assert Ok(value) = decode.run(data, decode.string)
     resolve(value)
     Nil

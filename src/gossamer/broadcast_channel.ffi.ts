@@ -52,5 +52,5 @@ export const set_on_message: typeof $broadcastChannel.set_on_message = (
   channel,
   handler,
 ) => {
-  channel.onmessage = (event) => handler(wrapArrayBuffer(event.data));
+  channel.onmessage = (event) => handler(wrapArrayBuffer(event.data), channel);
 };

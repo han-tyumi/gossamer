@@ -44,13 +44,15 @@ pub fn post_message(
 pub fn close(channel: BroadcastChannel) -> Nil
 
 /// Registers a handler invoked with each broadcast message's data
-/// payload. Decode the payload with `gleam/dynamic/decode`.
-/// `ArrayBuffer` payloads are exposed as `BitArray`; other values
-/// pass through unchanged. Equivalent to JavaScript's
-/// `channel.onmessage`.
+/// payload. The handler also receives the
+/// [`BroadcastChannel`](#BroadcastChannel) so it can reply via
+/// [`post_message`](#post_message) from inside. Decode the payload
+/// with `gleam/dynamic/decode`. `ArrayBuffer` payloads are exposed as
+/// `BitArray`; other values pass through unchanged. Equivalent to
+/// JavaScript's `channel.onmessage`.
 ///
 @external(javascript, "./broadcast_channel.ffi.mjs", "set_on_message")
 pub fn set_on_message(
   channel: BroadcastChannel,
-  run handler: fn(Dynamic) -> a,
+  run handler: fn(Dynamic, BroadcastChannel) -> a,
 ) -> Nil
