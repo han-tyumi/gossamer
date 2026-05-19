@@ -123,8 +123,14 @@ Event-handler setters are explicit setters:
 | JS pattern                | Gleam pattern                                              | Form             |
 | ------------------------- | ---------------------------------------------------------- | ---------------- |
 | `new WS(...)` then config | `web_socket.new(uri) \|> with_on_event(handler) \|> build` | Opaque builder   |
-| `signal.onabort = fn`     | `abort_signal.set_on_abort(signal, handler)`               | Direct on opaque |
 | `port.onmessage = fn`     | `message_port.set_on_message(port, handler)`               | Direct on opaque |
+
+Single-shot async events expose a `Promise`-returning observer rather than a
+setter:
+
+| JS pattern                                                | Gleam pattern                              | Form                  |
+| --------------------------------------------------------- | ------------------------------------------ | --------------------- |
+| `addEventListener("abort", fn, { once: true })` on signal | `abort_signal.on_abort(signal) -> Promise` | Promise of classifier |
 
 The `_on_<event>` segment marks the function as wiring up a JS-side `onevent`
 slot. Plain configuration callbacks that aren't event handlers (stream `start`,

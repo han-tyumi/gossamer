@@ -152,7 +152,6 @@ segment specifically marks the function as wiring up a JS-side `onevent` slot.
 
 Gossamer-side examples:
 
-- `abort_signal.set_on_abort(signal, run handler:)` — direct mutation.
 - `message_port.set_on_message(port, run handler:)` — direct mutation.
 - `web_socket.with_on_event(builder, run handler:)` — `Builder` setter; the
   handler receives the `WebSocket` so it can reply via `send_*`.
@@ -160,6 +159,10 @@ Gossamer-side examples:
   handler also receives the `Worker` so it can reply via `post_message`.
 - `readable_stream.with_pull(builder, run callback:)` — not an event handler;
   keeps unprefixed `with_<field>`.
+
+Single-shot async events (where the event fires at most once) use a
+`Promise`-returning observer rather than a setter — see
+`abort_signal.on_abort(signal) -> Promise(AbortReason)`.
 
 ## Reuse and inspectability
 
