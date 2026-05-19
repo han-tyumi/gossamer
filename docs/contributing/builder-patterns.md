@@ -223,7 +223,7 @@ the setters they don't need.
 ```gleam
 pub type WebSocket  // opaque
 
-pub fn from_uri(uri: Uri) -> Builder
+pub fn new(uri: Uri) -> Builder
 pub fn with_protocols(builder: Builder, protocols: List(String)) -> Builder
 pub fn with_on_event(
   builder: Builder,

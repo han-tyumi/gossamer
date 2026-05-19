@@ -18,7 +18,7 @@ and what the underlying type allows:
   an opaque JS reference with a mix of required and optional fields. A separate
   `Builder` record accumulates fields; a finalizer realizes it. Setters use
   `with_<field>(builder, field)`. Example:
-  `web_socket.from_uri(uri) |> web_socket.with_on_event(handler) |> web_socket.build`.
+  `web_socket.new(uri) |> web_socket.with_on_event(handler) |> web_socket.build`.
 
 See [`gleam_http`](https://hexdocs.pm/gleam_http/) for the canonical
 record-builder precedent.

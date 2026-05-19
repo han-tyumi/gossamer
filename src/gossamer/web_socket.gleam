@@ -1,7 +1,7 @@
 //// Bidirectional, message-oriented WebSocket connections (`ws:` and
-//// `wss:`). Construct via [`from_uri`](#from_uri); lifecycle events
-//// arrive on the [`WebSocketEvent`](#WebSocketEvent) sum, dispatched
-//// by the handler registered via [`with_on_event`](#with_on_event).
+//// `wss:`). Construct via [`new`](#new); lifecycle events arrive on
+//// the [`WebSocketEvent`](#WebSocketEvent) sum, dispatched by the
+//// handler registered via [`with_on_event`](#with_on_event).
 
 import gleam/option.{type Option, None, Some}
 import gleam/uri.{type Uri}
@@ -98,7 +98,7 @@ pub opaque type Builder {
 /// Creates a `Builder` for a WebSocket connection to `uri`. Protocols
 /// default to `[]` (no negotiation), and the event handler is unset.
 ///
-pub fn from_uri(uri: Uri) -> Builder {
+pub fn new(uri: Uri) -> Builder {
   Builder(url: uri.to_string(uri), protocols: [], on_event: None)
 }
 
