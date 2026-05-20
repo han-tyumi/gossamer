@@ -42,10 +42,21 @@ pub fn measure(
 @external(javascript, "./performance.ffi.mjs", "clear_marks")
 pub fn clear_marks() -> Nil
 
+/// Removes mark entries with this name from the performance timeline.
+///
+@external(javascript, "./performance.ffi.mjs", "clear_mark")
+pub fn clear_mark(name: String) -> Nil
+
 /// Removes all `measure` entries from the performance timeline.
 ///
 @external(javascript, "./performance.ffi.mjs", "clear_measures")
 pub fn clear_measures() -> Nil
+
+/// Removes measure entries with this name from the performance
+/// timeline.
+///
+@external(javascript, "./performance.ffi.mjs", "clear_measure")
+pub fn clear_measure(name: String) -> Nil
 
 /// Returns every entry on the performance timeline.
 ///

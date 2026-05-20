@@ -79,6 +79,15 @@ pub fn clear_marks_test() {
   should.equal(list.length(entries), 0)
 }
 
+pub fn clear_mark_test() {
+  let _ = performance.mark("keep")
+  let _ = performance.mark("drop")
+  performance.clear_mark("drop")
+  performance.entries_by_name("drop") |> list.length |> should.equal(0)
+  performance.entries_by_name("keep") |> list.length |> should.equal(1)
+  performance.clear_marks()
+}
+
 pub fn clear_measures_test() {
   let _ = performance.mark("cm-start")
   let _ = performance.mark("cm-end")
@@ -87,6 +96,18 @@ pub fn clear_measures_test() {
   let entries = performance.entries_by_name("to-clear-m")
   should.equal(list.length(entries), 0)
   performance.clear_marks()
+}
+
+pub fn clear_measure_test() {
+  let _ = performance.mark("cmm-start")
+  let _ = performance.mark("cmm-end")
+  let assert Ok(_) = performance.measure("keep-m", "cmm-start", "cmm-end")
+  let assert Ok(_) = performance.measure("drop-m", "cmm-start", "cmm-end")
+  performance.clear_measure("drop-m")
+  performance.entries_by_name("drop-m") |> list.length |> should.equal(0)
+  performance.entries_by_name("keep-m") |> list.length |> should.equal(1)
+  performance.clear_marks()
+  performance.clear_measures()
 }
 
 pub fn performance_entry_detail_test() {
