@@ -10,13 +10,29 @@ import gossamer/performance_entry.{type Kind, type PerformanceEntry}
 @external(javascript, "./performance_observer.type.ts", "PerformanceObserver$")
 pub type PerformanceObserver
 
+/// The entries delivered to a handler on a single observer
+/// invocation, plus the count of entries the runtime dropped from
+/// its global buffer before this observer started observing.
+///
+pub type Batch {
+  Batch(
+    /// The entries delivered to the handler on this invocation.
+    entries: List(PerformanceEntry),
+    /// The count of entries the runtime dropped from its global
+    /// buffer due to overflow. Reported only on the first invocation
+    /// of an [`observe_buffered`](#observe_buffered) observer; always
+    /// zero on other observers and on subsequent invocations.
+    dropped: Int,
+  )
+}
+
 /// Subscribes to performance entries of the given kinds. The handler
-/// is called with each batch of new entries and the
+/// receives a [`Batch`](#Batch) of new entries plus the
 /// [`PerformanceObserver`](#PerformanceObserver) so it can call
-/// [`disconnect`](#disconnect) or [`take_records`](#take_records) from
-/// inside (e.g., auto-disconnect after the first batch). Equivalent
-/// to constructing a JavaScript `PerformanceObserver` and calling
-/// `observer.observe({ entryTypes: [...] })`.
+/// [`disconnect`](#disconnect) or [`take_records`](#take_records)
+/// from inside (e.g., auto-disconnect after the first batch).
+/// Equivalent to constructing a JavaScript `PerformanceObserver` and
+/// calling `observer.observe({ entryTypes: [...] })`.
 ///
 /// Kind support differs across runtimes — see
 /// [`supported_entry_types`](#supported_entry_types).
@@ -24,22 +40,20 @@ pub type PerformanceObserver
 @external(javascript, "./performance_observer.ffi.mjs", "observe")
 pub fn observe(
   for entry_kinds: List(Kind),
-  run handler: fn(List(PerformanceEntry), PerformanceObserver) -> a,
+  run handler: fn(Batch, PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
 /// Subscribes to a single entry kind and replays any entries the
 /// runtime has already buffered for that kind. Useful when the
 /// observer attaches after some entries were recorded. The handler
-/// also receives the [`PerformanceObserver`](#PerformanceObserver) so
-/// it can call [`disconnect`](#disconnect) or
-/// [`take_records`](#take_records) from inside. Equivalent to
-/// constructing a JavaScript `PerformanceObserver` and calling
-/// `observer.observe({ type: ..., buffered: true })`.
+/// also receives the [`PerformanceObserver`](#PerformanceObserver).
+/// Equivalent to constructing a JavaScript `PerformanceObserver` and
+/// calling `observer.observe({ type: ..., buffered: true })`.
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "observe_buffered")
 pub fn observe_buffered(
   for entry_kind: Kind,
-  run handler: fn(List(PerformanceEntry), PerformanceObserver) -> a,
+  run handler: fn(Batch, PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
 /// Stops the observer from receiving further entries. Any pending

@@ -1,4 +1,4 @@
-import type * as $performanceObserver from "$/gossamer/gossamer/performance_observer.mjs";
+import * as $performanceObserver from "$/gossamer/gossamer/performance_observer.mjs";
 import {
   kindFromString,
   kindToString,
@@ -10,9 +10,18 @@ export const observe: typeof $performanceObserver.observe = (
   entryKinds,
   handler,
 ) => {
-  const observer = new PerformanceObserver((list) => {
-    handler(fromArrayMapped(list.getEntries(), project), observer);
-  });
+  const observer = new PerformanceObserver(
+    // @ts-expect-error PerformanceObserverCallback in TS lib lacks the options arg.
+    (list, _observer, options) => {
+      handler(
+        $performanceObserver.Batch$Batch(
+          fromArrayMapped(list.getEntries(), project),
+          options?.droppedEntriesCount ?? 0,
+        ),
+        observer,
+      );
+    },
+  );
   observer.observe({
     // @ts-expect-error TS narrows entryTypes to a literal union.
     entryTypes: toArray(entryKinds).map(kindToString),
@@ -24,9 +33,18 @@ export const observe_buffered: typeof $performanceObserver.observe_buffered = (
   entryKind,
   handler,
 ) => {
-  const observer = new PerformanceObserver((list) => {
-    handler(fromArrayMapped(list.getEntries(), project), observer);
-  });
+  const observer = new PerformanceObserver(
+    // @ts-expect-error PerformanceObserverCallback in TS lib lacks the options arg.
+    (list, _observer, options) => {
+      handler(
+        $performanceObserver.Batch$Batch(
+          fromArrayMapped(list.getEntries(), project),
+          options?.droppedEntriesCount ?? 0,
+        ),
+        observer,
+      );
+    },
+  );
   observer.observe({
     // @ts-expect-error TS narrows type to a literal union.
     type: kindToString(entryKind),
