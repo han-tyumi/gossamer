@@ -20,12 +20,12 @@ pub fn time_origin_test() {
 }
 
 pub fn mark_test() {
-  let info = performance_entry.info(performance.mark("test-mark"))
-  info.name |> should.equal("test-mark")
-  info.entry_type |> should.equal(performance_entry.Mark)
-  duration.compare(info.start_time, duration.seconds(0))
+  let entry = performance.mark("test-mark")
+  entry.kind |> should.equal(performance_entry.Mark)
+  entry.name |> should.equal("test-mark")
+  duration.compare(entry.start_time, duration.seconds(0))
   |> should.not_equal(order.Lt)
-  info.duration |> should.equal(duration.seconds(0))
+  entry.duration |> should.equal(duration.seconds(0))
   performance.clear_marks()
 }
 
@@ -34,10 +34,9 @@ pub fn measure_test() {
   let _ = performance.mark("measure-end")
   let assert Ok(entry) =
     performance.measure("test-measure", "measure-start", "measure-end")
-  let info = performance_entry.info(entry)
-  info.name |> should.equal("test-measure")
-  info.entry_type |> should.equal(performance_entry.Measure)
-  duration.compare(info.duration, duration.seconds(0))
+  entry.kind |> should.equal(performance_entry.Measure)
+  entry.name |> should.equal("test-measure")
+  duration.compare(entry.duration, duration.seconds(0))
   |> should.not_equal(order.Lt)
   performance.clear_marks()
   performance.clear_measures()
@@ -65,10 +64,10 @@ pub fn entries_by_name_test() {
   performance.clear_marks()
 }
 
-pub fn entries_by_type_test() {
+pub fn entries_by_kind_test() {
   performance.clear_marks()
   let _ = performance.mark("typed-mark")
-  let entries = performance.entries_by_type("mark")
+  let entries = performance.entries_by_kind(performance_entry.Mark)
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
 }
@@ -92,16 +91,6 @@ pub fn clear_measures_test() {
 
 pub fn performance_entry_detail_test() {
   let entry = performance.mark("detail-mark")
-  performance_entry.info(entry).detail |> should.equal(option.None)
+  entry.detail |> should.equal(option.None)
   performance.clear_marks()
-}
-
-pub fn performance_entry_to_json_test() {
-  let entry = performance.mark("json-mark")
-  let _json = performance_entry.to_json(entry)
-  performance.clear_marks()
-}
-
-pub fn performance_to_json_test() {
-  let _json = performance.to_json()
 }

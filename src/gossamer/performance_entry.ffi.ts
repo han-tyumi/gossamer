@@ -2,101 +2,91 @@ import * as $performanceEntry from "$/gossamer/gossamer/performance_entry.mjs";
 import { toOption } from "~/utils/option.ffi.ts";
 import { msToDuration } from "~/utils/time.ffi.ts";
 
-export function toEntryTypeString(
-  entryType: $performanceEntry.EntryType$,
-): string {
-  if ($performanceEntry.EntryType$isMark(entryType)) return "mark";
-  if ($performanceEntry.EntryType$isMeasure(entryType)) return "measure";
-  if ($performanceEntry.EntryType$isResource(entryType)) return "resource";
-  if ($performanceEntry.EntryType$isNavigation(entryType)) return "navigation";
-  if ($performanceEntry.EntryType$isPaint(entryType)) return "paint";
-  if ($performanceEntry.EntryType$isLongTask(entryType)) return "longtask";
-  if ($performanceEntry.EntryType$isEvent(entryType)) return "event";
-  if ($performanceEntry.EntryType$isFirstInput(entryType)) return "first-input";
-  if ($performanceEntry.EntryType$isLargestContentfulPaint(entryType)) {
-    return "largest-contentful-paint";
-  }
-  if ($performanceEntry.EntryType$isLayoutShift(entryType)) {
-    return "layout-shift";
-  }
-  if ($performanceEntry.EntryType$isTaskAttribution(entryType)) {
-    return "taskattribution";
-  }
-  if ($performanceEntry.EntryType$isVisibilityState(entryType)) {
-    return "visibility-state";
-  }
-  if ($performanceEntry.EntryType$isElement(entryType)) return "element";
-  if ($performanceEntry.EntryType$isBackForwardCacheRestoration(entryType)) {
-    return "back-forward-cache-restoration";
-  }
-  if ($performanceEntry.EntryType$isDns(entryType)) return "dns";
-  if ($performanceEntry.EntryType$isFunction(entryType)) return "function";
-  if ($performanceEntry.EntryType$isGc(entryType)) return "gc";
-  if ($performanceEntry.EntryType$isHttp(entryType)) return "http";
-  if ($performanceEntry.EntryType$isHttp2(entryType)) return "http2";
-  if ($performanceEntry.EntryType$isNet(entryType)) return "net";
-  return $performanceEntry.EntryType$Other$0(entryType);
-}
-
-export function fromEntryTypeString(
-  value: string,
-): $performanceEntry.EntryType$ {
+export function kindFromString(value: string): $performanceEntry.Kind$ {
   switch (value) {
     case "mark":
-      return $performanceEntry.EntryType$Mark();
+      return $performanceEntry.Kind$Mark();
     case "measure":
-      return $performanceEntry.EntryType$Measure();
+      return $performanceEntry.Kind$Measure();
     case "resource":
-      return $performanceEntry.EntryType$Resource();
+      return $performanceEntry.Kind$Resource();
     case "navigation":
-      return $performanceEntry.EntryType$Navigation();
+      return $performanceEntry.Kind$Navigation();
     case "paint":
-      return $performanceEntry.EntryType$Paint();
+      return $performanceEntry.Kind$Paint();
     case "longtask":
-      return $performanceEntry.EntryType$LongTask();
+      return $performanceEntry.Kind$LongTask();
     case "event":
-      return $performanceEntry.EntryType$Event();
+      return $performanceEntry.Kind$Event();
     case "first-input":
-      return $performanceEntry.EntryType$FirstInput();
+      return $performanceEntry.Kind$FirstInput();
     case "largest-contentful-paint":
-      return $performanceEntry.EntryType$LargestContentfulPaint();
+      return $performanceEntry.Kind$LargestContentfulPaint();
     case "layout-shift":
-      return $performanceEntry.EntryType$LayoutShift();
+      return $performanceEntry.Kind$LayoutShift();
     case "taskattribution":
-      return $performanceEntry.EntryType$TaskAttribution();
+      return $performanceEntry.Kind$TaskAttribution();
     case "visibility-state":
-      return $performanceEntry.EntryType$VisibilityState();
+      return $performanceEntry.Kind$VisibilityState();
     case "element":
-      return $performanceEntry.EntryType$Element();
+      return $performanceEntry.Kind$Element();
     case "back-forward-cache-restoration":
-      return $performanceEntry.EntryType$BackForwardCacheRestoration();
+      return $performanceEntry.Kind$BackForwardCacheRestoration();
     case "dns":
-      return $performanceEntry.EntryType$Dns();
+      return $performanceEntry.Kind$Dns();
     case "function":
-      return $performanceEntry.EntryType$Function();
+      return $performanceEntry.Kind$Function();
     case "gc":
-      return $performanceEntry.EntryType$Gc();
+      return $performanceEntry.Kind$Gc();
     case "http":
-      return $performanceEntry.EntryType$Http();
+      return $performanceEntry.Kind$Http();
     case "http2":
-      return $performanceEntry.EntryType$Http2();
+      return $performanceEntry.Kind$Http2();
     case "net":
-      return $performanceEntry.EntryType$Net();
+      return $performanceEntry.Kind$Net();
     default:
-      return $performanceEntry.EntryType$Other(value);
+      return $performanceEntry.Kind$Other(value);
   }
 }
 
-export const info: typeof $performanceEntry.info = (entry) => {
-  return $performanceEntry.Info$Info(
+export function kindToString(kind: $performanceEntry.Kind$): string {
+  if ($performanceEntry.Kind$isMark(kind)) return "mark";
+  if ($performanceEntry.Kind$isMeasure(kind)) return "measure";
+  if ($performanceEntry.Kind$isResource(kind)) return "resource";
+  if ($performanceEntry.Kind$isNavigation(kind)) return "navigation";
+  if ($performanceEntry.Kind$isPaint(kind)) return "paint";
+  if ($performanceEntry.Kind$isLongTask(kind)) return "longtask";
+  if ($performanceEntry.Kind$isEvent(kind)) return "event";
+  if ($performanceEntry.Kind$isFirstInput(kind)) return "first-input";
+  if ($performanceEntry.Kind$isLargestContentfulPaint(kind)) {
+    return "largest-contentful-paint";
+  }
+  if ($performanceEntry.Kind$isLayoutShift(kind)) return "layout-shift";
+  if ($performanceEntry.Kind$isTaskAttribution(kind)) return "taskattribution";
+  if ($performanceEntry.Kind$isVisibilityState(kind)) return "visibility-state";
+  if ($performanceEntry.Kind$isElement(kind)) return "element";
+  if ($performanceEntry.Kind$isBackForwardCacheRestoration(kind)) {
+    return "back-forward-cache-restoration";
+  }
+  if ($performanceEntry.Kind$isDns(kind)) return "dns";
+  if ($performanceEntry.Kind$isFunction(kind)) return "function";
+  if ($performanceEntry.Kind$isGc(kind)) return "gc";
+  if ($performanceEntry.Kind$isHttp(kind)) return "http";
+  if ($performanceEntry.Kind$isHttp2(kind)) return "http2";
+  if ($performanceEntry.Kind$isNet(kind)) return "net";
+  return $performanceEntry.Kind$Other$0(kind);
+}
+
+export function project(
+  entry: PerformanceEntry,
+): $performanceEntry.PerformanceEntry$ {
+  return $performanceEntry.PerformanceEntry$PerformanceEntry(
+    kindFromString(entry.entryType),
     entry.name,
-    fromEntryTypeString(entry.entryType),
     msToDuration(entry.startTime),
     msToDuration(entry.duration),
-    toOption((entry as PerformanceMark).detail),
+    // @ts-expect-error detail is defined on Mark/Measure/Gc subclasses only.
+    toOption(entry.detail),
+    entry,
   );
-};
-
-export const to_json: typeof $performanceEntry.to_json = (entry) => {
-  return entry.toJSON();
-};
+}

@@ -1,7 +1,7 @@
 //// Asynchronously receive performance entries as the runtime records
 //// them.
 
-import gossamer/performance_entry.{type EntryType, type PerformanceEntry}
+import gossamer/performance_entry.{type Kind, type PerformanceEntry}
 
 /// A subscription that delivers performance entries to a handler.
 ///
@@ -10,7 +10,7 @@ import gossamer/performance_entry.{type EntryType, type PerformanceEntry}
 @external(javascript, "./performance_observer.type.ts", "PerformanceObserver$")
 pub type PerformanceObserver
 
-/// Subscribes to performance entries of the given types. The handler
+/// Subscribes to performance entries of the given kinds. The handler
 /// is called with each batch of new entries and the
 /// [`PerformanceObserver`](#PerformanceObserver) so it can call
 /// [`disconnect`](#disconnect) or [`take_records`](#take_records) from
@@ -18,17 +18,17 @@ pub type PerformanceObserver
 /// to constructing a JavaScript `PerformanceObserver` and calling
 /// `observer.observe({ entryTypes: [...] })`.
 ///
-/// Entry-type support differs across runtimes — see
+/// Kind support differs across runtimes — see
 /// [`supported_entry_types`](#supported_entry_types).
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "observe")
 pub fn observe(
-  for entry_types: List(EntryType),
+  for entry_kinds: List(Kind),
   run handler: fn(List(PerformanceEntry), PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
-/// Subscribes to a single entry type and replays any entries the
-/// runtime has already buffered for that type. Useful when the
+/// Subscribes to a single entry kind and replays any entries the
+/// runtime has already buffered for that kind. Useful when the
 /// observer attaches after some entries were recorded. The handler
 /// also receives the [`PerformanceObserver`](#PerformanceObserver) so
 /// it can call [`disconnect`](#disconnect) or
@@ -38,7 +38,7 @@ pub fn observe(
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "observe_buffered")
 pub fn observe_buffered(
-  for entry_type: EntryType,
+  for entry_kind: Kind,
   run handler: fn(List(PerformanceEntry), PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
@@ -55,10 +55,10 @@ pub fn disconnect(observer: PerformanceObserver) -> Nil
 @external(javascript, "./performance_observer.ffi.mjs", "take_records")
 pub fn take_records(observer: PerformanceObserver) -> List(PerformanceEntry)
 
-/// Returns the entry types supported by this runtime's
+/// Returns the entry kinds supported by this runtime's
 /// `PerformanceObserver`. Deno supports `Mark` and `Measure`; Node
 /// and Bun support a larger set that includes `Resource`. Equivalent
 /// to JavaScript's static `PerformanceObserver.supportedEntryTypes`.
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "supported_entry_types")
-pub fn supported_entry_types() -> List(EntryType)
+pub fn supported_entry_types() -> List(Kind)

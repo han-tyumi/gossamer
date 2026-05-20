@@ -1,34 +1,35 @@
 import type * as $performanceObserver from "$/gossamer/gossamer/performance_observer.mjs";
 import {
-  fromEntryTypeString,
-  toEntryTypeString,
+  kindFromString,
+  kindToString,
+  project,
 } from "~/gossamer/performance_entry.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 
 export const observe: typeof $performanceObserver.observe = (
-  entryTypes,
+  entryKinds,
   handler,
 ) => {
   const observer = new PerformanceObserver((list) => {
-    handler(fromArray(list.getEntries()), observer);
+    handler(fromArrayMapped(list.getEntries(), project), observer);
   });
   observer.observe({
     // @ts-expect-error TS narrows entryTypes to a literal union.
-    entryTypes: toArray(entryTypes).map(toEntryTypeString),
+    entryTypes: toArray(entryKinds).map(kindToString),
   });
   return observer;
 };
 
 export const observe_buffered: typeof $performanceObserver.observe_buffered = (
-  entryType,
+  entryKind,
   handler,
 ) => {
   const observer = new PerformanceObserver((list) => {
-    handler(fromArray(list.getEntries()), observer);
+    handler(fromArrayMapped(list.getEntries(), project), observer);
   });
   observer.observe({
     // @ts-expect-error TS narrows type to a literal union.
-    type: toEntryTypeString(entryType),
+    type: kindToString(entryKind),
     buffered: true,
   });
   return observer;
@@ -43,13 +44,13 @@ export const disconnect: typeof $performanceObserver.disconnect = (
 export const take_records: typeof $performanceObserver.take_records = (
   observer,
 ) => {
-  return fromArray(observer.takeRecords());
+  return fromArrayMapped(observer.takeRecords(), project);
 };
 
 export const supported_entry_types:
   typeof $performanceObserver.supported_entry_types = () => {
     return fromArrayMapped(
       [...PerformanceObserver.supportedEntryTypes],
-      fromEntryTypeString,
+      kindFromString,
     );
   };

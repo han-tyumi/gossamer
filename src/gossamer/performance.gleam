@@ -3,15 +3,15 @@
 ////
 //// See [Performance](https://developer.mozilla.org/en-US/docs/Web/API/Performance) on MDN.
 
-import gleam/dynamic.{type Dynamic}
 import gleam/time/duration.{type Duration}
 import gleam/time/timestamp.{type Timestamp}
-import gossamer/performance_entry.{type PerformanceEntry}
+import gossamer/performance_entry.{type Kind, type PerformanceEntry}
 
 /// Returns the high-resolution elapsed time since
-/// [`time_origin`](#time_origin). Pair with `time_origin` to recover
-/// an absolute `Timestamp`, or subtract two `now()` values via
-/// `duration.difference` to measure elapsed time.
+/// [`time_origin`](#time_origin), monotonically non-decreasing within
+/// the execution context. Pair with [`time_origin`](#time_origin) to
+/// recover an absolute `Timestamp`, or subtract two [`now`](#now)
+/// values via `duration.difference` to measure elapsed time.
 ///
 @external(javascript, "./performance.ffi.mjs", "now")
 pub fn now() -> Duration
@@ -58,16 +58,8 @@ pub fn entries() -> List(PerformanceEntry)
 @external(javascript, "./performance.ffi.mjs", "entries_by_name")
 pub fn entries_by_name(name: String) -> List(PerformanceEntry)
 
-/// Returns the entries on the performance timeline whose type matches
-/// `entry_type` (e.g., `"mark"`, `"measure"`).
+/// Returns the entries on the performance timeline whose kind matches
+/// `kind` (e.g., `performance_entry.Mark`, `performance_entry.Measure`).
 ///
-@external(javascript, "./performance.ffi.mjs", "entries_by_type")
-pub fn entries_by_type(entry_type: String) -> List(PerformanceEntry)
-
-/// Returns a JSON-serializable snapshot of the performance object as
-/// a `Dynamic`. Pass to `gleam/json.encode_dynamic` (or any
-/// dynamic-aware serializer) to produce a JSON string, or decode with
-/// `gleam/dynamic/decode` to extract specific fields.
-///
-@external(javascript, "./performance.ffi.mjs", "to_json")
-pub fn to_json() -> Dynamic
+@external(javascript, "./performance.ffi.mjs", "entries_by_kind")
+pub fn entries_by_kind(kind: Kind) -> List(PerformanceEntry)

@@ -1,6 +1,7 @@
 import type * as $performance from "$/gossamer/gossamer/performance.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { fromArray } from "~/utils/list.ffi.ts";
+import { kindToString, project } from "~/gossamer/performance_entry.ffi.ts";
+import { fromArrayMapped } from "~/utils/list.ffi.ts";
 import { msToDuration, msToTimestamp } from "~/utils/time.ffi.ts";
 
 export const now: typeof $performance.now = () => {
@@ -12,7 +13,7 @@ export const time_origin: typeof $performance.time_origin = () => {
 };
 
 export const mark: typeof $performance.mark = (name) => {
-  return performance.mark(name);
+  return project(performance.mark(name));
 };
 
 export const measure: typeof $performance.measure = (
@@ -21,7 +22,7 @@ export const measure: typeof $performance.measure = (
   endMark,
 ) => {
   try {
-    return Result$Ok(performance.measure(name, startMark, endMark));
+    return Result$Ok(project(performance.measure(name, startMark, endMark)));
   } catch {
     return Result$Error(undefined);
   }
@@ -36,21 +37,20 @@ export const clear_measures: typeof $performance.clear_measures = () => {
 };
 
 export const entries: typeof $performance.entries = () => {
-  return fromArray(performance.getEntries());
+  return fromArrayMapped(performance.getEntries(), project);
 };
 
 export const entries_by_name: typeof $performance.entries_by_name = (
   name,
 ) => {
-  return fromArray(performance.getEntriesByName(name));
+  return fromArrayMapped(performance.getEntriesByName(name), project);
 };
 
-export const entries_by_type: typeof $performance.entries_by_type = (
-  entryType,
+export const entries_by_kind: typeof $performance.entries_by_kind = (
+  kind,
 ) => {
-  return fromArray(performance.getEntriesByType(entryType));
-};
-
-export const to_json: typeof $performance.to_json = () => {
-  return performance.toJSON();
+  return fromArrayMapped(
+    performance.getEntriesByType(kindToString(kind)),
+    project,
+  );
 };

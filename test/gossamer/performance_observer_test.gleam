@@ -6,9 +6,9 @@ import gossamer/performance_entry
 import gossamer/performance_observer
 
 pub fn supported_entry_types_test() {
-  let types = performance_observer.supported_entry_types()
-  list.contains(types, performance_entry.Mark) |> should.be_true
-  list.contains(types, performance_entry.Measure) |> should.be_true
+  let kinds = performance_observer.supported_entry_types()
+  list.contains(kinds, performance_entry.Mark) |> should.be_true
+  list.contains(kinds, performance_entry.Measure) |> should.be_true
 }
 
 pub fn take_records_test() {
