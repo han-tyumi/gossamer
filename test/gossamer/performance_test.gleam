@@ -1,3 +1,4 @@
+import gleam/dynamic
 import gleam/list
 import gleam/option
 import gleam/order
@@ -5,6 +6,8 @@ import gleam/time/duration
 import gleam/time/timestamp
 import gleeunit/should
 import gossamer/performance
+import gossamer/performance/mark
+import gossamer/performance/measure
 import gossamer/performance_entry
 
 pub fn now_test() {
@@ -20,37 +23,104 @@ pub fn time_origin_test() {
 }
 
 pub fn mark_test() {
-  let entry = performance.mark("test-mark")
-  entry.kind |> should.equal(performance_entry.Mark)
-  entry.name |> should.equal("test-mark")
-  duration.compare(entry.start_time, duration.seconds(0))
+  let m = mark.new("test-mark") |> mark.record()
+  m.name |> should.equal("test-mark")
+  duration.compare(m.start_time, duration.seconds(0))
   |> should.not_equal(order.Lt)
-  entry.duration |> should.equal(duration.seconds(0))
+  m.detail |> should.equal(option.None)
+  performance.clear_marks()
+}
+
+pub fn mark_at_clamps_negative_test() {
+  let m = mark.at("clamp-mark", duration.milliseconds(-50)) |> mark.record()
+  m.start_time |> should.equal(duration.seconds(0))
+  performance.clear_marks()
+}
+
+pub fn mark_with_detail_test() {
+  let m =
+    mark.new("detailed-mark")
+    |> mark.set_detail(dynamic.string("hello"))
+    |> mark.record()
+  m.detail |> option.is_some |> should.be_true
   performance.clear_marks()
 }
 
 pub fn measure_test() {
-  let _ = performance.mark("measure-start")
-  let _ = performance.mark("measure-end")
-  let assert Ok(entry) =
-    performance.measure("test-measure", "measure-start", "measure-end")
-  entry.kind |> should.equal(performance_entry.Measure)
-  entry.name |> should.equal("test-measure")
-  duration.compare(entry.duration, duration.seconds(0))
+  let start = mark.new("measure-start") |> mark.record()
+  let end = mark.new("measure-end") |> mark.record()
+  let m =
+    measure.between("test-measure", from: start.start_time, to: end.start_time)
+    |> measure.record()
+  m.name |> should.equal("test-measure")
+  duration.compare(m.duration, duration.seconds(0))
   |> should.not_equal(order.Lt)
   performance.clear_marks()
   performance.clear_measures()
 }
 
-pub fn measure_invalid_test() {
-  performance.measure("bad", "nonexistent-start", "nonexistent-end")
-  |> should.be_error
+pub fn measure_clamps_negative_test() {
+  let m =
+    measure.between(
+      "test-measure-clamp",
+      from: duration.milliseconds(-50),
+      to: duration.milliseconds(0),
+    )
+    |> measure.record()
+  m.start_time |> should.equal(duration.seconds(0))
+  performance.clear_measures()
+}
+
+pub fn mark_entries_test() {
+  performance.clear_marks()
+  let _ = mark.new("entry-1") |> mark.record()
+  let _ = mark.new("entry-2") |> mark.record()
+  mark.entries() |> list.length |> should.equal(2)
+  performance.clear_marks()
+}
+
+pub fn measure_entries_test() {
+  performance.clear_marks()
+  performance.clear_measures()
+  let start = mark.new("s") |> mark.record()
+  let end = mark.new("e") |> mark.record()
+  let _ =
+    measure.between("m1", from: start.start_time, to: end.start_time)
+    |> measure.record()
+  let _ =
+    measure.between("m2", from: start.start_time, to: end.start_time)
+    |> measure.record()
+  measure.entries() |> list.length |> should.equal(2)
+  performance.clear_marks()
+  performance.clear_measures()
+}
+
+pub fn from_entry_mark_test() {
+  let recorded = mark.new("from-entry") |> mark.record()
+  let entries = performance.entries_by_name("from-entry")
+  let assert [entry] = entries
+  let assert Ok(projected) = mark.from_entry(entry)
+  projected.name |> should.equal(recorded.name)
+  performance.clear_marks()
+}
+
+pub fn from_entry_wrong_kind_test() {
+  let start = mark.new("wk-s") |> mark.record()
+  let end = mark.new("wk-e") |> mark.record()
+  let _ =
+    measure.between("wk-m", from: start.start_time, to: end.start_time)
+    |> measure.record()
+  let measure_entries = performance.entries_by_name("wk-m")
+  let assert [entry] = measure_entries
+  mark.from_entry(entry) |> should.be_error
+  performance.clear_marks()
+  performance.clear_measures()
 }
 
 pub fn entries_test() {
   performance.clear_marks()
   performance.clear_measures()
-  let _ = performance.mark("entries-mark")
+  let _ = mark.new("entries-mark") |> mark.record()
   let entries = performance.entries()
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
@@ -58,7 +128,7 @@ pub fn entries_test() {
 
 pub fn entries_by_name_test() {
   performance.clear_marks()
-  let _ = performance.mark("named-mark")
+  let _ = mark.new("named-mark") |> mark.record()
   let entries = performance.entries_by_name("named-mark")
   should.equal(list.length(entries), 1)
   performance.clear_marks()
@@ -66,22 +136,22 @@ pub fn entries_by_name_test() {
 
 pub fn entries_by_kind_test() {
   performance.clear_marks()
-  let _ = performance.mark("typed-mark")
-  let entries = performance.entries_by_kind(performance_entry.Mark)
+  let _ = mark.new("typed-mark") |> mark.record()
+  let entries = performance.entries_by_kind(performance_entry.MarkKind)
   should.be_true(list.length(entries) >= 1)
   performance.clear_marks()
 }
 
 pub fn clear_marks_test() {
-  let _ = performance.mark("to-clear")
+  let _ = mark.new("to-clear") |> mark.record()
   performance.clear_marks()
   let entries = performance.entries_by_name("to-clear")
   should.equal(list.length(entries), 0)
 }
 
 pub fn clear_mark_test() {
-  let _ = performance.mark("keep")
-  let _ = performance.mark("drop")
+  let _ = mark.new("keep") |> mark.record()
+  let _ = mark.new("drop") |> mark.record()
   performance.clear_mark("drop")
   performance.entries_by_name("drop") |> list.length |> should.equal(0)
   performance.entries_by_name("keep") |> list.length |> should.equal(1)
@@ -89,9 +159,11 @@ pub fn clear_mark_test() {
 }
 
 pub fn clear_measures_test() {
-  let _ = performance.mark("cm-start")
-  let _ = performance.mark("cm-end")
-  let assert Ok(_) = performance.measure("to-clear-m", "cm-start", "cm-end")
+  let start = mark.new("cm-start") |> mark.record()
+  let end = mark.new("cm-end") |> mark.record()
+  let _ =
+    measure.between("to-clear-m", from: start.start_time, to: end.start_time)
+    |> measure.record()
   performance.clear_measures()
   let entries = performance.entries_by_name("to-clear-m")
   should.equal(list.length(entries), 0)
@@ -99,10 +171,14 @@ pub fn clear_measures_test() {
 }
 
 pub fn clear_measure_test() {
-  let _ = performance.mark("cmm-start")
-  let _ = performance.mark("cmm-end")
-  let assert Ok(_) = performance.measure("keep-m", "cmm-start", "cmm-end")
-  let assert Ok(_) = performance.measure("drop-m", "cmm-start", "cmm-end")
+  let start = mark.new("cmm-start") |> mark.record()
+  let end = mark.new("cmm-end") |> mark.record()
+  let _ =
+    measure.between("keep-m", from: start.start_time, to: end.start_time)
+    |> measure.record()
+  let _ =
+    measure.between("drop-m", from: start.start_time, to: end.start_time)
+    |> measure.record()
   performance.clear_measure("drop-m")
   performance.entries_by_name("drop-m") |> list.length |> should.equal(0)
   performance.entries_by_name("keep-m") |> list.length |> should.equal(1)
@@ -110,8 +186,12 @@ pub fn clear_measure_test() {
   performance.clear_measures()
 }
 
-pub fn performance_entry_detail_test() {
-  let entry = performance.mark("detail-mark")
-  entry.detail |> should.equal(option.None)
+pub fn entry_shared_field_access_test() {
+  let m = mark.new("shared-field") |> mark.record()
+  let entries = performance.entries_by_name("shared-field")
+  let assert [entry] = entries
+  entry.name |> should.equal(m.name)
+  duration.compare(entry.start_time, duration.seconds(0))
+  |> should.not_equal(order.Lt)
   performance.clear_marks()
 }

@@ -1,6 +1,13 @@
 //// Access to the runtime's high-resolution performance timeline —
 //// monotonic timestamps, named marks, and span measurements.
 ////
+//// Recording lives in the per-kind submodules:
+////
+//// - [`gossamer/performance/mark`](./performance/mark.html) — record
+////   marks (point-in-time events).
+//// - [`gossamer/performance/measure`](./performance/measure.html) —
+////   record measures (span between two timestamps).
+////
 //// See [Performance](https://developer.mozilla.org/en-US/docs/Web/API/Performance) on MDN.
 
 import gleam/time/duration.{type Duration}
@@ -21,21 +28,6 @@ pub fn now() -> Duration
 ///
 @external(javascript, "./performance.ffi.mjs", "time_origin")
 pub fn time_origin() -> Timestamp
-
-/// Records a performance mark with `name` at the current time.
-///
-@external(javascript, "./performance.ffi.mjs", "mark")
-pub fn mark(name: String) -> PerformanceEntry
-
-/// Records a measurement between two previously-recorded marks. Returns
-/// an error if either `start_mark` or `end_mark` doesn't exist.
-///
-@external(javascript, "./performance.ffi.mjs", "measure")
-pub fn measure(
-  name: String,
-  from start_mark: String,
-  to end_mark: String,
-) -> Result(PerformanceEntry, Nil)
 
 /// Removes all `mark` entries from the performance timeline.
 ///
@@ -70,7 +62,10 @@ pub fn entries() -> List(PerformanceEntry)
 pub fn entries_by_name(name: String) -> List(PerformanceEntry)
 
 /// Returns the entries on the performance timeline whose kind matches
-/// `kind` (e.g., `performance_entry.Mark`, `performance_entry.Measure`).
+/// `kind`. For kinds with a dedicated submodule, prefer the typed
+/// helper (e.g.,
+/// [`gossamer/performance/mark.entries`](./performance/mark.html#entries))
+/// which returns the typed record directly.
 ///
 @external(javascript, "./performance.ffi.mjs", "entries_by_kind")
 pub fn entries_by_kind(kind: Kind) -> List(PerformanceEntry)

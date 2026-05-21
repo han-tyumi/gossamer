@@ -1,9 +1,9 @@
-import * as $performanceObserver from "$/gossamer/gossamer/performance_observer.mjs";
 import {
-  kindFromString,
-  kindToString,
-  project,
-} from "~/gossamer/performance_entry.ffi.ts";
+  kind_from_name,
+  kind_to_name,
+} from "$/gossamer/gossamer/performance_entry.mjs";
+import * as $performanceObserver from "$/gossamer/gossamer/performance_observer.mjs";
+import { project } from "~/gossamer/performance_entry.ffi.ts";
 import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 
 export const observe: typeof $performanceObserver.observe = (
@@ -24,7 +24,7 @@ export const observe: typeof $performanceObserver.observe = (
   );
   observer.observe({
     // @ts-expect-error TS narrows entryTypes to a literal union.
-    entryTypes: toArray(entryKinds).map(kindToString),
+    entryTypes: toArray(entryKinds).map(kind_to_name),
   });
   return observer;
 };
@@ -47,7 +47,7 @@ export const observe_buffered: typeof $performanceObserver.observe_buffered = (
   );
   observer.observe({
     // @ts-expect-error TS narrows type to a literal union.
-    type: kindToString(entryKind),
+    type: kind_to_name(entryKind),
     buffered: true,
   });
   return observer;
@@ -69,6 +69,6 @@ export const supported_entry_types:
   typeof $performanceObserver.supported_entry_types = () => {
     return fromArrayMapped(
       [...PerformanceObserver.supportedEntryTypes],
-      kindFromString,
+      kind_from_name,
     );
   };
