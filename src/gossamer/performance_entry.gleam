@@ -93,6 +93,15 @@ pub type Kind {
   OtherKind(String)
 }
 
+/// A server-side timing entry attached to a resource by the server
+/// via the `Server-Timing` HTTP header.
+///
+/// See [PerformanceServerTiming](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceServerTiming) on MDN.
+///
+pub type ServerTiming {
+  ServerTiming(name: String, duration: Duration, description: String)
+}
+
 /// An entry on the performance timeline. Each variant carries the
 /// fields gossamer has bound for its kind; kinds without their own
 /// variant fall into [`OtherEntry`](#OtherEntry).
@@ -104,6 +113,7 @@ pub type PerformanceEntry {
     name: String,
     start_time: Duration,
     duration: Duration,
+    /// User-supplied metadata attached at record time.
     detail: Option(Dynamic),
   )
 
@@ -113,19 +123,96 @@ pub type PerformanceEntry {
     name: String,
     start_time: Duration,
     duration: Duration,
+    /// User-supplied metadata attached at record time.
     detail: Option(Dynamic),
   )
 
+  /// A resource-loading timing entry — emitted by the runtime when a
+  /// fetch, script load, or other resource request completes. `name`
+  /// is the resource URL. Cross-runtime support is uneven: Node emits
+  /// these for `fetch`; Deno and Bun currently don't. Browsers emit
+  /// for fetch, images, scripts, stylesheets, etc. All timing fields
+  /// are relative to
+  /// [`performance.time_origin`](./performance.html#time_origin) and
+  /// default to zero when the corresponding phase wasn't measured.
+  ResourceEntry(
+    name: String,
+    start_time: Duration,
+    duration: Duration,
+    /// What triggered the load (`"fetch"`, `"xmlhttprequest"`,
+    /// `"img"`, `"script"`, etc.).
+    initiator_type: String,
+    /// The network protocol used (`"h2"`, `"http/1.1"`). `None` when
+    /// the runtime didn't capture it — Node returns `undefined` even
+    /// on supported `fetch` calls.
+    next_hop_protocol: Option(String),
+    /// When a service worker began handling the request, or zero when
+    /// no service worker was involved.
+    worker_start: Duration,
+    /// When HTTP redirect processing began, or zero when there were
+    /// no redirects.
+    redirect_start: Duration,
+    /// When HTTP redirect processing finished, or zero when there
+    /// were no redirects.
+    redirect_end: Duration,
+    /// When the resource fetch began.
+    fetch_start: Duration,
+    /// When DNS lookup began.
+    domain_lookup_start: Duration,
+    /// When DNS lookup completed.
+    domain_lookup_end: Duration,
+    /// When TCP connection setup began.
+    connect_start: Duration,
+    /// When TCP connection setup (including TLS) completed.
+    connect_end: Duration,
+    /// When TLS handshake began, or zero for non-secure connections.
+    secure_connection_start: Duration,
+    /// When the runtime began sending the request.
+    request_start: Duration,
+    /// When the runtime began receiving the response.
+    response_start: Duration,
+    /// When the response was fully received.
+    response_end: Duration,
+    /// Total bytes received including response headers.
+    transfer_size: Int,
+    /// Body bytes received over the wire, before any decompression.
+    encoded_body_size: Int,
+    /// Body bytes after the runtime decompressed them.
+    decoded_body_size: Int,
+    /// HTTP status code (e.g., `200`, `404`).
+    response_status: Int,
+    /// MIME type from the response's `Content-Type` header. Empty
+    /// string when not available.
+    content_type: String,
+    /// How the resource was delivered. Spec values: `"cache"`,
+    /// `"navigational-prefetch"`, or `""` (normal delivery).
+    delivery_type: String,
+    /// Whether the resource blocked rendering of the document.
+    /// Spec values: `"blocking"`, `"non-blocking"`, or `""` (not
+    /// applicable). Browser-only.
+    render_blocking_status: String,
+    /// When the runtime began receiving the first interim response
+    /// (e.g., HTTP 103 Early Hints), or zero when no interim
+    /// response was sent.
+    first_interim_response_start: Duration,
+    /// When the runtime began receiving the final response headers,
+    /// or zero when not measured.
+    final_response_headers_start: Duration,
+    /// Server-side timing entries attached via the `Server-Timing`
+    /// HTTP header. Empty when none.
+    server_timing: List(ServerTiming),
+  )
+
   /// An entry of a kind gossamer hasn't bound to its own variant.
-  /// `kind` is the resolved [`Kind`](#Kind) tag (`OtherKind(name)`
-  /// when the runtime emits a kind gossamer doesn't recognize at all);
-  /// `raw` is the original JavaScript entry object for manual decoding
-  /// via `gleam/dynamic/decode`.
   OtherEntry(
     name: String,
     start_time: Duration,
     duration: Duration,
+    /// The resolved [`Kind`](#Kind) tag — `OtherKind(name)` when the
+    /// runtime emits a kind gossamer doesn't recognize at all.
     kind: Kind,
+    /// The original JavaScript entry, for manual decoding via
+    /// `gleam/dynamic/decode`.
     raw: Dynamic,
   )
 }
@@ -137,6 +224,7 @@ pub fn kind(entry: PerformanceEntry) -> Kind {
   case entry {
     MarkEntry(..) -> MarkKind
     MeasureEntry(..) -> MeasureKind
+    ResourceEntry(..) -> ResourceKind
     OtherEntry(kind:, ..) -> kind
   }
 }
