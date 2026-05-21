@@ -27,6 +27,10 @@ versions than those are considered unsupported.
 - **`date_time_format.format_range`** — uses regular U+0020 spaces around the en
   dash. Node and Deno use thin (U+2009) spaces. Assert via substring rather than
   strict equality if you compare formatted output across runtimes.
+- **Resource Timing** — Bun does not emit `ResourceEntry` for `fetch` (or
+  anything else). `performance_observer.observe` callbacks subscribed to
+  `ResourceKind` never fire, and `performance.entries_by_kind(ResourceKind)`
+  returns an empty list.
 
 ## Node.js
 
@@ -34,6 +38,19 @@ versions than those are considered unsupported.
   `RangeError: The value of "delay" is out of range` for durations longer than
   `4_294_967_295` ms (~49.7 days, the u32 max). Deno and Bun accept values up to
   `Int`'s safe range.
+- **`performance_entry.ResourceEntry.next_hop_protocol`** — returns `None` for
+  fetch entries even though the field is present on the spec interface. Other
+  Level 3 fields (`content_type`, `delivery_type`, `render_blocking_status`,
+  `first_interim_response_start`, `final_response_headers_start`,
+  `server_timing`) are also missing on Node and fall back to spec defaults
+  (`""`, `0`, `[]`).
+
+## Deno
+
+- **Resource Timing** — Deno does not emit `ResourceEntry` for `fetch` (or
+  anything else). `performance_observer.observe` callbacks subscribed to
+  `ResourceKind` never fire, and `performance.entries_by_kind(ResourceKind)`
+  returns an empty list.
 
 ## All three runtimes
 
