@@ -23,6 +23,9 @@ Deno, Bun, and browsers.
     CompressionStream, DecompressionStream
   - [DOM Standard](https://dom.spec.whatwg.org/) — AbortController, AbortSignal
   - [XMLHttpRequest Standard](https://xhr.spec.whatwg.org/) — FormData
+  - [Performance Timeline](https://w3c.github.io/performance-timeline/) +
+    [User Timing](https://w3c.github.io/user-timing/) — Performance,
+    PerformanceEntry, PerformanceMark, PerformanceMeasure, PerformanceObserver
 - [WebSocket Standard](https://websockets.spec.whatwg.org/) — WebSocket (outside
   WinterTC minimum)
 - [URL Pattern API](https://urlpattern.spec.whatwg.org/) — URLPattern (outside
