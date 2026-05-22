@@ -1,5 +1,11 @@
 //// Asynchronously receive performance entries as the runtime records
-//// them.
+//// them. Subscribe to many kinds at once via [`observe`](#observe), or
+//// to a single kind with buffer replay via
+//// [`observe_buffered`](#observe_buffered). The handler receives a
+//// [`Batch`](#Batch) of new entries plus the
+//// [`PerformanceObserver`](#PerformanceObserver) itself for
+//// in-handler [`disconnect`](#disconnect) /
+//// [`take_records`](#take_records) calls.
 
 import gossamer/performance_entry.{type Kind, type PerformanceEntry}
 
