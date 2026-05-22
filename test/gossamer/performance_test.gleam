@@ -59,6 +59,32 @@ pub fn measure_test() {
   performance.clear_measures()
 }
 
+pub fn measure_between_marks_test() {
+  performance.clear_marks()
+  performance.clear_measures()
+  let _ = mark.new("start-anchor") |> mark.record()
+  let _ = mark.new("end-anchor") |> mark.record()
+  let assert Ok(m) =
+    measure.between_marks(
+      "span-by-marks",
+      from: "start-anchor",
+      to: "end-anchor",
+    )
+  m |> measure.record()
+  measure.entries_by_name("span-by-marks")
+  |> list.length
+  |> should.equal(1)
+  performance.clear_marks()
+  performance.clear_measures()
+}
+
+pub fn measure_between_marks_missing_test() {
+  performance.clear_marks()
+  measure.between_marks("span", from: "no-such-mark", to: "also-missing")
+  |> should.be_error
+  performance.clear_marks()
+}
+
 pub fn measure_clamps_negative_test() {
   let m =
     measure.between(

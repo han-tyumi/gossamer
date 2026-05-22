@@ -6,9 +6,12 @@
 //// See [Performance.measure](https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure) on MDN.
 
 import gleam/dynamic.{type Dynamic}
+import gleam/list
 import gleam/option.{type Option, Some}
+import gleam/result
 import gleam/time/duration.{type Duration}
 import gossamer/performance
+import gossamer/performance/mark
 import gossamer/performance_entry.{type PerformanceEntry, MeasureKind}
 
 /// A measure on the performance timeline.
@@ -31,6 +34,29 @@ pub type Measure {
 ///
 @external(javascript, "./measure.ffi.mjs", "between")
 pub fn between(name: String, from from: Duration, to to: Duration) -> Measure
+
+/// Creates a `Measure` named `name` spanning from the most recent
+/// mark named `from` to the most recent mark named `to`. Returns
+/// `Error(Nil)` when either mark name has no recorded marks on the
+/// performance timeline. Pass to [`record`](#record) to write the
+/// measure.
+///
+pub fn between_marks(
+  name: String,
+  from from_mark: String,
+  to to_mark: String,
+) -> Result(Measure, Nil) {
+  use from_time <- result.try(latest_mark_time(from_mark))
+  use to_time <- result.try(latest_mark_time(to_mark))
+  Ok(between(name, from: from_time, to: to_time))
+}
+
+fn latest_mark_time(name: String) -> Result(Duration, Nil) {
+  case mark.entries_by_name(name) |> list.last {
+    Ok(m) -> Ok(m.start_time)
+    Error(_) -> Error(Nil)
+  }
+}
 
 /// Sets the name of the measure.
 ///
