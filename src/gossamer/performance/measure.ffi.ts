@@ -14,6 +14,10 @@ function projectMeasure(entry: PerformanceEntry): $measure.Measure$ {
   );
 }
 
+export const from_raw: typeof $measure.do_from_raw = (raw) => {
+  return projectMeasure(raw as PerformanceEntry);
+};
+
 export const between: typeof $measure.between = (name, from, to) => {
   const startMs = Math.max(0, durationToMs(from));
   const endMs = Math.max(0, durationToMs(to));

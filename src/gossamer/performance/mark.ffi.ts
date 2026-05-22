@@ -12,6 +12,10 @@ function projectMark(entry: PerformanceEntry): $mark.Mark$ {
   );
 }
 
+export const from_raw: typeof $mark.do_from_raw = (raw) => {
+  return projectMark(raw as PerformanceEntry);
+};
+
 export const record: typeof $mark.do_record = (name, startTime, detail) => {
   const options: PerformanceMarkOptions = {
     startTime: Math.max(0, durationToMs(startTime)),

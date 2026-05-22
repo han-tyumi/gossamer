@@ -6,7 +6,7 @@ import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
 import gleam/time/duration.{type Duration}
 import gossamer/performance
-import gossamer/performance_entry.{type PerformanceEntry, MarkEntry}
+import gossamer/performance_entry.{type PerformanceEntry, MarkKind}
 
 /// A mark on the performance timeline.
 ///
@@ -70,12 +70,15 @@ pub fn entries_by_name(name: String) -> List(Mark)
 /// mark.
 ///
 pub fn from_entry(entry: PerformanceEntry) -> Result(Mark, Nil) {
-  case entry {
-    MarkEntry(name:, start_time:, detail:, ..) ->
-      Ok(Mark(name:, start_time:, detail:))
+  case entry.kind {
+    MarkKind -> Ok(do_from_raw(entry.raw))
     _ -> Error(Nil)
   }
 }
+
+@external(javascript, "./mark.ffi.mjs", "from_raw")
+@internal
+pub fn do_from_raw(raw: Dynamic) -> Mark
 
 fn clamp(d: Duration) -> Duration {
   let #(seconds, _) = duration.to_seconds_and_nanoseconds(d)

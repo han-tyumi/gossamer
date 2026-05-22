@@ -4,17 +4,19 @@
 //// `entries_*` queries, and delivered to
 //// [`performance_observer`](./performance_observer.html) callbacks.
 ////
-//// Each variant carries the spec-defined fields for its kind. The
-//// base fields `name`, `start_time`, and `duration` sit at the same
-//// position in every variant, so `entry.name` / `entry.start_time` /
-//// `entry.duration` work without pattern matching.
+//// Every entry carries the four base fields the W3C
+//// [PerformanceEntry interface](https://w3c.github.io/performance-timeline/#dom-performanceentry)
+//// defines (`name`, `entryType`, `startTime`, `duration`). The
+//// `entryType` string surfaces as a typed [`Kind`](#Kind); the
+//// original JavaScript entry stays accessible via `raw` for kind-
+//// specific decoding through `gleam/dynamic/decode`.
 ////
-//// Kinds gossamer hasn't bound to their own variant collapse into
-//// [`OtherEntry`](#OtherEntry); read `kind` to discriminate and `raw`
-//// to decode kind-specific fields via `gleam/dynamic/decode`.
+//// Project to a typed
+//// [`Mark`](./performance/mark.html#Mark) or
+//// [`Measure`](./performance/measure.html#Measure) via the
+//// submodules' `from_entry` helpers.
 
 import gleam/dynamic.{type Dynamic}
-import gleam/option.{type Option}
 import gleam/time/duration.{type Duration}
 
 /// The kind of entry on the performance timeline. Names match the W3C
@@ -34,54 +36,20 @@ pub type Kind {
   OtherKind(String)
 }
 
-/// An entry on the performance timeline. Each variant carries the
-/// fields gossamer has bound for its kind; kinds without their own
-/// variant fall into [`OtherEntry`](#OtherEntry).
+/// An entry on the performance timeline. Carries the W3C base fields
+/// plus a typed [`Kind`](#Kind) discriminator and a `raw` reference
+/// to the original JavaScript entry for kind-specific decoding.
 ///
 pub type PerformanceEntry {
-  /// A user-recorded mark — see
-  /// [`gossamer/performance/mark`](./performance/mark.html).
-  MarkEntry(
+  PerformanceEntry(
     name: String,
     start_time: Duration,
     duration: Duration,
-    /// User-supplied metadata attached at record time.
-    detail: Option(Dynamic),
-  )
-
-  /// A user-recorded measurement — see
-  /// [`gossamer/performance/measure`](./performance/measure.html).
-  MeasureEntry(
-    name: String,
-    start_time: Duration,
-    duration: Duration,
-    /// User-supplied metadata attached at record time.
-    detail: Option(Dynamic),
-  )
-
-  /// An entry of a kind gossamer hasn't bound to its own variant.
-  OtherEntry(
-    name: String,
-    start_time: Duration,
-    duration: Duration,
-    /// The resolved [`Kind`](#Kind) tag — `OtherKind(name)` when the
-    /// runtime emits a kind gossamer doesn't recognize at all.
     kind: Kind,
     /// The original JavaScript entry, for manual decoding via
     /// `gleam/dynamic/decode`.
     raw: Dynamic,
   )
-}
-
-/// Returns the [`Kind`](#Kind) tag of an entry. Useful for filtering
-/// without pattern matching on the full variant.
-///
-pub fn kind(entry: PerformanceEntry) -> Kind {
-  case entry {
-    MarkEntry(..) -> MarkKind
-    MeasureEntry(..) -> MeasureKind
-    OtherEntry(kind:, ..) -> kind
-  }
 }
 
 @internal

@@ -8,7 +8,7 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, Some}
 import gleam/time/duration.{type Duration}
-import gossamer/performance_entry.{type PerformanceEntry, MeasureEntry}
+import gossamer/performance_entry.{type PerformanceEntry, MeasureKind}
 
 /// A measure on the performance timeline.
 ///
@@ -72,9 +72,12 @@ pub fn entries_by_name(name: String) -> List(Measure)
 /// isn't a measure.
 ///
 pub fn from_entry(entry: PerformanceEntry) -> Result(Measure, Nil) {
-  case entry {
-    MeasureEntry(name:, start_time:, duration:, detail:) ->
-      Ok(Measure(name:, start_time:, duration:, detail:))
+  case entry.kind {
+    MeasureKind -> Ok(do_from_raw(entry.raw))
     _ -> Error(Nil)
   }
 }
+
+@external(javascript, "./measure.ffi.mjs", "from_raw")
+@internal
+pub fn do_from_raw(raw: Dynamic) -> Measure
