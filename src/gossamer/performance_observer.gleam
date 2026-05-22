@@ -75,10 +75,13 @@ pub fn disconnect(observer: PerformanceObserver) -> Nil
 @external(javascript, "./performance_observer.ffi.mjs", "take_records")
 pub fn take_records(observer: PerformanceObserver) -> List(PerformanceEntry)
 
-/// Returns the entry kinds supported by this runtime's
-/// `PerformanceObserver`. Deno supports `Mark` and `Measure`; Node
-/// and Bun support a larger set that includes `Resource`. Equivalent
-/// to JavaScript's static `PerformanceObserver.supportedEntryTypes`.
+/// Returns the entry kinds this runtime's `PerformanceObserver`
+/// accepts. Every runtime accepts
+/// [`MarkKind`](./performance_entry.html#Kind) and
+/// [`MeasureKind`](./performance_entry.html#Kind); Node accepts a
+/// larger set including resource-loading and several runtime-
+/// internal kinds (DNS, GC, etc.) that arrive wrapped as
+/// `OtherKind(name)`.
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "supported_entry_types")
 pub fn supported_entry_types() -> List(Kind)
