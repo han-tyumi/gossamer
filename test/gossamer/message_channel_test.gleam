@@ -6,15 +6,11 @@ import gossamer/message_channel
 import gossamer/message_port
 
 pub fn new_test() {
-  let channel = message_channel.new()
-  let _port1 = message_channel.port1(channel)
-  let _port2 = message_channel.port2(channel)
+  let #(_port1, _port2) = message_channel.new()
 }
 
 pub fn post_message_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  let port2 = message_channel.port2(channel)
+  let #(port1, port2) = message_channel.new()
 
   let #(p, resolve) = promise.start()
 
@@ -33,15 +29,12 @@ pub fn post_message_test() {
 }
 
 pub fn close_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
+  let #(port1, _port2) = message_channel.new()
   message_port.close(port1)
 }
 
 pub fn post_message_array_buffer_wraps_as_bit_array_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  let port2 = message_channel.port2(channel)
+  let #(port1, port2) = message_channel.new()
 
   let #(p, resolve) = promise.start()
 
