@@ -1,8 +1,7 @@
-//// One end of a `MessageChannel`. Obtain ports via
-//// [`message_channel.port1`](./message_channel.html#port1) or
-//// [`port2`](./message_channel.html#port2), send messages with
-//// [`post_message`](#post_message), and react to incoming messages
-//// via [`set_on_message`](#set_on_message).
+//// One end of a `MessageChannel`. Obtain a pair of ports via
+//// [`message_channel.new`](./message_channel.html#new), send messages
+//// with [`post_message`](#post_message), and react to incoming
+//// messages via [`set_on_message`](#set_on_message).
 
 import gleam/dynamic.{type Dynamic}
 
