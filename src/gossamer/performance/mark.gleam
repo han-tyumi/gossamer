@@ -27,7 +27,7 @@ pub fn new(name: String) -> Mark {
 /// inputs are clamped to zero.
 ///
 pub fn at(name: String, time: Duration) -> Mark {
-  Mark(name:, start_time: clamp(time), detail: None)
+  Mark(name:, start_time: performance.clamp_to_zero(time), detail: None)
 }
 
 /// Sets the name of the mark.
@@ -41,7 +41,7 @@ pub fn set_name(mark: Mark, name: String) -> Mark {
 /// Negative inputs are clamped to zero.
 ///
 pub fn set_start_time(mark: Mark, start_time: Duration) -> Mark {
-  Mark(..mark, start_time: clamp(start_time))
+  Mark(..mark, start_time: performance.clamp_to_zero(start_time))
 }
 
 /// Sets arbitrary metadata attached to the mark, exposed on the
@@ -93,11 +93,3 @@ pub fn from_entry(entry: PerformanceEntry) -> Result(Mark, Nil) {
 @external(javascript, "./mark.ffi.mjs", "from_raw")
 @internal
 pub fn do_from_raw(raw: Dynamic) -> Mark
-
-fn clamp(d: Duration) -> Duration {
-  let #(seconds, _) = duration.to_seconds_and_nanoseconds(d)
-  case seconds < 0 {
-    True -> duration.seconds(0)
-    False -> d
-  }
-}

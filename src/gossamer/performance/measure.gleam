@@ -8,6 +8,7 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, Some}
 import gleam/time/duration.{type Duration}
+import gossamer/performance
 import gossamer/performance_entry.{type PerformanceEntry, MeasureKind}
 
 /// A measure on the performance timeline.
@@ -42,14 +43,14 @@ pub fn set_name(measure: Measure, name: String) -> Measure {
 /// Negative inputs are clamped to zero.
 ///
 pub fn set_start_time(measure: Measure, start_time: Duration) -> Measure {
-  Measure(..measure, start_time: clamp(start_time))
+  Measure(..measure, start_time: performance.clamp_to_zero(start_time))
 }
 
 /// Sets the duration of the measure. Negative inputs are clamped to
 /// zero.
 ///
 pub fn set_duration(measure: Measure, duration: Duration) -> Measure {
-  Measure(..measure, duration: clamp(duration))
+  Measure(..measure, duration: performance.clamp_to_zero(duration))
 }
 
 /// Sets arbitrary metadata attached to the measure, exposed on the
@@ -102,11 +103,3 @@ pub fn from_entry(entry: PerformanceEntry) -> Result(Measure, Nil) {
 @external(javascript, "./measure.ffi.mjs", "from_raw")
 @internal
 pub fn do_from_raw(raw: Dynamic) -> Measure
-
-fn clamp(d: Duration) -> Duration {
-  let #(seconds, _) = duration.to_seconds_and_nanoseconds(d)
-  case seconds < 0 {
-    True -> duration.seconds(0)
-    False -> d
-  }
-}

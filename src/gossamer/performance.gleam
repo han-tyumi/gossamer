@@ -70,3 +70,12 @@ pub fn entries_by_name(name: String) -> List(PerformanceEntry)
 ///
 @external(javascript, "./performance.ffi.mjs", "entries_by_kind")
 pub fn entries_by_kind(kind: Kind) -> List(PerformanceEntry)
+
+@internal
+pub fn clamp_to_zero(d: Duration) -> Duration {
+  let #(seconds, _) = duration.to_seconds_and_nanoseconds(d)
+  case seconds < 0 {
+    True -> duration.seconds(0)
+    False -> d
+  }
+}
