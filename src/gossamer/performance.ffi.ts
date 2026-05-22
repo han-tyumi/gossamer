@@ -16,7 +16,9 @@ export const clear_marks: typeof $performance.clear_marks = () => {
   performance.clearMarks();
 };
 
-export const clear_mark: typeof $performance.clear_mark = (name) => {
+export const clear_marks_by_name: typeof $performance.clear_marks_by_name = (
+  name,
+) => {
   performance.clearMarks(name);
 };
 
@@ -24,9 +26,10 @@ export const clear_measures: typeof $performance.clear_measures = () => {
   performance.clearMeasures();
 };
 
-export const clear_measure: typeof $performance.clear_measure = (name) => {
-  performance.clearMeasures(name);
-};
+export const clear_measures_by_name:
+  typeof $performance.clear_measures_by_name = (name) => {
+    performance.clearMeasures(name);
+  };
 
 export const entries: typeof $performance.entries = () => {
   return fromArrayMapped(performance.getEntries(), project);

@@ -149,10 +149,10 @@ pub fn clear_marks_test() {
   should.equal(list.length(entries), 0)
 }
 
-pub fn clear_mark_test() {
+pub fn clear_marks_by_name_test() {
   let _ = mark.new("keep") |> mark.record()
   let _ = mark.new("drop") |> mark.record()
-  performance.clear_mark("drop")
+  performance.clear_marks_by_name("drop")
   performance.entries_by_name("drop") |> list.length |> should.equal(0)
   performance.entries_by_name("keep") |> list.length |> should.equal(1)
   performance.clear_marks()
@@ -170,7 +170,7 @@ pub fn clear_measures_test() {
   performance.clear_marks()
 }
 
-pub fn clear_measure_test() {
+pub fn clear_measures_by_name_test() {
   let start = mark.new("cmm-start") |> mark.record()
   let end = mark.new("cmm-end") |> mark.record()
   let _ =
@@ -179,7 +179,7 @@ pub fn clear_measure_test() {
   let _ =
     measure.between("drop-m", from: start.start_time, to: end.start_time)
     |> measure.record()
-  performance.clear_measure("drop-m")
+  performance.clear_measures_by_name("drop-m")
   performance.entries_by_name("drop-m") |> list.length |> should.equal(0)
   performance.entries_by_name("keep-m") |> list.length |> should.equal(1)
   performance.clear_marks()
