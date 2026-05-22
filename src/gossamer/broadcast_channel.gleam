@@ -45,8 +45,8 @@ pub fn name(channel: BroadcastChannel) -> String
 ///
 @external(javascript, "./broadcast_channel.ffi.mjs", "post_message")
 pub fn post_message(
-  to channel: BroadcastChannel,
-  data data: a,
+  channel: BroadcastChannel,
+  data: a,
 ) -> Result(Nil, PostMessageError)
 
 /// Closes the channel. Messages posted to other channels of the same

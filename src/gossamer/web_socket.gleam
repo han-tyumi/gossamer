@@ -217,10 +217,7 @@ pub fn close_with(
 /// JavaScript's `WebSocket.send` with a `Blob` argument.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_blob")
-pub fn send_blob(
-  to socket: WebSocket,
-  data data: Blob,
-) -> Result(Nil, WebSocketError)
+pub fn send_blob(socket: WebSocket, data: Blob) -> Result(Nil, WebSocketError)
 
 /// Sends a binary frame through the WebSocket. Returns `Error(NotOpen)`
 /// if the connection is still `Connecting`. Data sent after the
@@ -230,8 +227,8 @@ pub fn send_blob(
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_binary")
 pub fn send_binary(
-  to socket: WebSocket,
-  data data: BitArray,
+  socket: WebSocket,
+  data: BitArray,
 ) -> Result(Nil, WebSocketError)
 
 /// Sends a text frame through the WebSocket. Returns `Error(NotOpen)` if
@@ -240,7 +237,4 @@ pub fn send_binary(
 /// to JavaScript's `WebSocket.send` with a `String` argument.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "send_text")
-pub fn send_text(
-  to socket: WebSocket,
-  data data: String,
-) -> Result(Nil, WebSocketError)
+pub fn send_text(socket: WebSocket, data: String) -> Result(Nil, WebSocketError)

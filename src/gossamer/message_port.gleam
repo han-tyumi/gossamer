@@ -17,7 +17,7 @@ pub type MessagePort
 /// functions, symbols, and most class instances are not cloneable.
 ///
 @external(javascript, "./message_port.ffi.mjs", "post_message")
-pub fn post_message(to port: MessagePort, data data: a) -> Result(Nil, Nil)
+pub fn post_message(port: MessagePort, data: a) -> Result(Nil, Nil)
 
 /// Disconnects the port. Subsequent messages sent on the paired port
 /// are discarded.

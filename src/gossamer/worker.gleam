@@ -110,7 +110,7 @@ pub fn do_build(
 /// and most class instances are not cloneable.
 ///
 @external(javascript, "./worker.ffi.mjs", "post_message")
-pub fn post_message(to worker: Worker, data data: a) -> Result(Nil, Nil)
+pub fn post_message(worker: Worker, data: a) -> Result(Nil, Nil)
 
 /// Stops the worker thread immediately. Any queued messages are
 /// discarded and the worker's script is not given a chance to clean
