@@ -85,6 +85,16 @@ pub fn measure_between_marks_missing_test() {
   performance.clear_marks()
 }
 
+pub fn measure_clamps_inverted_endpoints_test() {
+  let m =
+    measure.between(
+      "test-measure-inverted",
+      from: duration.milliseconds(100),
+      to: duration.milliseconds(50),
+    )
+  m.duration |> should.equal(duration.seconds(0))
+}
+
 pub fn measure_clamps_negative_test() {
   let m =
     measure.between(

@@ -24,7 +24,7 @@ export const between: typeof $measure.between = (name, from, to) => {
   return $measure.Measure$Measure(
     name,
     msToDuration(startMs),
-    msToDuration(endMs - startMs),
+    msToDuration(Math.max(0, endMs - startMs)),
     Option$None(),
   );
 };

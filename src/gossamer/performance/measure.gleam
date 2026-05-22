@@ -34,9 +34,9 @@ pub type Measure {
 /// Creates a `Measure` named `name` spanning from `from` to `to` (both
 /// relative to
 /// [`performance.time_origin`](../performance.html#time_origin)). The
-/// `duration` field is computed as `to - from`. Negative inputs are
-/// clamped to zero. Pass to [`record`](#record) to write to the
-/// timeline.
+/// `duration` field is computed as `to - from`. Negative endpoints
+/// and a negative computed duration (i.e. `to < from`) are clamped
+/// to zero. Pass to [`record`](#record) to write to the timeline.
 ///
 @external(javascript, "./measure.ffi.mjs", "between")
 pub fn between(name: String, from from: Duration, to to: Duration) -> Measure
