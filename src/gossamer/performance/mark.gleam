@@ -30,6 +30,20 @@ pub fn at(name: String, time: Duration) -> Mark {
   Mark(name:, start_time: clamp(time), detail: None)
 }
 
+/// Sets the name of the mark.
+///
+pub fn set_name(mark: Mark, name: String) -> Mark {
+  Mark(..mark, name:)
+}
+
+/// Sets the start time of the mark relative to
+/// [`performance.time_origin`](../performance.html#time_origin).
+/// Negative inputs are clamped to zero.
+///
+pub fn set_start_time(mark: Mark, start_time: Duration) -> Mark {
+  Mark(..mark, start_time: clamp(start_time))
+}
+
 /// Sets arbitrary metadata attached to the mark, exposed on the
 /// recorded [`Mark`](#Mark)'s `detail` field.
 ///
