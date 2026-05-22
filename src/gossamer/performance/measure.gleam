@@ -18,9 +18,15 @@ import gossamer/performance_entry.{type PerformanceEntry, MeasureKind}
 ///
 pub type Measure {
   Measure(
+    /// The measure's name.
     name: String,
+    /// When the span begins, relative to
+    /// [`performance.time_origin`](../performance.html#time_origin).
     start_time: Duration,
+    /// The span's length.
     duration: Duration,
+    /// Arbitrary metadata attached at construction via
+    /// [`set_detail`](#set_detail). `None` when nothing is attached.
     detail: Option(Dynamic),
   )
 }

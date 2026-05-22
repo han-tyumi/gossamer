@@ -42,9 +42,18 @@ pub type Kind {
 ///
 pub type PerformanceEntry {
   PerformanceEntry(
+    /// The entry's name. For marks and measures, the name the user
+    /// recorded; for other kinds, an entry-type-specific label.
     name: String,
+    /// When the entry began, relative to
+    /// [`performance.time_origin`](./performance.html#time_origin).
     start_time: Duration,
+    /// The entry's span length. Zero for marks and other point-in-
+    /// time kinds.
     duration: Duration,
+    /// The kind of entry — [`MarkKind`](#Kind) /
+    /// [`MeasureKind`](#Kind) / [`OtherKind`](#Kind) for everything
+    /// else.
     kind: Kind,
     /// The original JavaScript entry, for manual decoding via
     /// `gleam/dynamic/decode`.

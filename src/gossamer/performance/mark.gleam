@@ -11,7 +11,16 @@ import gossamer/performance_entry.{type PerformanceEntry, MarkKind}
 /// A mark on the performance timeline.
 ///
 pub type Mark {
-  Mark(name: String, start_time: Duration, detail: Option(Dynamic))
+  Mark(
+    /// The mark's name.
+    name: String,
+    /// When the mark was anchored, relative to
+    /// [`performance.time_origin`](../performance.html#time_origin).
+    start_time: Duration,
+    /// Arbitrary metadata attached at construction via
+    /// [`set_detail`](#set_detail). `None` when nothing is attached.
+    detail: Option(Dynamic),
+  )
 }
 
 /// Creates a `Mark` named `name` at the current high-resolution time.
