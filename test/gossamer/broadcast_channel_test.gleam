@@ -33,8 +33,16 @@ pub fn round_trip_test() {
 
 pub fn post_message_non_cloneable_test() {
   let channel = broadcast_channel.new("test-channel-non-cloneable")
-  broadcast_channel.post_message(channel, fn() { Nil }) |> should.be_error
+  broadcast_channel.post_message(channel, fn() { Nil })
+  |> should.equal(Error(broadcast_channel.DataClone))
   broadcast_channel.close(channel)
+}
+
+pub fn post_message_closed_test() {
+  let channel = broadcast_channel.new("test-channel-closed")
+  broadcast_channel.close(channel)
+  broadcast_channel.post_message(channel, "hello")
+  |> should.equal(Error(broadcast_channel.InvalidState))
 }
 
 pub fn cross_worker_fanout_test() {

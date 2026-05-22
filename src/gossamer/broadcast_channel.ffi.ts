@@ -1,4 +1,4 @@
-import type * as $broadcastChannel from "$/gossamer/gossamer/broadcast_channel.mjs";
+import * as $broadcastChannel from "$/gossamer/gossamer/broadcast_channel.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   unwrapBitArrayForClone,
@@ -24,6 +24,15 @@ if (typeof globalThis.Deno !== "undefined") {
   });
 }
 
+function classifyError(
+  error: unknown,
+): $broadcastChannel.PostMessageError$ {
+  if (error instanceof DOMException && error.name === "InvalidStateError") {
+    return $broadcastChannel.PostMessageError$InvalidState();
+  }
+  return $broadcastChannel.PostMessageError$DataClone();
+}
+
 export const new_: typeof $broadcastChannel.new$ = (name) => {
   return new BroadcastChannel(name);
 };
@@ -39,8 +48,8 @@ export const post_message: typeof $broadcastChannel.post_message = (
   try {
     channel.postMessage(unwrapBitArrayForClone(data));
     return Result$Ok(undefined);
-  } catch {
-    return Result$Error(undefined);
+  } catch (e) {
+    return Result$Error(classifyError(e));
   }
 };
 

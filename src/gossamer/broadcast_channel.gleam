@@ -14,6 +14,17 @@ import gleam/dynamic.{type Dynamic}
 @external(javascript, "./broadcast_channel.type.ts", "BroadcastChannel$")
 pub type BroadcastChannel
 
+/// Reasons a [`post_message`](#post_message) call can fail.
+///
+pub type PostMessageError {
+  /// `data` can't be serialized by the structured-clone algorithm —
+  /// functions, symbols, and most class instances aren't cloneable.
+  DataClone
+
+  /// The channel has been [`close`d](#close).
+  InvalidState
+}
+
 /// Creates a `BroadcastChannel` for the given name. Any other channel
 /// of the same name in the same agent will receive messages posted
 /// here.
@@ -27,15 +38,16 @@ pub fn new(name: String) -> BroadcastChannel
 pub fn name(channel: BroadcastChannel) -> String
 
 /// Sends `data` to every other `BroadcastChannel` of the same name.
-/// Returns an error if `data` can't be serialized by the
-/// structured-clone algorithm — functions, symbols, and most class
-/// instances are not cloneable.
+/// Returns [`DataClone`](#PostMessageError) if `data` can't be
+/// serialized by the structured-clone algorithm, or
+/// [`InvalidState`](#PostMessageError) if the channel has been
+/// [`close`d](#close).
 ///
 @external(javascript, "./broadcast_channel.ffi.mjs", "post_message")
 pub fn post_message(
   to channel: BroadcastChannel,
   data data: a,
-) -> Result(Nil, Nil)
+) -> Result(Nil, PostMessageError)
 
 /// Closes the channel. Messages posted to other channels of the same
 /// name no longer arrive here.
