@@ -138,23 +138,30 @@ pub fn unfold_async(
   })
 }
 
-/// Yields `element` followed by whatever `next()` produces. `next()` is
-/// only called when the yielder is first pulled.
+/// Yields `element` followed by whatever `next()` produces. `next()`
+/// is only called when the yielder is pulled past `element`.
 ///
 pub fn yield(element: a, next: fn() -> AsyncYielder(a)) -> AsyncYielder(a) {
-  AsyncYielder(pull: fn() { promise.resolve(Next(element, next())) })
+  AsyncYielder(pull: fn() {
+    promise.resolve(Next(element, AsyncYielder(pull: fn() { next().pull() })))
+  })
 }
 
 /// Like [`yield`](#yield) but `next` returns a `Promise`. The promise
-/// is awaited when the yielder is first pulled.
+/// is awaited when the yielder is pulled past `element`.
 ///
 pub fn yield_async(
   element: a,
   next: fn() -> Promise(AsyncYielder(a)),
 ) -> AsyncYielder(a) {
   AsyncYielder(pull: fn() {
-    use rest <- promise.map(next())
-    Next(element, rest)
+    promise.resolve(Next(
+      element,
+      AsyncYielder(pull: fn() {
+        use rest <- promise.await(next())
+        rest.pull()
+      }),
+    ))
   })
 }
 
@@ -1088,17 +1095,15 @@ fn chunk_async_loop(
 }
 
 /// Splits `yielder` into fixed-size lists. The final list may be
-/// shorter than `count`. If `count` is non-positive, yields nothing.
+/// shorter than `count`. For any `count` less than 1 this function
+/// behaves as if it was set to 1.
 ///
 pub fn sized_chunk(
   over yielder: AsyncYielder(a),
   into count: Int,
 ) -> AsyncYielder(List(a)) {
-  case count > 0 {
-    False -> empty()
-    True ->
-      AsyncYielder(pull: fn() { sized_chunk_loop(yielder, count, [], count) })
-  }
+  let count = int.max(count, 1)
+  AsyncYielder(pull: fn() { sized_chunk_loop(yielder, count, [], count) })
 }
 
 fn sized_chunk_loop(
@@ -1173,14 +1178,10 @@ pub fn group_async(
 /// Drains the yielder, collecting all yielded values into a list.
 ///
 pub fn to_list(yielder: AsyncYielder(a)) -> Promise(List(a)) {
-  use step <- promise.await(yielder.pull())
-  case step {
-    Done -> promise.resolve([])
-    Next(value, rest) -> {
-      use rest_list <- promise.map(to_list(rest))
-      [value, ..rest_list]
-    }
-  }
+  use reversed <- promise.map(
+    fold(yielder, [], fn(acc, value) { [value, ..acc] }),
+  )
+  list.reverse(reversed)
 }
 
 /// Drains the yielder, calling `fun` on each yielded value.

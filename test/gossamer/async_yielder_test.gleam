@@ -907,13 +907,14 @@ pub fn sized_chunk_empty_test() {
   should.equal(result, [])
 }
 
-pub fn sized_chunk_zero_test() {
+pub fn sized_chunk_zero_clamps_to_one_test() {
   let result =
     async_yielder.from_list([1, 2])
     |> async_yielder.sized_chunk(into: 0)
     |> async_yielder.to_list
   use result <- promise.map(result)
-  should.equal(result, [])
+  // `sized_chunk` clamps `count < 1` to `1`, matching `gleam_yielder`.
+  should.equal(result, [[1], [2]])
 }
 
 pub fn group_test() {
