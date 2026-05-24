@@ -1,6 +1,6 @@
 import * as $segmenter from "$/gossamer/gossamer/intl/segmenter.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
+import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
 import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, toOption } from "~/utils/option.ffi.ts";

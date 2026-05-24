@@ -3,7 +3,7 @@ import {
   from_list as gleam_set_from_list,
 } from "$/gleam_stdlib/gleam/set.mjs";
 import type * as $set from "$/gossamer/gossamer/set.mjs";
-import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
+import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 
 export const new_: typeof $set.new$ = <T>() => {

@@ -3,7 +3,7 @@ import {
   from_list as dict_from_list,
 } from "$/gleam_stdlib/gleam/dict.mjs";
 import type * as $map from "$/gossamer/gossamer/map.mjs";
-import { jsIteratorAsYielder } from "~/gossamer/iteration.ffi.ts";
+import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
 

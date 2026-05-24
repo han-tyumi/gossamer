@@ -1,6 +1,5 @@
 import * as $asyncYielder from "$/gossamer/gossamer/iteration/async_yielder.mjs";
 import * as $yielder from "$/gleam_yielder/gleam/yielder.mjs";
-import * as $iteration from "$/gossamer/gossamer/iteration.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 
 export function jsIteratorAsYielder<T>(
@@ -72,19 +71,4 @@ export function toCallbackResultPromise<T>(promise: Promise<T>) {
     (value) => Result$Ok(value),
     (error) => Result$Error(error),
   );
-}
-
-export function toIteratorResult<T, TReturn>(
-  result: $iteration.IteratorResult$<T, TReturn>,
-): IteratorResult<T, TReturn> {
-  if ($iteration.IteratorResult$isReturn(result)) {
-    return {
-      done: true,
-      value: $iteration.IteratorResult$Return$value(result),
-    };
-  }
-  return {
-    done: false,
-    value: $iteration.IteratorResult$Yield$value(result),
-  };
 }

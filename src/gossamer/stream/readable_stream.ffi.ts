@@ -6,7 +6,7 @@ import {
   asyncYielderAsJsAsyncIterator,
   jsAsyncIteratorAsAsyncYielder,
   yielderAsJsIterator,
-} from "~/gossamer/iteration.ffi.ts";
+} from "~/utils/iteration.ffi.ts";
 import { fromBitArrayReadable } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 import { fromQueuingStrategy } from "~/utils/queuing_strategy.ffi.ts";

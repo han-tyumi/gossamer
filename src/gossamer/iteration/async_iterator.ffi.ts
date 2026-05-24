@@ -2,22 +2,7 @@ import type * as $asyncIterator from "$/gossamer/gossamer/iteration/async_iterat
 import {
   asyncYielderAsJsAsyncIterator,
   jsAsyncIteratorAsAsyncYielder,
-  toIteratorResult,
-} from "~/gossamer/iteration.ffi.ts";
-import { toOption } from "~/utils/option.ffi.ts";
-
-export const new_: typeof $asyncIterator.new$ = <TNext, T, TReturn>(
-  ...[next]: Parameters<typeof $asyncIterator.new$<TNext, T, TReturn>>
-) => {
-  const iterator: AsyncIterableIterator<T, TReturn, TNext> = {
-    next: async (...[value]: [TNext?]) =>
-      toIteratorResult(await next(toOption(value))),
-    [Symbol.asyncIterator]() {
-      return this;
-    },
-  };
-  return iterator;
-};
+} from "~/utils/iteration.ffi.ts";
 
 export const from_async_yielder: typeof $asyncIterator.from_async_yielder =
   asyncYielderAsJsAsyncIterator;
@@ -25,8 +10,8 @@ export const from_async_yielder: typeof $asyncIterator.from_async_yielder =
 export const to_async_yielder: typeof $asyncIterator.to_async_yielder =
   jsAsyncIteratorAsAsyncYielder;
 
-export const each: typeof $asyncIterator.each = async <T, TReturn, TNext>(
-  iterator: AsyncIterator<T, TReturn, TNext>,
+export const each: typeof $asyncIterator.each = async <T>(
+  iterator: AsyncIterator<T>,
   fun: Parameters<typeof $asyncIterator.each<T>>[1],
 ) => {
   while (true) {

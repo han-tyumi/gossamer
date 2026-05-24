@@ -1,15 +1,6 @@
 import gleam/yielder
 import gleeunit/should
-import gossamer/iteration
 import gossamer/iteration/iterator
-
-pub fn new_yielder_round_trip_test() {
-  let iter = iterator.new(fn(_next) { iteration.Yield(42) })
-  iter
-  |> iterator.to_yielder
-  |> yielder.first
-  |> should.equal(Ok(42))
-}
 
 pub fn for_test() {
   let collected = [3, 2, 1]
