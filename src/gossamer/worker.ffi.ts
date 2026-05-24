@@ -9,9 +9,10 @@ import {
   unwrapBitArrayForClone,
   wrapArrayBuffer,
 } from "~/utils/bit_array.ffi.ts";
+import { collectPorts } from "~/utils/transferables.ffi.ts";
 
 interface UnifiedWorker {
-  postMessage(data: unknown): void;
+  postMessage(data: unknown, transfer?: readonly unknown[]): void;
   terminate(): unknown;
 }
 
@@ -93,7 +94,13 @@ export const build: typeof $worker.do_build = (url, name, on_message) => {
 
 export const post_message: typeof $worker.post_message = (worker, data) => {
   try {
-    worker.postMessage(unwrapBitArrayForClone(data));
+    const payload = unwrapBitArrayForClone(data);
+    const ports = collectPorts(payload);
+    if (ports.length === 0) {
+      worker.postMessage(payload);
+    } else {
+      worker.postMessage(payload, ports);
+    }
     return Result$Ok(undefined);
   } catch {
     return Result$Error(undefined);

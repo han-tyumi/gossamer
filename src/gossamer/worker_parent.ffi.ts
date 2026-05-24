@@ -4,9 +4,10 @@ import {
   unwrapBitArrayForClone,
   wrapArrayBuffer,
 } from "~/utils/bit_array.ffi.ts";
+import { collectPorts } from "~/utils/transferables.ffi.ts";
 
 interface Target {
-  postMessage(data: unknown): void;
+  postMessage(data: unknown, transfer?: readonly unknown[]): void;
   onmessage?: ((event: MessageEvent) => void) | null;
 }
 
@@ -35,7 +36,13 @@ function onMessage(handler: (data: unknown) => void): void {
 
 export const post_message: typeof $workerParent.post_message = (data) => {
   try {
-    target.postMessage(unwrapBitArrayForClone(data));
+    const payload = unwrapBitArrayForClone(data);
+    const ports = collectPorts(payload);
+    if (ports.length === 0) {
+      target.postMessage(payload);
+    } else {
+      target.postMessage(payload, ports);
+    }
     return Result$Ok(undefined);
   } catch {
     return Result$Error(undefined);

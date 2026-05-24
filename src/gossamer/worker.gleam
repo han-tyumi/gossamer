@@ -12,6 +12,22 @@
 //// Send messages to a running worker with
 //// [`post_message`](#post_message) and stop it with
 //// [`terminate`](#terminate).
+////
+//// ## Sending Gleam values
+////
+//// Values cross via structured-clone and arrive on the worker side as
+//// `Dynamic`. See [`gossamer/message_port`](./message_port.html) for
+//// what round-trips cleanly and how to decode the received data.
+////
+//// ## Transferring ports
+////
+//// A [`MessagePort`](./message_port.html) reachable from the data
+//// passed to [`post_message`](#post_message) is automatically detached
+//// on this side and re-attached inside the worker — the message and
+//// any ports ride a single atomic call. Transferred ports are no
+//// longer usable on the sender. To extract a transferred port from
+//// the received `Dynamic`, use
+//// [`message_port.from_dynamic`](./message_port.html#from_dynamic).
 
 import gleam/dynamic.{type Dynamic}
 import gleam/option.{type Option, None, Some}
@@ -69,9 +85,11 @@ pub fn with_name(builder: Builder, name: String) -> Builder {
 
 /// Registers a handler invoked for each message the worker sends back.
 /// The handler also receives the [`Worker`](#Worker) so it can reply
-/// via [`post_message`](#post_message). `ArrayBuffer` payloads are
-/// exposed as `BitArray`; other values pass through unchanged. Decode
-/// the payload with `gleam/dynamic/decode`.
+/// via [`post_message`](#post_message). Decode the payload with
+/// `gleam/dynamic/decode`; extract any transferred ports with
+/// [`message_port.from_dynamic`](./message_port.html#from_dynamic).
+/// `ArrayBuffer` payloads are exposed as `BitArray`; other values pass
+/// through unchanged.
 ///
 pub fn with_on_message(
   builder: Builder,
@@ -105,7 +123,10 @@ pub fn do_build(
   on_message: Option(fn(Dynamic, Worker) -> Nil),
 ) -> Result(Worker, Nil)
 
-/// Sends `data` to the worker. Returns an error if `data` can't be
+/// Sends `data` to the worker. Any
+/// [`MessagePort`](./message_port.html) reachable from `data` is
+/// detached on this side and arrives inside the worker at its position
+/// in the data structure. Returns an error if `data` can't be
 /// serialized by the structured-clone algorithm — functions, symbols,
 /// and most class instances are not cloneable.
 ///
