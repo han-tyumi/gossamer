@@ -942,3 +942,122 @@ pub fn group_async_test() {
   should.equal(dict.get(grouped, 0), Ok([2, 4]))
   should.equal(dict.get(grouped, 1), Ok([1, 3]))
 }
+
+pub fn repeat_test() {
+  let result =
+    async_yielder.repeat(7)
+    |> async_yielder.take(up_to: 4)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [7, 7, 7, 7])
+}
+
+pub fn repeatedly_test() {
+  let result =
+    async_yielder.repeatedly(fn() { 42 })
+    |> async_yielder.take(up_to: 3)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [42, 42, 42])
+}
+
+pub fn repeatedly_async_test() {
+  let result =
+    async_yielder.repeatedly_async(fn() { promise.resolve("x") })
+    |> async_yielder.take(up_to: 3)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, ["x", "x", "x"])
+}
+
+pub fn iterate_test() {
+  let result =
+    async_yielder.iterate(from: 1, with: fn(n) { n * 2 })
+    |> async_yielder.take(up_to: 5)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [1, 2, 4, 8, 16])
+}
+
+pub fn iterate_async_test() {
+  let result =
+    async_yielder.iterate_async(from: 0, with: fn(n) { promise.resolve(n + 3) })
+    |> async_yielder.take(up_to: 4)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [0, 3, 6, 9])
+}
+
+pub fn cycle_test() {
+  let result =
+    async_yielder.from_list([1, 2, 3])
+    |> async_yielder.cycle
+    |> async_yielder.take(up_to: 7)
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [1, 2, 3, 1, 2, 3, 1])
+}
+
+pub fn zip_test() {
+  let result =
+    async_yielder.zip(
+      async_yielder.from_list([1, 2, 3]),
+      async_yielder.from_list(["a", "b", "c"]),
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [#(1, "a"), #(2, "b"), #(3, "c")])
+}
+
+pub fn zip_uneven_test() {
+  let result =
+    async_yielder.zip(
+      async_yielder.from_list([1, 2, 3, 4]),
+      async_yielder.from_list(["a", "b"]),
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [#(1, "a"), #(2, "b")])
+}
+
+pub fn map2_test() {
+  let result =
+    async_yielder.map2(
+      async_yielder.from_list([1, 2, 3]),
+      async_yielder.from_list([10, 20, 30]),
+      with: fn(a, b) { a + b },
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [11, 22, 33])
+}
+
+pub fn map2_async_test() {
+  let result =
+    async_yielder.map2_async(
+      async_yielder.from_list([1, 2, 3]),
+      async_yielder.from_list([10, 20, 30]),
+      with: fn(a, b) { promise.resolve(a * b) },
+    )
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [10, 40, 90])
+}
+
+pub fn interleave_test() {
+  let result =
+    async_yielder.from_list([1, 3, 5])
+    |> async_yielder.interleave(with: async_yielder.from_list([2, 4, 6]))
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [1, 2, 3, 4, 5, 6])
+}
+
+pub fn interleave_uneven_test() {
+  let result =
+    async_yielder.from_list([1, 3, 5, 7, 9])
+    |> async_yielder.interleave(with: async_yielder.from_list([2, 4]))
+    |> async_yielder.to_list
+  use result <- promise.map(result)
+  should.equal(result, [1, 2, 3, 4, 5, 7, 9])
+}

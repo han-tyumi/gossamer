@@ -80,6 +80,28 @@ pub fn once_async(fun: fn() -> Promise(a)) -> AsyncYielder(a) {
   })
 }
 
+/// An async yielder that yields `fun()` infinitely.
+///
+pub fn repeatedly(fun: fn() -> a) -> AsyncYielder(a) {
+  unfold(Nil, fn(_) { Next(fun(), Nil) })
+}
+
+/// Like [`repeatedly`](#repeatedly) but `fun` returns a `Promise`.
+/// Each call is awaited before the next.
+///
+pub fn repeatedly_async(fun: fn() -> Promise(a)) -> AsyncYielder(a) {
+  unfold_async(Nil, fn(_) {
+    use value <- promise.map(fun())
+    Next(value, Nil)
+  })
+}
+
+/// An async yielder that yields `x` infinitely.
+///
+pub fn repeat(x: a) -> AsyncYielder(a) {
+  repeatedly(fn() { x })
+}
+
 /// An async yielder of integers from `start` up to (or down to) `stop`,
 /// inclusive on both ends.
 ///
@@ -135,6 +157,26 @@ pub fn unfold_async(
       Next(element, accumulator) ->
         Next(element, unfold_async(accumulator, fun))
     }
+  })
+}
+
+/// Constructs an async yielder by repeatedly applying `fun` to the
+/// previous value, starting from `initial`. The yielder is infinite.
+///
+pub fn iterate(from initial: a, with fun: fn(a) -> a) -> AsyncYielder(a) {
+  unfold(from: initial, with: fn(element) { Next(element, fun(element)) })
+}
+
+/// Like [`iterate`](#iterate) but `fun` returns a `Promise`. Each call
+/// is awaited before the next.
+///
+pub fn iterate_async(
+  from initial: a,
+  with fun: fn(a) -> Promise(a),
+) -> AsyncYielder(a) {
+  unfold_async(from: initial, with: fn(element) {
+    use next <- promise.map(fun(element))
+    Next(element, next)
   })
 }
 
@@ -205,6 +247,60 @@ pub fn flatten(yielder: AsyncYielder(AsyncYielder(a))) -> AsyncYielder(a) {
 ///
 pub fn concat(yielders: List(AsyncYielder(a))) -> AsyncYielder(a) {
   flatten(from_list(yielders))
+}
+
+/// Repeats `yielder` infinitely, restarting from the beginning each
+/// round. Pair with [`take`](#take) to bound it. Cycling an empty
+/// yielder yields nothing and never halts, so don't fully drain it.
+///
+pub fn cycle(yielder: AsyncYielder(a)) -> AsyncYielder(a) {
+  repeat(yielder) |> flatten
+}
+
+/// Yields pairs of corresponding elements from `left` and `right`,
+/// stopping when either runs out.
+///
+pub fn zip(
+  left: AsyncYielder(a),
+  right: AsyncYielder(b),
+) -> AsyncYielder(#(a, b)) {
+  AsyncYielder(pull: fn() {
+    use left_step <- promise.await(left.pull())
+    case left_step {
+      Done -> promise.resolve(Done)
+      Next(left_value, left_rest) -> {
+        use right_step <- promise.map(right.pull())
+        case right_step {
+          Done -> Done
+          Next(right_value, right_rest) ->
+            Next(#(left_value, right_value), zip(left_rest, right_rest))
+        }
+      }
+    }
+  })
+}
+
+/// Yields the result of `fun(left_value, right_value)` for each
+/// corresponding pair from `yielder1` and `yielder2`, stopping when
+/// either runs out.
+///
+pub fn map2(
+  yielder1: AsyncYielder(a),
+  yielder2: AsyncYielder(b),
+  with fun: fn(a, b) -> c,
+) -> AsyncYielder(c) {
+  zip(yielder1, yielder2) |> map(fn(pair) { fun(pair.0, pair.1) })
+}
+
+/// Like [`map2`](#map2) but `fun` returns a `Promise`. Each call is
+/// awaited before the next.
+///
+pub fn map2_async(
+  yielder1: AsyncYielder(a),
+  yielder2: AsyncYielder(b),
+  with fun: fn(a, b) -> Promise(c),
+) -> AsyncYielder(c) {
+  zip(yielder1, yielder2) |> map_async(fn(pair) { fun(pair.0, pair.1) })
 }
 
 /// Applies `fun` to each value of `yielder` as it's pulled.
@@ -451,6 +547,31 @@ fn intersperse_loop(yielder: AsyncYielder(a), elem: a) -> AsyncYielder(a) {
         Next(elem, yield(value, fn() { intersperse_loop(rest, elem) }))
     }
   })
+}
+
+/// Alternates yielding values from `left` and `right`. When one side
+/// is exhausted, continues with whatever remains of the other.
+///
+pub fn interleave(
+  left: AsyncYielder(a),
+  with right: AsyncYielder(a),
+) -> AsyncYielder(a) {
+  AsyncYielder(pull: fn() { interleave_loop(left, right) })
+}
+
+fn interleave_loop(
+  current: AsyncYielder(a),
+  next: AsyncYielder(a),
+) -> Promise(Step(a, AsyncYielder(a))) {
+  use step <- promise.await(current.pull())
+  case step {
+    Done -> next.pull()
+    Next(value, current_rest) ->
+      promise.resolve(Next(
+        value,
+        AsyncYielder(pull: fn() { interleave_loop(next, current_rest) }),
+      ))
+  }
 }
 
 /// Stateful map: threads `initial` through `fun(acc, value)`, which
