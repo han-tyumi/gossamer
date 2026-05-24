@@ -241,9 +241,11 @@ bridge to [`gleam/dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html) /
 [`gleam/set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html); `AsyncIterator`
 bridges to
 [`gossamer/iteration/async_yielder`](./gossamer/iteration/async_yielder.html),
-gossamer's pure-Gleam async iteration type.
-[`gossamer/iteration`](./gossamer/iteration.html) hosts the shared
-`IteratorResult` type used by both `iterator` and `async_iterator`.
+gossamer's pure-Gleam async iteration type. The transit-type bindings expose
+`from_<source>` / `to_<source>` bridges plus a draining `each` helper; the JS
+iterator helper methods (`map`, `filter`, `take`, `drop`, `reduce`, etc.,
+including `Iterator.concat` and `Iterator.from`) are not bound — bridge to the
+Gleam-side type and use its operations.
 
 **Extras** modules layer JS-specific capabilities on top of Gleam's canonical
 types ([`gleam/string`](https://hexdocs.pm/gleam_stdlib/gleam/string.html),
