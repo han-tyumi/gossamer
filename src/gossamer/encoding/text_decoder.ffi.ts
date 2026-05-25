@@ -1,7 +1,6 @@
 import * as $encoding from "$/gossamer/gossamer/encoding.mjs";
 import type * as $textDecoder from "$/gossamer/gossamer/encoding/text_decoder.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { fromEncoding } from "~/gossamer/encoding.ffi.ts";
 import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 
 function constructDecoder(label: string, options: TextDecoderOptions) {
@@ -33,7 +32,7 @@ export const build: typeof $textDecoder.do_build = (
 };
 
 export const encoding: typeof $textDecoder.encoding = (decoder) => {
-  return fromEncoding(decoder.encoding);
+  return decoder.encoding;
 };
 
 export const is_fatal: typeof $textDecoder.is_fatal = (decoder) =>

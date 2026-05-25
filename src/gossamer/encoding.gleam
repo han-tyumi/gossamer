@@ -1,21 +1,7 @@
 //// Parent module for the text-encoding family — `TextDecoder`,
 //// `TextDecoderStream`, and `TextEncoderStream`. Hosts the shared
-//// [`Encoding`](#Encoding) type and the
 //// [`DecoderError`](#DecoderError) returned from decoder-side
 //// operations.
-
-/// A text encoding, used by `TextEncoder` and `TextDecoder`.
-///
-/// Encodings other than UTF-8 use `Other(String)`.
-///
-pub type Encoding {
-  /// UTF-8.
-  Utf8
-
-  /// Any encoding name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  Other(String)
-}
 
 /// Errors raised by `TextDecoder` and `TextDecoderStream` operations.
 pub type DecoderError {

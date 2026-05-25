@@ -1,10 +1,9 @@
 import gleeunit/should
-import gossamer/encoding
 import gossamer/encoding/text_decoder
 
 pub fn build_default_test() {
   let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
-  text_decoder.encoding(decoder) |> should.equal(encoding.Utf8)
+  text_decoder.encoding(decoder) |> should.equal("utf-8")
 }
 
 pub fn build_invalid_test() {

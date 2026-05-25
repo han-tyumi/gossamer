@@ -5,7 +5,7 @@
 //// [`gleam/bit_array.to_string`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html#to_string)
 //// is sufficient.
 
-import gossamer/encoding.{type DecoderError, type Encoding}
+import gossamer/encoding.{type DecoderError}
 
 /// Decodes a stream of bytes into text using a specified character
 /// encoding.
@@ -43,7 +43,8 @@ pub fn with_ignore_bom(builder: Builder, ignore_bom: Bool) -> Builder {
 }
 
 /// Constructs a `TextDecoder` from the configured `Builder`. Returns
-/// `UnsupportedEncoding` if the label isn't a recognized encoding.
+/// `UnsupportedEncoding` if the label isn't an encoding the runtime
+/// recognizes.
 ///
 pub fn build(builder: Builder) -> Result(TextDecoder, DecoderError) {
   do_build(builder.label, builder.fatal, builder.ignore_bom)
@@ -57,10 +58,11 @@ pub fn do_build(
   ignore_bom: Bool,
 ) -> Result(TextDecoder, DecoderError)
 
-/// The decoder's resolved encoding.
+/// The decoder's resolved encoding name. A label like `"sjis"`
+/// resolves to its canonical name `"shift_jis"`.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "encoding")
-pub fn encoding(decoder: TextDecoder) -> Encoding
+pub fn encoding(decoder: TextDecoder) -> String
 
 /// Whether decoding malformed data returns an error instead of
 /// substituting it with a replacement character. Equivalent to
@@ -95,7 +97,7 @@ pub fn flush(decoder: TextDecoder) -> Result(String, DecoderError)
 
 /// Decodes `input` using the given builder configuration in a single
 /// shot (no streaming state retained). Returns `UnsupportedEncoding`
-/// if the builder's label isn't a recognized encoding, or
+/// if the builder's label isn't an encoding the runtime recognizes, or
 /// `MalformedInput` if the builder is fatal and decoding encounters
 /// bytes that don't form a valid sequence. For default UTF-8 decoding,
 /// use `gleam/bit_array.to_string`.

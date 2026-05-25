@@ -5,7 +5,7 @@
 //// [`readable_stream.pipe_through`](../stream/readable_stream.html#pipe_through)
 //// via [`read_write_pair`](#read_write_pair).
 
-import gossamer/encoding.{type DecoderError, type Encoding}
+import gossamer/encoding.{type DecoderError}
 import gossamer/stream/readable_stream.{type ReadableStream}
 import gossamer/stream/writable_stream.{type WritableStream}
 
@@ -45,8 +45,8 @@ pub fn with_ignore_bom(builder: Builder, ignore_bom: Bool) -> Builder {
 }
 
 /// Constructs a `TextDecoderStream` from the configured `Builder`.
-/// Returns `UnsupportedEncoding` if the label isn't a recognized
-/// encoding.
+/// Returns `UnsupportedEncoding` if the label isn't an encoding the
+/// runtime recognizes.
 ///
 pub fn build(builder: Builder) -> Result(TextDecoderStream, DecoderError) {
   do_build(builder.label, builder.fatal, builder.ignore_bom)
@@ -70,10 +70,11 @@ pub fn readable(decoder: TextDecoderStream) -> ReadableStream(String)
 @external(javascript, "./text_decoder_stream.ffi.mjs", "writable")
 pub fn writable(decoder: TextDecoderStream) -> WritableStream(BitArray)
 
-/// The decoder's resolved encoding.
+/// The decoder's resolved encoding name. A label like `"sjis"`
+/// resolves to its canonical name `"shift_jis"`.
 ///
 @external(javascript, "./text_decoder_stream.ffi.mjs", "encoding")
-pub fn encoding(decoder: TextDecoderStream) -> Encoding
+pub fn encoding(decoder: TextDecoderStream) -> String
 
 /// Whether decoding malformed data emits an error on the stream
 /// instead of substituting it with a replacement character. Equivalent
