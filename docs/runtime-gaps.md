@@ -12,9 +12,6 @@ versions than those are considered unsupported.
 - **`readable_stream.from_yielder` / `from_async_yielder`** — panics via the
   FFI's `ensureMethod` guard. `ReadableStream.from` is not implemented on Bun.
   Tracked at [oven-sh/bun#3700](https://github.com/oven-sh/bun/issues/3700).
-- **`compression_stream.new(compression.Brotli)` /
-  `decompression_stream.new(compression.Brotli)`** — return `Error(Nil)`. Brotli
-  is not in Bun's compression-streams implementation.
 - **`text_decoder.build` / `text_decoder_stream.build`** with legacy single-byte
   encodings — return `Error(UnsupportedEncoding)` for 16 encodings Bun's ICU
   data omits (`iso-8859-2`, `-4`, `-5`, `-10`, `-13`, `-14`, `-15`, `-16`,

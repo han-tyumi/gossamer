@@ -8,7 +8,7 @@ Cross-runtime JavaScript API bindings for [Gleam](https://gleam.run/).
 <!-- floors-badges:start -->
 
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D%2024.0.0-339933?logo=nodedotjs&logoColor=fff)](https://nodejs.org/)
-[![Deno](https://img.shields.io/badge/Deno-%3E%3D%202.6.6-70ffaf?logo=deno&logoColor=fff)](https://deno.com/)
+[![Deno](https://img.shields.io/badge/Deno-%3E%3D%202.7.0-70ffaf?logo=deno&logoColor=fff)](https://deno.com/)
 [![Bun](https://img.shields.io/badge/Bun-%3E%3D%201.3.13-fbf0df?logo=bun&logoColor=fff)](https://bun.sh/)
 
 <!-- floors-badges:end -->
