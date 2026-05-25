@@ -1,5 +1,5 @@
-//// Extras for `gleam/javascript/symbol` — no-description constructor,
-//// registry-key lookup, and string conversion not exposed upstream.
+//// Extras for `gleam/javascript/symbol` — no-description constructor
+//// and registry-key lookup not exposed upstream.
 
 import gleam/javascript/symbol.{type Symbol}
 
@@ -31,16 +31,3 @@ pub fn anonymous() -> Symbol
 ///
 @external(javascript, "./symbol_extra.ffi.mjs", "key_for")
 pub fn key_for(symbol: Symbol) -> Result(String, Nil)
-
-/// The symbol's string representation.
-///
-/// ## Examples
-///
-/// ```gleam
-/// let s = symbol.new("test")
-/// symbol_extra.to_string(s)
-/// // -> "Symbol(test)"
-/// ```
-///
-@external(javascript, "./symbol_extra.ffi.mjs", "to_string")
-pub fn to_string(symbol: Symbol) -> String

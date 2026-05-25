@@ -8,7 +8,3 @@ export const anonymous: typeof $symbolExtra.anonymous = () => {
 export const key_for: typeof $symbolExtra.key_for = (symbol) => {
   return toResult(Symbol.keyFor(symbol));
 };
-
-export const to_string: typeof $symbolExtra.to_string = (symbol) => {
-  return symbol.toString();
-};
