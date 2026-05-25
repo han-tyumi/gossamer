@@ -49,7 +49,7 @@ export const compile: typeof $regexpExtra.compile = (pattern, flags) => {
         $regexp.CompileError$CompileError(String(error), 0),
       );
     }
-    // @ts-expect-error: columnNumber is non-standard, SpiderMonkey-only.
+    // @ts-expect-error columnNumber is non-standard (SpiderMonkey-only)
     const byteIndex = (error.columnNumber || 0) | 0;
     return Result$Error(
       $regexp.CompileError$CompileError(error.message, byteIndex),

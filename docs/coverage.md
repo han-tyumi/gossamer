@@ -245,7 +245,12 @@ gossamer's pure-Gleam async iteration type. The transit-type bindings expose
 `from_<source>` / `to_<source>` bridges plus a draining `each` helper; the JS
 iterator helper methods (`map`, `filter`, `take`, `drop`, `reduce`, etc.,
 including `Iterator.concat` and `Iterator.from`) are not bound — bridge to the
-Gleam-side type and use its operations.
+Gleam-side type and use its operations. For the byte transit types, in-place
+mutation (`set`, `fill`) and the base64/hex codec methods (`toBase64`,
+`fromBase64`, `toHex`, `fromHex`) are not bound — transform via `BitArray` and
+use [`gleam/bit_array`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html)'s
+`base64_encode` / `base16_encode`; resizable and transferable `ArrayBuffer`
+operations are likewise omitted.
 
 **Extras** modules layer JS-specific capabilities on top of Gleam's canonical
 types ([`gleam/string`](https://hexdocs.pm/gleam_stdlib/gleam/string.html),

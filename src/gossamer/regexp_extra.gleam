@@ -9,8 +9,7 @@ import gleam/regexp.{type CompileError, type Regexp}
 /// `Multiline`.
 ///
 pub type RegExpFlag {
-  /// `g` — find all matches in a string. Required by `gleam/regexp.scan`
-  /// and `gleam/regexp.match_map`.
+  /// `g` — find all matches in a string, not just the first.
   Global
   /// `i` — case-insensitive matching.
   IgnoreCase
