@@ -40,7 +40,7 @@ links the parameter to the action.
 | Positional index                | `at_index`               | `with(array:, at_index index:, value value:)`                    |
 | Delay (one-shot)                | `after`                  | `set_timeout(after delay:, run callback:)`                       |
 | Delay (recurring)               | `every`                  | `set_interval(every delay:, run callback:)`                      |
-| Base URL                        | `relative_to`            | `url_pattern.from_string(pattern:, relative_to base_url:)`       |
+| Base URL                        | `relative_to`            | `url_pattern.parse(pattern:, relative_to base_url:)`             |
 | Pattern matching                | `against`                | `url_pattern.matches(pattern:, against input:)`                  |
 | File / exception name           | `named`                  | `file.from_strings(parts:, named name:)`                         |
 | Assertion condition             | `that`                   | `console.log_if_false(that condition:, log data:)`               |

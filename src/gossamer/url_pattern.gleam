@@ -158,12 +158,12 @@ pub fn do_build(
   base_url: Option(String),
 ) -> Result(UrlPattern, Nil)
 
-/// Creates a `UrlPattern` from a pattern string. Pass `Some(base_url)`
-/// to resolve relative components against a base URL. Returns an
-/// error if the pattern is malformed or the base URL is invalid.
+/// Parses a pattern string into a `UrlPattern`. Pass `Some(base_url)`
+/// to resolve relative components against a base URL. Returns an error
+/// if the pattern is malformed or the base URL is invalid.
 ///
-@external(javascript, "./url_pattern.ffi.mjs", "from_string")
-pub fn from_string(
+@external(javascript, "./url_pattern.ffi.mjs", "parse")
+pub fn parse(
   pattern: String,
   relative_to base_url: Option(String),
 ) -> Result(UrlPattern, Nil)

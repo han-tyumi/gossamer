@@ -71,7 +71,7 @@ export const build: typeof $urlPattern.do_build = (
   }
 };
 
-export const from_string: typeof $urlPattern.from_string = (pattern, base) => {
+export const parse: typeof $urlPattern.parse = (pattern, base) => {
   try {
     const baseURL = optionToValue(base);
     return Result$Ok(

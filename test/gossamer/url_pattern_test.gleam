@@ -13,14 +13,14 @@ pub fn build_test() {
 
 pub fn from_string_test() {
   let assert Ok(pattern) =
-    url_pattern.from_string("https://example.com/*", relative_to: None)
+    url_pattern.parse("https://example.com/*", relative_to: None)
   url_pattern.protocol(pattern) |> should.equal("https")
   url_pattern.hostname(pattern) |> should.equal("example.com")
 }
 
 pub fn from_string_with_base_test() {
   let assert Ok(pattern) =
-    url_pattern.from_string("/foo/*", relative_to: Some("https://example.com"))
+    url_pattern.parse("/foo/*", relative_to: Some("https://example.com"))
   url_pattern.hostname(pattern) |> should.equal("example.com")
   url_pattern.pathname(pattern) |> should.equal("/foo/*")
 }
