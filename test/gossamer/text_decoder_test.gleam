@@ -1,5 +1,6 @@
 import gleeunit/should
 import gossamer/encoding/text_decoder
+import runtime
 
 pub fn build_default_test() {
   let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
@@ -55,4 +56,17 @@ pub fn flush_test() {
   let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
   let assert Ok(flushed) = text_decoder.flush(decoder)
   should.equal(flushed, "")
+}
+
+pub fn build_legacy_single_byte_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  text_decoder.new("iso-8859-2") |> text_decoder.build |> should.be_ok
+}
+
+/// Bun's ICU data omits 16 legacy single-byte encodings, so building a
+/// decoder for one returns `UnsupportedEncoding` where Node and Deno
+/// succeed.
+pub fn build_legacy_single_byte_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  text_decoder.new("iso-8859-2") |> text_decoder.build |> should.be_error
 }
