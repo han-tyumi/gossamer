@@ -5,8 +5,6 @@
 /// Compression algorithms supported by `CompressionStream` and
 /// `DecompressionStream`.
 ///
-/// Unrecognized or non-standard formats use `Other(String)`.
-///
 pub type CompressionFormat {
   /// Zlib-wrapped DEFLATE — DEFLATE compressed data inside a zlib
   /// header and Adler-32 trailer.
@@ -21,8 +19,4 @@ pub type CompressionFormat {
 
   /// Brotli compression.
   Brotli
-
-  /// Any format name the binding doesn't recognize, passed through
-  /// verbatim to the runtime.
-  Other(String)
 }

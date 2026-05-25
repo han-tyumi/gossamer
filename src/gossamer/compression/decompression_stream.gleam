@@ -16,18 +16,16 @@ import gossamer/stream/writable_stream.{type WritableStream}
 /// ## Examples
 ///
 /// ```gleam
-/// let assert Ok(decompressor) = decompression_stream.new(compression.Gzip)
+/// let decompressor = decompression_stream.new(compression.Gzip)
 /// ```
 ///
 @external(javascript, "./decompression_stream.type.ts", "DecompressionStream$")
 pub type DecompressionStream
 
-/// Creates a `DecompressionStream` for the given format. Returns an
-/// error if the format is not supported by the current runtime.
-/// `Brotli` is not supported on Bun.
+/// Creates a `DecompressionStream` for the given format.
 ///
 @external(javascript, "./decompression_stream.ffi.mjs", "new_")
-pub fn new(format: CompressionFormat) -> Result(DecompressionStream, Nil)
+pub fn new(format: CompressionFormat) -> DecompressionStream
 
 /// The readable side of the stream — produces uncompressed bytes.
 ///

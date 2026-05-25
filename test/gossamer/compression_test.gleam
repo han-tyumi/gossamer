@@ -9,17 +9,7 @@ import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/read_result
 import gossamer/stream/readable_stream/reader
 
-pub fn compression_stream_unsupported_format_test() {
-  compression_stream.new(compression.Other("zstd-unsupported-everywhere"))
-  |> should.be_error
-}
-
-pub fn decompression_stream_unsupported_format_test() {
-  decompression_stream.new(compression.Other("zstd-unsupported-everywhere"))
-  |> should.be_error
-}
-
-pub fn gzip_round_trip_test() {
+fn round_trip(format: compression.CompressionFormat) {
   let data = <<"Hello, compression!":utf8>>
 
   let assert Ok(input) =
@@ -29,25 +19,19 @@ pub fn gzip_round_trip_test() {
       Nil
     })
 
-  let assert Ok(compressor) = compression_stream.new(compression.Gzip)
-  let assert Ok(decompressor) = decompression_stream.new(compression.Gzip)
+  let compressor = compression_stream.new(format)
+  let decompressor = decompression_stream.new(format)
 
   let assert Ok(first) =
     input
     |> readable_stream.pipe_through(
-      #(
-        compression_stream.readable(compressor),
-        compression_stream.writable(compressor),
-      ),
+      compression_stream.read_write_pair(compressor),
       readable_stream.pipe_options(),
     )
   let assert Ok(output) =
     first
     |> readable_stream.pipe_through(
-      #(
-        decompression_stream.readable(decompressor),
-        decompression_stream.writable(decompressor),
-      ),
+      decompression_stream.read_write_pair(decompressor),
       readable_stream.pipe_options(),
     )
 
@@ -60,8 +44,14 @@ pub fn gzip_round_trip_test() {
       let assert Ok(text) = bit_array.to_string(chunk)
       should.equal(text, "Hello, compression!")
     }
-    read_result.Done(_) -> {
-      should.fail()
-    }
+    read_result.Done(_) -> should.fail()
   }
+}
+
+pub fn gzip_round_trip_test() {
+  round_trip(compression.Gzip)
+}
+
+pub fn brotli_round_trip_test() {
+  round_trip(compression.Brotli)
 }
