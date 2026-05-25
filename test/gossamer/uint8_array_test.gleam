@@ -46,6 +46,12 @@ pub fn from_buffer_range_out_of_range_test() {
   |> should.equal(Error(Nil))
 }
 
+pub fn from_buffer_range_negative_length_test() {
+  let buf = array_buffer.new(4)
+  uint8_array.from_buffer_range(buf, byte_offset: 0, length: -1)
+  |> should.equal(Error(Nil))
+}
+
 pub fn to_list_test() {
   uint8_array.from_list([5, 6, 7])
   |> uint8_array.to_list

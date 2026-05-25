@@ -21,7 +21,7 @@ export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
   byteOffset,
   length,
 ) => {
-  if (byteOffset < 0 || byteOffset + length > buffer.byteLength) {
+  if (byteOffset < 0 || length < 0 || byteOffset + length > buffer.byteLength) {
     return Result$Error(undefined);
   }
   return Result$Ok(new Uint8Array(buffer, byteOffset, length));
@@ -30,6 +30,8 @@ export const from_buffer_range: typeof $uint8Array.from_buffer_range = (
 export const from_bit_array: typeof $uint8Array.from_bit_array = toUint8Array;
 
 export const buffer: typeof $uint8Array.buffer = (array) => {
+  // A Uint8Array built over an ArrayBuffer never has a SharedArrayBuffer
+  // backing, so narrowing ArrayBufferLike to ArrayBuffer is sound here.
   return array.buffer as ArrayBuffer;
 };
 
