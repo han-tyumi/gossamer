@@ -15,6 +15,12 @@ versions than those are considered unsupported.
 - **`compression_stream.new(compression.Brotli)` /
   `decompression_stream.new(compression.Brotli)`** — return `Error(Nil)`. Brotli
   is not in Bun's compression-streams implementation.
+- **`text_decoder.build` / `text_decoder_stream.build`** with legacy single-byte
+  encodings — return `Error(UnsupportedEncoding)` for 16 encodings Bun's ICU
+  data omits (`iso-8859-2`, `-4`, `-5`, `-10`, `-13`, `-14`, `-15`, `-16`,
+  `koi8-r`, `macintosh`, `windows-1250`, `-1251`, `-1254`, `-1256`, `-1258`,
+  `x-mac-cyrillic`). Node and Deno construct them. UTF-8 and both UTF-16 byte
+  orders work everywhere.
 - **`fetch_extra.response_type`** — returns `ResponseDefault` for synthetic
   responses (e.g. `Response("body")`) where the Fetch spec, Node, and Deno
   return `ResponseBasic`.
