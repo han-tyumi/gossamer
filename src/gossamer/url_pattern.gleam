@@ -30,7 +30,7 @@ pub opaque type Builder {
     pathname: Option(String),
     search: Option(String),
     hash: Option(String),
-    base_url: Option(String),
+    base: Option(String),
     ignore_case: Bool,
   )
 }
@@ -70,7 +70,7 @@ pub fn new() -> Builder {
     pathname: None,
     search: None,
     hash: None,
-    base_url: None,
+    base: None,
     ignore_case: False,
   )
 }
@@ -125,8 +125,8 @@ pub fn with_hash(builder: Builder, hash: String) -> Builder {
 
 /// Sets the base URL used to resolve relative components.
 ///
-pub fn with_base_url(builder: Builder, base_url: String) -> Builder {
-  Builder(..builder, base_url: Some(base_url))
+pub fn with_base(builder: Builder, base: String) -> Builder {
+  Builder(..builder, base: Some(base))
 }
 
 /// Sets whether the pattern matches case-insensitively. Defaults to
@@ -149,7 +149,7 @@ pub fn build(builder: Builder) -> Result(UrlPattern, Nil) {
     builder.pathname,
     builder.search,
     builder.hash,
-    builder.base_url,
+    builder.base,
     builder.ignore_case,
   )
 }
@@ -165,11 +165,11 @@ pub fn do_build(
   pathname: Option(String),
   search: Option(String),
   hash: Option(String),
-  base_url: Option(String),
+  base: Option(String),
   ignore_case: Bool,
 ) -> Result(UrlPattern, Nil)
 
-/// Parses a pattern string into a `UrlPattern`. Pass `Some(base_url)`
+/// Parses a pattern string into a `UrlPattern`. Pass `Some(base)`
 /// to resolve relative components against a base URL, and `True` for
 /// `ignore_case` to match case-insensitively. Returns an error if the
 /// pattern is malformed or the base URL is invalid.
@@ -177,33 +177,33 @@ pub fn do_build(
 @external(javascript, "./url_pattern.ffi.mjs", "parse")
 pub fn parse(
   pattern: String,
-  relative_to base_url: Option(String),
+  relative_to base: Option(String),
   ignore_case ignore_case: Bool,
 ) -> Result(UrlPattern, Nil)
 
-/// Returns `True` if the pattern matches `input`. Pass `Some(base_url)`
+/// Returns `True` if the pattern matches `input`. Pass `Some(base)`
 /// to resolve `input` against a base URL before matching. Returns
-/// `False` if `base_url` is `Some` but isn't a valid URL. Equivalent
+/// `False` if `base` is `Some` but isn't a valid URL. Equivalent
 /// to JavaScript's `pattern.test`.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "matches")
 pub fn matches(
   pattern: UrlPattern,
   against input: String,
-  relative_to base_url: Option(String),
+  relative_to base: Option(String),
 ) -> Bool
 
 /// Matches `input` against the pattern and returns the captured
 /// components, or `Error(Nil)` if there's no match. Pass
-/// `Some(base_url)` to resolve `input` against a base URL before
-/// matching. Returns `Error(Nil)` if `base_url` is `Some` but isn't a
+/// `Some(base)` to resolve `input` against a base URL before
+/// matching. Returns `Error(Nil)` if `base` is `Some` but isn't a
 /// valid URL.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "exec")
 pub fn exec(
   pattern: UrlPattern,
   against input: String,
-  relative_to base_url: Option(String),
+  relative_to base: Option(String),
 ) -> Result(Match, Nil)
 
 /// The compiled protocol pattern.

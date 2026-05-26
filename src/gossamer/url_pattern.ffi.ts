@@ -43,7 +43,7 @@ export const build: typeof $urlPattern.do_build = (
   pathname,
   search,
   hash,
-  base_url,
+  base,
   ignore_case,
 ) => {
   const init: URLPatternInit = {};
@@ -55,7 +55,7 @@ export const build: typeof $urlPattern.do_build = (
   setIfSome(init, "pathname", pathname);
   setIfSome(init, "search", search);
   setIfSome(init, "hash", hash);
-  setIfSome(init, "baseURL", base_url);
+  setIfSome(init, "baseURL", base);
   try {
     return Result$Ok(new URLPattern(init, { ignoreCase: ignore_case }));
   } catch {
