@@ -53,6 +53,7 @@ export const build: typeof $urlPattern.do_build = (
   search,
   hash,
   base_url,
+  ignore_case,
 ) => {
   const init: URLPatternInit = {};
   setIfSome(init, "protocol", protocol);
@@ -65,19 +66,20 @@ export const build: typeof $urlPattern.do_build = (
   setIfSome(init, "hash", hash);
   setIfSome(init, "baseURL", base_url);
   try {
-    return Result$Ok(new URLPattern(init));
+    return Result$Ok(new URLPattern(init, { ignoreCase: ignore_case }));
   } catch {
     return invalidPattern();
   }
 };
 
-export const parse: typeof $urlPattern.parse = (pattern, base) => {
+export const parse: typeof $urlPattern.parse = (pattern, base, ignore_case) => {
   try {
     const baseURL = optionToValue(base);
+    const options: URLPatternOptions = { ignoreCase: ignore_case };
     return Result$Ok(
       baseURL === undefined
-        ? new URLPattern(pattern)
-        : new URLPattern(pattern, baseURL),
+        ? new URLPattern(pattern, options)
+        : new URLPattern(pattern, baseURL, options),
     );
   } catch {
     return invalidPattern();

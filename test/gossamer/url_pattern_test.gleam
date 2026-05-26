@@ -11,18 +11,68 @@ pub fn build_test() {
   url_pattern.pathname(pattern) |> should.equal("/foo/:id")
 }
 
-pub fn from_string_test() {
+pub fn parse_test() {
   let assert Ok(pattern) =
-    url_pattern.parse("https://example.com/*", relative_to: None)
+    url_pattern.parse(
+      "https://example.com/*",
+      relative_to: None,
+      ignore_case: False,
+    )
   url_pattern.protocol(pattern) |> should.equal("https")
   url_pattern.hostname(pattern) |> should.equal("example.com")
 }
 
-pub fn from_string_with_base_test() {
+pub fn parse_with_base_test() {
   let assert Ok(pattern) =
-    url_pattern.parse("/foo/*", relative_to: Some("https://example.com"))
+    url_pattern.parse(
+      "/foo/*",
+      relative_to: Some("https://example.com"),
+      ignore_case: False,
+    )
   url_pattern.hostname(pattern) |> should.equal("example.com")
   url_pattern.pathname(pattern) |> should.equal("/foo/*")
+}
+
+pub fn build_ignore_case_test() {
+  let assert Ok(pattern) =
+    url_pattern.new()
+    |> url_pattern.with_pathname("/Users/:id")
+    |> url_pattern.with_ignore_case(True)
+    |> url_pattern.build
+  url_pattern.matches(
+    pattern,
+    against: "https://example.com/users/123",
+    relative_to: None,
+  )
+  |> should.be_true
+}
+
+pub fn build_case_sensitive_by_default_test() {
+  let assert Ok(pattern) =
+    url_pattern.new()
+    |> url_pattern.with_pathname("/Users/:id")
+    |> url_pattern.build
+  url_pattern.matches(
+    pattern,
+    against: "https://example.com/users/123",
+    relative_to: None,
+  )
+  |> should.be_false
+}
+
+pub fn parse_ignore_case_test() {
+  let assert Ok(pattern) =
+    url_pattern.parse(
+      "https://example.com/Users/*",
+      relative_to: None,
+      ignore_case: True,
+    )
+  url_pattern.matches(
+    pattern,
+    against: "https://example.com/users/123",
+    relative_to: None,
+  )
+  |> should.be_true
 }
 
 pub fn matches_test() {

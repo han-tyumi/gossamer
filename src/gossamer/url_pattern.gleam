@@ -2,7 +2,7 @@
 //// regular-expression groups. Useful for routing and request
 //// dispatching. Parse a single
 //// [URL Pattern Syntax](https://urlpattern.spec.whatwg.org/#pattern-syntax)
-//// string with [`from_string`](#from_string), or build a per-component
+//// string with [`parse`](#parse), or build a per-component
 //// pattern via the [`Builder`](#Builder). Match with
 //// [`matches`](#matches) (boolean) or [`exec`](#exec) (captures).
 
@@ -31,6 +31,7 @@ pub opaque type Builder {
     search: Option(String),
     hash: Option(String),
     base_url: Option(String),
+    ignore_case: Bool,
   )
 }
 
@@ -70,6 +71,7 @@ pub fn new() -> Builder {
     search: None,
     hash: None,
     base_url: None,
+    ignore_case: False,
   )
 }
 
@@ -127,6 +129,13 @@ pub fn with_base_url(builder: Builder, base_url: String) -> Builder {
   Builder(..builder, base_url: Some(base_url))
 }
 
+/// Sets whether the pattern matches case-insensitively. Defaults to
+/// case-sensitive matching.
+///
+pub fn with_ignore_case(builder: Builder, ignore_case: Bool) -> Builder {
+  Builder(..builder, ignore_case:)
+}
+
 /// Constructs a `UrlPattern` from the configured `Builder`. Returns
 /// an error if any component pattern is malformed.
 ///
@@ -141,6 +150,7 @@ pub fn build(builder: Builder) -> Result(UrlPattern, Nil) {
     builder.search,
     builder.hash,
     builder.base_url,
+    builder.ignore_case,
   )
 }
 
@@ -156,16 +166,19 @@ pub fn do_build(
   search: Option(String),
   hash: Option(String),
   base_url: Option(String),
+  ignore_case: Bool,
 ) -> Result(UrlPattern, Nil)
 
 /// Parses a pattern string into a `UrlPattern`. Pass `Some(base_url)`
-/// to resolve relative components against a base URL. Returns an error
-/// if the pattern is malformed or the base URL is invalid.
+/// to resolve relative components against a base URL, and `True` for
+/// `ignore_case` to match case-insensitively. Returns an error if the
+/// pattern is malformed or the base URL is invalid.
 ///
 @external(javascript, "./url_pattern.ffi.mjs", "parse")
 pub fn parse(
   pattern: String,
   relative_to base_url: Option(String),
+  ignore_case ignore_case: Bool,
 ) -> Result(UrlPattern, Nil)
 
 /// Returns `True` if the pattern matches `input`. Pass `Some(base_url)`
