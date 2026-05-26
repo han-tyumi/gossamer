@@ -90,7 +90,7 @@ top-level (`gossamer/<name>.gleam`). Consider a submodule
 (`gossamer/<parent>/<name>.gleam`) only when:
 
 - The type is opaque and exclusively obtained through a parent module's API.
-  Examples in gossamer: `readable_stream/reader`, `readable_stream/byob_reader`,
+  Examples in gossamer: `readable_stream/reader` and
   `readable_stream/default_controller` — only obtainable via `readable_stream`
   methods.
 - Or the type's name is meaningless without the parent's context (rare).
@@ -106,12 +106,12 @@ equal footing.
 
 Examples in gossamer:
 
-- **stream** — 9 sibling submodules (readable + writable + transform streams,
+- **stream** — 8 sibling submodules (readable + writable + transform streams,
   plus their readers, writers, and controllers) share `StreamLifecycleError`.
   Structure: `gossamer/stream.gleam` + `gossamer/stream/*`.
 - **encoding** — 3 sibling submodules (`text_decoder` + `text_decoder_stream` +
-  `text_encoder_stream`) share the `Encoding` type and `DecoderError`.
-  Structure: `gossamer/encoding.gleam` + `gossamer/encoding/*`.
+  `text_encoder_stream`) share `DecoderError`. Structure:
+  `gossamer/encoding.gleam` + `gossamer/encoding/*`.
 - **compression** — 2 sibling submodules (`compression_stream` +
   `decompression_stream`) share the `CompressionFormat` type. Structure:
   `gossamer/compression.gleam` + `gossamer/compression/*`.
@@ -173,7 +173,7 @@ Method: Get | Post | Put | Delete | Other(String)
 
 StreamLifecycleError: Locked | Closed | Errored(reason:) |
   Aborted(reason:)
-  Shared across 8 sibling submodules in the stream family. → Lives in
+  Shared across the stream-family submodules. → Lives in
   gossamer/stream.gleam (family parent); submodules import.
 
 CloseEvent: CloseEvent(code:, reason:, was_clean:)
