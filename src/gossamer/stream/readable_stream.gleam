@@ -213,6 +213,16 @@ pub fn from_yielder(yielder: Yielder(a)) -> ReadableStream(a)
 @external(javascript, "./readable_stream.ffi.mjs", "from_async_yielder")
 pub fn from_async_yielder(yielder: AsyncYielder(a)) -> ReadableStream(a)
 
+/// Creates a `ReadableStream` together with its `DefaultController`,
+/// letting chunks be enqueued from outside the stream rather than
+/// produced on demand by a `pull` callback. The stream applies no
+/// automatic backpressure, so gate enqueues on
+/// `default_controller.desired_size` when the consumer may be slower
+/// than the producer.
+///
+@external(javascript, "./readable_stream.ffi.mjs", "controlled")
+pub fn controlled() -> #(ReadableStream(a), DefaultController(a))
+
 /// Checks whether the stream is locked to a reader.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "is_locked")

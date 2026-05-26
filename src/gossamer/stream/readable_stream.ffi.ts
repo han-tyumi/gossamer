@@ -90,6 +90,17 @@ export const from_async_yielder: typeof $readableStream.from_async_yielder = (
   return ReadableStream.from(asyncYielderAsJsAsyncIterator(yielder));
 };
 
+export const controlled: typeof $readableStream.controlled = <T>() => {
+  let controller: ReadableStreamDefaultController<T>;
+  const stream = new ReadableStream<T>({
+    start: (c) => {
+      controller = c;
+    },
+  });
+  // @ts-expect-error controller is assigned synchronously by start()
+  return [stream, controller];
+};
+
 export const is_locked: typeof $readableStream.is_locked = (
   stream: ReadableStream,
 ) => {

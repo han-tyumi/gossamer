@@ -541,6 +541,19 @@ pub fn readable_stream_to_async_yielder_test() {
   promise.resolve(Nil)
 }
 
+pub fn readable_stream_controlled_test() {
+  let #(stream, controller) = readable_stream.controlled()
+  let _ = default_controller.enqueue(controller, 1)
+  let _ = default_controller.enqueue(controller, 2)
+  let _ = default_controller.close(controller)
+
+  use result <- promise.await(
+    readable_stream.to_async_yielder(stream) |> async_yielder.to_list,
+  )
+  should.equal(result, [1, 2])
+  promise.resolve(Nil)
+}
+
 pub fn read_text_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
