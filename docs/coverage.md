@@ -167,6 +167,12 @@ and skips the key-import ceremony Web Crypto requires. Reach for
 [`gossamer/crypto`](./gossamer/crypto.html) for the full Web Crypto API (key
 generation, AES / RSA encryption, JSON Web Keys, key derivation).
 
+Not bound: multi-prime RSA JWKs (the `oth` member — Web Crypto never produces
+them and Deno and Bun reject them on import); custom-length HMAC keys (generate
+raw bytes with `gleam_crypto.strong_random_bytes` and pass them to
+`subtle.import_key` instead); and the nullable `derive_bits` length (pass the
+explicit bit count, e.g. `256` for an ECDH P-256 secret).
+
 ### Data Types
 
 | Name | Module                                  |
