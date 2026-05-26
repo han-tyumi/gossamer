@@ -41,14 +41,20 @@ pub fn parse_invalid_test() {
 }
 
 pub fn is_valid_test() {
-  url.is_valid("https://example.org") |> should.be_true
-  url.is_valid("ws://localhost:8080") |> should.be_true
+  url.is_valid("https://example.org", relative_to: None) |> should.be_true
+  url.is_valid("ws://localhost:8080", relative_to: None) |> should.be_true
 }
 
 pub fn is_valid_rejects_relative_test() {
-  url.is_valid("/path") |> should.be_false
-  url.is_valid("example.org") |> should.be_false
-  url.is_valid("not a url") |> should.be_false
+  url.is_valid("/path", relative_to: None) |> should.be_false
+  url.is_valid("example.org", relative_to: None) |> should.be_false
+  url.is_valid("not a url", relative_to: None) |> should.be_false
+}
+
+pub fn is_valid_with_base_test() {
+  url.is_valid("/path", relative_to: Some("https://example.org"))
+  |> should.be_true
+  url.is_valid("/path", relative_to: Some("not a url")) |> should.be_false
 }
 
 pub fn parse_round_trip_via_uri_test() {

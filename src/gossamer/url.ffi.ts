@@ -15,6 +15,7 @@ export const parse: typeof $url.parse = (url, base) => {
   }
 };
 
-export const is_valid: typeof $url.is_valid = (url) => {
-  return URL.canParse(url);
+export const is_valid: typeof $url.is_valid = (url, base) => {
+  const baseURL = optionToValue(base);
+  return baseURL === undefined ? URL.canParse(url) : URL.canParse(url, baseURL);
 };
