@@ -118,8 +118,6 @@ Examples in gossamer:
 - **crypto** — `crypto/key`, `crypto/subtle`, `crypto/jwk` share `KeyUsage`,
   `CryptoError`, and the algorithm types. Structure: `gossamer/crypto.gleam` +
   `gossamer/crypto/*`.
-- **iteration** — `iterator` + `async_iterator` share `IteratorResult`.
-  Structure: `gossamer/iteration.gleam` + `gossamer/iteration/*`.
 
 Mirrors `gleam/http.Method` exactly: type defined in parent module; submodules
 import.
