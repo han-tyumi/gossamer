@@ -69,9 +69,10 @@ inspect aborts via `gossamer/abort_signal` on the signal you passed to
 
 [`gleam/uri.Uri`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html#Uri) is the
 canonical Gleam URL type. [`gossamer/url`](./gossamer/url.html) wraps the JS
-`URL` constructor for WHATWG-strict parsing into a `gleam/uri.Uri` — useful when
-JS and Gleam disagree on whether a string parses. `URLSearchParams` parsing is
-delegated to
+`URL` constructor to validate a string as an absolute URL and return it in
+WHATWG-canonical form (normalized host, ports, and encoding), optionally
+resolving a relative input against a base — the canonicalization `gleam/uri`
+doesn't perform. `URLSearchParams` parsing is delegated to
 [`gleam/uri.parse_query`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html#parse_query);
 manipulate the resulting `List(#(String, String))` with
 [`gleam/list`](https://hexdocs.pm/gleam_stdlib/gleam/list.html).
