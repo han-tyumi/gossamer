@@ -1,7 +1,7 @@
 import type * as $writer from "$/gossamer/gossamer/stream/writable_stream/writer.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
+import { toDesiredSize } from "~/gossamer/stream.ffi.ts";
 
 function erroredError(reason: unknown) {
   return Result$Error($stream.StreamLifecycleError$Errored(reason));
@@ -19,7 +19,7 @@ export const closed: typeof $writer.closed = (
 export const desired_size: typeof $writer.desired_size = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toResult(writer.desiredSize);
+  return toDesiredSize(writer.desiredSize);
 };
 
 export const ready: typeof $writer.ready = (

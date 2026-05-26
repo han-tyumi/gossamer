@@ -3,7 +3,7 @@
 //// [`enqueue`](#enqueue), error the stream with [`error`](#error),
 //// or end transformation with [`terminate`](#terminate).
 
-import gossamer/stream.{type StreamLifecycleError}
+import gossamer/stream.{type DesiredSize, type StreamLifecycleError}
 
 /// A JavaScript `TransformStreamDefaultController` — passed to a
 /// `TransformStream`'s transformer callbacks. Used to enqueue output
@@ -14,11 +14,13 @@ import gossamer/stream.{type StreamLifecycleError}
 @external(javascript, "./default_controller.type.ts", "DefaultController$")
 pub type DefaultController(a)
 
-/// The desired size to fill the readable side's internal queue. Returns
-/// an error if the stream has been closed or errored.
+/// The room remaining in the readable side's internal queue. Returns an
+/// error if the stream has errored; a closed stream reports `Bounded(0)`.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
-pub fn desired_size(controller: DefaultController(a)) -> Result(Float, Nil)
+pub fn desired_size(
+  controller: DefaultController(a),
+) -> Result(DesiredSize, Nil)
 
 /// Enqueues `chunk` into the readable side's internal queue. Returns
 /// `Closed` if the stream is already closed or errored.

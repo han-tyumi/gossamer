@@ -351,8 +351,9 @@ pub fn readable_controller_desired_size_test() {
   let assert Ok(stream) =
     readable_stream.new()
     |> readable_stream.with_start(run: fn(controller) {
-      let assert Ok(size) = default_controller.desired_size(controller)
-      should.be_true(size >=. 0.0)
+      let assert Ok(stream.Bounded(size)) =
+        default_controller.desired_size(controller)
+      should.be_true(size >= 0)
       let _ = default_controller.close(controller)
       Nil
     })
@@ -382,8 +383,8 @@ pub fn writer_desired_size_test() {
     writable_stream.from_write(fn(_chunk, _controller) { promise.resolve(Nil) })
 
   let assert Ok(w) = writable_stream.get_writer(stream)
-  let assert Ok(size) = writer.desired_size(w)
-  should.be_true(size >=. 0.0)
+  let assert Ok(stream.Bounded(size)) = writer.desired_size(w)
+  should.be_true(size >= 0)
   writer.release_lock(w)
   Nil
 }

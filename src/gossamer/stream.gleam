@@ -8,6 +8,20 @@
 import gleam/dynamic.{type Dynamic}
 import gleam/javascript/promise.{type Promise}
 
+/// The room remaining in a stream's internal queue, from a
+/// `desired_size` accessor.
+///
+pub type DesiredSize {
+  /// Room for `n` more chunks or bytes before the queue signals
+  /// backpressure. Zero or negative when the queue is at or over
+  /// capacity.
+  Bounded(Int)
+
+  /// An unlimited strategy is in effect; the stream never signals
+  /// backpressure.
+  Unbounded
+}
+
 /// The backpressure threshold applied to a stream's internal queue.
 ///
 pub type QueuingStrategy {

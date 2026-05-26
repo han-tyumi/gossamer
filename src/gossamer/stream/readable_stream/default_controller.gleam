@@ -3,7 +3,7 @@
 //// [`enqueue`](#enqueue), close it with [`close`](#close), or signal
 //// failure with [`error`](#error).
 
-import gossamer/stream.{type StreamLifecycleError}
+import gossamer/stream.{type DesiredSize, type StreamLifecycleError}
 
 /// A JavaScript `ReadableStreamDefaultController` — passed to the
 /// `Start` and `Pull` callbacks of a `ReadableStream`. Used to
@@ -14,11 +14,13 @@ import gossamer/stream.{type StreamLifecycleError}
 @external(javascript, "./default_controller.type.ts", "DefaultController$")
 pub type DefaultController(a)
 
-/// The desired size to fill the stream's internal queue. Returns an error
-/// if the stream has been closed or errored.
+/// The room remaining in the stream's internal queue. Returns an error
+/// if the stream has errored; a closed stream reports `Bounded(0)`.
 ///
 @external(javascript, "./default_controller.ffi.mjs", "desired_size")
-pub fn desired_size(controller: DefaultController(a)) -> Result(Float, Nil)
+pub fn desired_size(
+  controller: DefaultController(a),
+) -> Result(DesiredSize, Nil)
 
 /// Closes the stream. Returns `Closed` if the stream is already
 /// closed or errored.

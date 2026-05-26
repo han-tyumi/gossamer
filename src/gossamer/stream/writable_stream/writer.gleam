@@ -4,7 +4,7 @@
 //// [`release_lock`](#release_lock) when done.
 
 import gleam/javascript/promise.{type Promise}
-import gossamer/stream.{type StreamLifecycleError}
+import gossamer/stream.{type DesiredSize, type StreamLifecycleError}
 
 /// A JavaScript `WritableStreamDefaultWriter` — a locked writer over
 /// a `WritableStream`.
@@ -21,11 +21,12 @@ pub type Writer(a)
 @external(javascript, "./writer.ffi.mjs", "closed")
 pub fn closed(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// The desired size to fill the stream's internal queue. Returns an error
-/// if the stream has been closed or errored.
+/// The room remaining in the stream's internal queue. Returns an error
+/// if the stream has errored or is erroring; a closed stream reports
+/// `Bounded(0)`.
 ///
 @external(javascript, "./writer.ffi.mjs", "desired_size")
-pub fn desired_size(writer: Writer(a)) -> Result(Float, Nil)
+pub fn desired_size(writer: Writer(a)) -> Result(DesiredSize, Nil)
 
 /// Resolves when the stream is ready to accept more writes
 /// (backpressure has cleared). Returns `Errored` if the stream enters
