@@ -310,8 +310,6 @@ pub fn writer_release_lock_test() {
   writable_stream.is_locked(stream) |> should.be_false
 }
 
-// Reader sub-module tests
-
 pub fn reader_closed_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
@@ -341,8 +339,6 @@ pub fn reader_cancel_test() {
   promise.resolve(Nil)
 }
 
-// Readable default_controller sub-module tests
-
 pub fn readable_controller_desired_size_test() {
   let assert Ok(stream) =
     readable_stream.new()
@@ -360,8 +356,6 @@ pub fn readable_controller_desired_size_test() {
   use _ <- promise.await(reader.read(r))
   promise.resolve(Nil)
 }
-
-// Writer sub-module tests
 
 pub fn writer_closed_test() {
   let stream =
@@ -406,8 +400,6 @@ pub fn writer_abort_test() {
   promise.resolve(Nil)
 }
 
-// Writable default_controller sub-module tests
-
 pub fn writable_controller_signal_test() {
   let assert Ok(stream) =
     writable_stream.new()
@@ -438,8 +430,6 @@ pub fn writable_controller_error_test() {
   use _ <- promise.await(writer.write(w, "trigger"))
   promise.resolve(Nil)
 }
-
-// Transform default_controller sub-module tests
 
 pub fn transform_controller_desired_size_test() {
   let assert Ok(transform) =
@@ -532,8 +522,6 @@ pub fn transform_controller_terminate_test() {
   should.equal(result, Ok(None))
   promise.resolve(Nil)
 }
-
-// ReadableStream.async_yielder test
 
 pub fn readable_stream_to_async_yielder_test() {
   let assert Ok(stream) =
