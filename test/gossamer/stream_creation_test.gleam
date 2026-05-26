@@ -129,10 +129,7 @@ pub fn transform_stream_from_transform_test() {
   let assert Ok(transformed) =
     readable_stream.pipe_through(
       readable,
-      #(
-        transform_stream.readable(transform),
-        transform_stream.writable(transform),
-      ),
+      transform_stream.read_write_pair(transform),
       readable_stream.pipe_options(),
     )
 
@@ -464,10 +461,7 @@ pub fn transform_controller_desired_size_test() {
   let assert Ok(transformed) =
     readable_stream.pipe_through(
       readable,
-      #(
-        transform_stream.readable(transform),
-        transform_stream.writable(transform),
-      ),
+      transform_stream.read_write_pair(transform),
       readable_stream.pipe_options(),
     )
 
@@ -496,10 +490,7 @@ pub fn transform_controller_error_test() {
   let assert Ok(transformed) =
     readable_stream.pipe_through(
       source,
-      #(
-        transform_stream.readable(transform),
-        transform_stream.writable(transform),
-      ),
+      transform_stream.read_write_pair(transform),
       readable_stream.pipe_options(),
     )
 
@@ -531,10 +522,7 @@ pub fn transform_controller_terminate_test() {
   let assert Ok(transformed) =
     readable_stream.pipe_through(
       readable,
-      #(
-        transform_stream.readable(transform),
-        transform_stream.writable(transform),
-      ),
+      transform_stream.read_write_pair(transform),
       readable_stream.pipe_options(),
     )
 

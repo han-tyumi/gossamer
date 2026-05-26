@@ -177,3 +177,12 @@ pub fn readable(
 ///
 @external(javascript, "./transform_stream.ffi.mjs", "writable")
 pub fn writable(stream: TransformStream(input, output)) -> WritableStream(input)
+
+/// The readable and writable sides as a tuple, convenient for passing
+/// directly to `readable_stream.pipe_through`.
+///
+pub fn read_write_pair(
+  stream: TransformStream(input, output),
+) -> #(ReadableStream(output), WritableStream(input)) {
+  #(stream |> readable, stream |> writable)
+}
