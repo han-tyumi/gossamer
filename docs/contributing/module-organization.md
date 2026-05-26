@@ -38,8 +38,8 @@ Confirmed empirically across the ecosystem:
 Split a type into its own module **only** when at least one of:
 
 1. **The type is shared across two or more unrelated top-level modules.**
-   Examples: `key_usage` used by `crypto_key`, `subtle_crypto`, AND
-   `json_web_key`. Cross-cutting types earn their own module.
+   Examples: `KeyUsage` used by `crypto/key`, `crypto/subtle`, AND `crypto/jwk`.
+   Cross-cutting types earn their own module.
 
 2. **The type has its own non-trivial API** — constructors, predicates, parsers,
    transforms. The module is the type's natural home, not a small auxiliary.
@@ -151,13 +151,14 @@ doesn't create a cycle (A → C → A).
 ## Worked examples
 
 ```
-EncryptAlgorithm: AesCbc(iv:) | AesGcm(iv:) | RsaOaep | Other(String)
-  Used only by subtle_crypto.encrypt / decrypt → keep in
-  subtle_crypto.gleam.
+EncryptAlgorithm: EncryptAesCbc(iv:) | EncryptAesGcm(iv:, ..) |
+  EncryptAesCtr(..) | EncryptRsaOaep(label:)
+  Used only by crypto/subtle.encrypt / decrypt → keep in
+  crypto/subtle.gleam.
 
 KeyUsage: Encrypt | Decrypt | Sign | Verify | DeriveKey | DeriveBits |
   WrapKey | UnwrapKey
-  Used by crypto_key, subtle_crypto, AND json_web_key (3 unrelated
+  Used by crypto/key, crypto/subtle, AND crypto/jwk (3 unrelated
   modules) → own module.
 
 CompressionFormat: Deflate | DeflateRaw | Gzip | Brotli | Other(String)
