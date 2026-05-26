@@ -13,6 +13,15 @@ export function toOption<T>(value: T | null | undefined): Option$<T> {
 }
 
 /**
+ * Unwraps `Some` to its inner value, or `undefined` for `None`. The
+ * inverse of `toOption`, for passing an optional Gleam value to a JS API
+ * whose absent case is `undefined`.
+ */
+export function optionToValue<T>(option: Option$<T>): T | undefined {
+  return Option$isNone(option) ? undefined : Option$Some$0(option);
+}
+
+/**
  * Wraps a transformed value as `Some` when the source is non-null and
  * non-undefined; returns `None` otherwise. Useful when the JS value
  * needs a Gleam-side conversion before becoming the `Option`'s inner

@@ -1,18 +1,9 @@
 import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
-import {
-  type Option$,
-  Option$isNone,
-  Option$Some$0,
-} from "$/gleam_stdlib/gleam/option.mjs";
 import * as $urlPattern from "$/gossamer/gossamer/url_pattern.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray } from "~/utils/list.ffi.ts";
-import { setIfSome } from "~/utils/option.ffi.ts";
+import { optionToValue, setIfSome } from "~/utils/option.ffi.ts";
 import { toResult } from "~/utils/result.ffi.ts";
-
-function optionToValue(option: Option$<string>): string | undefined {
-  return Option$isNone(option) ? undefined : Option$Some$0(option);
-}
 
 function invalidPattern() {
   return Result$Error(undefined);
