@@ -30,6 +30,20 @@ pub fn parse_with_base_test() {
   parsed.path |> should.equal("/a/b")
 }
 
+pub fn parse_ipv6_test() {
+  let assert Ok(parsed) = url.parse("https://[::1]:8080/x", relative_to: None)
+  parsed.port |> should.equal(Some(8080))
+  parsed.path |> should.equal("/x")
+}
+
+pub fn parse_userinfo_query_fragment_test() {
+  let assert Ok(parsed) =
+    url.parse("https://user:pw@example.org/p?q=1#frag", relative_to: None)
+  parsed.userinfo |> should.equal(Some("user:pw"))
+  parsed.query |> should.equal(Some("q=1"))
+  parsed.fragment |> should.equal(Some("frag"))
+}
+
 pub fn parse_relative_is_error_test() {
   // The WHATWG URL parser rejects relative URLs (no scheme) when no base
   // is given, unlike the permissive `gleam/uri.parse`.
