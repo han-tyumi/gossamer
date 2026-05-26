@@ -39,15 +39,13 @@ Split a type into its own module **only** when at least one of:
 
 1. **The type is shared across two or more unrelated top-level modules.**
    Examples: `key_usage` used by `crypto_key`, `subtle_crypto`, AND
-   `json_web_key`. `iterator_result` used by `iterator` AND `async_iterator`.
-   Cross-cutting types earn their own module.
+   `json_web_key`. Cross-cutting types earn their own module.
 
 2. **The type has its own non-trivial API** — constructors, predicates, parsers,
    transforms. The module is the type's natural home, not a small auxiliary.
 
 3. **Circular-import constraint forces it.** Sometimes a type referenced by an
-   opaque-typed submodule must live in its own file to break the cycle (e.g.,
-   `readable_stream/read_result`).
+   opaque-typed submodule must live in its own file to break the cycle.
 
 If none of these apply: keep the type in its consumer.
 
@@ -172,14 +170,6 @@ CompressionFormat: Deflate | DeflateRaw | Gzip | Brotli | Other(String)
 Method: Get | Post | Put | Delete | Other(String)
   In ecosystem (gleam_http) — lives with Scheme + other types in
   gleam/http.gleam. Same pattern.
-
-IteratorResult: Yield(a) | Return(r)
-  Used by iterator AND async_iterator (sibling but unrelated modules)
-  → lives in family parent gossamer/iteration.gleam.
-
-ReadResult: Value(a) | Done(Option(a))
-  Used by readable_stream submodules. Circular-import constraint forces
-  submodule placement.
 
 StreamLifecycleError: Locked | Closed | Errored(reason:) |
   Aborted(reason:)
