@@ -83,8 +83,8 @@ pub type EncryptAlgorithm {
 
   /// AES-GCM with the given initialization vector, additional
   /// authenticated data, and authentication `tag_length` in bits.
-  /// Pass `<<>>` for `additional_data` to omit it; pass `None` for
-  /// `tag_length` for the spec default (128 bits).
+  /// Pass `<<>>` for `additional_data` for no additional authenticated
+  /// data; pass `None` for `tag_length` for the spec default (128 bits).
   EncryptAesGcm(
     iv: BitArray,
     additional_data: BitArray,
@@ -182,8 +182,9 @@ pub type WrapAlgorithm {
 
   /// Wrap or unwrap with AES-GCM, the given initialization vector,
   /// additional authenticated data, and authentication `tag_length`
-  /// in bits. Pass `<<>>` for `additional_data` to omit it; pass
-  /// `None` for `tag_length` for the spec default (128 bits).
+  /// in bits. Pass `<<>>` for `additional_data` for no additional
+  /// authenticated data; pass `None` for `tag_length` for the spec
+  /// default (128 bits).
   WrapAesGcm(iv: BitArray, additional_data: BitArray, tag_length: Option(Int))
 
   /// Wrap or unwrap with AES Key Wrap (RFC 3394). The wrapping key
@@ -327,8 +328,9 @@ pub fn export_key(
 ) -> Promise(Result(BitArray, CryptoError))
 
 /// Exports `key` as a JSON Web Key. Returns `Error(KeyNotExtractable)`
-/// if `key.extractable` is `False`. Equivalent to JavaScript's
-/// `SubtleCrypto.exportKey` with format `"jwk"`.
+/// if `key.extractable` is `False`, or `Error(AlgorithmNotSupported)` if
+/// the key's algorithm can't be exported in JWK format. Equivalent to
+/// JavaScript's `SubtleCrypto.exportKey` with format `"jwk"`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "export_key_jwk")
 pub fn export_key_jwk(
@@ -337,8 +339,9 @@ pub fn export_key_jwk(
 
 /// Derives bits of shared secret from a base key. Returns
 /// `Error(KeyUsageMismatch(DeriveBits))` if `base_key.usages` doesn't
-/// include `DeriveBits`, or `Error(AlgorithmNotSupported)` if the
-/// runtime doesn't support the algorithm.
+/// include `DeriveBits`, `Error(InvalidAccess)` if `algorithm` doesn't
+/// match `base_key`, or `Error(AlgorithmNotSupported)` if the runtime
+/// doesn't support the algorithm.
 ///
 @external(javascript, "./subtle.ffi.mjs", "derive_bits")
 pub fn derive_bits(
@@ -349,8 +352,10 @@ pub fn derive_bits(
 
 /// Derives a new `CryptoKey` from a base key. Returns
 /// `Error(KeyUsageMismatch(DeriveKey))` if `base_key.usages` doesn't
-/// include `DeriveKey`, or `Error(AlgorithmNotSupported)` if the
-/// runtime doesn't support the algorithm.
+/// include `DeriveKey`, `Error(InvalidAccess)` if `algorithm` doesn't
+/// match `base_key`, `Error(AlgorithmNotSupported)` if the runtime
+/// doesn't support the algorithm, or `Error(InvalidSyntax)` if `usages`
+/// is empty for a derived-key type that requires it.
 ///
 @external(javascript, "./subtle.ffi.mjs", "derive_key")
 pub fn derive_key(
@@ -364,8 +369,9 @@ pub fn derive_key(
 /// Exports `key` in raw form and encrypts it with `wrapping_key`.
 /// Returns `Error(KeyNotExtractable)` if `key.extractable` is `False`,
 /// `Error(KeyUsageMismatch(WrapKey))` if `wrapping_key.usages` doesn't
-/// include `WrapKey`, or `Error(AlgorithmNotSupported)` if the runtime
-/// doesn't support the wrapping algorithm.
+/// include `WrapKey`, `Error(InvalidAccess)` if `algorithm` doesn't
+/// match `wrapping_key`, or `Error(AlgorithmNotSupported)` if the
+/// runtime doesn't support the wrapping algorithm.
 ///
 @external(javascript, "./subtle.ffi.mjs", "wrap_key")
 pub fn wrap_key(
@@ -390,8 +396,10 @@ pub fn wrap_key_jwk(
 /// Returns `Error(KeyUsageMismatch(UnwrapKey))` if `unwrapping_key.usages`
 /// doesn't include `UnwrapKey`, `Error(AlgorithmNotSupported)` if the
 /// runtime doesn't support the unwrap or import algorithm,
-/// `Error(OperationFailed)` if the unwrapping fails, or
-/// `Error(DataMalformed)` if the decrypted bytes aren't a valid key.
+/// `Error(OperationFailed)` if the unwrapping fails,
+/// `Error(DataMalformed)` if the decrypted bytes aren't a valid key, or
+/// `Error(InvalidSyntax)` if `usages` is empty for an unwrapped-key
+/// algorithm that requires it.
 ///
 @external(javascript, "./subtle.ffi.mjs", "unwrap_key")
 pub fn unwrap_key(
