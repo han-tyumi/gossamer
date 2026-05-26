@@ -37,8 +37,7 @@ pub opaque type Builder(a) {
   )
 }
 
-/// Per-call options for `pipe_through` and `pipe_to`. Construct with
-/// `pipe_options` and chain setters.
+/// Per-call options for `pipe_through` and `pipe_to`.
 ///
 pub type PipeOptions {
   PipeOptions(
