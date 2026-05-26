@@ -1,11 +1,10 @@
 import gleam/javascript/promise
-import gleam/option.{None}
+import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer/encoding/text_decoder_stream
 import gossamer/encoding/text_encoder_stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
-import gossamer/stream/readable_stream/read_result
 import gossamer/stream/readable_stream/reader
 
 pub fn text_encoder_stream_readable_writable_test() {
@@ -77,9 +76,9 @@ pub fn text_encode_decode_stream_roundtrip_test() {
   let assert Ok(r) = readable_stream.get_reader(decoded)
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Value("hello stream")))
+  should.equal(result, Ok(Some("hello stream")))
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Done(None)))
+  should.equal(result, Ok(None))
   promise.resolve(Nil)
 }

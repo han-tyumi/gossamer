@@ -1,7 +1,7 @@
 import gleam/dynamic
 import gleam/int
 import gleam/javascript/promise
-import gleam/option.{None}
+import gleam/option.{None, Some}
 import gleam/string
 import gleam/yielder
 import gleeunit/should
@@ -10,7 +10,6 @@ import gossamer/iteration/async_yielder
 import gossamer/stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
-import gossamer/stream/readable_stream/read_result
 import gossamer/stream/readable_stream/reader
 import gossamer/stream/transform_stream
 import gossamer/stream/transform_stream/default_controller as transform_controller
@@ -57,13 +56,13 @@ pub fn readable_stream_from_start_test() {
   let assert Ok(r) = readable_stream.get_reader(stream)
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Value("hello")))
+  should.equal(result, Ok(Some("hello")))
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Value("world")))
+  should.equal(result, Ok(Some("world")))
 
   use result <- promise.map(reader.read(r))
-  should.equal(result, Ok(read_result.Done(None)))
+  should.equal(result, Ok(None))
 }
 
 pub fn readable_stream_build_test() {
@@ -79,7 +78,7 @@ pub fn readable_stream_build_test() {
   let assert Ok(r) = readable_stream.get_reader(stream)
 
   use result <- promise.map(reader.read(r))
-  should.equal(result, Ok(read_result.Value(42)))
+  should.equal(result, Ok(Some(42)))
 }
 
 pub fn writable_stream_from_write_test() {
@@ -140,13 +139,13 @@ pub fn transform_stream_from_transform_test() {
   let assert Ok(r) = readable_stream.get_reader(transformed)
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Value("1")))
+  should.equal(result, Ok(Some("1")))
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Value("2")))
+  should.equal(result, Ok(Some("2")))
 
   use result <- promise.map(reader.read(r))
-  should.equal(result, Ok(read_result.Done(None)))
+  should.equal(result, Ok(None))
 }
 
 pub fn readable_pipe_to_writable_test() {
@@ -227,10 +226,10 @@ pub fn readable_stream_tee_test() {
   let assert Ok(reader2) = readable_stream.get_reader(branch2)
 
   use result1 <- promise.await(reader.read(reader1))
-  should.equal(result1, Ok(read_result.Value("hello")))
+  should.equal(result1, Ok(Some("hello")))
 
   use result2 <- promise.await(reader.read(reader2))
-  should.equal(result2, Ok(read_result.Value("hello")))
+  should.equal(result2, Ok(Some("hello")))
   promise.resolve(Nil)
 }
 
@@ -257,7 +256,7 @@ pub fn readable_stream_from_pull_test() {
   let assert Ok(r) = readable_stream.get_reader(stream)
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Value(42)))
+  should.equal(result, Ok(Some(42)))
   promise.resolve(Nil)
 }
 
@@ -542,7 +541,7 @@ pub fn transform_controller_terminate_test() {
   let assert Ok(r) = readable_stream.get_reader(transformed)
 
   use result <- promise.await(reader.read(r))
-  should.equal(result, Ok(read_result.Done(None)))
+  should.equal(result, Ok(None))
   promise.resolve(Nil)
 }
 

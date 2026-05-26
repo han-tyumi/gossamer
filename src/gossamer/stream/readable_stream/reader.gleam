@@ -4,8 +4,8 @@
 //// [`release_lock`](#release_lock) when done.
 
 import gleam/javascript/promise.{type Promise}
+import gleam/option.{type Option}
 import gossamer/stream.{type StreamLifecycleError}
-import gossamer/stream/readable_stream/read_result.{type ReadResult}
 
 /// A JavaScript `ReadableStreamDefaultReader` — a locked reader over a
 /// `ReadableStream`.
@@ -30,14 +30,15 @@ pub fn cancel(
   reason reason: r,
 ) -> Promise(Result(Nil, StreamLifecycleError))
 
-/// Reads the next chunk from the stream. Returns `Errored` if the
-/// stream enters an errored state, or if the reader no longer holds
-/// the lock; the reason payload distinguishes the two.
+/// Reads the next chunk: `Some(chunk)` while data remains, `None` once
+/// the stream is exhausted. Returns `Errored` if the stream enters an
+/// errored state, or if the reader no longer holds the lock; the reason
+/// payload distinguishes the two.
 ///
 @external(javascript, "./reader.ffi.mjs", "read")
 pub fn read(
   reader: Reader(a),
-) -> Promise(Result(ReadResult(a), StreamLifecycleError))
+) -> Promise(Result(Option(a), StreamLifecycleError))
 
 /// Releases the reader's lock on the stream. Pending reads reject
 /// asynchronously after release.

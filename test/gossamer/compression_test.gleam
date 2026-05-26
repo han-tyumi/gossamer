@@ -1,12 +1,12 @@
 import gleam/bit_array
 import gleam/javascript/promise
+import gleam/option.{None, Some}
 import gleeunit/should
 import gossamer/compression
 import gossamer/compression/compression_stream
 import gossamer/compression/decompression_stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
-import gossamer/stream/readable_stream/read_result
 import gossamer/stream/readable_stream/reader
 
 fn round_trip(format: compression.CompressionFormat) {
@@ -40,11 +40,11 @@ fn round_trip(format: compression.CompressionFormat) {
   use result <- promise.map(reader.read(reader))
   let assert Ok(read) = result
   case read {
-    read_result.Value(chunk) -> {
+    Some(chunk) -> {
       let assert Ok(text) = bit_array.to_string(chunk)
       should.equal(text, "Hello, compression!")
     }
-    read_result.Done(_) -> should.fail()
+    None -> should.fail()
   }
 }
 

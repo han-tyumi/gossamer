@@ -1,7 +1,7 @@
 import type * as $reader from "$/gossamer/gossamer/stream/readable_stream/reader.mjs";
 import * as $stream from "$/gossamer/gossamer/stream.mjs";
+import { Option$None, Option$Some } from "$/gleam_stdlib/gleam/option.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toReadResult } from "~/gossamer/stream/readable_stream/read_result.ffi.ts";
 
 function erroredError(reason: unknown) {
   return Result$Error($stream.StreamLifecycleError$Errored(reason));
@@ -30,7 +30,8 @@ export const read: typeof $reader.read = (
   reader: ReadableStreamDefaultReader,
 ) => {
   return reader.read().then(
-    (result) => Result$Ok(toReadResult(result)),
+    (result) =>
+      Result$Ok(result.done ? Option$None() : Option$Some(result.value)),
     (err) => erroredError(err),
   );
 };
