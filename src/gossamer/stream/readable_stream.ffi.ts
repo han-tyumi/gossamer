@@ -157,7 +157,7 @@ export const pipe_to: typeof $readableStream.pipe_to = (
 export const tee: typeof $readableStream.tee = (stream: ReadableStream) => {
   if (stream.locked) return lockedError();
   try {
-    return Result$Ok(stream.tee() as [ReadableStream, ReadableStream]);
+    return Result$Ok(stream.tee());
   } catch (err) {
     return erroredError(err);
   }
