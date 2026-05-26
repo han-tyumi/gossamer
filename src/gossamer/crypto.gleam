@@ -1,6 +1,7 @@
 //// Cross-runtime bindings for the Web Cryptography API. The top-level
-//// `Crypto` interface (`random_uuid`) lives here, along with types
-//// shared across `gossamer/crypto/key`, `gossamer/crypto/subtle`, and
+//// [`Crypto`](https://developer.mozilla.org/en-US/docs/Web/API/Crypto)
+//// interface (`random_uuid`) lives here, along with types shared across
+//// `gossamer/crypto/key`, `gossamer/crypto/subtle`, and
 //// `gossamer/crypto/jwk`. For cryptographically strong random bytes,
 //// use [`gleam_crypto.strong_random_bytes`](https://hexdocs.pm/gleam_crypto/).
 
