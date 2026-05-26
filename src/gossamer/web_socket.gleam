@@ -8,6 +8,7 @@ import gleam/uri.{type Uri}
 import gossamer/blob.{type Blob}
 
 /// Errors raised by `WebSocket` operations.
+///
 pub type WebSocketError {
   /// The URL is not an absolute `ws:` or `wss:` URL, or includes a
   /// fragment.
