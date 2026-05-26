@@ -273,8 +273,8 @@ pub fn tee(
 /// reading completes. Equivalent to JavaScript's
 /// `ReadableStream.values` (or `stream[Symbol.asyncIterator]()`).
 ///
-@external(javascript, "./readable_stream.ffi.mjs", "async_yielder")
-pub fn async_yielder(stream: ReadableStream(a)) -> AsyncYielder(a)
+@external(javascript, "./readable_stream.ffi.mjs", "to_async_yielder")
+pub fn to_async_yielder(stream: ReadableStream(a)) -> AsyncYielder(a)
 
 /// Consumes a byte stream and decodes the assembled bytes as UTF-8.
 /// Invalid bytes are replaced with U+FFFD. Returns `Locked` if the

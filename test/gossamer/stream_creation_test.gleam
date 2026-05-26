@@ -535,7 +535,7 @@ pub fn transform_controller_terminate_test() {
 
 // ReadableStream.async_yielder test
 
-pub fn readable_stream_async_yielder_test() {
+pub fn readable_stream_to_async_yielder_test() {
   let assert Ok(stream) =
     readable_stream.from_start(fn(controller) {
       let _ = default_controller.enqueue(controller, 1)
@@ -545,7 +545,7 @@ pub fn readable_stream_async_yielder_test() {
     })
 
   let result =
-    readable_stream.async_yielder(stream)
+    readable_stream.to_async_yielder(stream)
     |> async_yielder.to_list
 
   use result <- promise.await(result)

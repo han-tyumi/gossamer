@@ -163,7 +163,7 @@ export const tee: typeof $readableStream.tee = (stream: ReadableStream) => {
   }
 };
 
-export const async_yielder: typeof $readableStream.async_yielder = <T>(
+export const to_async_yielder: typeof $readableStream.to_async_yielder = <T>(
   stream: ReadableStream<T>,
 ) => {
   return jsAsyncIteratorAsAsyncYielder(stream.values());
