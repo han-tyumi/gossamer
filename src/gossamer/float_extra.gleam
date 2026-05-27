@@ -81,6 +81,12 @@ pub fn hypot(numbers: List(Float)) -> Float
 @external(javascript, "./float_extra.ffi.mjs", "fround")
 pub fn fround(x: Float) -> Float
 
+/// Returns `1.0` for a positive number, `-1.0` for a negative number,
+/// and `0.0` for zero. Equivalent to JavaScript's `Math.sign`.
+///
+@external(javascript, "./float_extra.ffi.mjs", "sign")
+pub fn sign(x: Float) -> Float
+
 /// Returns the sine of an angle in radians.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "sin")

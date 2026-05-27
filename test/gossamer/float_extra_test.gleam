@@ -23,6 +23,12 @@ pub fn fround_test() {
   should.be_true(value >. 1.336 && value <. 1.338)
 }
 
+pub fn sign_test() {
+  float_extra.sign(3.5) |> should.equal(1.0)
+  float_extra.sign(-3.5) |> should.equal(-1.0)
+  float_extra.sign(0.0) |> should.equal(0.0)
+}
+
 pub fn log2_test() {
   float_extra.log2(8.0) |> should.equal(Ok(3.0))
   float_extra.log2(1.0) |> should.equal(Ok(0.0))

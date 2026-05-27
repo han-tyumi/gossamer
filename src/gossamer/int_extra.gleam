@@ -29,3 +29,9 @@ pub fn clz32(x: Int) -> Int
 ///
 @external(javascript, "./int_extra.ffi.mjs", "imul")
 pub fn imul(a: Int, b: Int) -> Int
+
+/// Returns `1` for a positive number, `-1` for a negative number, and
+/// `0` for zero. Equivalent to JavaScript's `Math.sign`.
+///
+@external(javascript, "./int_extra.ffi.mjs", "sign")
+pub fn sign(x: Int) -> Int
