@@ -86,7 +86,8 @@ pub fn weekday_from_int(weekday: Int) -> Result(Weekday, Nil) {
 
 /// Returns the timestamp as an RFC 7231 string (e.g.,
 /// `"Thu, 01 Jan 1970 00:00:00 GMT"`). This is the format used by HTTP
-/// `Date`, `Last-Modified`, and `Expires` headers.
+/// `Date`, `Last-Modified`, and `Expires` headers. Equivalent to
+/// JavaScript's `Date.prototype.toUTCString`.
 ///
 @external(javascript, "./time_extra.ffi.mjs", "to_utc_string")
 pub fn to_utc_string(timestamp: Timestamp) -> String
