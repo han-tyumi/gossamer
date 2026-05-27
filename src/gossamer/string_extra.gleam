@@ -50,10 +50,10 @@ pub fn normalize_to(string: String, form form: NormalizationForm) -> String
 /// structurally invalid. Equivalent to JavaScript's
 /// `String.prototype.toLocaleLowerCase`.
 ///
-@external(javascript, "./string_extra.ffi.mjs", "to_locale_lower_case")
-pub fn to_locale_lower_case(
+@external(javascript, "./string_extra.ffi.mjs", "to_locale_lowercase")
+pub fn to_locale_lowercase(
   string: String,
-  in locales: List(String),
+  locales: List(String),
 ) -> Result(String, Nil)
 
 /// Returns `string` uppercased using the first supported locale from
@@ -63,10 +63,10 @@ pub fn to_locale_lower_case(
 /// structurally invalid. Equivalent to JavaScript's
 /// `String.prototype.toLocaleUpperCase`.
 ///
-@external(javascript, "./string_extra.ffi.mjs", "to_locale_upper_case")
-pub fn to_locale_upper_case(
+@external(javascript, "./string_extra.ffi.mjs", "to_locale_uppercase")
+pub fn to_locale_uppercase(
   string: String,
-  in locales: List(String),
+  locales: List(String),
 ) -> Result(String, Nil)
 
 /// `True` when `string` is a well-formed UTF-16 sequence — every

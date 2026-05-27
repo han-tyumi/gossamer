@@ -17,7 +17,7 @@ export const normalize: typeof $stringExtra.normalize = (string) =>
 export const normalize_to: typeof $stringExtra.normalize_to = (string, form) =>
   string.normalize(toNormalizationForm(form));
 
-export const to_locale_lower_case: typeof $stringExtra.to_locale_lower_case = (
+export const to_locale_lowercase: typeof $stringExtra.to_locale_lowercase = (
   string,
   locales,
 ) => {
@@ -28,7 +28,7 @@ export const to_locale_lower_case: typeof $stringExtra.to_locale_lower_case = (
   }
 };
 
-export const to_locale_upper_case: typeof $stringExtra.to_locale_upper_case = (
+export const to_locale_uppercase: typeof $stringExtra.to_locale_uppercase = (
   string,
   locales,
 ) => {
