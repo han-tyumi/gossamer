@@ -53,7 +53,7 @@ pub const sqrt1_2 = 0.7071067811865476
 /// Returns the cube root of a number.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "cbrt")
-pub fn cbrt(value: Float) -> Float
+pub fn cbrt(x: Float) -> Float
 
 /// Returns the square root of the sum of the squares of its values.
 /// The two-dimensional case is the hypotenuse `sqrt(x*x + y*y)`; the
@@ -73,45 +73,45 @@ pub fn cbrt(value: Float) -> Float
 /// ```
 ///
 @external(javascript, "./float_extra.ffi.mjs", "hypot")
-pub fn hypot(values: List(Float)) -> Float
+pub fn hypot(numbers: List(Float)) -> Float
 
 /// Returns the nearest 32-bit single-precision float representation of
 /// a number.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "fround")
-pub fn fround(value: Float) -> Float
+pub fn fround(x: Float) -> Float
 
 /// Returns the sine of an angle in radians.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "sin")
-pub fn sin(angle: Float) -> Float
+pub fn sin(x: Float) -> Float
 
 /// Returns the cosine of an angle in radians.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "cos")
-pub fn cos(angle: Float) -> Float
+pub fn cos(x: Float) -> Float
 
 /// Returns the tangent of an angle in radians.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "tan")
-pub fn tan(angle: Float) -> Float
+pub fn tan(x: Float) -> Float
 
 /// Returns the arcsine of a number, in radians. Returns an error if
 /// the value is outside the range `-1.0` to `1.0`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "asin")
-pub fn asin(value: Float) -> Result(Float, Nil)
+pub fn asin(x: Float) -> Result(Float, Nil)
 
 /// Returns the arccosine of a number, in radians. Returns an error if
 /// the value is outside the range `-1.0` to `1.0`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "acos")
-pub fn acos(value: Float) -> Result(Float, Nil)
+pub fn acos(x: Float) -> Result(Float, Nil)
 
 /// Returns the arctangent of a number, in radians.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "atan")
-pub fn atan(value: Float) -> Float
+pub fn atan(x: Float) -> Float
 
 /// Returns the angle in radians between the positive x-axis and the
 /// point `(x, y)`, with the result in the range `-pi` to `pi`.
@@ -122,75 +122,72 @@ pub fn atan2(y: Float, x: Float) -> Float
 /// Returns the hyperbolic sine of a number.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "sinh")
-pub fn sinh(value: Float) -> Float
+pub fn sinh(x: Float) -> Float
 
 /// Returns the hyperbolic cosine of a number.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "cosh")
-pub fn cosh(value: Float) -> Float
+pub fn cosh(x: Float) -> Float
 
 /// Returns the hyperbolic tangent of a number.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "tanh")
-pub fn tanh(value: Float) -> Float
+pub fn tanh(x: Float) -> Float
 
 /// Returns the inverse hyperbolic sine of a number.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "asinh")
-pub fn asinh(value: Float) -> Float
+pub fn asinh(x: Float) -> Float
 
 /// Returns the inverse hyperbolic cosine of a number. Returns an error
 /// if the value is less than `1.0`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "acosh")
-pub fn acosh(value: Float) -> Result(Float, Nil)
+pub fn acosh(x: Float) -> Result(Float, Nil)
 
 /// Returns the inverse hyperbolic tangent of a number. Returns an
 /// error if the absolute value is greater than or equal to `1.0`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "atanh")
-pub fn atanh(value: Float) -> Result(Float, Nil)
+pub fn atanh(x: Float) -> Result(Float, Nil)
 
 /// Returns the base-2 logarithm of a number. Returns an error if the
 /// value is not positive.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "log2")
-pub fn log2(value: Float) -> Result(Float, Nil)
+pub fn log2(x: Float) -> Result(Float, Nil)
 
 /// Returns the base-10 logarithm of a number. Returns an error if the
 /// value is not positive.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "log10")
-pub fn log10(value: Float) -> Result(Float, Nil)
+pub fn log10(x: Float) -> Result(Float, Nil)
 
-/// Returns the natural logarithm of `1 + value`, precise for small
-/// values. Returns an error if `value` is less than or equal to `-1.0`.
+/// Returns the natural logarithm of `1 + x`, precise for small
+/// values. Returns an error if `x` is less than or equal to `-1.0`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "log1p")
-pub fn log1p(value: Float) -> Result(Float, Nil)
+pub fn log1p(x: Float) -> Result(Float, Nil)
 
 /// Returns `e` raised to the power of a number minus `1`, precise for
 /// small values.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "expm1")
-pub fn expm1(value: Float) -> Float
+pub fn expm1(x: Float) -> Float
 
 /// Formats a number using fixed-point notation with the specified
 /// number of decimal places. Returns an error if `digits` is outside
 /// `0`–`100`. Equivalent to JavaScript's `Number.prototype.toFixed`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "to_fixed_string")
-pub fn to_fixed_string(value: Float, digits digits: Int) -> Result(String, Nil)
+pub fn to_fixed_string(x: Float, digits digits: Int) -> Result(String, Nil)
 
 /// Formats a number to the specified number of significant digits.
 /// Returns an error if `digits` is outside `1`–`100`. Equivalent to
 /// JavaScript's `Number.prototype.toPrecision`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "to_precision_string")
-pub fn to_precision_string(
-  value: Float,
-  digits digits: Int,
-) -> Result(String, Nil)
+pub fn to_precision_string(x: Float, digits digits: Int) -> Result(String, Nil)
 
 /// Formats a number in exponential (scientific) notation with the
 /// specified number of digits after the decimal point. Returns an
@@ -199,6 +196,6 @@ pub fn to_precision_string(
 ///
 @external(javascript, "./float_extra.ffi.mjs", "to_exponential_string")
 pub fn to_exponential_string(
-  value: Float,
+  x: Float,
   digits digits: Int,
 ) -> Result(String, Nil)

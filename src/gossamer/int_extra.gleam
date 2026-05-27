@@ -21,7 +21,7 @@ pub const min_safe_integer = -9_007_199_254_740_991
 /// `Math.clz32`.
 ///
 @external(javascript, "./int_extra.ffi.mjs", "clz32")
-pub fn clz32(value: Int) -> Int
+pub fn clz32(x: Int) -> Int
 
 /// Returns the result of C-like 32-bit integer multiplication of two
 /// numbers, wrapping on overflow. Equivalent to JavaScript's
