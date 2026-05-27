@@ -253,6 +253,18 @@ export const format_to_parts: typeof $durationFormat.format_to_parts = (
   }
 };
 
+export const format_duration: typeof $durationFormat.do_format_duration = (
+  formatter,
+  parts,
+) => {
+  return formatter.format(toDuration(parts));
+};
+
+export const format_duration_to_parts:
+  typeof $durationFormat.do_format_duration_to_parts = (formatter, parts) => {
+    return fromArrayMapped(formatter.formatToParts(toDuration(parts)), toPart);
+  };
+
 export const resolved_options: typeof $durationFormat.resolved_options = (
   formatter,
 ) => {

@@ -199,6 +199,22 @@ pub fn from_duration_test() {
   ))
 }
 
+pub fn format_duration_test() {
+  let assert Ok(formatter) =
+    duration_format.new(["en-US"])
+    |> duration_format.with_style(duration_format.StyleLong)
+    |> duration_format.build
+  duration_format.format_duration(formatter, duration.hours(2))
+  |> should.equal("2 hours")
+}
+
+pub fn format_duration_to_parts_test() {
+  let assert Ok(formatter) =
+    duration_format.new(["en-US"]) |> duration_format.build
+  duration_format.format_duration_to_parts(formatter, duration.hours(2))
+  |> should.not_equal([])
+}
+
 pub fn from_duration_with_subseconds_test() {
   let d = duration.milliseconds(1500)
   let parts = duration_format.from_duration(d)

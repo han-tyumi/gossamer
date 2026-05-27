@@ -546,6 +546,41 @@ pub fn format_to_parts(
   parts: DurationParts,
 ) -> Result(List(Part), Nil)
 
+/// Formats a `gleam/time/duration.Duration` as a locale-aware string,
+/// decomposing it into hours through nanoseconds via
+/// [`from_duration`](#from_duration). Calendar fields stay absent since
+/// `Duration` is elapsed time. Unlike [`format`](#format) this never
+/// errors — the decomposition always shares a single sign.
+///
+pub fn format_duration(formatter: DurationFormat, value: Duration) -> String {
+  do_format_duration(formatter, from_duration(value))
+}
+
+@external(javascript, "./duration_format.ffi.mjs", "format_duration")
+@internal
+pub fn do_format_duration(
+  formatter: DurationFormat,
+  parts: DurationParts,
+) -> String
+
+/// Formats a `gleam/time/duration.Duration` and returns its
+/// decomposition into [`Part`](#Part)s. Uses the same hours-through-
+/// nanoseconds decomposition as [`format_duration`](#format_duration).
+///
+pub fn format_duration_to_parts(
+  formatter: DurationFormat,
+  value: Duration,
+) -> List(Part) {
+  do_format_duration_to_parts(formatter, from_duration(value))
+}
+
+@external(javascript, "./duration_format.ffi.mjs", "format_duration_to_parts")
+@internal
+pub fn do_format_duration_to_parts(
+  formatter: DurationFormat,
+  parts: DurationParts,
+) -> List(Part)
+
 /// The options the runtime resolved for a
 /// [`DurationFormat`](#DurationFormat), including the per-unit styles and
 /// display modes it derived from the overall [`Style`](#Style). `locale`
