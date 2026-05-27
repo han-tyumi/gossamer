@@ -23,6 +23,12 @@ pub fn fround_test() {
   should.be_true(value >. 1.336 && value <. 1.338)
 }
 
+pub fn f16round_test() {
+  float_extra.f16round(1.0) |> should.equal(1.0)
+  let rounded = float_extra.f16round(1.337)
+  should.be_true(rounded >. 1.336 && rounded <. 1.338)
+}
+
 pub fn sign_test() {
   float_extra.sign(3.5) |> should.equal(1.0)
   float_extra.sign(-3.5) |> should.equal(-1.0)

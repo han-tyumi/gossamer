@@ -22,6 +22,8 @@ export const cbrt: typeof $float_extra.cbrt = (value) => Math.cbrt(value);
 export const hypot: typeof $float_extra.hypot = (values) =>
   Math.hypot(...toArray(values));
 export const fround: typeof $float_extra.fround = (value) => Math.fround(value);
+export const f16round: typeof $float_extra.f16round = (value) =>
+  Math.f16round(value);
 export const sign: typeof $float_extra.sign = (value) => Math.sign(value);
 
 export const sin: typeof $float_extra.sin = (angle) => Math.sin(angle);
