@@ -290,9 +290,11 @@ encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
 
 [`gossamer/intl`](./gossamer/intl.html) hosts shared types (`LabelStyle`,
 `LocaleMatcher`, `RangePartSource`, `HourCycle`, `CaseFirst`) used across the
-formatter submodules, plus `get_canonical_locales` (BCP 47 tag canonicalization)
-and the per-category enumeration helpers `calendars`, `collations`,
-`currencies`, `numbering_systems`, `time_zones`, and `units`.
+formatter submodules, plus `canonical_locales` (BCP 47 tag canonicalization) and
+the per-category enumeration helpers `calendars`, `collations`, `currencies`,
+`numbering_systems`, `time_zones`, and `units`.
+
+Not bound: `Intl.Locale.prototype.variants` (absent on Node and Deno).
 
 ### Delegated
 
