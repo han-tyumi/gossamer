@@ -650,11 +650,48 @@ pub fn format_big_int_range_to_parts(
   to end: BigInt,
 ) -> List(RangePart)
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// The options the runtime resolved for a
+/// [`NumberFormat`](#NumberFormat), including the defaults it filled in.
+/// `locale` is the BCP 47 tag chosen from the requested priority list
+/// (e.g., `"en-US"`). The currency fields are `Some` only for the
+/// [`StyleCurrency`](#Style) style, the unit fields only for
+/// [`StyleUnit`](#Style), `compact_display` only for
+/// [`NotationCompact`](#Notation), and the fraction- and
+/// significant-digit fields only when the matching precision mode is in
+/// effect.
 ///
-@external(javascript, "./number_format.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(formatter: NumberFormat) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    numbering_system: String,
+    style: Style,
+    currency: Option(String),
+    currency_display: Option(CurrencyDisplay),
+    currency_sign: Option(CurrencySign),
+    unit: Option(String),
+    unit_display: Option(UnitDisplay),
+    minimum_integer_digits: Int,
+    minimum_fraction_digits: Option(Int),
+    maximum_fraction_digits: Option(Int),
+    minimum_significant_digits: Option(Int),
+    maximum_significant_digits: Option(Int),
+    use_grouping: UseGrouping,
+    notation: Notation,
+    compact_display: Option(CompactDisplay),
+    sign_display: SignDisplay,
+    rounding_increment: Int,
+    rounding_mode: RoundingMode,
+    rounding_priority: RoundingPriority,
+    trailing_zero_display: TrailingZeroDisplay,
+  )
+}
+
+/// The full configuration the runtime resolved from the builder,
+/// including the digit and rounding defaults it derived from the style
+/// and locale.
+///
+@external(javascript, "./number_format.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: NumberFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for number
 /// formatting, preserving the input order.

@@ -234,11 +234,25 @@ fn decompose(value: Duration) -> #(Int, Unit) {
   }
 }
 
-/// The BCP 47 locale tag the runtime resolved from the requested
+/// The options the runtime resolved for a
+/// [`RelativeTimeFormat`](#RelativeTimeFormat), including the defaults
+/// it filled in. `locale` is the BCP 47 tag chosen from the requested
 /// priority list (e.g., `"en-US"`).
 ///
-@external(javascript, "./relative_time_format.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(formatter: RelativeTimeFormat) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    style: LabelStyle,
+    numeric: Numeric,
+    numbering_system: String,
+  )
+}
+
+/// The locale, style, numeric mode, and numbering system the runtime
+/// resolved from the builder's configuration.
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: RelativeTimeFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for relative-time
 /// formatting, preserving the input order.

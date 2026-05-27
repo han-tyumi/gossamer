@@ -509,11 +509,43 @@ pub fn do_format_range_to_parts(
   end_seconds: Float,
 ) -> List(RangePart)
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// The options the runtime resolved for a
+/// [`DateTimeFormat`](#DateTimeFormat), including the defaults it filled
+/// in. `locale` is the BCP 47 tag chosen from the requested priority
+/// list (e.g., `"en-US"`). The component fields (`weekday` through
+/// `day_period`) are `Some` only when that component is shown; a
+/// formatter built with `date_style`/`time_style` resolves those two
+/// instead and leaves the components `None`.
 ///
-@external(javascript, "./date_time_format.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(formatter: DateTimeFormat) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    calendar: String,
+    numbering_system: String,
+    time_zone: String,
+    hour_cycle: Option(HourCycle),
+    hour12: Option(Bool),
+    weekday: Option(LabelStyle),
+    era: Option(LabelStyle),
+    year: Option(NumericWidth),
+    month: Option(Month),
+    day: Option(NumericWidth),
+    hour: Option(NumericWidth),
+    minute: Option(NumericWidth),
+    second: Option(NumericWidth),
+    fractional_second_digits: Option(FractionalSecondDigits),
+    time_zone_name: Option(TimeZoneName),
+    day_period: Option(LabelStyle),
+    date_style: Option(Style),
+    time_style: Option(Style),
+  )
+}
+
+/// The full configuration the runtime resolved from the builder,
+/// including the calendar, time zone, and component widths it derived.
+///
+@external(javascript, "./date_time_format.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: DateTimeFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for date/time
 /// formatting, preserving the input order.

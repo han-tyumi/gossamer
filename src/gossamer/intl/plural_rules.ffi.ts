@@ -1,16 +1,25 @@
 import * as $pluralRules from "$/gossamer/gossamer/intl/plural_rules.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
+  fromRoundingMode,
+  fromRoundingPriority,
+  fromTrailingZeroDisplay,
   toRoundingMode,
   toRoundingPriority,
   toTrailingZeroDisplay,
 } from "~/gossamer/intl/number_format.ffi.ts";
 import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
-import { fromArray, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
+import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { mapIfSome, setIfSome, toOption } from "~/utils/option.ffi.ts";
 
 function toKind(kind: $pluralRules.Kind$): "cardinal" | "ordinal" {
   return $pluralRules.Kind$isCardinal(kind) ? "cardinal" : "ordinal";
+}
+
+function fromKind(value: string): $pluralRules.Kind$ {
+  return value === "ordinal"
+    ? $pluralRules.Kind$Ordinal()
+    : $pluralRules.Kind$Cardinal();
 }
 
 function fromPluralCategory(
@@ -87,8 +96,24 @@ export const select_range: typeof $pluralRules.select_float_range = (
   return fromPluralCategory(rules.selectRange(start, end));
 };
 
-export const resolved_locale: typeof $pluralRules.resolved_locale = (rules) => {
-  return rules.resolvedOptions().locale;
+export const resolved_options: typeof $pluralRules.resolved_options = (
+  rules,
+) => {
+  const resolved = rules.resolvedOptions();
+  return $pluralRules.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    fromKind(resolved.type),
+    resolved.minimumIntegerDigits,
+    toOption(resolved.minimumFractionDigits),
+    toOption(resolved.maximumFractionDigits),
+    toOption(resolved.minimumSignificantDigits),
+    toOption(resolved.maximumSignificantDigits),
+    fromArrayMapped(resolved.pluralCategories, fromPluralCategory),
+    resolved.roundingIncrement,
+    fromRoundingMode(resolved.roundingMode),
+    fromRoundingPriority(resolved.roundingPriority),
+    fromTrailingZeroDisplay(resolved.trailingZeroDisplay),
+  );
 };
 
 export const supported_locales_of: typeof $pluralRules.supported_locales_of = (

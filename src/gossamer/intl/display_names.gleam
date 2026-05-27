@@ -147,11 +147,26 @@ pub fn of(formatter: DisplayNames, code: String) -> String
 @external(javascript, "./display_names.ffi.mjs", "find")
 pub fn find(formatter: DisplayNames, code: String) -> Result(String, Nil)
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// The options the runtime resolved for a
+/// [`DisplayNames`](#DisplayNames), including the defaults it filled in.
+/// `locale` is the BCP 47 tag chosen from the requested priority list
+/// (e.g., `"en-US"`); `language_display` is `Some` only for the
+/// [`Language`](#Language) kind.
 ///
-@external(javascript, "./display_names.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(formatter: DisplayNames) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    kind: Kind,
+    style: LabelStyle,
+    language_display: Option(LanguageDisplay),
+  )
+}
+
+/// The kind, style, and language-display mode the runtime resolved
+/// from the builder's configuration.
+///
+@external(javascript, "./display_names.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: DisplayNames) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for display
 /// names, preserving the input order.

@@ -46,4 +46,27 @@ declare namespace Intl {
     /** ES2023 plural-rule selection for a range. */
     selectRange(start: number | bigint, end: number | bigint): LDMLPluralRule;
   }
+
+  export interface ResolvedPluralRulesOptions {
+    /** ES2023 rounding strategy. */
+    roundingMode:
+      | "ceil"
+      | "floor"
+      | "expand"
+      | "trunc"
+      | "halfCeil"
+      | "halfFloor"
+      | "halfExpand"
+      | "halfTrunc"
+      | "halfEven";
+
+    /** ES2023 rounding priority. */
+    roundingPriority: "auto" | "morePrecision" | "lessPrecision";
+
+    /** ES2023 rounding increment. */
+    roundingIncrement: number;
+
+    /** ES2023 trailing-zero display behavior. */
+    trailingZeroDisplay: "auto" | "stripIfInteger";
+  }
 }

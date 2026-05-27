@@ -1,4 +1,5 @@
 import gleam/list
+import gleam/option.{Some}
 import gleam/string
 import gleam/time/timestamp.{type Timestamp}
 import gleeunit/should
@@ -347,9 +348,18 @@ pub fn format_range_to_parts_test() {
   list.contains(sources, intl.End) |> should.be_true
 }
 
-pub fn resolved_locale_test() {
-  let assert Ok(fmt) = date_time_format.new(["en-US"]) |> date_time_format.build
-  date_time_format.resolved_locale(fmt) |> should.equal("en-US")
+pub fn resolved_options_test() {
+  let assert Ok(fmt) =
+    date_time_format.new(["en-US"])
+    |> date_time_format.with_year(date_time_format.Numeric)
+    |> date_time_format.with_month(date_time_format.MonthLong)
+    |> date_time_format.with_time_zone("UTC")
+    |> date_time_format.build
+  let options = date_time_format.resolved_options(fmt)
+  options.locale |> should.equal("en-US")
+  options.time_zone |> should.equal("UTC")
+  options.year |> should.equal(Some(date_time_format.Numeric))
+  options.month |> should.equal(Some(date_time_format.MonthLong))
 }
 
 pub fn supported_locales_of_test() {

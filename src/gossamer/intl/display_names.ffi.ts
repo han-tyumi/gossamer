@@ -1,8 +1,12 @@
 import * as $displayNames from "$/gossamer/gossamer/intl/display_names.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
+import {
+  fromLabelStyle,
+  toLabelStyle,
+  toLocaleMatcher,
+} from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome } from "~/utils/option.ffi.ts";
+import { mapIfSome, mapOption } from "~/utils/option.ffi.ts";
 
 function toKind(kind: $displayNames.Kind$): Intl.DisplayNamesType {
   if ($displayNames.Kind$isLanguage(kind)) return "language";
@@ -13,12 +17,37 @@ function toKind(kind: $displayNames.Kind$): Intl.DisplayNamesType {
   return "dateTimeField";
 }
 
+function fromKind(value: string): $displayNames.Kind$ {
+  switch (value) {
+    case "language":
+      return $displayNames.Kind$Language();
+    case "region":
+      return $displayNames.Kind$Region();
+    case "script":
+      return $displayNames.Kind$Script();
+    case "currency":
+      return $displayNames.Kind$Currency();
+    case "calendar":
+      return $displayNames.Kind$Calendar();
+    default:
+      return $displayNames.Kind$DateTimeField();
+  }
+}
+
 function toLanguageDisplay(
   display: $displayNames.LanguageDisplay$,
 ): "dialect" | "standard" {
   return $displayNames.LanguageDisplay$isDialect(display)
     ? "dialect"
     : "standard";
+}
+
+function fromLanguageDisplay(
+  value: string,
+): $displayNames.LanguageDisplay$ {
+  return value === "standard"
+    ? $displayNames.LanguageDisplay$Standard()
+    : $displayNames.LanguageDisplay$Dialect();
 }
 
 export const build: typeof $displayNames.do_build = (
@@ -53,10 +82,16 @@ export const find: typeof $displayNames.find = (formatter, code) => {
   return result === undefined ? Result$Error(undefined) : Result$Ok(result);
 };
 
-export const resolved_locale: typeof $displayNames.resolved_locale = (
+export const resolved_options: typeof $displayNames.resolved_options = (
   formatter,
 ) => {
-  return formatter.resolvedOptions().locale;
+  const resolved = formatter.resolvedOptions();
+  return $displayNames.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    fromKind(resolved.type),
+    fromLabelStyle(resolved.style),
+    mapOption(resolved.languageDisplay, fromLanguageDisplay),
+  );
 };
 
 export const supported_locales_of: typeof $displayNames.supported_locales_of = (

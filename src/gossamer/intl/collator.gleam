@@ -165,11 +165,30 @@ pub fn do_build(
 @external(javascript, "./collator.ffi.mjs", "compare")
 pub fn compare(collator: Collator, a: String, b: String) -> Order
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// The options the runtime resolved for a [`Collator`](#Collator),
+/// including the defaults it filled in. `locale` is the BCP 47 tag
+/// chosen from the requested priority list (e.g., `"en-US"`);
+/// `collation` is the resolved collation identifier (`"default"` when
+/// none was requested).
 ///
-@external(javascript, "./collator.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(collator: Collator) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    usage: Usage,
+    sensitivity: Sensitivity,
+    ignore_punctuation: Bool,
+    collation: String,
+    numeric: Bool,
+    case_first: CaseFirst,
+  )
+}
+
+/// The full configuration the runtime resolved from the builder,
+/// including the sensitivity and case ordering it derived from the
+/// usage and locale.
+///
+@external(javascript, "./collator.ffi.mjs", "resolved_options")
+pub fn resolved_options(collator: Collator) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for collation,
 /// preserving the input order.

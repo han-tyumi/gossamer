@@ -123,10 +123,16 @@ pub fn format_float_to_parts_test() {
   |> should.not_equal([])
 }
 
-pub fn resolved_locale_test() {
+pub fn resolved_options_test() {
   let assert Ok(formatter) =
-    relative_time_format.new(["en-US"]) |> relative_time_format.build
-  relative_time_format.resolved_locale(formatter) |> should.equal("en-US")
+    relative_time_format.new(["en-US"])
+    |> relative_time_format.with_style(intl.Short)
+    |> relative_time_format.with_numeric(relative_time_format.Auto)
+    |> relative_time_format.build
+  let options = relative_time_format.resolved_options(formatter)
+  options.locale |> should.equal("en-US")
+  options.style |> should.equal(intl.Short)
+  options.numeric |> should.equal(relative_time_format.Auto)
 }
 
 pub fn supported_locales_of_test() {

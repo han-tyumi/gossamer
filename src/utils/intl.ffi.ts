@@ -23,6 +23,17 @@ export function toLabelStyle(
   return "narrow";
 }
 
+export function fromLabelStyle(value: string): $intl.LabelStyle$ {
+  switch (value) {
+    case "long":
+      return $intl.LabelStyle$Long();
+    case "short":
+      return $intl.LabelStyle$Short();
+    default:
+      return $intl.LabelStyle$Narrow();
+  }
+}
+
 export function fromRangeSource(
   source: "startRange" | "shared" | "endRange",
 ): $intl.RangePartSource$ {

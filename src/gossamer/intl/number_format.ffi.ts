@@ -3,7 +3,12 @@ import * as $numberFormat from "$/gossamer/gossamer/intl/number_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromRangeSource, toLocaleMatcher } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
+import {
+  mapIfSome,
+  mapOption,
+  setIfSome,
+  toOption,
+} from "~/utils/option.ffi.ts";
 
 function toStyle(
   style: $numberFormat.Style$,
@@ -126,6 +131,140 @@ export function toTrailingZeroDisplay(
   return $intl.TrailingZeroDisplay$isTrailingZeroAuto(display)
     ? "auto"
     : "stripIfInteger";
+}
+
+export function fromRoundingMode(value: string): $intl.RoundingMode$ {
+  switch (value) {
+    case "ceil":
+      return $intl.RoundingMode$RoundingModeCeil();
+    case "floor":
+      return $intl.RoundingMode$RoundingModeFloor();
+    case "expand":
+      return $intl.RoundingMode$RoundingModeExpand();
+    case "trunc":
+      return $intl.RoundingMode$RoundingModeTrunc();
+    case "halfCeil":
+      return $intl.RoundingMode$RoundingModeHalfCeil();
+    case "halfFloor":
+      return $intl.RoundingMode$RoundingModeHalfFloor();
+    case "halfTrunc":
+      return $intl.RoundingMode$RoundingModeHalfTrunc();
+    case "halfEven":
+      return $intl.RoundingMode$RoundingModeHalfEven();
+    default:
+      return $intl.RoundingMode$RoundingModeHalfExpand();
+  }
+}
+
+export function fromRoundingPriority(value: string): $intl.RoundingPriority$ {
+  switch (value) {
+    case "morePrecision":
+      return $intl.RoundingPriority$RoundingPriorityMorePrecision();
+    case "lessPrecision":
+      return $intl.RoundingPriority$RoundingPriorityLessPrecision();
+    default:
+      return $intl.RoundingPriority$RoundingPriorityAuto();
+  }
+}
+
+export function fromTrailingZeroDisplay(
+  value: string,
+): $intl.TrailingZeroDisplay$ {
+  return value === "stripIfInteger"
+    ? $intl.TrailingZeroDisplay$TrailingZeroStripIfInteger()
+    : $intl.TrailingZeroDisplay$TrailingZeroAuto();
+}
+
+function fromStyle(value: string): $numberFormat.Style$ {
+  switch (value) {
+    case "currency":
+      return $numberFormat.Style$StyleCurrency();
+    case "percent":
+      return $numberFormat.Style$StylePercent();
+    case "unit":
+      return $numberFormat.Style$StyleUnit();
+    default:
+      return $numberFormat.Style$StyleDecimal();
+  }
+}
+
+function fromCurrencyDisplay(value: string): $numberFormat.CurrencyDisplay$ {
+  switch (value) {
+    case "code":
+      return $numberFormat.CurrencyDisplay$CurrencyCode();
+    case "narrowSymbol":
+      return $numberFormat.CurrencyDisplay$CurrencyNarrowSymbol();
+    case "name":
+      return $numberFormat.CurrencyDisplay$CurrencyName();
+    default:
+      return $numberFormat.CurrencyDisplay$CurrencySymbol();
+  }
+}
+
+function fromCurrencySign(value: string): $numberFormat.CurrencySign$ {
+  return value === "accounting"
+    ? $numberFormat.CurrencySign$CurrencySignAccounting()
+    : $numberFormat.CurrencySign$CurrencySignStandard();
+}
+
+function fromUnitDisplay(value: string): $numberFormat.UnitDisplay$ {
+  switch (value) {
+    case "long":
+      return $numberFormat.UnitDisplay$UnitLong();
+    case "narrow":
+      return $numberFormat.UnitDisplay$UnitNarrow();
+    default:
+      return $numberFormat.UnitDisplay$UnitShort();
+  }
+}
+
+function fromUseGrouping(
+  value: string | boolean,
+): $numberFormat.UseGrouping$ {
+  switch (value) {
+    case "always":
+      return $numberFormat.UseGrouping$UseGroupingAlways();
+    case "min2":
+      return $numberFormat.UseGrouping$UseGroupingMin2();
+    case false:
+      return $numberFormat.UseGrouping$UseGroupingOff();
+    default:
+      return $numberFormat.UseGrouping$UseGroupingAuto();
+  }
+}
+
+function fromNotation(value: string): $numberFormat.Notation$ {
+  switch (value) {
+    case "scientific":
+      return $numberFormat.Notation$NotationScientific();
+    case "engineering":
+      return $numberFormat.Notation$NotationEngineering();
+    case "compact":
+      return $numberFormat.Notation$NotationCompact();
+    default:
+      return $numberFormat.Notation$NotationStandard();
+  }
+}
+
+function fromCompactDisplay(value: string): $numberFormat.CompactDisplay$ {
+  return value === "long"
+    ? $numberFormat.CompactDisplay$CompactLong()
+    : $numberFormat.CompactDisplay$CompactShort();
+}
+
+function fromSignDisplay(value: string): $numberFormat.SignDisplay$ {
+  switch (value) {
+    case "always":
+      return $numberFormat.SignDisplay$SignAlways();
+    case "exceptZero":
+      return $numberFormat.SignDisplay$SignExceptZero();
+    case "negative":
+      return $numberFormat.SignDisplay$SignNegative();
+    case "never":
+      return $numberFormat.SignDisplay$SignNever();
+    default:
+      return $numberFormat.SignDisplay$SignAuto();
+  }
 }
 
 function fromPartKind(type: string): $numberFormat.PartKind$ {
@@ -281,10 +420,33 @@ export const format_range_to_parts:
     );
   };
 
-export const resolved_locale: typeof $numberFormat.resolved_locale = (
+export const resolved_options: typeof $numberFormat.resolved_options = (
   formatter,
 ) => {
-  return formatter.resolvedOptions().locale;
+  const resolved = formatter.resolvedOptions();
+  return $numberFormat.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    resolved.numberingSystem,
+    fromStyle(resolved.style),
+    toOption(resolved.currency),
+    mapOption(resolved.currencyDisplay, fromCurrencyDisplay),
+    mapOption(resolved.currencySign, fromCurrencySign),
+    toOption(resolved.unit),
+    mapOption(resolved.unitDisplay, fromUnitDisplay),
+    resolved.minimumIntegerDigits,
+    toOption(resolved.minimumFractionDigits),
+    toOption(resolved.maximumFractionDigits),
+    toOption(resolved.minimumSignificantDigits),
+    toOption(resolved.maximumSignificantDigits),
+    fromUseGrouping(resolved.useGrouping),
+    fromNotation(resolved.notation),
+    mapOption(resolved.compactDisplay, fromCompactDisplay),
+    fromSignDisplay(resolved.signDisplay),
+    resolved.roundingIncrement,
+    fromRoundingMode(resolved.roundingMode),
+    fromRoundingPriority(resolved.roundingPriority),
+    fromTrailingZeroDisplay(resolved.trailingZeroDisplay),
+  );
 };
 
 export const supported_locales_of: typeof $numberFormat.supported_locales_of = (

@@ -119,11 +119,19 @@ pub fn format(formatter: ListFormat, list: List(String)) -> String
 @external(javascript, "./list_format.ffi.mjs", "format_to_parts")
 pub fn format_to_parts(formatter: ListFormat, list: List(String)) -> List(Part)
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// The options the runtime resolved for a [`ListFormat`](#ListFormat),
+/// including the defaults it filled in. `locale` is the BCP 47 tag
+/// chosen from the requested priority list (e.g., `"en-US"`).
 ///
-@external(javascript, "./list_format.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(formatter: ListFormat) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(locale: String, kind: Kind, style: LabelStyle)
+}
+
+/// The locale, kind, and style the runtime resolved from the builder's
+/// configuration.
+///
+@external(javascript, "./list_format.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: ListFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for list
 /// formatting, preserving the input order.

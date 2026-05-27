@@ -1,13 +1,20 @@
 import * as $dateTimeFormat from "$/gossamer/gossamer/intl/date_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
+  fromHourCycle,
+  fromLabelStyle,
   fromRangeSource,
   toHourCycle,
   toLabelStyle,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
+import {
+  mapIfSome,
+  mapOption,
+  setIfSome,
+  toOption,
+} from "~/utils/option.ffi.ts";
 
 function toNumericWidth(
   width: $dateTimeFormat.NumericWidth$,
@@ -67,6 +74,70 @@ function toStyle(
   if ($dateTimeFormat.Style$isStyleLong(style)) return "long";
   if ($dateTimeFormat.Style$isStyleMedium(style)) return "medium";
   return "short";
+}
+
+function fromNumericWidth(value: string): $dateTimeFormat.NumericWidth$ {
+  return value === "2-digit"
+    ? $dateTimeFormat.NumericWidth$TwoDigit()
+    : $dateTimeFormat.NumericWidth$Numeric();
+}
+
+function fromMonth(value: string): $dateTimeFormat.Month$ {
+  switch (value) {
+    case "2-digit":
+      return $dateTimeFormat.Month$MonthTwoDigit();
+    case "long":
+      return $dateTimeFormat.Month$MonthLong();
+    case "short":
+      return $dateTimeFormat.Month$MonthShort();
+    case "narrow":
+      return $dateTimeFormat.Month$MonthNarrow();
+    default:
+      return $dateTimeFormat.Month$MonthNumeric();
+  }
+}
+
+function fromFractionalSecondDigits(
+  value: number,
+): $dateTimeFormat.FractionalSecondDigits$ {
+  switch (value) {
+    case 2:
+      return $dateTimeFormat.FractionalSecondDigits$FractionalSeconds2();
+    case 3:
+      return $dateTimeFormat.FractionalSecondDigits$FractionalSeconds3();
+    default:
+      return $dateTimeFormat.FractionalSecondDigits$FractionalSeconds1();
+  }
+}
+
+function fromTimeZoneName(value: string): $dateTimeFormat.TimeZoneName$ {
+  switch (value) {
+    case "long":
+      return $dateTimeFormat.TimeZoneName$TimeZoneLong();
+    case "shortOffset":
+      return $dateTimeFormat.TimeZoneName$TimeZoneShortOffset();
+    case "longOffset":
+      return $dateTimeFormat.TimeZoneName$TimeZoneLongOffset();
+    case "shortGeneric":
+      return $dateTimeFormat.TimeZoneName$TimeZoneShortGeneric();
+    case "longGeneric":
+      return $dateTimeFormat.TimeZoneName$TimeZoneLongGeneric();
+    default:
+      return $dateTimeFormat.TimeZoneName$TimeZoneShort();
+  }
+}
+
+function fromStyle(value: string): $dateTimeFormat.Style$ {
+  switch (value) {
+    case "full":
+      return $dateTimeFormat.Style$StyleFull();
+    case "long":
+      return $dateTimeFormat.Style$StyleLong();
+    case "medium":
+      return $dateTimeFormat.Style$StyleMedium();
+    default:
+      return $dateTimeFormat.Style$StyleShort();
+  }
 }
 
 function fromPartKind(type: string): $dateTimeFormat.PartKind$ {
@@ -225,10 +296,31 @@ export const format_range_to_parts:
     );
   };
 
-export const resolved_locale: typeof $dateTimeFormat.resolved_locale = (
+export const resolved_options: typeof $dateTimeFormat.resolved_options = (
   formatter,
 ) => {
-  return formatter.resolvedOptions().locale;
+  const resolved = formatter.resolvedOptions();
+  return $dateTimeFormat.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    resolved.calendar,
+    resolved.numberingSystem,
+    resolved.timeZone,
+    mapOption(resolved.hourCycle, fromHourCycle),
+    toOption(resolved.hour12),
+    mapOption(resolved.weekday, fromLabelStyle),
+    mapOption(resolved.era, fromLabelStyle),
+    mapOption(resolved.year, fromNumericWidth),
+    mapOption(resolved.month, fromMonth),
+    mapOption(resolved.day, fromNumericWidth),
+    mapOption(resolved.hour, fromNumericWidth),
+    mapOption(resolved.minute, fromNumericWidth),
+    mapOption(resolved.second, fromNumericWidth),
+    mapOption(resolved.fractionalSecondDigits, fromFractionalSecondDigits),
+    mapOption(resolved.timeZoneName, fromTimeZoneName),
+    mapOption(resolved.dayPeriod, fromLabelStyle),
+    mapOption(resolved.dateStyle, fromStyle),
+    mapOption(resolved.timeStyle, fromStyle),
+  );
 };
 
 export const supported_locales_of: typeof $dateTimeFormat.supported_locales_of =

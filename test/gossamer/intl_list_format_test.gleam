@@ -75,9 +75,16 @@ pub fn format_to_parts_test() {
   }
 }
 
-pub fn resolved_locale_test() {
-  let assert Ok(formatter) = list_format.new(["en-US"]) |> list_format.build
-  list_format.resolved_locale(formatter) |> should.equal("en-US")
+pub fn resolved_options_test() {
+  let assert Ok(formatter) =
+    list_format.new(["en-US"])
+    |> list_format.with_kind(list_format.Disjunction)
+    |> list_format.with_style(intl.Short)
+    |> list_format.build
+  let options = list_format.resolved_options(formatter)
+  options.locale |> should.equal("en-US")
+  options.kind |> should.equal(list_format.Disjunction)
+  options.style |> should.equal(intl.Short)
 }
 
 pub fn locale_matcher_lookup_test() {

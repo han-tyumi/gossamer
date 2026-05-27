@@ -546,11 +546,48 @@ pub fn format_to_parts(
   parts: DurationParts,
 ) -> Result(List(Part), Nil)
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// The options the runtime resolved for a
+/// [`DurationFormat`](#DurationFormat), including the per-unit styles and
+/// display modes it derived from the overall [`Style`](#Style). `locale`
+/// is the BCP 47 tag chosen from the requested priority list (e.g.,
+/// `"en-US"`); `fractional_digits` is `Some` only when a fixed digit
+/// count was requested.
 ///
-@external(javascript, "./duration_format.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(formatter: DurationFormat) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    numbering_system: String,
+    style: Style,
+    years: LabelStyle,
+    months: LabelStyle,
+    weeks: LabelStyle,
+    days: LabelStyle,
+    hours: ClockStyle,
+    minutes: ClockStyle,
+    seconds: ClockStyle,
+    milliseconds: SubSecondStyle,
+    microseconds: SubSecondStyle,
+    nanoseconds: SubSecondStyle,
+    years_display: Display,
+    months_display: Display,
+    weeks_display: Display,
+    days_display: Display,
+    hours_display: Display,
+    minutes_display: Display,
+    seconds_display: Display,
+    milliseconds_display: Display,
+    microseconds_display: Display,
+    nanoseconds_display: Display,
+    fractional_digits: Option(FractionalDigits),
+  )
+}
+
+/// The full configuration the runtime resolved from the builder,
+/// including the per-unit styles and display modes derived from the
+/// overall style.
+///
+@external(javascript, "./duration_format.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: DurationFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for duration
 /// formatting, preserving the input order.

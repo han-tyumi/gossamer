@@ -74,9 +74,18 @@ pub fn sort_via_list_test() {
   |> should.equal(["apple", "banana", "cherry"])
 }
 
-pub fn resolved_locale_test() {
-  let assert Ok(c) = collator.new(["en-US"]) |> collator.build
-  collator.resolved_locale(c) |> should.equal("en-US")
+pub fn resolved_options_test() {
+  let assert Ok(c) =
+    collator.new(["en-US"])
+    |> collator.with_usage(collator.Search)
+    |> collator.with_sensitivity(collator.Base)
+    |> collator.with_numeric(True)
+    |> collator.build
+  let options = collator.resolved_options(c)
+  options.locale |> should.equal("en-US")
+  options.usage |> should.equal(collator.Search)
+  options.sensitivity |> should.equal(collator.Base)
+  options.numeric |> should.equal(True)
 }
 
 pub fn supported_locales_of_test() {

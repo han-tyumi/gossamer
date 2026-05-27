@@ -1,8 +1,17 @@
 import * as $durationFormat from "$/gossamer/gossamer/intl/duration_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
+import {
+  fromLabelStyle,
+  toLabelStyle,
+  toLocaleMatcher,
+} from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
-import { mapIfSome, setIfSome, toOption } from "~/utils/option.ffi.ts";
+import {
+  mapIfSome,
+  mapOption,
+  setIfSome,
+  toOption,
+} from "~/utils/option.ffi.ts";
 
 function toStyle(
   style: $durationFormat.Style$,
@@ -51,6 +60,80 @@ function toFractionalDigits(
   if ($durationFormat.FractionalDigits$isFractionalDigits7(value)) return 7;
   if ($durationFormat.FractionalDigits$isFractionalDigits8(value)) return 8;
   return 9;
+}
+
+function fromStyle(value: string): $durationFormat.Style$ {
+  switch (value) {
+    case "short":
+      return $durationFormat.Style$StyleShort();
+    case "narrow":
+      return $durationFormat.Style$StyleNarrow();
+    case "digital":
+      return $durationFormat.Style$StyleDigital();
+    default:
+      return $durationFormat.Style$StyleLong();
+  }
+}
+
+function fromClockStyle(value: string): $durationFormat.ClockStyle$ {
+  switch (value) {
+    case "short":
+      return $durationFormat.ClockStyle$ClockShort();
+    case "narrow":
+      return $durationFormat.ClockStyle$ClockNarrow();
+    case "numeric":
+      return $durationFormat.ClockStyle$ClockNumeric();
+    case "2-digit":
+      return $durationFormat.ClockStyle$ClockTwoDigit();
+    default:
+      return $durationFormat.ClockStyle$ClockLong();
+  }
+}
+
+function fromSubSecondStyle(value: string): $durationFormat.SubSecondStyle$ {
+  switch (value) {
+    case "short":
+      return $durationFormat.SubSecondStyle$SubSecondShort();
+    case "narrow":
+      return $durationFormat.SubSecondStyle$SubSecondNarrow();
+    case "numeric":
+      return $durationFormat.SubSecondStyle$SubSecondNumeric();
+    default:
+      return $durationFormat.SubSecondStyle$SubSecondLong();
+  }
+}
+
+function fromDisplay(value: string): $durationFormat.Display$ {
+  return value === "always"
+    ? $durationFormat.Display$Always()
+    : $durationFormat.Display$Auto();
+}
+
+function fromFractionalDigits(
+  value: number,
+): $durationFormat.FractionalDigits$ {
+  switch (value) {
+    case 1:
+      return $durationFormat.FractionalDigits$FractionalDigits1();
+    case 2:
+      return $durationFormat.FractionalDigits$FractionalDigits2();
+    case 3:
+      return $durationFormat.FractionalDigits$FractionalDigits3();
+    case 4:
+      return $durationFormat.FractionalDigits$FractionalDigits4();
+    case 5:
+      return $durationFormat.FractionalDigits$FractionalDigits5();
+    case 6:
+      return $durationFormat.FractionalDigits$FractionalDigits6();
+    case 7:
+      return $durationFormat.FractionalDigits$FractionalDigits7();
+    case 8:
+      return $durationFormat.FractionalDigits$FractionalDigits8();
+    case 9:
+      return $durationFormat.FractionalDigits$FractionalDigits9();
+    default:
+      return $durationFormat.FractionalDigits$FractionalDigits0();
+  }
 }
 
 function fromPartKind(type: string): $durationFormat.PartKind$ {
@@ -170,10 +253,36 @@ export const format_to_parts: typeof $durationFormat.format_to_parts = (
   }
 };
 
-export const resolved_locale: typeof $durationFormat.resolved_locale = (
+export const resolved_options: typeof $durationFormat.resolved_options = (
   formatter,
 ) => {
-  return formatter.resolvedOptions().locale;
+  const resolved = formatter.resolvedOptions();
+  return $durationFormat.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    resolved.numberingSystem,
+    fromStyle(resolved.style),
+    fromLabelStyle(resolved.years),
+    fromLabelStyle(resolved.months),
+    fromLabelStyle(resolved.weeks),
+    fromLabelStyle(resolved.days),
+    fromClockStyle(resolved.hours),
+    fromClockStyle(resolved.minutes),
+    fromClockStyle(resolved.seconds),
+    fromSubSecondStyle(resolved.milliseconds),
+    fromSubSecondStyle(resolved.microseconds),
+    fromSubSecondStyle(resolved.nanoseconds),
+    fromDisplay(resolved.yearsDisplay),
+    fromDisplay(resolved.monthsDisplay),
+    fromDisplay(resolved.weeksDisplay),
+    fromDisplay(resolved.daysDisplay),
+    fromDisplay(resolved.hoursDisplay),
+    fromDisplay(resolved.minutesDisplay),
+    fromDisplay(resolved.secondsDisplay),
+    fromDisplay(resolved.millisecondsDisplay),
+    fromDisplay(resolved.microsecondsDisplay),
+    fromDisplay(resolved.nanosecondsDisplay),
+    mapOption(resolved.fractionalDigits, fromFractionalDigits),
+  );
 };
 
 export const supported_locales_of: typeof $durationFormat.supported_locales_of =

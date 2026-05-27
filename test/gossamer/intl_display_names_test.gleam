@@ -1,3 +1,4 @@
+import gleam/option.{Some}
 import gleeunit/should
 import gossamer/intl
 import gossamer/intl/display_names
@@ -107,11 +108,17 @@ pub fn language_display_differs_test() {
   { dialect_name != standard_name } |> should.be_true
 }
 
-pub fn resolved_locale_test() {
+pub fn resolved_options_test() {
   let assert Ok(formatter) =
     display_names.new(["en-US"], of: display_names.Language)
+    |> display_names.with_style(intl.Short)
+    |> display_names.with_language_display(display_names.Standard)
     |> display_names.build
-  display_names.resolved_locale(formatter) |> should.equal("en-US")
+  let options = display_names.resolved_options(formatter)
+  options.locale |> should.equal("en-US")
+  options.kind |> should.equal(display_names.Language)
+  options.style |> should.equal(intl.Short)
+  options.language_display |> should.equal(Some(display_names.Standard))
 }
 
 pub fn supported_locales_of_test() {

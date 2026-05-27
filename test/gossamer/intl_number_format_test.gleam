@@ -1,3 +1,4 @@
+import gleam/option.{Some}
 import gleeunit/should
 import gossamer/big_int
 import gossamer/intl
@@ -253,9 +254,19 @@ pub fn format_range_to_parts_test() {
   }
 }
 
-pub fn resolved_locale_test() {
-  let assert Ok(formatter) = number_format.new(["en-US"]) |> number_format.build
-  number_format.resolved_locale(formatter) |> should.equal("en-US")
+pub fn resolved_options_test() {
+  let assert Ok(formatter) =
+    number_format.new(["en-US"])
+    |> number_format.with_style(number_format.StyleCurrency)
+    |> number_format.with_currency("EUR")
+    |> number_format.build
+  let options = number_format.resolved_options(formatter)
+  options.locale |> should.equal("en-US")
+  options.style |> should.equal(number_format.StyleCurrency)
+  options.currency |> should.equal(Some("EUR"))
+  // EUR resolves to 2 fraction digits — a runtime-derived default the
+  // builder never set.
+  options.minimum_fraction_digits |> should.equal(Some(2))
 }
 
 pub fn supported_locales_of_test() {

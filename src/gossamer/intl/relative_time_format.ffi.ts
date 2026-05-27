@@ -1,11 +1,21 @@
 import * as $relativeTimeFormat from "$/gossamer/gossamer/intl/relative_time_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toLabelStyle, toLocaleMatcher } from "~/utils/intl.ffi.ts";
+import {
+  fromLabelStyle,
+  toLabelStyle,
+  toLocaleMatcher,
+} from "~/utils/intl.ffi.ts";
 import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, mapOption } from "~/utils/option.ffi.ts";
 
 function toNumeric(numeric: $relativeTimeFormat.Numeric$): "always" | "auto" {
   return $relativeTimeFormat.Numeric$isAlways(numeric) ? "always" : "auto";
+}
+
+function fromNumeric(value: string): $relativeTimeFormat.Numeric$ {
+  return value === "auto"
+    ? $relativeTimeFormat.Numeric$Auto()
+    : $relativeTimeFormat.Numeric$Always();
 }
 
 function toUnit(
@@ -110,10 +120,16 @@ export const format_to_parts: typeof $relativeTimeFormat.format_int_to_parts = (
   return fromArrayMapped(formatter.formatToParts(value, toUnit(unit)), toPart);
 };
 
-export const resolved_locale: typeof $relativeTimeFormat.resolved_locale = (
+export const resolved_options: typeof $relativeTimeFormat.resolved_options = (
   formatter,
 ) => {
-  return formatter.resolvedOptions().locale;
+  const resolved = formatter.resolvedOptions();
+  return $relativeTimeFormat.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    fromLabelStyle(resolved.style),
+    fromNumeric(resolved.numeric),
+    resolved.numberingSystem,
+  );
 };
 
 export const supported_locales_of:

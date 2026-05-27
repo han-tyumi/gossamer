@@ -2,6 +2,7 @@ import gleam/list
 import gleam/option.{Some}
 import gleam/time/duration
 import gleeunit/should
+import gossamer/intl
 import gossamer/intl/duration_format
 
 pub fn build_default_test() {
@@ -170,10 +171,15 @@ pub fn supported_locales_of_test() {
   |> should.equal(["en-US", "fr"])
 }
 
-pub fn resolved_locale_test() {
+pub fn resolved_options_test() {
   let assert Ok(formatter) =
-    duration_format.new(["en-US"]) |> duration_format.build
-  duration_format.resolved_locale(formatter) |> should.equal("en-US")
+    duration_format.new(["en-US"])
+    |> duration_format.with_style(duration_format.StyleShort)
+    |> duration_format.build
+  let options = duration_format.resolved_options(formatter)
+  options.locale |> should.equal("en-US")
+  options.style |> should.equal(duration_format.StyleShort)
+  options.years |> should.equal(intl.Short)
 }
 
 pub fn from_duration_test() {

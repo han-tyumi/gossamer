@@ -1,12 +1,20 @@
 import * as $order from "$/gleam_stdlib/gleam/order.mjs";
 import * as $collator from "$/gossamer/gossamer/intl/collator.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { toCaseFirst, toLocaleMatcher } from "~/utils/intl.ffi.ts";
+import {
+  fromCaseFirst,
+  toCaseFirst,
+  toLocaleMatcher,
+} from "~/utils/intl.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
 function toUsage(usage: $collator.Usage$): "sort" | "search" {
   return $collator.Usage$isSort(usage) ? "sort" : "search";
+}
+
+function fromUsage(value: string): $collator.Usage$ {
+  return value === "search" ? $collator.Usage$Search() : $collator.Usage$Sort();
 }
 
 function toSensitivity(
@@ -16,6 +24,19 @@ function toSensitivity(
   if ($collator.Sensitivity$isAccent(sensitivity)) return "accent";
   if ($collator.Sensitivity$isCase(sensitivity)) return "case";
   return "variant";
+}
+
+function fromSensitivity(value: string): $collator.Sensitivity$ {
+  switch (value) {
+    case "base":
+      return $collator.Sensitivity$Base();
+    case "accent":
+      return $collator.Sensitivity$Accent();
+    case "case":
+      return $collator.Sensitivity$Case();
+    default:
+      return $collator.Sensitivity$Variant();
+  }
 }
 
 export const build: typeof $collator.do_build = (
@@ -51,8 +72,19 @@ export const compare: typeof $collator.compare = (collator, a, b) => {
   return $order.Order$Eq();
 };
 
-export const resolved_locale: typeof $collator.resolved_locale = (collator) => {
-  return collator.resolvedOptions().locale;
+export const resolved_options: typeof $collator.resolved_options = (
+  collator,
+) => {
+  const resolved = collator.resolvedOptions();
+  return $collator.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    fromUsage(resolved.usage),
+    fromSensitivity(resolved.sensitivity),
+    resolved.ignorePunctuation,
+    resolved.collation,
+    resolved.numeric,
+    fromCaseFirst(resolved.caseFirst),
+  );
 };
 
 export const supported_locales_of: typeof $collator.supported_locales_of = (

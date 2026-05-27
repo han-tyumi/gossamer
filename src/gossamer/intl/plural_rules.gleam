@@ -287,13 +287,37 @@ pub fn select_int_range(
   to end: Int,
 ) -> PluralCategory
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list. The runtime may normalize regional tags to the
-/// language tag when plural rules don't differ by region — `"en-US"`
-/// typically resolves to `"en"`.
+/// The options the runtime resolved for a [`PluralRules`](#PluralRules),
+/// including the defaults it filled in and the
+/// [`plural_categories`](#PluralCategory) the locale actually uses.
+/// `locale` is the BCP 47 tag chosen from the requested priority list;
+/// the runtime may normalize regional tags to the language tag when
+/// plural rules don't differ by region (`"en-US"` typically resolves to
+/// `"en"`). The fraction- and significant-digit fields are `Some` only
+/// when the corresponding precision mode is in effect.
 ///
-@external(javascript, "./plural_rules.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(rules: PluralRules) -> String
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    kind: Kind,
+    minimum_integer_digits: Int,
+    minimum_fraction_digits: Option(Int),
+    maximum_fraction_digits: Option(Int),
+    minimum_significant_digits: Option(Int),
+    maximum_significant_digits: Option(Int),
+    plural_categories: List(PluralCategory),
+    rounding_increment: Int,
+    rounding_mode: RoundingMode,
+    rounding_priority: RoundingPriority,
+    trailing_zero_display: TrailingZeroDisplay,
+  )
+}
+
+/// The full configuration the runtime resolved from the builder,
+/// including the plural categories the locale uses.
+///
+@external(javascript, "./plural_rules.ffi.mjs", "resolved_options")
+pub fn resolved_options(rules: PluralRules) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for plural-rules
 /// selection, preserving the input order.

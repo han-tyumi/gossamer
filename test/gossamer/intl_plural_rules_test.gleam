@@ -1,3 +1,4 @@
+import gleam/list
 import gleeunit/should
 import gossamer/intl
 import gossamer/intl/plural_rules
@@ -92,9 +93,16 @@ pub fn select_range_test() {
   |> should.equal(plural_rules.Other)
 }
 
-pub fn resolved_locale_test() {
-  let assert Ok(rules) = plural_rules.new(["en"]) |> plural_rules.build
-  plural_rules.resolved_locale(rules) |> should.equal("en")
+pub fn resolved_options_test() {
+  let assert Ok(rules) =
+    plural_rules.new(["en"])
+    |> plural_rules.with_kind(plural_rules.Ordinal)
+    |> plural_rules.build
+  let options = plural_rules.resolved_options(rules)
+  options.locale |> should.equal("en")
+  options.kind |> should.equal(plural_rules.Ordinal)
+  options.minimum_integer_digits |> should.equal(1)
+  list.contains(options.plural_categories, plural_rules.Other) |> should.be_true
 }
 
 pub fn supported_locales_of_test() {
