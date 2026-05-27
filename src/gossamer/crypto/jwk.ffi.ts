@@ -23,7 +23,7 @@ export function toJsonWebKey(jwk: JWK): JsonWebKey {
 
   const keyOps = unwrap($jwk.JsonWebKey$JsonWebKey$key_ops(jwk));
   if (keyOps !== undefined) {
-    result.key_ops = toKeyUsageArray(keyOps) as string[];
+    result.key_ops = toKeyUsageArray(keyOps);
   }
 
   const alg = unwrap($jwk.JsonWebKey$JsonWebKey$alg(jwk));
@@ -77,7 +77,8 @@ export function fromJsonWebKey(jwk: JsonWebKey): JWK {
     toOption(jwk.use),
     jwk.key_ops !== undefined
       ? $option.Option$Some(
-        fromArrayMapped(jwk.key_ops as KeyUsage[], fromKeyUsage),
+        // @ts-expect-error DOM key_ops is string[]; fromKeyUsage maps each to a KeyUsage
+        fromArrayMapped(jwk.key_ops, fromKeyUsage),
       )
       : $option.Option$None(),
     toOption(jwk.alg),

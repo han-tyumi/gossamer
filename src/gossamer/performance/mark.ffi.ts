@@ -13,7 +13,7 @@ function projectMark(entry: PerformanceEntry): $mark.Mark$ {
 }
 
 export const from_raw: typeof $mark.do_from_raw = (raw) => {
-  return projectMark(raw as PerformanceEntry);
+  return projectMark(raw);
 };
 
 export const record: typeof $mark.do_record = (name, startTime, detail) => {

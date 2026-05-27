@@ -15,7 +15,7 @@ function projectMeasure(entry: PerformanceEntry): $measure.Measure$ {
 }
 
 export const from_raw: typeof $measure.do_from_raw = (raw) => {
-  return projectMeasure(raw as PerformanceEntry);
+  return projectMeasure(raw);
 };
 
 export const between: typeof $measure.between = (name, from, to) => {
