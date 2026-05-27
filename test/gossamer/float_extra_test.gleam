@@ -146,36 +146,36 @@ pub fn expm1_test() {
 }
 
 pub fn to_fixed_string_test() {
-  float_extra.to_fixed_string(3.14159, digits: 2) |> should.equal(Ok("3.14"))
-  float_extra.to_fixed_string(1.0, digits: 0) |> should.equal(Ok("1"))
-  float_extra.to_fixed_string(1.005, digits: 2) |> should.equal(Ok("1.00"))
+  float_extra.to_fixed_string(3.14159, 2) |> should.equal(Ok("3.14"))
+  float_extra.to_fixed_string(1.0, 0) |> should.equal(Ok("1"))
+  float_extra.to_fixed_string(1.005, 2) |> should.equal(Ok("1.00"))
 }
 
 pub fn to_fixed_string_out_of_range_test() {
-  float_extra.to_fixed_string(1.0, digits: -1) |> should.be_error()
-  float_extra.to_fixed_string(1.0, digits: 101) |> should.be_error()
+  float_extra.to_fixed_string(1.0, -1) |> should.be_error()
+  float_extra.to_fixed_string(1.0, 101) |> should.be_error()
 }
 
 pub fn to_precision_string_test() {
-  float_extra.to_precision_string(123.456, digits: 4)
+  float_extra.to_precision_string(123.456, 4)
   |> should.equal(Ok("123.5"))
-  float_extra.to_precision_string(0.00123, digits: 2)
+  float_extra.to_precision_string(0.00123, 2)
   |> should.equal(Ok("0.0012"))
 }
 
 pub fn to_precision_string_out_of_range_test() {
-  float_extra.to_precision_string(1.0, digits: 0) |> should.be_error()
-  float_extra.to_precision_string(1.0, digits: 101) |> should.be_error()
+  float_extra.to_precision_string(1.0, 0) |> should.be_error()
+  float_extra.to_precision_string(1.0, 101) |> should.be_error()
 }
 
 pub fn to_exponential_string_test() {
-  float_extra.to_exponential_string(123_456.0, digits: 2)
+  float_extra.to_exponential_string(123_456.0, 2)
   |> should.equal(Ok("1.23e+5"))
-  float_extra.to_exponential_string(0.0, digits: 0)
+  float_extra.to_exponential_string(0.0, 0)
   |> should.equal(Ok("0e+0"))
 }
 
 pub fn to_exponential_string_out_of_range_test() {
-  float_extra.to_exponential_string(1.0, digits: -1) |> should.be_error()
-  float_extra.to_exponential_string(1.0, digits: 101) |> should.be_error()
+  float_extra.to_exponential_string(1.0, -1) |> should.be_error()
+  float_extra.to_exponential_string(1.0, 101) |> should.be_error()
 }

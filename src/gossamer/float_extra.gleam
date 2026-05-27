@@ -180,14 +180,14 @@ pub fn expm1(x: Float) -> Float
 /// `0`–`100`. Equivalent to JavaScript's `Number.prototype.toFixed`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "to_fixed_string")
-pub fn to_fixed_string(x: Float, digits digits: Int) -> Result(String, Nil)
+pub fn to_fixed_string(x: Float, digits: Int) -> Result(String, Nil)
 
 /// Formats a number to the specified number of significant digits.
 /// Returns an error if `digits` is outside `1`–`100`. Equivalent to
 /// JavaScript's `Number.prototype.toPrecision`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "to_precision_string")
-pub fn to_precision_string(x: Float, digits digits: Int) -> Result(String, Nil)
+pub fn to_precision_string(x: Float, digits: Int) -> Result(String, Nil)
 
 /// Formats a number in exponential (scientific) notation with the
 /// specified number of digits after the decimal point. Returns an
@@ -195,7 +195,4 @@ pub fn to_precision_string(x: Float, digits digits: Int) -> Result(String, Nil)
 /// `Number.prototype.toExponential`.
 ///
 @external(javascript, "./float_extra.ffi.mjs", "to_exponential_string")
-pub fn to_exponential_string(
-  x: Float,
-  digits digits: Int,
-) -> Result(String, Nil)
+pub fn to_exponential_string(x: Float, digits: Int) -> Result(String, Nil)
