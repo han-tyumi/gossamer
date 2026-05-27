@@ -95,11 +95,29 @@ pub fn do_build(
 @external(javascript, "./segmenter.ffi.mjs", "segment")
 pub fn segment(segmenter: Segmenter, input: String) -> Yielder(Segment)
 
-/// The BCP 47 locale tag the runtime resolved from the requested
-/// priority list (e.g., `"en-US"`).
+/// Returns the [`Segment`](#Segment) containing the UTF-16 code-unit at
+/// `index`, or `None` if `index` falls outside `input`.
 ///
-@external(javascript, "./segmenter.ffi.mjs", "resolved_locale")
-pub fn resolved_locale(segmenter: Segmenter) -> String
+@external(javascript, "./segmenter.ffi.mjs", "containing")
+pub fn containing(
+  segmenter: Segmenter,
+  input: String,
+  index: Int,
+) -> Option(Segment)
+
+/// The options the runtime resolved for a [`Segmenter`](#Segmenter),
+/// including the defaults it filled in. `locale` is the BCP 47 tag
+/// chosen from the requested priority list (e.g., `"en-US"`).
+///
+pub type ResolvedOptions {
+  ResolvedOptions(locale: String, granularity: Granularity)
+}
+
+/// The locale and granularity the runtime resolved from the builder's
+/// configuration.
+///
+@external(javascript, "./segmenter.ffi.mjs", "resolved_options")
+pub fn resolved_options(segmenter: Segmenter) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for segmentation,
 /// preserving the input order.

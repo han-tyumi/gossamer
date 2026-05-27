@@ -101,9 +101,28 @@ pub fn segment_empty_input_test() {
   segments(of: seg, in: "") |> should.equal([])
 }
 
-pub fn resolved_locale_test() {
-  let assert Ok(seg) = segmenter.new(["en-US"]) |> segmenter.build
-  segmenter.resolved_locale(seg) |> should.equal("en-US")
+pub fn containing_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  let assert Some(segment) = segmenter.containing(seg, "Hello, world!", 8)
+  segment.value |> should.equal("world")
+}
+
+pub fn containing_out_of_range_test() {
+  let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
+  segmenter.containing(seg, "hi", 99) |> should.equal(None)
+}
+
+pub fn resolved_options_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en-US"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  let options = segmenter.resolved_options(seg)
+  options.locale |> should.equal("en-US")
+  options.granularity |> should.equal(segmenter.Word)
 }
 
 pub fn supported_locales_of_test() {

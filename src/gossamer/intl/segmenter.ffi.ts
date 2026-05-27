@@ -1,4 +1,5 @@
 import * as $segmenter from "$/gossamer/gossamer/intl/segmenter.mjs";
+import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
 import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
@@ -11,6 +12,19 @@ function toGranularity(
   if ($segmenter.Granularity$isGrapheme(granularity)) return "grapheme";
   if ($segmenter.Granularity$isWord(granularity)) return "word";
   return "sentence";
+}
+
+function fromGranularity(
+  granularity: "grapheme" | "word" | "sentence",
+): $segmenter.Granularity$ {
+  switch (granularity) {
+    case "grapheme":
+      return $segmenter.Granularity$Grapheme();
+    case "word":
+      return $segmenter.Granularity$Word();
+    case "sentence":
+      return $segmenter.Granularity$Sentence();
+  }
 }
 
 function toSegment(data: Intl.SegmentData): $segmenter.Segment$ {
@@ -49,10 +63,26 @@ export const segment: typeof $segmenter.segment = (segmenter, input) => {
   return jsIteratorAsYielder(mappedIterator);
 };
 
-export const resolved_locale: typeof $segmenter.resolved_locale = (
+export const containing: typeof $segmenter.containing = (
+  segmenter,
+  input,
+  index,
+) => {
+  const data: Intl.SegmentData | undefined = segmenter.segment(input)
+    .containing(index);
+  return data === undefined
+    ? $option.Option$None()
+    : $option.Option$Some(toSegment(data));
+};
+
+export const resolved_options: typeof $segmenter.resolved_options = (
   segmenter,
 ) => {
-  return segmenter.resolvedOptions().locale;
+  const resolved = segmenter.resolvedOptions();
+  return $segmenter.ResolvedOptions$ResolvedOptions(
+    resolved.locale,
+    fromGranularity(resolved.granularity),
+  );
 };
 
 export const supported_locales_of: typeof $segmenter.supported_locales_of = (
