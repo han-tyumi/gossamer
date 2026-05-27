@@ -24,6 +24,10 @@ pub fn dir_test() {
   console.dir("dir item")
 }
 
+pub fn dirxml_test() {
+  console.dirxml("dirxml item")
+}
+
 pub fn table_test() {
   console.table(42)
 }

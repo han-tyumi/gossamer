@@ -38,6 +38,13 @@ pub fn debug(data: a) -> Nil
 @external(javascript, "./console.ffi.mjs", "dir")
 pub fn dir(item: a) -> Nil
 
+/// Displays an interactive tree of `item`'s descendant elements when
+/// `item` is a markup element, falling back to a property listing like
+/// [`dir`](#dir) otherwise.
+///
+@external(javascript, "./console.ffi.mjs", "dirxml")
+pub fn dirxml(item: a) -> Nil
+
 /// Outputs `data` to the console at the `error` log level.
 ///
 @external(javascript, "./console.ffi.mjs", "error")

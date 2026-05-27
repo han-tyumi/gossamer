@@ -24,6 +24,10 @@ export const dir: typeof $console.dir = (item) => {
   console.dir(item);
 };
 
+export const dirxml: typeof $console.dirxml = (item) => {
+  console.dirxml(item);
+};
+
 export const error: typeof $console.error = (data) => {
   console.error(data);
 };
