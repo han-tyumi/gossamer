@@ -16,16 +16,14 @@ pub fn random_uuid_test() {
 
 pub fn digest_test() {
   let data = <<1, 2, 3>>
-  use result <- promise.await(subtle.digest(crypto.Sha256, data))
-  let assert Ok(hash) = result
+  use hash <- promise.await(subtle.digest(crypto.Sha256, data))
   should.equal(bit_array.byte_size(hash), 32)
   promise.resolve(Nil)
 }
 
 pub fn digest_unaligned_test() {
   let unaligned = <<1:size(7)>>
-  use result <- promise.await(subtle.digest(crypto.Sha256, unaligned))
-  let assert Ok(hash) = result
+  use hash <- promise.await(subtle.digest(crypto.Sha256, unaligned))
   should.equal(bit_array.byte_size(hash), 32)
   promise.resolve(Nil)
 }

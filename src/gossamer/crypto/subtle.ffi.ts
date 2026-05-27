@@ -360,11 +360,10 @@ function toWrapAlgorithm(
   };
 }
 
-export const digest: typeof $subtle.digest = (algorithm, data) => {
-  return toCryptoBitArrayResult(() =>
-    subtle.digest(toHashAlgorithm(algorithm), toUint8Array(data))
-  );
-};
+export const digest: typeof $subtle.digest = (algorithm, data) =>
+  subtle
+    .digest(toHashAlgorithm(algorithm), toUint8Array(data))
+    .then((buffer) => BitArray$BitArray(new Uint8Array(buffer)));
 
 export const encrypt: typeof $subtle.encrypt = (
   algorithm,

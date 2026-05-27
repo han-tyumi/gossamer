@@ -196,15 +196,13 @@ pub type WrapAlgorithm {
   WrapRsaOaep(label: BitArray)
 }
 
-/// Computes a cryptographic hash of `data`. Returns
-/// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// requested hash.
+/// Computes a cryptographic hash of `data`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "digest")
 pub fn digest(
   algorithm algorithm: HashAlgorithm,
   data data: BitArray,
-) -> Promise(Result(BitArray, CryptoError))
+) -> Promise(BitArray)
 
 /// Encrypts `data` with `key` using `algorithm`. Returns
 /// `Error(KeyUsageMismatch(Encrypt))` if `key.usages` doesn't include
