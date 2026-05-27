@@ -41,7 +41,7 @@ pub type Kind {
 
 /// How language display names are rendered when the input combines a
 /// language and a region. Maps the JavaScript `languageDisplay`
-/// option. Only meaningful when [`new`](#new) is called with
+/// option. Ignored unless the formatter was built with
 /// [`Language`](#Language).
 ///
 pub type LanguageDisplay {

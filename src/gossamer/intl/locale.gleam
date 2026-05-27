@@ -200,10 +200,8 @@ pub fn do_build(
   script: Option(String),
 ) -> Result(Locale, Nil)
 
-/// A snapshot of the locale's parsed components — base name,
-/// language, script, region, and Unicode extension subtags
-/// (calendar, case-first, collation, hour cycle, numbering system,
-/// and numeric flag).
+/// Returns a snapshot of the locale's parsed components. See
+/// [`Info`](#Info).
 ///
 @external(javascript, "./locale.ffi.mjs", "info")
 pub fn info(locale: Locale) -> Info

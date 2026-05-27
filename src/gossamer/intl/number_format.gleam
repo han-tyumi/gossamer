@@ -553,7 +553,7 @@ pub fn do_build(
 @external(javascript, "./number_format.ffi.mjs", "format")
 pub fn format_float(formatter: NumberFormat, value: Float) -> String
 
-/// Formats an `Int` value.
+/// Formats an `Int` value using the configured locale and options.
 ///
 @external(javascript, "./number_format.ffi.mjs", "format")
 pub fn format_int(formatter: NumberFormat, value: Int) -> String
@@ -599,7 +599,8 @@ pub fn format_float_range(
   to end: Float,
 ) -> String
 
-/// Formats an `Int` range.
+/// Formats an `Int` range. Passing `end < start` produces a
+/// reversed-range string without erroring.
 ///
 @external(javascript, "./number_format.ffi.mjs", "format_range")
 pub fn format_int_range(
@@ -609,7 +610,8 @@ pub fn format_int_range(
 ) -> String
 
 /// Formats a [`BigInt`](https://hexdocs.pm/gossamer/gossamer/big_int.html#BigInt)
-/// range.
+/// range. Passing `end < start` produces a reversed-range string
+/// without erroring.
 ///
 @external(javascript, "./number_format.ffi.mjs", "format_range")
 pub fn format_big_int_range(

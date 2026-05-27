@@ -105,7 +105,8 @@ pub type FractionalDigits {
 }
 
 /// Whether to display a unit even when its value is zero. Maps the
-/// JavaScript `<unit>Display` option.
+/// JavaScript per-unit display options (`yearsDisplay`, `hoursDisplay`,
+/// and so on).
 ///
 pub type Display {
   /// Show the unit only when its value is non-zero (the default for
@@ -157,8 +158,8 @@ pub fn from_duration(value: Duration) -> DurationParts {
   let #(total_seconds, ns_remainder) =
     duration.to_seconds_and_nanoseconds(value)
   // `to_seconds_and_nanoseconds` normalizes so `ns_remainder` is in
-  // [0, 1_000_000_000); for negative durations that means a more-
-  // negative seconds count plus a positive nanosecond tail. Rebalance
+  // [0, 1_000_000_000); for negative durations the seconds count rounds
+  // toward negative infinity with a positive nanosecond tail. Rebalance
   // onto the magnitude, then apply the original sign uniformly so the
   // fields don't mix signs.
   let negative = total_seconds < 0

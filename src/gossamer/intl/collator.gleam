@@ -132,8 +132,7 @@ pub fn with_collation(builder: Builder, collation: String) -> Builder {
 }
 
 /// Constructs a [`Collator`](#Collator) from the configured builder.
-/// Returns `Error(Nil)` if any locale tag or the collation subtag is
-/// structurally malformed.
+/// Returns `Error(Nil)` if any locale tag is structurally malformed.
 ///
 pub fn build(builder: Builder) -> Result(Collator, Nil) {
   do_build(

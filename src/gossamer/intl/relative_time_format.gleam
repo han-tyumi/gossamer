@@ -193,7 +193,7 @@ pub fn format_int_to_parts(
 /// Formats a `gleam/time/duration.Duration` as relative time,
 /// decomposing into the largest applicable unit
 /// (`duration.hours(-2)` → `"2 hours ago"`). Sub-second durations
-/// clamp to `(0, Second)` because `Intl.RelativeTimeFormat` doesn't
+/// clamp to zero seconds because `Intl.RelativeTimeFormat` doesn't
 /// accept sub-second units; the rendered phrasing then depends on the
 /// formatter's [`Numeric`](#Numeric) setting.
 ///
