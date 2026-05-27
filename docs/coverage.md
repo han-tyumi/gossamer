@@ -268,6 +268,8 @@ types ([`gleam/string`](https://hexdocs.pm/gleam_stdlib/gleam/string.html),
 [`gleam/javascript/symbol`](https://hexdocs.pm/gleam_javascript/gleam/javascript/symbol.html)),
 which already are the JS primitives under the hood. `Number` and `Math` split
 across `int_extra` and `float_extra` mirroring `gleam/int` / `gleam/float`.
+Number's non-finite values (`Infinity`, `-Infinity`, `NaN`) have no binding,
+since Gleam's `Float` is always finite.
 
 [`gossamer/json`](./gossamer/json.html) provides a transparent `Json` type for
 inspecting or pattern-matching JSON of unknown structure. For typed
