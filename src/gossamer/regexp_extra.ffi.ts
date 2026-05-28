@@ -1,3 +1,5 @@
+import * as $dict from "$/gleam_stdlib/gleam/dict.mjs";
+import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import * as $regexp from "$/gleam_regexp/gleam/regexp.mjs";
 import * as $regexpExtra from "$/gossamer/gossamer/regexp_extra.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
@@ -67,6 +69,39 @@ export const flags: typeof $regexpExtra.flags = (regexp) => {
 };
 
 export const source: typeof $regexpExtra.source = (regexp) => regexp.source;
+
+function submatches(captures: (string | undefined)[]) {
+  const result: $option.Option$<string>[] = [];
+  for (let index = captures.length - 1; index >= 0; index--) {
+    const capture = captures[index];
+    if (capture) {
+      result[index] = $option.Option$Some(capture);
+      continue;
+    }
+    if (result.length > 0) {
+      result[index] = $option.Option$None();
+    }
+  }
+  return fromArray(result);
+}
+
+export const scan: typeof $regexpExtra.scan = (regexp, string) => {
+  const global = regexp.global
+    ? regexp
+    : new RegExp(regexp.source, regexp.flags + "g");
+  global.lastIndex = 0;
+  const matches = [...string.matchAll(global)].map((match) => {
+    const named = match.groups
+      ? Object.entries(match.groups).filter(([, value]) => value !== undefined)
+      : [];
+    return $regexpExtra.Match$Match(
+      match[0],
+      submatches(match.slice(1)),
+      $dict.from_list(fromArray(named)),
+    );
+  });
+  return fromArray(matches);
+};
 
 export const escape: typeof $regexpExtra.escape = (string) => {
   return RegExp.escape(string);

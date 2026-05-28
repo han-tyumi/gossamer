@@ -1,7 +1,9 @@
 //// Extras for `gleam/regexp` — full flag access beyond the two-field
-//// `Options` record upstream exposes, plus introspection accessors and
-//// ES2025 `escape`.
+//// `Options` record upstream exposes, plus introspection accessors,
+//// named-group scanning, and ES2025 `escape`.
 
+import gleam/dict.{type Dict}
+import gleam/option.{type Option}
 import gleam/regexp.{type CompileError, type Regexp}
 
 /// A `RegExp` flag. The full set is reachable via `compile` and `flags`;
@@ -74,6 +76,40 @@ pub fn flags(regexp: Regexp) -> List(RegExpFlag)
 ///
 @external(javascript, "./regexp_extra.ffi.mjs", "source")
 pub fn source(regexp: Regexp) -> String
+
+/// A match with its named capture groups, extending
+/// [`gleam/regexp.Match`](https://hexdocs.pm/gleam_regexp/gleam/regexp.html#Match)
+/// with a `groups` map keyed by capture-group name.
+///
+pub type Match {
+  Match(
+    /// The full string of the match.
+    content: String,
+    /// The positional capture groups, as in `gleam/regexp.Match`.
+    submatches: List(Option(String)),
+    /// The named capture groups, keyed by name. A group that did not
+    /// participate in the match is absent.
+    groups: Dict(String, String),
+  )
+}
+
+/// Collects all matches of `regexp`, like
+/// [`gleam/regexp.scan`](https://hexdocs.pm/gleam_regexp/gleam/regexp.html#scan),
+/// additionally reporting each match's named capture groups. The
+/// positional `submatches` still carry every group, named or not, so
+/// reach for the `groups` map when a pattern uses `(?<name>...)`.
+///
+/// ## Examples
+///
+/// ```gleam
+/// let assert Ok(re) = regexp.from_string("(?<year>\\d{4})-(?<month>\\d{2})")
+/// let assert [match] = regexp_extra.scan(with: re, content: "2024-05")
+/// dict.get(match.groups, "year")
+/// // -> Ok("2024")
+/// ```
+///
+@external(javascript, "./regexp_extra.ffi.mjs", "scan")
+pub fn scan(with regexp: Regexp, content string: String) -> List(Match)
 
 /// Escapes regex metacharacters in `string` so it can be embedded as a
 /// literal pattern. Equivalent to JavaScript's static `RegExp.escape`
