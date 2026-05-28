@@ -39,7 +39,7 @@ Cross-referenced from `gleam_stdlib`, `gleam_time`, `gleam_http`, `gleam_fetch`,
 | `_start` / `_end`, `_first` / `_last`, `_prefix` / `_suffix` | Directional pairs              | `string.drop_start` / `drop_end`, `string.starts_with` / `ends_with`, `list.first` / `last`        |
 | `_while`, `_until`, `_once`                                  | Predicate / count-limited      | `list.take_while`, `list.fold_until`, `string.split_once`                                          |
 | `_at`, `_at_index`                                           | Positional                     | `list.optionally_at`, `array.with(at_index:)`                                                      |
-| `_by_<criterion>`                                            | Criterion variant              | `performance.get_entries_by_name`, `list.sort(by:)`                                                |
+| `_by_<criterion>`                                            | Criterion variant              | `performance.entries_by_name`, `list.sort(by:)`                                                    |
 | `_and_<param>`                                               | Additional precision component | `timestamp.from_unix_seconds_and_nanoseconds`                                                      |
 | `_<output_kind>`                                             | Output flavor suffix           | `lustre.element.to_string_tree`                                                                    |
 | `key_*`, `try_*`, `index_*`, `base64_*` (prefix)             | Kind-tailored variant          | `list.try_each`, `list.key_filter`, `list.index_fold`                                              |
@@ -125,9 +125,9 @@ Read as English: "slice from (start) to (end)" parses better than
 When the variation picks an attribute of the subject:
 
 ```gleam
-performance.get_entries(...)
-performance.get_entries_by_name(name)
-performance.get_entries_by_type(entry_type)
+performance.entries()
+performance.entries_by_name(name)
+performance.entries_by_kind(kind)
 ```
 
 The `_by_<criterion>` suffix names which attribute differs.
@@ -231,7 +231,7 @@ Each names the kind of payload. No "default" — every send is typed.
 
 - `entries()`
 - `entries_by_name(name)`
-- `entries_by_type(entry_type)`
+- `entries_by_kind(kind)`
 
 The base returns everything; each `_by_<criterion>` narrows by a specific
 attribute.
