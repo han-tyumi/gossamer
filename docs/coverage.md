@@ -138,8 +138,7 @@ tabs, and iframes.
 | TextEncoderStream | [`gossamer/encoding/text_encoder_stream`](./gossamer/encoding/text_encoder_stream.html) |
 | TextDecoderStream | [`gossamer/encoding/text_decoder_stream`](./gossamer/encoding/text_decoder_stream.html) |
 
-[`gossamer/encoding`](./gossamer/encoding.html) hosts the shared `Encoding` and
-`DecoderError`.
+[`gossamer/encoding`](./gossamer/encoding.html) hosts the shared `DecoderError`.
 
 `TextEncoder` is omitted in favor of
 [`gleam/bit_array.from_string`](https://hexdocs.pm/gleam_stdlib/gleam/bit_array.html#from_string)
