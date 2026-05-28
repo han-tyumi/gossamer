@@ -1,6 +1,5 @@
 import * as $asyncYielder from "$/gossamer/gossamer/iteration/async_yielder.mjs";
 import * as $yielder from "$/gleam_yielder/gleam/yielder.mjs";
-import { Result$Error, Result$Ok } from "$/prelude.mjs";
 
 export function jsIteratorAsYielder<T>(
   jsIterator: Iterator<T, unknown, unknown>,
@@ -64,11 +63,4 @@ export function asyncYielderAsJsAsyncIterator<T>(
     },
   };
   return iter;
-}
-
-export function toCallbackResultPromise<T>(promise: Promise<T>) {
-  return promise.then(
-    (value) => Result$Ok(value),
-    (error) => Result$Error(error),
-  );
 }
