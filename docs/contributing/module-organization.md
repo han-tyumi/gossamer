@@ -161,7 +161,7 @@ KeyUsage: Encrypt | Decrypt | Sign | Verify | DeriveKey | DeriveBits |
   Used by crypto/key, crypto/subtle, AND crypto/jwk (3 unrelated
   modules) → own module.
 
-CompressionFormat: Deflate | DeflateRaw | Gzip | Brotli | Other(String)
+CompressionFormat: Deflate | DeflateRaw | Gzip | Brotli
   Shared across compression_stream + decompression_stream (sibling
   pair). → Lives in gossamer/compression.gleam (family parent);
   submodules import.

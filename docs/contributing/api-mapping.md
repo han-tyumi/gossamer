@@ -108,7 +108,6 @@ pub type CompressionFormat {
   DeflateRaw
   Gzip
   Brotli
-  Other(String)
 }
 
 compression.Gzip
