@@ -90,7 +90,8 @@ pub fn decode_chunk(
 
 /// Emits any remaining bytes buffered from prior `decode_chunk` calls.
 /// Returns `MalformedInput` if the decoder is fatal and an incomplete
-/// multi-byte sequence was left in the buffer.
+/// multi-byte sequence was left in the buffer. Equivalent to
+/// JavaScript's `decoder.decode()`.
 ///
 @external(javascript, "./text_decoder.ffi.mjs", "flush")
 pub fn flush(decoder: TextDecoder) -> Result(String, DecoderError)
