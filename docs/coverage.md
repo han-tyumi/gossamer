@@ -95,9 +95,9 @@ manipulate the resulting `List(#(String, String))` with
 Gleam worker scripts use
 [`gossamer/worker_parent`](./gossamer/worker_parent.html) for `post_message` and
 `set_on_message`; the parent spawns them with
-`worker.from_module("my_app/worker")`. The FFI uses Node's `worker_threads` on
-Node and Web Workers on Deno, Bun, and browsers, so the same script runs on all
-three.
+`worker.new("my_app/worker") |> worker.build`. The FFI uses Node's
+`worker_threads` on Node and Web Workers on Deno, Bun, and browsers, so the same
+script runs on all three.
 
 [`gossamer/broadcast_channel`](./gossamer/broadcast_channel.html) sends messages
 between every channel of the same name in the same agent — same-origin workers,
