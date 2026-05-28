@@ -45,8 +45,8 @@ pub type Batch {
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "observe")
 pub fn observe(
-  for entry_kinds: List(Kind),
-  run handler: fn(Batch, PerformanceObserver) -> a,
+  entry_kinds: List(Kind),
+  handler: fn(Batch, PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
 /// Subscribes to a single entry kind and replays any entries the
@@ -58,8 +58,8 @@ pub fn observe(
 ///
 @external(javascript, "./performance_observer.ffi.mjs", "observe_buffered")
 pub fn observe_buffered(
-  for entry_kind: Kind,
-  run handler: fn(Batch, PerformanceObserver) -> a,
+  entry_kind: Kind,
+  handler: fn(Batch, PerformanceObserver) -> a,
 ) -> PerformanceObserver
 
 /// Stops the observer from receiving further entries. Any pending

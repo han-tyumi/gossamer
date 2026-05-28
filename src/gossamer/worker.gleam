@@ -93,7 +93,7 @@ pub fn with_name(builder: Builder, name: String) -> Builder {
 ///
 pub fn with_on_message(
   builder: Builder,
-  run handler: fn(Dynamic, Worker) -> a,
+  handler: fn(Dynamic, Worker) -> a,
 ) -> Builder {
   Builder(
     ..builder,

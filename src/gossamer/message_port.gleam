@@ -62,7 +62,7 @@ pub fn close(port: MessagePort) -> Nil
 @external(javascript, "./message_port.ffi.mjs", "set_on_message")
 pub fn set_on_message(
   port: MessagePort,
-  run handler: fn(Dynamic, MessagePort) -> a,
+  handler: fn(Dynamic, MessagePort) -> a,
 ) -> Nil
 
 /// Projects a `Dynamic` value to a [`MessagePort`](#MessagePort).

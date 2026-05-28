@@ -119,7 +119,7 @@ pub fn with_protocols(builder: Builder, protocols: List(String)) -> Builder {
 ///
 pub fn with_on_event(
   builder: Builder,
-  run handler: fn(WebSocketEvent, WebSocket) -> a,
+  handler: fn(WebSocketEvent, WebSocket) -> a,
 ) -> Builder {
   Builder(
     ..builder,

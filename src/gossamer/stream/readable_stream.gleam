@@ -108,9 +108,9 @@ pub fn new() -> Builder(a) {
 ///
 pub fn with_start(
   builder: Builder(a),
-  run callback: fn(DefaultController(a)) -> b,
+  start: fn(DefaultController(a)) -> b,
 ) -> Builder(a) {
-  Builder(..builder, start: Some(fn(c) { as_promise(callback(c)) }))
+  Builder(..builder, start: Some(fn(c) { as_promise(start(c)) }))
 }
 
 /// Registers the `pull` callback that runs whenever the consumer
@@ -119,9 +119,9 @@ pub fn with_start(
 ///
 pub fn with_pull(
   builder: Builder(a),
-  run callback: fn(DefaultController(a)) -> b,
+  pull: fn(DefaultController(a)) -> b,
 ) -> Builder(a) {
-  Builder(..builder, pull: Some(fn(c) { as_promise(callback(c)) }))
+  Builder(..builder, pull: Some(fn(c) { as_promise(pull(c)) }))
 }
 
 /// Registers the `cancel` callback that runs when the consumer aborts.
@@ -131,9 +131,9 @@ pub fn with_pull(
 ///
 pub fn with_cancel(
   builder: Builder(a),
-  run callback: fn(Dynamic) -> b,
+  cancel: fn(Dynamic) -> b,
 ) -> Builder(a) {
-  Builder(..builder, cancel: Some(fn(r) { as_promise(callback(r)) }))
+  Builder(..builder, cancel: Some(fn(r) { as_promise(cancel(r)) }))
 }
 
 /// Sets the queuing strategy controlling backpressure on the stream's
@@ -179,7 +179,7 @@ pub fn do_build(
 pub fn from_start(
   start: fn(DefaultController(a)) -> b,
 ) -> Result(ReadableStream(a), StreamLifecycleError) {
-  new() |> with_start(run: start) |> build
+  new() |> with_start(start) |> build
 }
 
 /// Creates a `ReadableStream` from only a `pull` callback — use when

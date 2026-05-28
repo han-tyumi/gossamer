@@ -66,5 +66,5 @@ pub fn close(channel: BroadcastChannel) -> Nil
 @external(javascript, "./broadcast_channel.ffi.mjs", "set_on_message")
 pub fn set_on_message(
   channel: BroadcastChannel,
-  run handler: fn(Dynamic, BroadcastChannel) -> a,
+  handler: fn(Dynamic, BroadcastChannel) -> a,
 ) -> Nil

@@ -55,9 +55,9 @@ pub fn new() -> Builder(input, output) {
 ///
 pub fn with_start(
   builder: Builder(input, output),
-  run callback: fn(DefaultController(output)) -> b,
+  start: fn(DefaultController(output)) -> b,
 ) -> Builder(input, output) {
-  Builder(..builder, start: Some(fn(c) { as_promise(callback(c)) }))
+  Builder(..builder, start: Some(fn(c) { as_promise(start(c)) }))
 }
 
 /// Registers the `transform` callback that runs for each input chunk.
@@ -66,11 +66,11 @@ pub fn with_start(
 ///
 pub fn with_transform(
   builder: Builder(input, output),
-  run callback: fn(input, DefaultController(output)) -> b,
+  transform: fn(input, DefaultController(output)) -> b,
 ) -> Builder(input, output) {
   Builder(
     ..builder,
-    transform: Some(fn(chunk, c) { as_promise(callback(chunk, c)) }),
+    transform: Some(fn(chunk, c) { as_promise(transform(chunk, c)) }),
   )
 }
 
@@ -81,9 +81,9 @@ pub fn with_transform(
 ///
 pub fn with_flush(
   builder: Builder(input, output),
-  run callback: fn(DefaultController(output)) -> b,
+  flush: fn(DefaultController(output)) -> b,
 ) -> Builder(input, output) {
-  Builder(..builder, flush: Some(fn(c) { as_promise(callback(c)) }))
+  Builder(..builder, flush: Some(fn(c) { as_promise(flush(c)) }))
 }
 
 /// Registers the `cancel` callback that runs when either side is
@@ -92,9 +92,9 @@ pub fn with_flush(
 ///
 pub fn with_cancel(
   builder: Builder(input, output),
-  run callback: fn(Dynamic) -> b,
+  cancel: fn(Dynamic) -> b,
 ) -> Builder(input, output) {
-  Builder(..builder, cancel: Some(fn(r) { as_promise(callback(r)) }))
+  Builder(..builder, cancel: Some(fn(r) { as_promise(cancel(r)) }))
 }
 
 /// Sets the queuing strategy for the writable side of the transform.

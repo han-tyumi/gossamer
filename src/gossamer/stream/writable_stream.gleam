@@ -53,9 +53,9 @@ pub fn new() -> Builder(a) {
 ///
 pub fn with_start(
   builder: Builder(a),
-  run callback: fn(DefaultController) -> b,
+  start: fn(DefaultController) -> b,
 ) -> Builder(a) {
-  Builder(..builder, start: Some(fn(c) { as_promise(callback(c)) }))
+  Builder(..builder, start: Some(fn(c) { as_promise(start(c)) }))
 }
 
 /// Registers the `write` callback that runs for each chunk written to
@@ -64,31 +64,25 @@ pub fn with_start(
 ///
 pub fn with_write(
   builder: Builder(a),
-  run callback: fn(a, DefaultController) -> b,
+  write: fn(a, DefaultController) -> b,
 ) -> Builder(a) {
-  Builder(
-    ..builder,
-    write: Some(fn(chunk, c) { as_promise(callback(chunk, c)) }),
-  )
+  Builder(..builder, write: Some(fn(chunk, c) { as_promise(write(chunk, c)) }))
 }
 
 /// Registers the `close` callback that runs once after all writes
 /// complete. If the callback returns a `Promise`, the stream waits for
 /// it before resolving the close.
 ///
-pub fn with_close(builder: Builder(a), run callback: fn() -> b) -> Builder(a) {
-  Builder(..builder, close: Some(fn() { as_promise(callback()) }))
+pub fn with_close(builder: Builder(a), close: fn() -> b) -> Builder(a) {
+  Builder(..builder, close: Some(fn() { as_promise(close()) }))
 }
 
 /// Registers the `abort` callback that runs if the stream is aborted.
 /// Receives the abort reason. If the callback returns a `Promise`, the
 /// stream waits for it before resolving the abort.
 ///
-pub fn with_abort(
-  builder: Builder(a),
-  run callback: fn(Dynamic) -> b,
-) -> Builder(a) {
-  Builder(..builder, abort: Some(fn(r) { as_promise(callback(r)) }))
+pub fn with_abort(builder: Builder(a), abort: fn(Dynamic) -> b) -> Builder(a) {
+  Builder(..builder, abort: Some(fn(r) { as_promise(abort(r)) }))
 }
 
 /// Sets the queuing strategy controlling backpressure on the stream's

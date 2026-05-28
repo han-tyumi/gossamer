@@ -41,14 +41,14 @@ pub fn queue_microtask(callback: fn() -> a) -> Nil
 /// are treated as zero.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_interval")
-pub fn set_interval(every delay: Duration, run callback: fn() -> a) -> Int
+pub fn set_interval(delay: Duration, callback: fn() -> a) -> Int
 
 /// Sets a timer which executes `callback` once after `delay` elapses.
 /// Returns an id that can be passed to `clear_timeout` to cancel.
 /// Negative durations are treated as zero.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_timeout")
-pub fn set_timeout(after delay: Duration, run callback: fn() -> a) -> Int
+pub fn set_timeout(delay: Duration, callback: fn() -> a) -> Int
 
 /// Returns the runtime's user agent string (e.g., browser identity,
 /// Deno/Node version). Equivalent to JavaScript's `navigator.userAgent`.
