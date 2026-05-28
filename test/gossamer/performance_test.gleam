@@ -107,6 +107,23 @@ pub fn measure_clamps_negative_test() {
   performance.clear_measures()
 }
 
+pub fn measure_record_clamps_directly_built_negative_duration_test() {
+  // A directly-constructed Measure can carry a negative duration,
+  // bypassing the clamping builders; recording it must not throw.
+  performance.clear_measures()
+  let _ =
+    measure.Measure(
+      name: "direct-negative",
+      start_time: duration.seconds(0),
+      duration: duration.milliseconds(-100),
+      detail: option.None,
+    )
+    |> measure.record()
+  let assert [recorded] = measure.entries_by_name("direct-negative")
+  recorded.duration |> should.equal(duration.seconds(0))
+  performance.clear_measures()
+}
+
 pub fn mark_entries_test() {
   performance.clear_marks()
   let _ = mark.new("entry-1") |> mark.record()

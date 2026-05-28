@@ -37,7 +37,7 @@ export const record: typeof $measure.do_record = (
 ) => {
   const options: PerformanceMeasureOptions = {
     start: Math.max(0, durationToMs(startTime)),
-    duration: durationToMs(duration),
+    duration: Math.max(0, durationToMs(duration)),
   };
   setIfSome(options, "detail", detail);
   performance.measure(name, options);
