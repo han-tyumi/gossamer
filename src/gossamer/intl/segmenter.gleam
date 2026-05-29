@@ -96,14 +96,14 @@ pub fn do_build(
 pub fn segment(segmenter: Segmenter, input: String) -> Yielder(Segment)
 
 /// Returns the [`Segment`](#Segment) containing the UTF-16 code-unit at
-/// `index`, or `None` if `index` falls outside `input`.
+/// `index`, or `Error(Nil)` if `index` falls outside `input`.
 ///
 @external(javascript, "./segmenter.ffi.mjs", "containing")
 pub fn containing(
   segmenter: Segmenter,
   input: String,
   index: Int,
-) -> Option(Segment)
+) -> Result(Segment, Nil)
 
 /// The options the runtime resolved for a [`Segmenter`](#Segmenter),
 /// including the defaults it filled in. `locale` is the BCP 47 tag

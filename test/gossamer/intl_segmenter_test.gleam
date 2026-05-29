@@ -106,13 +106,13 @@ pub fn containing_test() {
     segmenter.new(["en"])
     |> segmenter.with_granularity(segmenter.Word)
     |> segmenter.build
-  let assert Some(segment) = segmenter.containing(seg, "Hello, world!", 8)
+  let assert Ok(segment) = segmenter.containing(seg, "Hello, world!", 8)
   segment.value |> should.equal("world")
 }
 
 pub fn containing_out_of_range_test() {
   let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
-  segmenter.containing(seg, "hi", 99) |> should.equal(None)
+  segmenter.containing(seg, "hi", 99) |> should.equal(Error(Nil))
 }
 
 pub fn resolved_options_test() {

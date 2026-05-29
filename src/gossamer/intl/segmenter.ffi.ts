@@ -1,5 +1,4 @@
 import * as $segmenter from "$/gossamer/gossamer/intl/segmenter.mjs";
-import * as $option from "$/gleam_stdlib/gleam/option.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
 import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
@@ -71,8 +70,8 @@ export const containing: typeof $segmenter.containing = (
   const data: Intl.SegmentData | undefined = segmenter.segment(input)
     .containing(index);
   return data === undefined
-    ? $option.Option$None()
-    : $option.Option$Some(toSegment(data));
+    ? Result$Error(undefined)
+    : Result$Ok(toSegment(data));
 };
 
 export const resolved_options: typeof $segmenter.resolved_options = (
