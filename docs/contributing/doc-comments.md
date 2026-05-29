@@ -470,7 +470,7 @@ Documenting the wrapped JS behavior is fine (_"`JSON.stringify` throws
 ### Function with cross-references
 
     /// Constructs a `UrlPattern` from the configured `Builder`. Use
-    /// [`from_string`](#from_string) for a single-pattern shorthand.
+    /// [`parse`](#parse) for a single-pattern shorthand.
     /// Returns an error if any component pattern is malformed.
     ///
     /// ## Examples
