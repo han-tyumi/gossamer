@@ -17,7 +17,7 @@ packages = [
 gleam_crypto = { version = ">= 1.5.1 and < 2.0.0" }
 gleam_fetch = { version = ">= 1.1.1 and < 2.0.0" }
 gleam_http = { version = ">= 4.1.0 and < 5.0.0" }
-gleam_javascript = { version = ">= 0.7.0 and < 2.0.0" }
+gleam_javascript = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_regexp = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_stdlib = { version = ">= 0.45.0 and < 2.0.0" }
 gleam_time = { version = ">= 1.2.0 and < 2.0.0" }
