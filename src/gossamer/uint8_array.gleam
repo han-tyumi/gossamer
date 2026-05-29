@@ -70,7 +70,7 @@ pub fn length(array: Uint8Array) -> Int
 /// bounds. Negative indices count from the end.
 ///
 @external(javascript, "./uint8_array.ffi.mjs", "at")
-pub fn at(array: Uint8Array, index index: Int) -> Result(Int, Nil)
+pub fn at(in array: Uint8Array, get index: Int) -> Result(Int, Nil)
 
 /// Returns the bytes of `array` as a Gleam list.
 ///
