@@ -21,9 +21,9 @@ versions than those are considered unsupported.
 - **`fetch_extra.response_type`** — returns `ResponseDefault` for synthetic
   responses (e.g. `Response("body")`) where the Fetch spec, Node, and Deno
   return `ResponseBasic`.
-- **`plural_rules.resolved_locale`** — keeps full input tags like `"en-US"`.
-  Node and Deno normalize the same input to `"en"`. Other Intl formatters
-  (`number_format`, etc.) keep `"en-US"` across all three.
+- **`plural_rules.resolved_options`** — its `locale` field keeps full input tags
+  like `"en-US"`. Node and Deno normalize the same input to `"en"`. Other Intl
+  formatters (`number_format`, etc.) keep `"en-US"` across all three.
 - **`date_time_format.format_to_parts`** for the Chinese calendar
   (`zh-u-ca-chinese`) — omits the `RelatedYear` segment that Node and Deno emit;
   only emits `YearName`.

@@ -278,7 +278,8 @@ pub fn select_float_range(
 ) -> PluralCategory
 
 /// Selects the [`PluralCategory`](#PluralCategory) for an `Int`
-/// range.
+/// range from `start` to `end`. Passing `end < start` selects a
+/// category for the reversed range without erroring.
 ///
 @external(javascript, "./plural_rules.ffi.mjs", "select_range")
 pub fn select_int_range(
