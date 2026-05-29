@@ -7,8 +7,8 @@
 import gossamer/abort_signal.{type AbortSignal}
 
 /// A controller for a `WritableStream`'s underlying sink, passed to the
-/// `Start`, `Write`, `Close`, and `Abort` callbacks. Used to signal stream
-/// errors and access the abort signal.
+/// `start` and `write` callbacks. Used to signal stream errors and access
+/// the abort signal.
 ///
 /// See [WritableStreamDefaultController](https://developer.mozilla.org/en-US/docs/Web/API/WritableStreamDefaultController) on MDN.
 ///
