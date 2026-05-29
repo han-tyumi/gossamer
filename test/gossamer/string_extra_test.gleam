@@ -9,8 +9,8 @@ pub fn normalize_test() {
 pub fn normalize_to_test() {
   let nfc = "é"
   let nfd = "e\u{0301}"
-  string_extra.normalize_to(nfd, form: string_extra.Nfc) |> should.equal(nfc)
-  string_extra.normalize_to(nfc, form: string_extra.Nfd) |> should.equal(nfd)
+  string_extra.normalize_to(nfd, string_extra.Nfc) |> should.equal(nfc)
+  string_extra.normalize_to(nfc, string_extra.Nfd) |> should.equal(nfd)
 }
 
 pub fn to_locale_lowercase_default_test() {

@@ -40,7 +40,7 @@ pub fn normalize(string: String) -> String
 /// Equivalent to JavaScript's `String.prototype.normalize(form)`.
 ///
 @external(javascript, "./string_extra.ffi.mjs", "normalize_to")
-pub fn normalize_to(string: String, form form: NormalizationForm) -> String
+pub fn normalize_to(string: String, form: NormalizationForm) -> String
 
 /// Returns `string` lowercased using the first supported locale from
 /// `locales` (or the runtime's default locale when the list is empty).
