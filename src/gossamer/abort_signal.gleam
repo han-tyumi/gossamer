@@ -60,10 +60,10 @@ pub fn any(signals: List(AbortSignal)) -> AbortSignal
 
 /// Creates an `AbortSignal` that aborts automatically after
 /// `duration` with the `Timeout` reason. Negative durations are
-/// treated as zero. Node enforces an unsigned 32-bit upper bound on
-/// the resolved millisecond value; Deno and Bun accept values up to
-/// `9_007_199_254_740_991`. Equivalent to JavaScript's static
-/// `AbortSignal.timeout`.
+/// treated as zero. Panics on Node for durations above
+/// `4_294_967_295` ms (the unsigned 32-bit millisecond bound); Deno
+/// and Bun accept values up to `9_007_199_254_740_991`. Equivalent to
+/// JavaScript's static `AbortSignal.timeout`.
 ///
 @external(javascript, "./abort_signal.ffi.mjs", "timeout")
 pub fn timeout(duration: Duration) -> AbortSignal
