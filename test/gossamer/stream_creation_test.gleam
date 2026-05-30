@@ -6,7 +6,7 @@ import gleam/string
 import gleam/yielder
 import gleeunit/should
 import gossamer/abort_signal
-import gossamer/iteration/async_yielder
+import gossamer/async_yielder
 import gossamer/stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller

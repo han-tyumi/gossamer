@@ -2,7 +2,7 @@ import gleam/dict
 import gleam/javascript/promise
 import gleam/list
 import gleeunit/should
-import gossamer/iteration/async_yielder
+import gossamer/async_yielder
 
 pub fn from_list_to_list_test() {
   let yielder = async_yielder.from_list([1, 2, 3])

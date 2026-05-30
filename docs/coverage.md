@@ -228,8 +228,8 @@ Gleam type that mirrors a JS namespace.
 | ------------- | -------------------------------------------------------------------------------------------------------- |
 | ArrayBuffer   | [`gossamer/array_buffer`](./gossamer/array_buffer.html)                                                  |
 | Uint8Array    | [`gossamer/uint8_array`](./gossamer/uint8_array.html)                                                    |
-| Iterator      | [`gossamer/iteration/iterator`](./gossamer/iteration/iterator.html)                                      |
-| AsyncIterator | [`gossamer/iteration/async_iterator`](./gossamer/iteration/async_iterator.html)                          |
+| Iterator      | [`gossamer/iterator`](./gossamer/iterator.html)                                                          |
+| AsyncIterator | [`gossamer/async_iterator`](./gossamer/async_iterator.html)                                              |
 | Map           | [`gossamer/map`](./gossamer/map.html)                                                                    |
 | Set           | [`gossamer/set`](./gossamer/set.html)                                                                    |
 | String        | [`gossamer/string_extra`](./gossamer/string_extra.html)                                                  |
@@ -245,9 +245,8 @@ return them while the canonical Gleam type stays preferred. `ArrayBuffer` /
 [`gleam_yielder.Yielder`](https://hexdocs.pm/gleam_yielder/); `Map` / `Set`
 bridge to [`gleam/dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html) /
 [`gleam/set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html); `AsyncIterator`
-bridges to
-[`gossamer/iteration/async_yielder`](./gossamer/iteration/async_yielder.html),
-gossamer's pure-Gleam async iteration type. The transit-type bindings expose
+bridges to [`gossamer/async_yielder`](./gossamer/async_yielder.html), gossamer's
+pure-Gleam async iteration type. The transit-type bindings expose
 `from_<source>` / `to_<source>` bridges plus a draining `each` helper; the JS
 iterator helper methods (`map`, `filter`, `take`, `drop`, `reduce`, etc.,
 including `Iterator.concat` and `Iterator.from`) are not bound — bridge to the

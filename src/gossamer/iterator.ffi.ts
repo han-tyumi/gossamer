@@ -1,4 +1,4 @@
-import type * as $iterator from "$/gossamer/gossamer/iteration/iterator.mjs";
+import type * as $iterator from "$/gossamer/gossamer/iterator.mjs";
 import {
   jsIteratorAsYielder,
   yielderAsJsIterator,

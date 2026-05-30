@@ -1,4 +1,4 @@
-import * as $asyncYielder from "$/gossamer/gossamer/iteration/async_yielder.mjs";
+import * as $asyncYielder from "$/gossamer/gossamer/async_yielder.mjs";
 import * as $yielder from "$/gleam_yielder/gleam/yielder.mjs";
 
 export function jsIteratorAsYielder<T>(

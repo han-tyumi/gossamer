@@ -1,7 +1,7 @@
 import gleam/javascript/promise
 import gleeunit/should
-import gossamer/iteration/async_iterator
-import gossamer/iteration/async_yielder
+import gossamer/async_iterator
+import gossamer/async_yielder
 
 pub fn each_test() {
   let iter =

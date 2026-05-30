@@ -8,7 +8,7 @@ import gleam/javascript/promise.{type Promise}
 import gleam/option.{type Option, None, Some}
 import gleam/yielder.{type Yielder}
 import gossamer/abort_signal.{type AbortSignal}
-import gossamer/iteration/async_yielder.{type AsyncYielder}
+import gossamer/async_yielder.{type AsyncYielder}
 import gossamer/stream.{
   type QueuingStrategy, type StreamLifecycleError, as_promise,
 }
@@ -205,7 +205,7 @@ pub fn do_from_pull(
 pub fn from_yielder(yielder: Yielder(a)) -> ReadableStream(a)
 
 /// Creates a `ReadableStream` from an
-/// [`AsyncYielder`](../iteration/async_yielder.html#AsyncYielder).
+/// [`AsyncYielder`](../async_yielder.html#AsyncYielder).
 /// Equivalent to JavaScript's `ReadableStream.from` with an async
 /// iterable. Panics on Bun — see
 /// https://github.com/oven-sh/bun/issues/3700.
@@ -278,7 +278,7 @@ pub fn tee(
 ) -> Result(#(ReadableStream(a), ReadableStream(a)), StreamLifecycleError)
 
 /// Returns an
-/// [`AsyncYielder`](../iteration/async_yielder.html#AsyncYielder)
+/// [`AsyncYielder`](../async_yielder.html#AsyncYielder)
 /// that reads from the stream. The yielder locks the stream until
 /// reading completes. Equivalent to JavaScript's
 /// `ReadableStream.values` (or `stream[Symbol.asyncIterator]()`).

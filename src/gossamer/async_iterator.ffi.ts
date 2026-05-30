@@ -1,4 +1,4 @@
-import type * as $asyncIterator from "$/gossamer/gossamer/iteration/async_iterator.mjs";
+import type * as $asyncIterator from "$/gossamer/gossamer/async_iterator.mjs";
 import {
   asyncYielderAsJsAsyncIterator,
   jsAsyncIteratorAsAsyncYielder,

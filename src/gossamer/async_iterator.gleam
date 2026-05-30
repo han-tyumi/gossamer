@@ -15,7 +15,7 @@
 //// at the call site if you need to handle them.
 
 import gleam/javascript/promise.{type Promise}
-import gossamer/iteration/async_yielder.{type AsyncYielder}
+import gossamer/async_yielder.{type AsyncYielder}
 
 /// A pull-based iterator that yields values asynchronously. Each call
 /// to `next` returns a promise.

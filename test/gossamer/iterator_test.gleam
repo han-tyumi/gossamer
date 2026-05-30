@@ -1,6 +1,6 @@
 import gleam/yielder
 import gleeunit/should
-import gossamer/iteration/iterator
+import gossamer/iterator
 
 pub fn for_test() {
   let collected = [3, 2, 1]
