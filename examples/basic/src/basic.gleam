@@ -1,19 +1,17 @@
 import gleam/io
-import gleam/option.{Some}
-import gossamer/headers
-import gossamer/promise.{type Promise}
+import gleam/javascript/promise.{type Promise}
+import gleam/option.{None}
 import gossamer/url
 
 pub fn main() -> Promise(Nil) {
-  let assert Ok(parsed) = url.new("https://example.com/api?q=gleam")
-  io.println("host: " <> url.host(parsed))
+  // gossamer/url parses per the WHATWG URL spec and returns a canonical
+  // gleam/uri.Uri: the host is lowercased, the default port is dropped, and
+  // the `..` path segment is resolved.
+  let assert Ok(canonical) =
+    url.parse("HTTPS://Example.COM:443/api/../v1?q=gleam", relative_to: None)
+  io.println("host: " <> option.unwrap(canonical.host, ""))
+  io.println("path: " <> canonical.path)
 
-  let hs = headers.new()
-  let assert Ok(hs) =
-    headers.append(to: hs, name: "content-type", value: "application/json")
-  let assert Ok(Some(ct)) = headers.get(from: hs, name: "content-type")
-  io.println("content-type: " <> ct)
-
-  use _ <- promise.then(promise.resolve(Nil))
+  use _ <- promise.map(promise.resolve(Nil))
   io.println("done")
 }
