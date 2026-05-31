@@ -81,10 +81,6 @@ pub type PartKind {
 
   /// The literal NaN representation.
   Nan
-
-  /// Any future part kind the binding doesn't recognize, passed
-  /// through verbatim.
-  Other(String)
 }
 
 /// The configuration for a

@@ -73,7 +73,9 @@ function fromPartKind(type: string): $relativeTimeFormat.PartKind$ {
     case "nan":
       return $relativeTimeFormat.PartKind$Nan();
     default:
-      return $relativeTimeFormat.PartKind$Other(type);
+      throw new Error(
+        `gossamer.intl.relative_time_format: runtime returned unexpected RelativeTimeFormat part type: ${type}`,
+      );
   }
 }
 

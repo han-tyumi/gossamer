@@ -28,9 +28,16 @@ function fromKind(value: string): $listFormat.Kind$ {
 }
 
 function fromPartKind(type: string): $listFormat.PartKind$ {
-  return type === "literal"
-    ? $listFormat.PartKind$Literal()
-    : $listFormat.PartKind$Element();
+  switch (type) {
+    case "literal":
+      return $listFormat.PartKind$Literal();
+    case "element":
+      return $listFormat.PartKind$Element();
+    default:
+      throw new Error(
+        `gossamer.intl.list_format: runtime returned unexpected ListFormat part type: ${type}`,
+      );
+  }
 }
 
 function toPart(item: { type: string; value: string }): $listFormat.Part$ {

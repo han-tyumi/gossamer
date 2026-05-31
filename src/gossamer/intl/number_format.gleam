@@ -210,10 +210,6 @@ pub type PartKind {
 
   /// A measurement unit name or symbol.
   Unit
-
-  /// Any future part kind the binding doesn't recognize, passed
-  /// through verbatim.
-  Other(String)
 }
 
 /// A single segment of a formatted number range, returned by the

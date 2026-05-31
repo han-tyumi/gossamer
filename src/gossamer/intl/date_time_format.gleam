@@ -173,10 +173,6 @@ pub type PartKind {
 
   /// The time-zone label (`"PST"`, `"GMT-08:00"`).
   TimeZoneName
-
-  /// Any future part type the binding doesn't recognize, passed
-  /// through verbatim.
-  Other(String)
 }
 
 /// The configuration for a [`DateTimeFormat`](#DateTimeFormat).

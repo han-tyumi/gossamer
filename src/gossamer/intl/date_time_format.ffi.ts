@@ -171,7 +171,9 @@ function fromPartKind(type: string): $dateTimeFormat.PartKind$ {
     case "timeZoneName":
       return $dateTimeFormat.PartKind$TimeZoneName();
     default:
-      return $dateTimeFormat.PartKind$Other(type);
+      throw new Error(
+        `gossamer.intl.date_time_format: runtime returned unexpected DateTimeFormat part type: ${type}`,
+      );
   }
 }
 

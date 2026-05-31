@@ -302,7 +302,9 @@ function fromPartKind(type: string): $numberFormat.PartKind$ {
     case "unit":
       return $numberFormat.PartKind$Unit();
     default:
-      return $numberFormat.PartKind$Other(type);
+      throw new Error(
+        `gossamer.intl.number_format: runtime returned unexpected NumberFormat part type: ${type}`,
+      );
   }
 }
 
