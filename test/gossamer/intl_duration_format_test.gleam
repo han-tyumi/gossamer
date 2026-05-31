@@ -166,6 +166,40 @@ pub fn format_to_parts_test() {
   |> should.be_true
 }
 
+pub fn format_to_parts_fractional_kinds_test() {
+  let assert Ok(formatter) =
+    duration_format.new(["en-US"])
+    |> duration_format.with_style(duration_format.StyleDigital)
+    |> duration_format.with_fractional_digits(duration_format.FractionalDigits3)
+    |> duration_format.build
+  let assert Ok(parts) =
+    duration_format.format_to_parts(
+      formatter,
+      duration_format.DurationParts(
+        ..duration_format.zero,
+        seconds: 12,
+        milliseconds: 500,
+      ),
+    )
+  let kinds = list.map(parts, fn(part) { part.kind })
+  list.contains(kinds, duration_format.Decimal) |> should.be_true
+  list.contains(kinds, duration_format.Fraction) |> should.be_true
+}
+
+pub fn format_to_parts_group_kind_test() {
+  let assert Ok(formatter) =
+    duration_format.new(["en-US"])
+    |> duration_format.with_style(duration_format.StyleLong)
+    |> duration_format.build
+  let assert Ok(parts) =
+    duration_format.format_to_parts(
+      formatter,
+      duration_format.DurationParts(..duration_format.zero, seconds: 1_234_567),
+    )
+  let kinds = list.map(parts, fn(part) { part.kind })
+  list.contains(kinds, duration_format.Group) |> should.be_true
+}
+
 pub fn supported_locales_of_test() {
   duration_format.supported_locales_of(["en-US", "fr"])
   |> should.equal(["en-US", "fr"])

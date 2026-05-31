@@ -137,9 +137,24 @@ function fromFractionalDigits(
 }
 
 function fromPartKind(type: string): $durationFormat.PartKind$ {
-  if (type === "integer") return $durationFormat.PartKind$Integer();
-  if (type === "literal") return $durationFormat.PartKind$Literal();
-  return $durationFormat.PartKind$Unit();
+  switch (type) {
+    case "integer":
+      return $durationFormat.PartKind$Integer();
+    case "decimal":
+      return $durationFormat.PartKind$Decimal();
+    case "fraction":
+      return $durationFormat.PartKind$Fraction();
+    case "group":
+      return $durationFormat.PartKind$Group();
+    case "literal":
+      return $durationFormat.PartKind$Literal();
+    case "unit":
+      return $durationFormat.PartKind$Unit();
+    default:
+      throw new Error(
+        `gossamer.intl.duration_format: runtime returned unexpected DurationFormat part type: ${type}`,
+      );
+  }
 }
 
 function toPart(

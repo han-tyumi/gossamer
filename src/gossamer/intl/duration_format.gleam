@@ -207,6 +207,17 @@ pub type PartKind {
   /// The numeric portion of a value (e.g., `"2"` from `"2 hours"`).
   Integer
 
+  /// The decimal separator (`"."` or `","` per locale), emitted for
+  /// fractional values.
+  Decimal
+
+  /// The fractional portion, emitted for sub-second values.
+  Fraction
+
+  /// A digit-group separator (`","` or `" "` per locale), emitted for
+  /// large values.
+  Group
+
   /// A literal separator or spacing (e.g., `", "` or `" "`).
   Literal
 
