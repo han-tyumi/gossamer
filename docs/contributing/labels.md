@@ -33,19 +33,22 @@ links the parameter to the action.
 | All / any test                  | `satisfying`             | `every(in array:, satisfying predicate:)`                        |
 | Find predicate                  | `one_that`               | `find(in array:, one_that predicate:)`                           |
 | Continuation callback           | `apply`                  | `promise.then(promise:, apply onfulfilled:)`                     |
-| Side-effect callback            | `run`                    | `for_each(in headers:, run callback:)`                           |
 | Fold / reduce                   | `over` / `from` / `with` | `reduce(over array:, from initial:, with callback:)`             |
 | Range start / end               | `from` / `to`            | `slice(blob:, from start:, to end:)`                             |
 | Upper bound (when `to` is used) | `up_to`                  | `copy_within_range(array:, to target:, from start:, up_to end:)` |
 | Positional index                | `at_index`               | `with(array:, at_index index:, value value:)`                    |
-| Delay (one-shot)                | `after`                  | `set_timeout(after delay:, run callback:)`                       |
-| Delay (recurring)               | `every`                  | `set_interval(every delay:, run callback:)`                      |
 | Base URL                        | `relative_to`            | `url_pattern.parse(pattern:, relative_to base:)`                 |
 | Pattern matching                | `against`                | `url_pattern.matches(pattern:, against input:)`                  |
 | File / exception name           | `named`                  | `file.from_strings(parts:, named name:)`                         |
 | Assertion condition             | `that`                   | `console.log_if_false(that condition:, log data:)`               |
 | Assertion data                  | `log`                    | `console.log_if_false(that condition:, log data:)`               |
 | High-arity attributes           | self-labels              | `encrypt(algorithm algorithm:, key key:, data data:)`            |
+
+Event handlers, stream lifecycle callbacks, and timer callbacks take no label —
+they are passed positionally, named for the role they fill (`handler`, `pull`,
+`callback`). Tier-1 libraries (`mist`, `lustre`) pass handlers and effects this
+way, so a generic `run`/`with` label on a lone handler adds nothing. See
+[Event-handler setters](./builder-patterns.md).
 
 ## Definition readability
 

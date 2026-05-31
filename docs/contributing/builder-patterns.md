@@ -140,25 +140,31 @@ Event-handler setters use an `on_<event>` segment. Whether the target is a
 `Builder` (opaque-builder shape) or an opaque object that mutates in place, the
 name makes the assignment explicit:
 
-| Site                                                  | Shape          | Naming                                   |
-| ----------------------------------------------------- | -------------- | ---------------------------------------- |
-| `Builder` setter for an event-handler field           | Opaque builder | `with_on_<event>(builder, run handler:)` |
-| Direct event-handler registration on an opaque object | n/a            | `set_on_<event>(target, run handler:)`   |
+| Site                                                  | Shape          | Naming                              |
+| ----------------------------------------------------- | -------------- | ----------------------------------- |
+| `Builder` setter for an event-handler field           | Opaque builder | `with_on_<event>(builder, handler)` |
+| Direct event-handler registration on an opaque object | n/a            | `set_on_<event>(target, handler)`   |
+
+The callback is passed positionally — no label. Tier-1 libraries pass handlers
+and effects positionally (`mist`, `lustre`), so a generic `run`/`with` label on
+the callback adds nothing.
 
 Plain configuration callbacks that aren't event handlers (stream
 underlying-source/sink methods like `start`, `pull`, `cancel`, `write`,
-`transform`, `flush`) keep the unprefixed `with_<field>` setter. The `_on_`
-segment specifically marks the function as wiring up a JS-side `onevent` slot.
+`transform`, `flush`) keep the unprefixed `with_<field>` setter and name the
+callback parameter for the role it fills (`lustre` names its lifecycle pieces
+`init`/`update`/`view` the same way). The `_on_` segment specifically marks the
+function as wiring up a JS-side `onevent` slot.
 
 Gossamer-side examples:
 
-- `message_port.set_on_message(port, run handler:)` — direct mutation.
-- `web_socket.with_on_event(builder, run handler:)` — `Builder` setter; the
-  handler receives the `WebSocket` so it can reply via `send_*`.
-- `worker.with_on_message(builder, run handler:)` — `Builder` setter; the
-  handler also receives the `Worker` so it can reply via `post_message`.
-- `readable_stream.with_pull(builder, run callback:)` — not an event handler;
-  keeps unprefixed `with_<field>`.
+- `message_port.set_on_message(port, handler)` — direct mutation.
+- `web_socket.with_on_event(builder, handler)` — `Builder` setter; the handler
+  receives the `WebSocket` so it can reply via `send_*`.
+- `worker.with_on_message(builder, handler)` — `Builder` setter; the handler
+  also receives the `Worker` so it can reply via `post_message`.
+- `readable_stream.with_pull(builder, pull)` — not an event handler; keeps the
+  unprefixed `with_<field>` setter with a role-named parameter.
 
 Single-shot async events (where the event fires at most once) use a
 `Promise`-returning observer rather than a setter — see
@@ -230,7 +236,7 @@ pub fn new(uri: Uri) -> Builder
 pub fn with_protocols(builder: Builder, protocols: List(String)) -> Builder
 pub fn with_on_event(
   builder: Builder,
-  run handler: fn(WebSocketEvent, WebSocket) -> a,
+  handler: fn(WebSocketEvent, WebSocket) -> a,
 ) -> Builder
 pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError)
 
