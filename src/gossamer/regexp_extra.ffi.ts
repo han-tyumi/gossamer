@@ -5,37 +5,37 @@ import * as $regexpExtra from "$/gossamer/gossamer/regexp_extra.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 
-function flagChar(flag: $regexpExtra.RegExpFlag$): string {
-  if ($regexpExtra.RegExpFlag$isGlobal(flag)) return "g";
-  if ($regexpExtra.RegExpFlag$isIgnoreCase(flag)) return "i";
-  if ($regexpExtra.RegExpFlag$isMultiline(flag)) return "m";
-  if ($regexpExtra.RegExpFlag$isDotAll(flag)) return "s";
-  if ($regexpExtra.RegExpFlag$isUnicode(flag)) return "u";
-  if ($regexpExtra.RegExpFlag$isUnicodeSets(flag)) return "v";
-  if ($regexpExtra.RegExpFlag$isSticky(flag)) return "y";
+function flagChar(flag: $regexpExtra.RegexpFlag$): string {
+  if ($regexpExtra.RegexpFlag$isGlobal(flag)) return "g";
+  if ($regexpExtra.RegexpFlag$isIgnoreCase(flag)) return "i";
+  if ($regexpExtra.RegexpFlag$isMultiline(flag)) return "m";
+  if ($regexpExtra.RegexpFlag$isDotAll(flag)) return "s";
+  if ($regexpExtra.RegexpFlag$isUnicode(flag)) return "u";
+  if ($regexpExtra.RegexpFlag$isUnicodeSets(flag)) return "v";
+  if ($regexpExtra.RegexpFlag$isSticky(flag)) return "y";
   return "d";
 }
 
 function fromFlagChar(
   char: string,
-): $regexpExtra.RegExpFlag$ | undefined {
+): $regexpExtra.RegexpFlag$ | undefined {
   switch (char) {
     case "g":
-      return $regexpExtra.RegExpFlag$Global();
+      return $regexpExtra.RegexpFlag$Global();
     case "i":
-      return $regexpExtra.RegExpFlag$IgnoreCase();
+      return $regexpExtra.RegexpFlag$IgnoreCase();
     case "m":
-      return $regexpExtra.RegExpFlag$Multiline();
+      return $regexpExtra.RegexpFlag$Multiline();
     case "s":
-      return $regexpExtra.RegExpFlag$DotAll();
+      return $regexpExtra.RegexpFlag$DotAll();
     case "u":
-      return $regexpExtra.RegExpFlag$Unicode();
+      return $regexpExtra.RegexpFlag$Unicode();
     case "v":
-      return $regexpExtra.RegExpFlag$UnicodeSets();
+      return $regexpExtra.RegexpFlag$UnicodeSets();
     case "y":
-      return $regexpExtra.RegExpFlag$Sticky();
+      return $regexpExtra.RegexpFlag$Sticky();
     case "d":
-      return $regexpExtra.RegExpFlag$HasIndices();
+      return $regexpExtra.RegexpFlag$HasIndices();
     default:
       return undefined;
   }
@@ -60,7 +60,7 @@ export const compile: typeof $regexpExtra.compile = (pattern, flags) => {
 };
 
 export const flags: typeof $regexpExtra.flags = (regexp) => {
-  const variants: $regexpExtra.RegExpFlag$[] = [];
+  const variants: $regexpExtra.RegexpFlag$[] = [];
   for (const char of regexp.flags) {
     const flag = fromFlagChar(char);
     if (flag !== undefined) variants.push(flag);

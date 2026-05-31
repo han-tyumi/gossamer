@@ -6,11 +6,11 @@ import gleam/dict.{type Dict}
 import gleam/option.{type Option}
 import gleam/regexp.{type CompileError, type Regexp}
 
-/// A `RegExp` flag. The full set is reachable via `compile` and `flags`;
+/// A `Regexp` flag. The full set is reachable via `compile` and `flags`;
 /// `gleam/regexp.compile`'s `Options` exposes only `IgnoreCase` and
 /// `Multiline`.
 ///
-pub type RegExpFlag {
+pub type RegexpFlag {
   /// `g` — find all matches in a string, not just the first.
   Global
   /// `i` — case-insensitive matching.
@@ -47,7 +47,7 @@ pub type RegExpFlag {
 @external(javascript, "./regexp_extra.ffi.mjs", "compile")
 pub fn compile(
   pattern: String,
-  with flags: List(RegExpFlag),
+  with flags: List(RegexpFlag),
 ) -> Result(Regexp, CompileError)
 
 /// The flags set on `regexp`, including ones `gleam/regexp` doesn't
@@ -62,7 +62,7 @@ pub fn compile(
 /// ```
 ///
 @external(javascript, "./regexp_extra.ffi.mjs", "flags")
-pub fn flags(regexp: Regexp) -> List(RegExpFlag)
+pub fn flags(regexp: Regexp) -> List(RegexpFlag)
 
 /// The original pattern string the regex was compiled from.
 ///
