@@ -359,7 +359,7 @@ pub fn derive_bits(
 pub fn derive_key(
   algorithm algorithm: DeriveAlgorithm,
   base_key key: CryptoKey,
-  derived_key_type derived_key_type: SymmetricKeyParams,
+  derived_key_type type_: SymmetricKeyParams,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))
@@ -404,8 +404,8 @@ pub fn unwrap_key(
   format format: KeyFormat,
   wrapped_key wrapped_key: BitArray,
   unwrapping_key unwrapping_key: CryptoKey,
-  unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
-  unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
+  unwrap_algorithm algorithm: WrapAlgorithm,
+  unwrapped_key_algorithm key_algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))
@@ -418,8 +418,8 @@ pub fn unwrap_key(
 pub fn unwrap_key_jwk(
   wrapped_key wrapped_key: BitArray,
   unwrapping_key unwrapping_key: CryptoKey,
-  unwrap_algorithm unwrap_algorithm: WrapAlgorithm,
-  unwrapped_key_algorithm unwrapped_key_algorithm: ImportAlgorithm,
+  unwrap_algorithm algorithm: WrapAlgorithm,
+  unwrapped_key_algorithm key_algorithm: ImportAlgorithm,
   extractable extractable: Bool,
   usages usages: List(KeyUsage),
 ) -> Promise(Result(CryptoKey, CryptoError))
