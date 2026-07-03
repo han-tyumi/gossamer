@@ -2,18 +2,25 @@
 
 ## Prerequisites
 
+Tool versions are pinned in [`mise.toml`](./mise.toml), with download
+checksums locked in `mise.lock`. With
+[mise](https://mise.jdx.dev/getting-started.html) installed:
+
+```sh
+mise install
+```
+
+Or install each tool manually at the pinned version:
+
+- [Bun](https://bun.sh/docs/installation)
 - [Deno](https://docs.deno.com/runtime/getting_started/installation/)
 - [Erlang](https://www.erlang.org/downloads)
 - [Gleam](https://gleam.run/install/)
 - [Just](https://just.systems/man/en/installation.html)
 - [Lefthook](https://lefthook.dev/#how-to-install-lefthook)
+- [Node.js](https://nodejs.org/en/download)
 - [Rebar3](https://rebar3.org/docs/getting-started/)
 - [Watchexec](https://github.com/watchexec/watchexec#install)
-
-_Tip_: These can also be installed via
-[mise](https://mise.jdx.dev/getting-started.html) or
-[asdf](https://asdf-vm.com/guide/getting-started.html), which read from
-`.tool-versions`.
 
 ## Initial setup
 
