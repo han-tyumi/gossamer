@@ -5,25 +5,6 @@ import {
   wrapArrayBuffer,
 } from "~/utils/bit_array.ffi.ts";
 
-// Deno's BroadcastChannel posts onto an internal timer that can fire a
-// TypeError("expected i32") as an unhandled rejection after the
-// channel closes. Silence the narrow case so test runs and short-lived
-// scripts exit cleanly; legitimate errors still propagate.
-if (typeof globalThis.Deno !== "undefined") {
-  globalThis.addEventListener("unhandledrejection", (event) => {
-    const reason = event.reason;
-    if (
-      reason instanceof TypeError &&
-      typeof reason.message === "string" &&
-      reason.message.includes("expected i32") &&
-      typeof reason.stack === "string" &&
-      reason.stack.includes("broadcast_channel")
-    ) {
-      event.preventDefault();
-    }
-  });
-}
-
 function classifyError(
   error: unknown,
 ): $broadcastChannel.PostMessageError$ {

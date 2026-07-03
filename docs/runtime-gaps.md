@@ -44,19 +44,6 @@ versions than those are considered unsupported.
   `4_294_967_295` ms (~49.7 days, the u32 max). Deno and Bun accept values up to
   `Int`'s safe range.
 
-## Deno
-
-- **`broadcast_channel.set_on_message`** — Deno below 2.8.2 posts
-  BroadcastChannel messages via an internal timer that can fire
-  `TypeError: expected i32` as an unhandled rejection after the channel closes
-  (fixed in 2.8.2 by
-  [denoland/deno#34628](https://github.com/denoland/deno/pull/34628)). gossamer
-  installs a narrow `unhandledrejection` listener on Deno (in
-  `broadcast_channel.ffi.ts`) that suppresses this exact case — a `TypeError`
-  whose message contains `"expected i32"` and whose stack mentions
-  `broadcast_channel` — so test runs and short-lived scripts exit cleanly.
-  Legitimate errors still propagate.
-
 ## All three runtimes
 
 - **`plural_rules.select` with `BigInt`** — all three runtimes throw `TypeError`
