@@ -169,8 +169,10 @@ generation, AES / RSA encryption, JSON Web Keys, key derivation).
 Not bound: multi-prime RSA JWKs (the `oth` member — Web Crypto never produces
 them and Deno and Bun reject them on import); custom-length HMAC keys (generate
 raw bytes with `gleam_crypto.strong_random_bytes` and pass them to
-`subtle.import_key` instead); and the nullable `derive_bits` length (pass the
-explicit bit count, e.g. `256` for an ECDH P-256 secret).
+`subtle.import_key` instead); the nullable `derive_bits` length (pass the
+explicit bit count, e.g. `256` for an ECDH P-256 secret); and
+`SubtleCrypto.supports` with the incubating modern-algorithms suite (SHA-3,
+ML-KEM / ML-DSA, Argon2) — not yet in the W3C spec, and Bun ships none of it.
 
 ### Data Types
 
@@ -178,6 +180,9 @@ explicit bit count, e.g. `256` for an ECDH P-256 secret).
 | ---- | --------------------------------------- |
 | Blob | [`gossamer/blob`](./gossamer/blob.html) |
 | File | [`gossamer/file`](./gossamer/file.html) |
+
+Not bound: `textStream` (added to `Blob` and the fetch body mixin mid-2026) — no
+runtime ships it yet.
 
 ### Cancellation
 
@@ -267,11 +272,14 @@ types ([`gleam/string`](https://hexdocs.pm/gleam_stdlib/gleam/string.html),
 which already are the JS primitives under the hood. `Number` and `Math` split
 across `int_extra` and `float_extra` mirroring `gleam/int` / `gleam/float`.
 Number's non-finite values (`Infinity`, `-Infinity`, `NaN`) have no binding,
-since Gleam's `Float` is always finite.
+since Gleam's `Float` is always finite. `Math.sumPrecise` is likewise unbound
+(absent on Node.js).
 
 [`gossamer/json`](./gossamer/json.html) provides a transparent `Json` type for
 inspecting or pattern-matching JSON of unknown structure. For typed
 encode/decode pipelines, use [`gleam_json`](https://hexdocs.pm/gleam_json/).
+`JSON.rawJSON` / `JSON.isRawJSON` are not bound — `Number(Float)` deliberately
+trades arbitrary-precision literals for a simple inspection surface.
 
 ### Internationalization (ECMA-402)
 
@@ -317,6 +325,8 @@ Use the upstream bindings directly — gossamer doesn't wrap them.
 | PromiseRejectionEvent                                              | Not exposed as a global on Node or Bun                                                                        |
 | structuredClone                                                    | Gleam values are immutable; the "break shared references" primitive doesn't translate                         |
 | WebAssembly                                                        | Warrants its own package                                                                                      |
+| Temporal                                                           | Time is delegated to [`gleam/time`](https://hexdocs.pm/gleam_time/); absent on Bun                            |
+| Web Locks (`navigator.locks`)                                      | Absent on Bun; revisit when cross-runtime                                                                     |
 | Proxy, Reflect                                                     | Metaprogramming, not expressible in Gleam's type system                                                       |
 | SharedArrayBuffer, Atomics                                         | Cross-thread shared memory; revisit when a concrete cross-runtime use case arrives                            |
 | Generator, AsyncGenerator                                          | Iterator creation via protocol is sufficient                                                                  |
