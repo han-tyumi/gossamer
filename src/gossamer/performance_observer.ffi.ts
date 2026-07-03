@@ -23,7 +23,6 @@ export const observe: typeof $performanceObserver.observe = (
     },
   );
   observer.observe({
-    // @ts-expect-error TS narrows entryTypes to a literal union.
     entryTypes: toArray(entryKinds).map(kind_to_name),
   });
   return observer;
@@ -46,7 +45,6 @@ export const observe_buffered: typeof $performanceObserver.observe_buffered = (
     },
   );
   observer.observe({
-    // @ts-expect-error TS narrows type to a literal union.
     type: kind_to_name(entryKind),
     buffered: true,
   });
