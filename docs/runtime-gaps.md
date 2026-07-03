@@ -18,6 +18,11 @@ versions than those are considered unsupported.
   `koi8-r`, `macintosh`, `windows-1250`, `-1251`, `-1254`, `-1256`, `-1258`,
   `x-mac-cyrillic`). Node and Deno construct them. UTF-8 and both UTF-16 byte
   orders work everywhere.
+- **`crypto/subtle.derive_bits`** with `length: 0` — resolves with the full
+  shared secret instead of an empty `BitArray`. Node and Deno resolve with an
+  empty result. Fixed upstream in
+  [oven-sh/bun#32819](https://github.com/oven-sh/bun/pull/32819); not yet in a
+  Bun release.
 - **`fetch_extra.response_type`** — returns `ResponseDefault` for synthetic
   responses (e.g. `Response("body")`) where the Fetch spec, Node, and Deno
   return `ResponseBasic`.
@@ -25,8 +30,9 @@ versions than those are considered unsupported.
   like `"en-US"`. Node and Deno normalize the same input to `"en"`. Other Intl
   formatters (`number_format`, etc.) keep `"en-US"` across all three.
 - **`date_time_format.format_to_parts`** for the Chinese calendar
-  (`zh-u-ca-chinese`) — omits the `RelatedYear` segment that Node and Deno emit;
-  only emits `YearName`.
+  (`zh-u-ca-chinese`) with year-only options — omits the `RelatedYear` segment
+  that Node and Deno emit before `YearName`. Option sets that include a month or
+  day emit `RelatedYear` on all three runtimes.
 - **`date_time_format.format_range`** — uses regular U+0020 spaces around the en
   dash. Node and Deno use thin (U+2009) spaces. Assert via substring rather than
   strict equality if you compare formatted output across runtimes.
@@ -40,13 +46,16 @@ versions than those are considered unsupported.
 
 ## Deno
 
-- **`broadcast_channel.set_on_message`** — Deno posts BroadcastChannel messages
-  via an internal timer that can fire `TypeError: expected i32` as an unhandled
-  rejection after the channel closes. gossamer installs a narrow
-  `unhandledrejection` listener on Deno (in `broadcast_channel.ffi.ts`) that
-  suppresses this exact case — a `TypeError` whose message contains
-  `"expected i32"` and whose stack mentions `broadcast_channel` — so test runs
-  and short-lived scripts exit cleanly. Legitimate errors still propagate.
+- **`broadcast_channel.set_on_message`** — Deno below 2.8.2 posts
+  BroadcastChannel messages via an internal timer that can fire
+  `TypeError: expected i32` as an unhandled rejection after the channel closes
+  (fixed in 2.8.2 by
+  [denoland/deno#34628](https://github.com/denoland/deno/pull/34628)). gossamer
+  installs a narrow `unhandledrejection` listener on Deno (in
+  `broadcast_channel.ffi.ts`) that suppresses this exact case — a `TypeError`
+  whose message contains `"expected i32"` and whose stack mentions
+  `broadcast_channel` — so test runs and short-lived scripts exit cleanly.
+  Legitimate errors still propagate.
 
 ## All three runtimes
 

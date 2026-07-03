@@ -10,6 +10,9 @@ import {
   toRsaAlgorithm,
 } from "~/gossamer/crypto/key.ffi.ts";
 import { fromJsonWebKey, toJsonWebKey } from "~/gossamer/crypto/jwk.ffi.ts";
+// BitArray inputs are passed as Uint8Array rather than DataView: Node.js
+// below 24.15.0 fails on DataView inputs (nodejs/node#62169). Required
+// while the supported Node.js floor is older than 24.15.0.
 import { toUint8Array } from "~/utils/bit_array.ffi.ts";
 import { setIfSome } from "~/utils/option.ffi.ts";
 
