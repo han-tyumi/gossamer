@@ -41,7 +41,7 @@ check:
 
 [group('build')]
 format:
-    deno fmt -q
+    deno fmt -q .claude .github .vscode docs examples patch src test *.md *.ts deno.json
     gleam format
     just --fmt
 
