@@ -28,37 +28,17 @@ type = "Command"
 command = './scripts/render-runtime-floors.sh && { git diff --exit-code README.md || { echo "README runtime-floor badges out of sync — commit the render output" >&2; exit 1; }; }'
 shell = true
 
-[[workflows.steps]]
-type = "PrepareRelease"
-
-# Refresh each example's lock so the new gleam.toml version doesn't leave
-# them stale. Folded into the prepare-release commit below.
-[[workflows.steps]]
-type = "Command"
-command = 'for dir in examples/*/; do (cd "$dir" && gleam deps update gossamer) || exit 1; done'
-shell = true
-
-[[workflows.steps]]
-type = "Command"
-command = 'git add gleam.toml CHANGELOG.md examples/*/manifest.toml && git commit -m "chore: prepare release $version"'
-shell = true
-
-[[workflows.steps]]
-type = "Command"
-command = "git push"
-
+# The release version and its CHANGELOG.md section are committed by hand
+# before running this workflow (along with refreshed example locks via
+# `gleam deps update gossamer` in each example). Release reads the version
+# from gleam.toml, tags it, and lifts the matching CHANGELOG.md section
+# into the GitHub release notes.
 [[workflows.steps]]
 type = "Release"
 
 [[workflows.steps]]
 type = "Command"
 command = "just publish --yes"
-
-[[workflows]]
-name = "document-change"
-
-[[workflows.steps]]
-type = "CreateChangeFile"
 
 [[workflows]]
 name = "get-version"
