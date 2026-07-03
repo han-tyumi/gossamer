@@ -8,6 +8,7 @@ import gleeunit/should
 import gossamer/crypto
 import gossamer/crypto/key
 import gossamer/crypto/subtle
+import runtime
 
 pub fn random_uuid_test() {
   let uuid = crypto.random_uuid()
@@ -494,6 +495,46 @@ pub fn derive_bits_x25519_test() {
   ))
   let assert Ok(bits) = result
   bit_array.byte_size(bits) |> should.equal(32)
+  promise.resolve(Nil)
+}
+
+fn derive_zero_length_ec_dh_bits() -> promise.Promise(Int) {
+  use result <- promise.await(
+    subtle.generate_key_pair(subtle.KeyPairGenEc(crypto.Dh, crypto.P256), True, [
+      crypto.DeriveBits,
+    ]),
+  )
+  let assert Ok(party_a) = result
+
+  use result <- promise.await(
+    subtle.generate_key_pair(subtle.KeyPairGenEc(crypto.Dh, crypto.P256), True, [
+      crypto.DeriveBits,
+    ]),
+  )
+  let assert Ok(party_b) = result
+
+  use result <- promise.await(subtle.derive_bits(
+    subtle.DeriveEcDh(party_b.public_key),
+    party_a.private_key,
+    0,
+  ))
+  let assert Ok(bits) = result
+  promise.resolve(bit_array.byte_size(bits))
+}
+
+pub fn derive_bits_zero_length_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  use size <- promise.await(derive_zero_length_ec_dh_bits())
+  size |> should.equal(0)
+  promise.resolve(Nil)
+}
+
+/// Bun resolves a zero-length `derive_bits` with the full shared secret
+/// where the Web Crypto spec (and Node and Deno) produce an empty result.
+pub fn derive_bits_zero_length_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  use size <- promise.await(derive_zero_length_ec_dh_bits())
+  size |> should.equal(32)
   promise.resolve(Nil)
 }
 
