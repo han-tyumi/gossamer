@@ -17,7 +17,7 @@ shell = true
 
 [[workflows.steps]]
 type = "Command"
-command = "just clean build check test examples"
+command = "just gate"
 
 # Re-render runtime-floor badges from runtime.toml and fail if
 # README.md drifted (manual edits to the marker section, etc.). The

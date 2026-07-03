@@ -49,6 +49,9 @@ format:
 docs:
     gleam docs build
 
+[group('release')]
+gate: clean build check test examples
+
 [group('build')]
 watch +recipes:
     watchexec --no-meta -c -e gleam,mjs,ts,md,json -- just {{ recipes }}
