@@ -182,6 +182,15 @@ export const response_type: typeof $fetchExtra.response_type = (response) => {
 };
 
 async function send_internal(jsRequest: Request, init: RequestInit) {
+  // A fetch given an already-aborted signal rejects with the signal's
+  // reason without sending. Produce that result without calling fetch:
+  // on Node.js the call would also leak the reason as an unhandled
+  // rejection when the request body is a stream (FormData or
+  // ReadableStream bodies).
+  if (init.signal?.aborted) {
+    return Result$Error(FetchError$NetworkError(String(init.signal.reason)));
+  }
+
   try {
     const jsResponse = await globalThis.fetch(jsRequest, init);
     return Result$Ok(from_fetch_response(jsResponse));
