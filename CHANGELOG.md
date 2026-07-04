@@ -1,3 +1,88 @@
+## 10.0.0 (2026-07-04)
+
+v10 is a ground-up reshape around two principles: lean on the Gleam ecosystem
+where it already covers a Web API, and focus gossamer on filling the gaps the
+spec leaves. Nearly every module moved, was renamed, or was dropped in favor of
+a canonical type — treat this as a fresh start, not an incremental upgrade.
+
+### Breaking Changes
+
+v10 supports Node.js >= 24.7.0, Deno >= 2.8.2, and Bun >= 1.3.13.
+
+Dropped in favor of existing ecosystem libraries and canonical types:
+
+- Request, Response, Headers, and HTTP methods/statuses are gone — use
+  [`gleam_http`](https://hexdocs.pm/gleam_http/) and
+  [`gleam_fetch`](https://hexdocs.pm/gleam_fetch/). Fetch configuration they
+  don't cover (mode, credentials, cache, redirect, referrer, priority,
+  integrity, keepalive, signal) is now in `gossamer/fetch_extra`; File-valued
+  form entries are in `gossamer/form_data_extra`.
+- URLSearchParams is gone — use
+  [`gleam/uri`](https://hexdocs.pm/gleam_stdlib/gleam/uri.html). `gossamer/url`
+  now validates and canonicalizes a URL per the WHATWG spec and returns a
+  `gleam/uri.Uri`.
+- The Date, Promise, Math, Number, String, Symbol, and RegExp bindings are gone
+  — use [`gleam/time`](https://hexdocs.pm/gleam_time/),
+  [`gleam/javascript/promise`](https://hexdocs.pm/gleam_javascript/gleam/javascript/promise.html),
+  [`gleam/float`](https://hexdocs.pm/gleam_stdlib/gleam/float.html),
+  [`gleam/int`](https://hexdocs.pm/gleam_stdlib/gleam/int.html),
+  [`gleam/string`](https://hexdocs.pm/gleam_stdlib/gleam/string.html),
+  [`gleam/javascript/symbol`](https://hexdocs.pm/gleam_javascript/gleam/javascript/symbol.html),
+  and [`gleam/regexp`](https://hexdocs.pm/gleam_regexp/). The platform extras
+  those libraries don't cover live in `gossamer/time_extra`, `float_extra`,
+  `int_extra`, `string_extra`, `symbol_extra`, and `regexp_extra`.
+- The Iterator and AsyncIterator bindings are now the top-level
+  `gossamer/iterator` and `gossamer/async_iterator` — thin interop types (like
+  [`gleam/javascript/array`](https://hexdocs.pm/gleam_javascript/gleam/javascript/array.html))
+  that bridge to [`gleam/yielder`](https://hexdocs.pm/gleam_yielder/) and the
+  new pure-Gleam `gossamer/async_yielder`.
+
+Dropped entirely:
+
+- The full TypedArray family, keeping only `gossamer/uint8_array` for interop —
+  use `BitArray` for byte data and bridge with `to_bit_array` /
+  `from_bit_array`.
+- The Event family (Event, EventTarget, CustomEvent, ErrorEvent, MessageEvent),
+  the WeakMap / WeakSet / WeakRef / FinalizationRegistry bindings, and js_error.
+
+Reorganized into family modules:
+
+- Crypto is now `gossamer/crypto` (the shared types and `random_uuid`) plus
+  `crypto/key`, `crypto/subtle`, and `crypto/jwk`, with per-algorithm options as
+  typed variants on `crypto/subtle`.
+- Text encoding is now `gossamer/encoding/*`; compression is
+  `gossamer/compression/*`; the Streams API is `gossamer/stream/*`, with the
+  shared lifecycle error and queuing strategy on `gossamer/stream`.
+
+Reshaped within retained bindings:
+
+- AbortController folds into `gossamer/abort_signal` (`new()` returns the signal
+  and an abort function); WebSocket's ready state folds into
+  `gossamer/web_socket`, and the binary type is gone — binary messages always
+  arrive as `Binary(BitArray)` events.
+- Numerous shape refinements to match the ecosystem: `desired_size` reports a
+  `DesiredSize` variant, `reader.read` returns `Result(Option(a), _)`, the
+  digest / compression-stream constructors are infallible, the `run` / `for`
+  callback labels are dropped, and `uint8_array.at` and the locale-casing
+  functions are relabeled/renamed.
+- Fallibility follows the input domain: stream operations report `Locked`
+  instead of panicking on locked streams, the intl formatters report errors for
+  malformed locale tags/codes and out-of-JS-range timestamps, and
+  `web_socket.build` accepts `http:`/`https:` URLs per the current spec.
+
+### Features
+
+- `gossamer/intl` — the [ECMA-402](https://tc39.es/ecma402/) surface: collator,
+  date_time_format, number_format, duration_format, relative_time_format,
+  list_format, plural_rules, display_names, segmenter, and locale.
+- Concurrency: `gossamer/worker`, `gossamer/worker_parent`,
+  `gossamer/broadcast_channel`, and message channels/ports with automatic
+  MessagePort transfer.
+- `gossamer/async_yielder` — a pure-Gleam async-iteration type mirroring
+  [`gleam/yielder`](https://hexdocs.pm/gleam_yielder/).
+- `gossamer/performance_observer` and the performance/mark and
+  performance/measure entry types.
+
 ## 9.2.0 (2026-05-04)
 
 ### Features
