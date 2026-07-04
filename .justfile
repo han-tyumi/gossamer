@@ -45,9 +45,13 @@ format:
     gleam format
     just --fmt
 
+# --target sidesteps a compiler defect: the docs command resets the
+# prod build cache for Erlang unless a target is given, so on this
+# JavaScript-target package a second warm-cache run renders no module
+# pages (gleam 1.16.0-1.17.0).
 [group('release')]
 docs:
-    gleam docs build
+    gleam docs build --target javascript
 
 [group('release')]
 gate: clean build check test examples docs
