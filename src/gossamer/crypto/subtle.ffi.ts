@@ -33,6 +33,11 @@ function toCryptoError(value: unknown): $crypto.CryptoError$ {
         return $crypto.CryptoError$QuotaExceeded();
       case "SyntaxError":
         return $crypto.CryptoError$InvalidSyntax();
+
+      // Invalid numeric parameters (WebIDL [EnforceRange], e.g. a
+      // negative iteration count) reject with TypeError.
+      case "TypeError":
+        return $crypto.CryptoError$InvalidSyntax();
     }
   }
   throw new Error(

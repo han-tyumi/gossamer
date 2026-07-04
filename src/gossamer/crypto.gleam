@@ -75,7 +75,9 @@ pub type CryptoError {
 
   /// A required parameter is missing or invalid for the algorithm
   /// (e.g., an empty `usages` list when generating or importing a
-  /// symmetric key). Corresponds to the `SyntaxError` DOMException.
+  /// symmetric key, or an out-of-range numeric parameter). Corresponds
+  /// to the `SyntaxError` DOMException and the `TypeError` rejections
+  /// from invalid numeric parameters.
   InvalidSyntax
 }
 

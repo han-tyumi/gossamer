@@ -10,9 +10,10 @@
 //// [`export_key`](#export_key), [`wrap_key`](#wrap_key),
 //// [`unwrap_key`](#unwrap_key)).
 ////
-//// Every operation returns `Promise(Result(_, CryptoError))`. Key-usage
-//// and extractability constraints are checked before dispatch and
-//// surface as typed `CryptoError` variants.
+//// Every fallible operation returns `Promise(Result(_, CryptoError))`;
+//// `digest` cannot fail and returns `Promise(BitArray)` directly.
+//// Key-usage and extractability constraints are checked before
+//// dispatch and surface as typed `CryptoError` variants.
 ////
 //// See [SubtleCrypto](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto) on MDN.
 
@@ -262,7 +263,9 @@ pub fn verify(
 
 /// Generates a new symmetric `CryptoKey`. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// algorithm, or `Error(InvalidSyntax)` if `usages` is empty.
+/// algorithm, `Error(InvalidSyntax)` if `usages` is empty, or
+/// `Error(OperationFailed)` if the AES `length` isn't `128`, `192`, or
+/// `256`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "generate_key")
 pub fn generate_key(
@@ -273,8 +276,10 @@ pub fn generate_key(
 
 /// Generates a new public/private key pair. Returns
 /// `Error(AlgorithmNotSupported)` if the runtime doesn't support the
-/// algorithm, or `Error(InvalidSyntax)` if `usages` is empty for an
-/// algorithm that requires it. Equivalent to JavaScript's
+/// algorithm, `Error(InvalidSyntax)` if `usages` is empty for an
+/// algorithm that requires it, or `Error(OperationFailed)` if the RSA
+/// parameters are unusable (e.g. an empty or invalid
+/// `public_exponent`). Equivalent to JavaScript's
 /// `SubtleCrypto.generateKey` with an asymmetric-key algorithm.
 ///
 @external(javascript, "./subtle.ffi.mjs", "generate_key_pair")
@@ -338,8 +343,11 @@ pub fn export_key_jwk(
 /// Derives bits of shared secret from a base key. Returns
 /// `Error(KeyUsageMismatch(DeriveBits))` if `base_key.usages` doesn't
 /// include `DeriveBits`, `Error(InvalidAccess)` if `algorithm` doesn't
-/// match `base_key`, or `Error(AlgorithmNotSupported)` if the runtime
-/// doesn't support the algorithm.
+/// match `base_key`, `Error(AlgorithmNotSupported)` if the runtime
+/// doesn't support the algorithm, or `Error(OperationFailed)` if
+/// `length` isn't a multiple of 8 or exceeds what the algorithm can
+/// derive. On Bun, `length: 0` resolves with the full shared secret
+/// instead of an empty `BitArray`.
 ///
 @external(javascript, "./subtle.ffi.mjs", "derive_bits")
 pub fn derive_bits(

@@ -414,6 +414,59 @@ pub fn encrypt_key_usage_mismatch_test() {
   promise.resolve(Nil)
 }
 
+pub fn decrypt_tampered_ciphertext_test() {
+  use result <- promise.await(
+    subtle.generate_key(subtle.Aes(crypto.Gcm, 256), True, [
+      crypto.Encrypt,
+      crypto.Decrypt,
+    ]),
+  )
+  let assert Ok(key) = result
+
+  let iv = gleam_crypto.strong_random_bytes(12)
+  use result <- promise.await(
+    subtle.encrypt(subtle.EncryptAesGcm(iv, <<>>, option.None), key, <<
+      "secret":utf8,
+    >>),
+  )
+  let assert Ok(ciphertext) = result
+
+  let assert <<first_byte, rest:bits>> = ciphertext
+  let flipped_byte = 255 - first_byte
+  let tampered = <<flipped_byte, rest:bits>>
+
+  use result <- promise.await(subtle.decrypt(
+    subtle.EncryptAesGcm(iv, <<>>, option.None),
+    key,
+    tampered,
+  ))
+  let assert Error(crypto.OperationFailed) = result
+  promise.resolve(Nil)
+}
+
+pub fn encrypt_algorithm_mismatch_test() {
+  use result <- promise.await(
+    subtle.generate_key(subtle.Aes(crypto.Cbc, 256), True, [
+      crypto.Encrypt,
+    ]),
+  )
+  let assert Ok(key) = result
+
+  use result <- promise.await(
+    subtle.encrypt(
+      subtle.EncryptAesGcm(
+        gleam_crypto.strong_random_bytes(12),
+        <<>>,
+        option.None,
+      ),
+      key,
+      <<1, 2, 3>>,
+    ),
+  )
+  let assert Error(crypto.InvalidAccess) = result
+  promise.resolve(Nil)
+}
+
 pub fn export_key_not_extractable_test() {
   use result <- promise.await(
     subtle.generate_key(subtle.Aes(crypto.Gcm, 256), False, [
@@ -446,6 +499,20 @@ pub fn import_key_empty_usages_test() {
     ),
   )
   let assert Error(crypto.InvalidSyntax) = result
+  promise.resolve(Nil)
+}
+
+pub fn import_key_malformed_data_test() {
+  use result <- promise.await(
+    subtle.import_key(
+      subtle.Raw,
+      <<1, 2, 3>>,
+      subtle.ImportAes(crypto.Gcm),
+      True,
+      [crypto.Encrypt],
+    ),
+  )
+  let assert Error(crypto.DataMalformed) = result
   promise.resolve(Nil)
 }
 
