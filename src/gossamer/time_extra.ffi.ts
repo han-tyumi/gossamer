@@ -1,10 +1,18 @@
 import { to_milliseconds } from "$/gleam_time/gleam/time/duration.mjs";
-import type { Timestamp$ } from "$/gleam_time/gleam/time/timestamp.mjs";
 import * as $time_extra from "$/gossamer/gossamer/time_extra.mjs";
 import { timestampToMs } from "~/utils/time.ffi.ts";
 
-function timestampToDate(timestamp: Timestamp$): Date {
-  return new Date(timestampToMs(timestamp));
+// The maximum millisecond offset from the epoch a JavaScript Date can
+// represent, per ECMA-262.
+const MAX_DATE_MS = 8.64e15;
+
+function toDate(ms: number, binding: string): Date {
+  if (!(Math.abs(ms) <= MAX_DATE_MS)) {
+    throw new Error(
+      `gossamer.${binding}: the timestamp is outside the range JavaScript dates support`,
+    );
+  }
+  return new Date(ms);
 }
 
 function toWeekday(day: number): $time_extra.Weekday$ {
@@ -27,7 +35,8 @@ function toWeekday(day: number): $time_extra.Weekday$ {
 }
 
 export const to_utc_string: typeof $time_extra.to_utc_string = (timestamp) => {
-  return timestampToDate(timestamp).toUTCString();
+  return toDate(timestampToMs(timestamp), "time_extra.to_utc_string")
+    .toUTCString();
 };
 
 export const day_of_week: typeof $time_extra.day_of_week = (
@@ -35,5 +44,5 @@ export const day_of_week: typeof $time_extra.day_of_week = (
   offset,
 ) => {
   const adjusted = timestampToMs(timestamp) + to_milliseconds(offset);
-  return toWeekday(new Date(adjusted).getUTCDay());
+  return toWeekday(toDate(adjusted, "time_extra.day_of_week").getUTCDay());
 };

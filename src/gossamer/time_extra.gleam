@@ -86,8 +86,10 @@ pub fn weekday_from_int(weekday: Int) -> Result(Weekday, Nil) {
 
 /// Returns the timestamp as an RFC 7231 string (e.g.,
 /// `"Thu, 01 Jan 1970 00:00:00 GMT"`). This is the format used by HTTP
-/// `Date`, `Last-Modified`, and `Expires` headers. Equivalent to
-/// JavaScript's `Date.prototype.toUTCString`.
+/// `Date`, `Last-Modified`, and `Expires` headers. Panics when the
+/// timestamp is outside the range JavaScript dates support (about plus
+/// or minus 273,790 years). Equivalent to JavaScript's
+/// `Date.prototype.toUTCString`.
 ///
 @external(javascript, "./time_extra.ffi.mjs", "to_utc_string")
 pub fn to_utc_string(timestamp: Timestamp) -> String
@@ -95,7 +97,9 @@ pub fn to_utc_string(timestamp: Timestamp) -> String
 /// Returns the day of the week for the given offset. Pass
 /// `gleam/time/calendar.utc_offset` for UTC or
 /// `gleam/time/calendar.local_offset()` for the host's local timezone.
-/// Equivalent to JavaScript's `Date.prototype.getDay`.
+/// Panics when the timestamp is outside the range JavaScript dates
+/// support (about plus or minus 273,790 years). Equivalent to
+/// JavaScript's `Date.prototype.getDay`.
 ///
 @external(javascript, "./time_extra.ffi.mjs", "day_of_week")
 pub fn day_of_week(timestamp: Timestamp, offset: Duration) -> Weekday
