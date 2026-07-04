@@ -10,8 +10,8 @@ import gossamer/blob.{type Blob}
 /// Errors raised by `WebSocket` operations.
 ///
 pub type WebSocketError {
-  /// The URL is not an absolute `ws:` or `wss:` URL, or includes a
-  /// fragment.
+  /// The URL is not an absolute `ws:`, `wss:`, `http:`, or `https:`
+  /// URL, or includes a fragment.
   InvalidUrl
 
   /// The protocols list contains duplicates or values that aren't valid
@@ -130,10 +130,12 @@ pub fn with_on_event(
   )
 }
 
-/// Opens the WebSocket connection from the configured `Builder`. Returns
-/// `Error(InvalidUrl)` when the URL isn't an absolute `ws:`/`wss:` URL or
-/// contains a fragment, and `Error(InvalidProtocols)` when the protocols
-/// list has duplicates or non-token entries.
+/// Opens the WebSocket connection from the configured `Builder`. An
+/// `http:` or `https:` URL connects over `ws:` or `wss:` respectively.
+/// Returns `Error(InvalidUrl)` when the URL isn't an absolute `ws:`,
+/// `wss:`, `http:`, or `https:` URL or contains a fragment, and
+/// `Error(InvalidProtocols)` when the protocols list has duplicates or
+/// non-token entries.
 ///
 pub fn build(builder: Builder) -> Result(WebSocket, WebSocketError) {
   do_build(builder.url, builder.protocols, builder.on_event)
@@ -166,7 +168,10 @@ pub type Info {
 }
 
 /// A snapshot of the socket's URL, negotiated sub-protocol, and server
-/// extensions. These fields are fixed once the handshake completes.
+/// extensions. These fields are fixed once the handshake completes. For
+/// sockets built from `http:`/`https:` URLs, Bun keeps the original
+/// scheme in `url` where Node.js and Deno report the normalized
+/// `ws:`/`wss:` URL.
 ///
 @external(javascript, "./web_socket.ffi.mjs", "info")
 pub fn info(socket: WebSocket) -> Info

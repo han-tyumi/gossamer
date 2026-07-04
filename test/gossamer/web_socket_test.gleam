@@ -64,8 +64,15 @@ pub fn send_blob_while_connecting_test() {
   web_socket.close(ws)
 }
 
+pub fn build_http_url_test() {
+  let assert Ok(socket) =
+    web_socket.new(ws("http://localhost:1")) |> web_socket.build
+  web_socket.ready_state(socket) |> should.equal(web_socket.Connecting)
+  web_socket.close(socket)
+}
+
 pub fn build_invalid_url_test() {
-  web_socket.new(ws("http://example.com"))
+  web_socket.new(ws("ftp://example.com"))
   |> web_socket.build
   |> should.equal(Error(web_socket.InvalidUrl))
 }

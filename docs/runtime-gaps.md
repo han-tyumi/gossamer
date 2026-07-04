@@ -23,9 +23,9 @@ versions than those are considered unsupported.
   empty result. Fixed upstream in
   [oven-sh/bun#32819](https://github.com/oven-sh/bun/pull/32819); not yet in a
   Bun release.
-- **`fetch_extra.response_type`** — returns `ResponseDefault` for synthetic
-  responses (e.g. `Response("body")`) where the Fetch spec, Node, and Deno
-  return `ResponseBasic`.
+- **`fetch_extra.response_type`** — returns `ResponseDefault` for responses
+  fetched from synthetic sources (e.g. a fetched `data:` URL) where the Fetch
+  spec, Node, and Deno return `ResponseBasic`.
 - **`plural_rules.resolved_options`** — its `locale` field keeps full input tags
   like `"en-US"`. Node and Deno normalize the same input to `"en"`. Other Intl
   formatters (`number_format`, etc.) keep `"en-US"` across all three.
@@ -36,6 +36,15 @@ versions than those are considered unsupported.
 - **`date_time_format.format_range`** — uses regular U+0020 spaces around the en
   dash. Node and Deno use thin (U+2009) spaces. Assert via substring rather than
   strict equality if you compare formatted output across runtimes.
+- **`web_socket.info`** for sockets built from `http:`/`https:` URLs — the `url`
+  field keeps the original scheme where Node and Deno report the normalized
+  `ws:`/`wss:` URL.
+
+## Deno
+
+- **`blob.revoke_object_url`** — Deno throws on unparseable URL strings where
+  the spec, Node, and Bun silently no-op. The FFI catches the throw, so the
+  binding is a silent no-op on every runtime.
 
 ## Node.js
 

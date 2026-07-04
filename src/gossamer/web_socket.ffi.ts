@@ -11,7 +11,10 @@ function isValidWebSocketUrl(url: string): boolean {
   } catch {
     return false;
   }
-  if (parsed.protocol !== "ws:" && parsed.protocol !== "wss:") return false;
+  // http: and https: are spec-valid; the constructor normalizes them
+  // to ws: and wss:.
+  const allowedSchemes = ["ws:", "wss:", "http:", "https:"];
+  if (!allowedSchemes.includes(parsed.protocol)) return false;
   if (parsed.hash !== "") return false;
   return true;
 }
@@ -33,10 +36,11 @@ function toMessageEvent(data: unknown): $webSocket.WebSocketEvent$ {
       BitArray$BitArray(new Uint8Array(data)),
     );
   }
-  // Defensive fallback for runtimes that ignore binaryType: convert
-  // any other value (e.g. a Blob) to an empty BitArray. Pinning
-  // binaryType = "arraybuffer" below should prevent this path.
-  return $webSocket.WebSocketEvent$Binary(BitArray$BitArray(new Uint8Array()));
+  throw new Error(
+    "gossamer.web_socket: the runtime delivered a binary message that is " +
+      'not an ArrayBuffer despite binaryType being pinned to "arraybuffer". ' +
+      "Please file an issue at https://github.com/han-tyumi/gossamer/issues.",
+  );
 }
 
 function toReadyState(value: number): $webSocket.ReadyState$ {
