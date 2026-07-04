@@ -37,12 +37,28 @@ just watch build test
 ## Commits and releases
 
 Commits use [Conventional Commits](https://www.conventionalcommits.org/) —
-they're the raw material for the hand-written changelog. To release, commit the
-new version in `gleam.toml` together with its `CHANGELOG.md` section, then run
-[knope](https://knope.tech/)'s `release` workflow from a clean `main`. knope
-gates (branch, clean tree, `just gate`, README badge sync), tags the version
-from `gleam.toml`, creates the GitHub release from the matching `CHANGELOG.md`
-section, and publishes — see `knope.toml` for the workflow.
+[knope](https://knope.tech/) reads them to generate the changelog section and
+bump the version. To release, run from a clean `main`:
+
+```sh
+just release
+```
+
+The recipe sources a fresh GitHub token from `gh auth token`, validates
+credentials before the gate runs, and hands off to knope, which gates (branch,
+clean tree, `just gate`, README badge sync), prepares the release commit
+(changelog + version + example locks), tags, creates the GitHub release, and
+publishes — see `knope.toml` for the workflow.
+
+Hex authentication uses the `gleam hex authenticate` login by default. To
+publish with an API key instead, store one in the macOS Keychain once —
+`security add-generic-password -a "$USER" -s hexpm-gossamer-publish -w` — and
+the recipe picks it up and validates it automatically; delete the entry to
+return to the OAuth login.
+
+For a release whose changelog entry is hand-curated (like 10.0.0), commit the
+`CHANGELOG.md` section and `gleam.toml` version by hand and drop the
+`PrepareRelease` step for that run.
 
 ## Conventions for adding bindings
 

@@ -56,6 +56,35 @@ docs:
 [group('release')]
 gate: clean build check test examples docs
 
+# Runs the knope release workflow with credentials sourced and validated
+# up front: the GitHub token comes fresh from `gh auth token`, and the
+# Hex key comes from the macOS Keychain when a `hexpm-gossamer-publish`
+# entry exists (store one with
+# `security add-generic-password -a "$USER" -s hexpm-gossamer-publish -w`).
+# Without a Keychain entry, publishing uses the stored `gleam hex
+# authenticate` login.
+[group('release')]
+release:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    export GITHUB_TOKEN="$(gh auth token)"
+    gh api repos/han-tyumi/gossamer --jq .id > /dev/null \
+      || { echo "GitHub credentials failed — run gh auth login" >&2; exit 1; }
+    hex_key="$(security find-generic-password -a "$USER" -s hexpm-gossamer-publish -w 2>/dev/null || true)"
+    if [ -n "${hex_key}" ]; then
+        status="$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: ${hex_key}" 'https://hex.pm/api/auth?domain=api&resource=write')"
+        case "${status}" in
+            204 | 403) export HEXPM_API_KEY="${hex_key}" ;;
+            *)
+                echo "Hex key in Keychain rejected (HTTP ${status}) — refresh it or delete the entry to use OAuth" >&2
+                exit 1
+                ;;
+        esac
+    else
+        echo "No Keychain Hex key found; gleam publish will use the stored OAuth login"
+    fi
+    knope release
+
 [group('build')]
 watch +recipes:
     watchexec --no-meta -c -e gleam,mjs,ts,md,json -- just {{ recipes }}
