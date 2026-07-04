@@ -1,69 +1,84 @@
-import gossamer/iterator.{type Iterator}
+//// JavaScript `Map` bindings for interop with APIs that produce or
+//// consume a `Map`. Treated as a transit type: bridge to
+//// [`gleam/dict.Dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html)
+//// via [`to_dict`](#to_dict) and operate on the canonical Gleam
+//// surface for transformations, then [`from_dict`](#from_dict) back
+//// when handing off to JavaScript. The non-mutating reads
+//// ([`size`](#size), [`get`](#get), [`has`](#has),
+//// [`keys`](#keys), [`values`](#values), [`entries`](#entries)) stay
+//// for one-shot interop without round-tripping through `Dict`.
 
-/// A JS `Map` holding key-value pairs. Supports any key type (unlike
-/// plain objects) and preserves insertion order. Mutable — methods modify
-/// the map in place and return it for chaining.
+import gleam/dict.{type Dict}
+import gleam/yielder.{type Yielder}
+
+/// A JavaScript `Map`, holding key-value pairs and preserving insertion
+/// order. Supports any key type (unlike plain objects).
 ///
 /// For most Gleam use cases, prefer `gleam/dict.Dict`. This binding
-/// exists for JS interop where a JS `Map` is specifically required.
+/// exists for interop with JavaScript code that expects a `Map`; bridge
+/// with `to_dict` / `from_dict` and operate on the `Dict` surface for
+/// transformations.
 ///
-/// Object keys (records, lists, tuples) are matched by JS reference
-/// identity, not value equality — two equal-by-value tuples constructed
-/// separately are distinct keys. Primitive keys (`Int`, `Float`,
-/// `String`, `Bool`) use value equality.
+/// Object keys (records, lists, tuples) are matched by JavaScript
+/// reference identity, not by Gleam value equality — two equal-by-value
+/// tuples constructed separately are distinct keys. Primitive keys
+/// (`Int`, `Float`, `String`, `Bool`) use value equality.
 ///
 /// See [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) on MDN.
 ///
 @external(javascript, "./map.type.ts", "Map$")
 pub type Map(key, value)
 
+/// Creates an empty `Map`.
+///
 @external(javascript, "./map.ffi.mjs", "new_")
 pub fn new() -> Map(key, value)
 
+/// Creates a `Map` from a list of key-value pairs. Later pairs override
+/// earlier ones for the same key.
+///
 @external(javascript, "./map.ffi.mjs", "from_list")
 pub fn from_list(entries: List(#(key, value))) -> Map(key, value)
 
-@external(javascript, "./map.ffi.mjs", "size")
-pub fn size(of map: Map(key, value)) -> Int
+/// Creates a `Map` from a `Dict`. Iteration order follows the `Dict`'s
+/// `to_list` order.
+///
+@external(javascript, "./map.ffi.mjs", "from_dict")
+pub fn from_dict(dict: Dict(key, value)) -> Map(key, value)
 
-/// Returns the value associated with the given key, or an error if not found.
+/// Converts the `Map` to a `Dict`. Iteration order is preserved as
+/// `Dict` insertion order.
+///
+@external(javascript, "./map.ffi.mjs", "to_dict")
+pub fn to_dict(map: Map(key, value)) -> Dict(key, value)
+
+/// The number of entries in the `Map`.
+///
+@external(javascript, "./map.ffi.mjs", "size")
+pub fn size(map: Map(key, value)) -> Int
+
+/// Returns the value associated with the given key, or `Error(Nil)` if
+/// the key is absent.
 ///
 @external(javascript, "./map.ffi.mjs", "get")
 pub fn get(from map: Map(key, value), key key: key) -> Result(value, Nil)
 
+/// Returns whether the `Map` contains the given key.
+///
 @external(javascript, "./map.ffi.mjs", "has")
 pub fn has(in map: Map(key, value), key key: key) -> Bool
 
-/// Sets the value for the given key. Mutates the map.
+/// Returns the keys of the `Map` in insertion order.
 ///
-@external(javascript, "./map.ffi.mjs", "set")
-pub fn set(
-  in map: Map(key, value),
-  key key: key,
-  value value: value,
-) -> Map(key, value)
-
-/// Removes the entry for the given key. Mutates the map.
-///
-@external(javascript, "./map.ffi.mjs", "delete_")
-pub fn delete(from map: Map(key, value), key key: key) -> Map(key, value)
-
-/// Removes all entries. Mutates the map.
-///
-@external(javascript, "./map.ffi.mjs", "clear")
-pub fn clear(map: Map(key, value)) -> Map(key, value)
-
 @external(javascript, "./map.ffi.mjs", "keys")
-pub fn keys(of map: Map(key, value)) -> Iterator(key, Nil, Nil)
+pub fn keys(map: Map(key, value)) -> Yielder(key)
 
+/// Returns the values of the `Map` in insertion order.
+///
 @external(javascript, "./map.ffi.mjs", "values")
-pub fn values(of map: Map(key, value)) -> Iterator(value, Nil, Nil)
+pub fn values(map: Map(key, value)) -> Yielder(value)
 
+/// Returns the `#(key, value)` pairs of the `Map` in insertion order.
+///
 @external(javascript, "./map.ffi.mjs", "entries")
-pub fn entries(of map: Map(key, value)) -> Iterator(#(key, value), Nil, Nil)
-
-@external(javascript, "./map.ffi.mjs", "for_each")
-pub fn for_each(
-  in map: Map(key, value),
-  run callback: fn(key, value) -> a,
-) -> Nil
+pub fn entries(map: Map(key, value)) -> Yielder(#(key, value))

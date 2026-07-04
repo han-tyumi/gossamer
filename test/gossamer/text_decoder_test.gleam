@@ -1,70 +1,104 @@
 import gleeunit/should
 import gossamer/encoding
-import gossamer/text_decoder
-import gossamer/text_encoder
-import gossamer/uint8_array
+import gossamer/encoding/text_decoder
+import runtime
 
-pub fn new_test() {
-  let decoder = text_decoder.new()
-  text_decoder.encoding(decoder) |> should.equal(encoding.Utf8)
+pub fn build_default_test() {
+  let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
+  text_decoder.encoding(decoder) |> should.equal("utf-8")
 }
 
-pub fn new_with_utf8_test() {
-  let assert Ok(decoder) = text_decoder.new_with("utf-8", [])
-  text_decoder.encoding(decoder) |> should.equal(encoding.Utf8)
-}
-
-pub fn new_with_invalid_test() {
-  text_decoder.new_with("not-a-real-encoding", [])
+pub fn build_invalid_test() {
+  text_decoder.new("not-a-real-encoding")
+  |> text_decoder.build
   |> should.be_error
 }
 
-pub fn new_with_fatal_test() {
-  let assert Ok(decoder) = text_decoder.new_with("utf-8", [text_decoder.Fatal])
+pub fn with_fatal_test() {
+  let assert Ok(decoder) =
+    text_decoder.new("utf-8")
+    |> text_decoder.with_fatal(True)
+    |> text_decoder.build
   text_decoder.is_fatal(decoder) |> should.be_true
 }
 
-pub fn new_with_ignore_bom_test() {
+pub fn with_ignore_bom_test() {
   let assert Ok(decoder) =
-    text_decoder.new_with("utf-8", [text_decoder.IgnoreBom])
+    text_decoder.new("utf-8")
+    |> text_decoder.with_ignore_bom(True)
+    |> text_decoder.build
   text_decoder.is_ignore_bom(decoder) |> should.be_true
 }
 
 pub fn is_fatal_default_test() {
-  let decoder = text_decoder.new()
+  let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
   text_decoder.is_fatal(decoder) |> should.be_false
 }
 
 pub fn is_ignore_bom_default_test() {
-  let decoder = text_decoder.new()
+  let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
   text_decoder.is_ignore_bom(decoder) |> should.be_false
 }
 
 pub fn decode_test() {
-  let encoded = text_encoder.encode("hello world")
-  text_decoder.decode(encoded) |> should.equal("hello world")
-}
-
-pub fn decode_with_test() {
-  let encoded = text_encoder.encode("utf-8 text")
-  let assert Ok(decoded) = text_decoder.decode_with(encoded, "utf-8", [])
+  let assert Ok(decoded) =
+    text_decoder.decode(<<"utf-8 text":utf8>>, with: text_decoder.new("utf-8"))
   should.equal(decoded, "utf-8 text")
 }
 
+pub fn decode_fatal_malformed_test() {
+  text_decoder.decode(
+    <<0xff>>,
+    with: text_decoder.new("utf-8") |> text_decoder.with_fatal(True),
+  )
+  |> should.equal(Error(encoding.MalformedInput))
+}
+
+pub fn decode_unsupported_encoding_test() {
+  text_decoder.decode(<<>>, with: text_decoder.new("not-a-real-encoding"))
+  |> should.equal(Error(encoding.UnsupportedEncoding("not-a-real-encoding")))
+}
+
 pub fn decode_chunk_test() {
-  let decoder = text_decoder.new()
-  let encoded = text_encoder.encode("chunk data")
-  let assert Ok(decoded) = text_decoder.decode_chunk(decoder, encoded)
+  let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
+  let assert Ok(decoded) =
+    text_decoder.decode_chunk(decoder, <<"chunk data":utf8>>)
   should.equal(decoded, "chunk data")
 }
 
 pub fn flush_test() {
-  let decoder = text_decoder.new()
+  let assert Ok(decoder) = text_decoder.new("utf-8") |> text_decoder.build
   let assert Ok(flushed) = text_decoder.flush(decoder)
   should.equal(flushed, "")
 }
 
-pub fn decode_empty_test() {
-  let empty = uint8_array.new()
-  text_decoder.decode(empty) |> should.equal("")
+pub fn decode_chunk_fatal_malformed_test() {
+  let assert Ok(decoder) =
+    text_decoder.new("utf-8")
+    |> text_decoder.with_fatal(True)
+    |> text_decoder.build
+  text_decoder.decode_chunk(decoder, <<0xff>>)
+  |> should.equal(Error(encoding.MalformedInput))
+}
+
+pub fn flush_fatal_incomplete_sequence_test() {
+  let assert Ok(decoder) =
+    text_decoder.new("utf-8")
+    |> text_decoder.with_fatal(True)
+    |> text_decoder.build
+  let assert Ok("") = text_decoder.decode_chunk(decoder, <<0xe2>>)
+  text_decoder.flush(decoder) |> should.equal(Error(encoding.MalformedInput))
+}
+
+pub fn build_legacy_single_byte_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  text_decoder.new("iso-8859-2") |> text_decoder.build |> should.be_ok
+}
+
+/// Bun's ICU data omits 16 legacy single-byte encodings, so building a
+/// decoder for one returns `UnsupportedEncoding` where Node and Deno
+/// succeed.
+pub fn build_legacy_single_byte_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  text_decoder.new("iso-8859-2") |> text_decoder.build |> should.be_error
 }

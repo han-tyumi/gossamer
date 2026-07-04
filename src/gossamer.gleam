@@ -1,81 +1,23 @@
-//// Top-level cross-runtime Web Platform APIs: `fetch`, timers, base64,
-//// structured cloning, and more. Domain-specific APIs live in submodules
-//// (see `gossamer/url`, `gossamer/headers`, `gossamer/readable_stream`,
-//// etc.).
+//// Top-level cross-runtime APIs: timers, base64, microtask
+//// scheduling, and navigator info. Domain-specific APIs live in
+//// submodules (see `gossamer/url`, `gossamer/stream/readable_stream`,
+//// `gossamer/fetch_extra`, etc.).
 
-import gossamer/js_error.{type JsError}
-import gossamer/promise.{type Promise}
-import gossamer/request.{type Request, type RequestInit}
-import gossamer/response.{type Response}
-import gossamer/url.{type URL}
-
-/// Fetches a resource from `url`. Returns an error on network error,
-/// CORS failure, or if the URL is invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_")
-pub fn fetch(url: String) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource from `url` with the given request init options.
-/// Returns an error on network error, CORS failure, or if the URL or
-/// `init` is invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_with")
-pub fn fetch_with(
-  url: String,
-  with init: List(RequestInit),
-) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource from `url`. Returns an error on network error or
-/// CORS failure.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_url")
-pub fn fetch_url(url: URL) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource from `url` with the given request init options.
-/// Returns an error on network error, CORS failure, or if `init` is
-/// invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_url_with")
-pub fn fetch_url_with(
-  url: URL,
-  with init: List(RequestInit),
-) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource using a pre-built `Request`. Returns an error on
-/// network error or CORS failure.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_request")
-pub fn fetch_request(request: Request) -> Promise(Result(Response, JsError))
-
-/// Fetches a resource using a pre-built `Request`, with `init` options
-/// that override fields on `request`. Returns an error on network error,
-/// CORS failure, or if `init` is invalid.
-///
-@external(javascript, "./gossamer.ffi.mjs", "fetch_request_with")
-pub fn fetch_request_with(
-  request: Request,
-  with init: List(RequestInit),
-) -> Promise(Result(Response, JsError))
-
-/// Creates a deep clone of `value` using the structured clone algorithm.
-/// Returns an error if `value` contains a function, symbol, or other
-/// non-cloneable value.
-///
-@external(javascript, "./gossamer.ffi.mjs", "structured_clone")
-pub fn structured_clone(value: a) -> Result(a, JsError)
+import gleam/time/duration.{type Duration}
 
 /// Decodes a base64-encoded string. Returns an error if the string is
-/// not valid base64.
+/// not valid base64. Equivalent to JavaScript's `atob`.
 ///
-@external(javascript, "./gossamer.ffi.mjs", "atob")
-pub fn atob(encoded: String) -> Result(String, JsError)
+@external(javascript, "./gossamer.ffi.mjs", "decode_base64")
+pub fn decode_base64(encoded: String) -> Result(String, Nil)
 
-/// Encodes a binary string as base64. Returns an error if `data` contains
-/// code points beyond `0xFF` (use `uint8_array.to_base64` for arbitrary
-/// bytes).
+/// Encodes a binary string as base64. Returns an error if `data`
+/// contains code points beyond `0xFF` (use
+/// `gleam/bit_array.base64_encode` for arbitrary bytes). Equivalent to
+/// JavaScript's `btoa`.
 ///
-@external(javascript, "./gossamer.ffi.mjs", "btoa")
-pub fn btoa(data: String) -> Result(String, JsError)
+@external(javascript, "./gossamer.ffi.mjs", "encode_base64")
+pub fn encode_base64(data: String) -> Result(String, Nil)
 
 /// Cancels a repeating timer previously scheduled with `set_interval`.
 ///
@@ -87,28 +29,37 @@ pub fn clear_interval(id: Int) -> Nil
 @external(javascript, "./gossamer.ffi.mjs", "clear_timeout")
 pub fn clear_timeout(id: Int) -> Nil
 
-/// A microtask is a short function which is executed after the function or
-/// module which created it exits and only if the JavaScript execution stack is
-/// empty, but before returning control to the event loop.
+/// Schedules `callback` to run as a microtask — after the current
+/// execution stack empties but before returning control to the event
+/// loop.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "queue_microtask")
-pub fn queue_microtask(run func: fn() -> a) -> Nil
+pub fn queue_microtask(callback: fn() -> a) -> Nil
 
-/// Schedules `callback` to run repeatedly every `delay` milliseconds.
-/// Returns an id that can be passed to `clear_interval` to cancel.
+/// Schedules `callback` to run repeatedly every `delay`. Returns an id
+/// that can be passed to `clear_interval` to cancel. Negative durations
+/// are treated as zero.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_interval")
-pub fn set_interval(every delay: Int, run callback: fn() -> a) -> Int
+pub fn set_interval(delay: Duration, callback: fn() -> a) -> Int
 
-/// Sets a timer which executes a function once after the delay
-/// (in milliseconds) elapses. Returns an id which may be used to cancel the
-/// timeout.
+/// Sets a timer which executes `callback` once after `delay` elapses.
+/// Returns an id that can be passed to `clear_timeout` to cancel.
+/// Negative durations are treated as zero.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "set_timeout")
-pub fn set_timeout(after delay: Int, run callback: fn() -> a) -> Int
+pub fn set_timeout(delay: Duration, callback: fn() -> a) -> Int
 
 /// Returns the runtime's user agent string (e.g., browser identity,
-/// Deno/Node version).
+/// Deno/Node version). Equivalent to JavaScript's `navigator.userAgent`.
 ///
 @external(javascript, "./gossamer.ffi.mjs", "user_agent")
 pub fn user_agent() -> String
+
+/// Returns the number of logical processors available to the runtime.
+/// Useful for sizing worker pools. Some browsers cap this value for
+/// fingerprinting protection. Equivalent to JavaScript's
+/// `navigator.hardwareConcurrency`.
+///
+@external(javascript, "./gossamer.ffi.mjs", "hardware_concurrency")
+pub fn hardware_concurrency() -> Int

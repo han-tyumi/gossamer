@@ -1,27 +1,71 @@
+import gleam/javascript/promise
 import gleeunit/should
-import gossamer/byte_length_queuing_strategy
-import gossamer/count_queuing_strategy
+import gossamer/stream
+import gossamer/stream/readable_stream
+import gossamer/stream/readable_stream/default_controller as readable_controller
+import gossamer/stream/transform_stream
+import gossamer/stream/writable_stream
 
-pub fn byte_length_new_test() {
-  let strategy = byte_length_queuing_strategy.new(1024.0)
-  byte_length_queuing_strategy.high_water_mark(strategy)
-  |> should.equal(1024.0)
+pub fn readable_with_unlimited_strategy_test() {
+  let assert Ok(_stream) =
+    readable_stream.new()
+    |> readable_stream.with_queuing_strategy(stream.Unlimited)
+    |> readable_stream.build
 }
 
-pub fn byte_length_zero_test() {
-  let strategy = byte_length_queuing_strategy.new(0.0)
-  byte_length_queuing_strategy.high_water_mark(strategy)
-  |> should.equal(0.0)
+pub fn readable_with_count_strategy_test() {
+  let assert Ok(_stream) =
+    readable_stream.new()
+    |> readable_stream.with_queuing_strategy(stream.ByCount(5))
+    |> readable_stream.build
 }
 
-pub fn count_new_test() {
-  let strategy = count_queuing_strategy.new(10.0)
-  count_queuing_strategy.high_water_mark(strategy)
-  |> should.equal(10.0)
+pub fn readable_with_byte_length_strategy_test() {
+  let assert Ok(_stream) =
+    readable_stream.new()
+    |> readable_stream.with_queuing_strategy(stream.ByByteLength(1024))
+    |> readable_stream.build
 }
 
-pub fn count_zero_test() {
-  let strategy = count_queuing_strategy.new(0.0)
-  count_queuing_strategy.high_water_mark(strategy)
-  |> should.equal(0.0)
+pub fn readable_strategy_applied_to_desired_size_test() {
+  let #(p, resolve) = promise.start()
+  let assert Ok(_stream) =
+    readable_stream.new()
+    |> readable_stream.with_queuing_strategy(stream.ByCount(5))
+    |> readable_stream.with_start(fn(controller) {
+      let assert Ok(size) = readable_controller.desired_size(controller)
+      resolve(size)
+    })
+    |> readable_stream.build
+  use size <- promise.map(p)
+  should.equal(size, stream.Bounded(5))
+}
+
+pub fn writable_with_count_strategy_test() {
+  let assert Ok(_stream) =
+    writable_stream.new()
+    |> writable_stream.with_queuing_strategy(stream.ByCount(3))
+    |> writable_stream.build
+}
+
+pub fn writable_with_unlimited_strategy_test() {
+  let assert Ok(_stream) =
+    writable_stream.new()
+    |> writable_stream.with_queuing_strategy(stream.Unlimited)
+    |> writable_stream.build
+}
+
+pub fn transform_with_both_strategies_test() {
+  let assert Ok(_stream) =
+    transform_stream.new()
+    |> transform_stream.with_writable_strategy(stream.ByCount(2))
+    |> transform_stream.with_readable_strategy(stream.ByByteLength(512))
+    |> transform_stream.build
+}
+
+pub fn transform_with_only_writable_strategy_test() {
+  let assert Ok(_stream) =
+    transform_stream.new()
+    |> transform_stream.with_writable_strategy(stream.Unlimited)
+    |> transform_stream.build
 }

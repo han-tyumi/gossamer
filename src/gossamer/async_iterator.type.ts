@@ -1,5 +1,1 @@
-export type AsyncIterator$<T, TReturn, TNext> = AsyncIterableIterator<
-  T,
-  TReturn,
-  TNext
->;
+export type AsyncIterator$<T> = AsyncIterableIterator<T>;

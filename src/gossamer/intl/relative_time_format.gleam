@@ -1,0 +1,258 @@
+//// Locale-aware relative-time formatting via the JavaScript
+//// `Intl.RelativeTimeFormat`. Reusing a built
+//// [`RelativeTimeFormat`](#RelativeTimeFormat) across many calls is
+//// significantly faster than building one per call.
+
+import gleam/option.{type Option, None, Some}
+import gleam/time/duration.{type Duration}
+import gossamer/intl.{type LabelStyle, type LocaleMatcher}
+
+/// A configured formatter that renders relative time spans
+/// (`"in 2 hours"`, `"yesterday"`, etc.) in a locale-specific way.
+///
+/// See [Intl.RelativeTimeFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/RelativeTimeFormat) on MDN.
+///
+@external(javascript, "./relative_time_format.type.ts", "RelativeTimeFormat$")
+pub type RelativeTimeFormat
+
+/// Whether the formatter renders numeric values verbatim or
+/// substitutes locale-specific wording. Maps the JavaScript
+/// `numeric` option.
+///
+pub type Numeric {
+  /// Always render the numeric value (`"in 1 day"`, the default).
+  Always
+
+  /// Substitute locale-specific wording for special values
+  /// (`"tomorrow"` instead of `"in 1 day"`).
+  Auto
+}
+
+/// A time unit accepted by the format operations. Maps the JavaScript
+/// `unit` argument string.
+///
+pub type Unit {
+  Year
+  Quarter
+  Month
+  Week
+  Day
+  Hour
+  Minute
+  Second
+}
+
+/// A single segment of a formatted relative-time string, returned by
+/// the `format_*_to_parts` family. The `unit` field is `Some` for
+/// segments that quantify a time unit (the integer portion of
+/// `"in 1 day"`) and `None` for literal connective text.
+///
+pub type Part {
+  Part(kind: PartKind, value: String, unit: Option(Unit))
+}
+
+/// The kind of a [`Part`](#Part). Mirrors the relevant subset of
+/// JavaScript `Intl.RelativeTimeFormatPart.type`.
+///
+pub type PartKind {
+  /// A literal connective text (`"in "`, `" ago"`).
+  Literal
+
+  /// An integer digit run.
+  Integer
+
+  /// The decimal separator (`"."` or `","` per locale).
+  Decimal
+
+  /// The fractional portion of a number.
+  Fraction
+
+  /// A digit-group separator (`","` or `" "` per locale).
+  Group
+
+  /// A minus sign for negative durations.
+  MinusSign
+
+  /// A plus sign.
+  PlusSign
+
+  /// The literal infinity symbol (`"∞"`).
+  Infinity
+
+  /// The literal NaN representation.
+  Nan
+}
+
+/// The configuration for a
+/// [`RelativeTimeFormat`](#RelativeTimeFormat).
+///
+pub opaque type Builder {
+  Builder(
+    locales: List(String),
+    locale_matcher: Option(LocaleMatcher),
+    numeric: Option(Numeric),
+    style: Option(LabelStyle),
+  )
+}
+
+/// Creates a `Builder` for the given locale priority list. The
+/// runtime picks the first locale it supports; pass an empty list to
+/// use the runtime's default locale.
+///
+pub fn new(locales: List(String)) -> Builder {
+  Builder(locales:, locale_matcher: None, numeric: None, style: None)
+}
+
+/// Sets the locale-matching algorithm used to pick a locale from the
+/// priority list.
+///
+pub fn with_locale_matcher(
+  builder: Builder,
+  locale_matcher: LocaleMatcher,
+) -> Builder {
+  Builder(..builder, locale_matcher: Some(locale_matcher))
+}
+
+/// Sets whether the formatter renders numeric values verbatim or
+/// substitutes locale-specific wording for special values.
+///
+pub fn with_numeric(builder: Builder, numeric: Numeric) -> Builder {
+  Builder(..builder, numeric: Some(numeric))
+}
+
+/// Sets the verbosity of the unit labels.
+///
+pub fn with_style(builder: Builder, style: LabelStyle) -> Builder {
+  Builder(..builder, style: Some(style))
+}
+
+/// Constructs a [`RelativeTimeFormat`](#RelativeTimeFormat) from the
+/// configured builder. Returns `Error(Nil)` if any locale tag is
+/// structurally invalid.
+///
+pub fn build(builder: Builder) -> Result(RelativeTimeFormat, Nil) {
+  do_build(
+    builder.locales,
+    builder.locale_matcher,
+    builder.numeric,
+    builder.style,
+  )
+}
+
+@external(javascript, "./relative_time_format.ffi.mjs", "build")
+@internal
+pub fn do_build(
+  locales: List(String),
+  locale_matcher: Option(LocaleMatcher),
+  numeric: Option(Numeric),
+  style: Option(LabelStyle),
+) -> Result(RelativeTimeFormat, Nil)
+
+/// Formats a `Float` value as a relative time in the given unit
+/// (`format_float(rtf, -1.0, in: Day)` → `"1 day ago"`).
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "format")
+pub fn format_float(
+  formatter: RelativeTimeFormat,
+  value: Float,
+  in unit: Unit,
+) -> String
+
+/// Formats an `Int` value as a relative time in the given unit.
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "format")
+pub fn format_int(
+  formatter: RelativeTimeFormat,
+  value: Int,
+  in unit: Unit,
+) -> String
+
+/// Formats a `Float` value and returns its decomposition into
+/// segments.
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "format_to_parts")
+pub fn format_float_to_parts(
+  formatter: RelativeTimeFormat,
+  value: Float,
+  in unit: Unit,
+) -> List(Part)
+
+/// Formats an `Int` value as a list of [`Part`](#Part)s.
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "format_to_parts")
+pub fn format_int_to_parts(
+  formatter: RelativeTimeFormat,
+  value: Int,
+  in unit: Unit,
+) -> List(Part)
+
+/// Formats a `gleam/time/duration.Duration` as relative time,
+/// decomposing into the largest applicable unit
+/// (`duration.hours(-2)` → `"2 hours ago"`). Sub-second durations
+/// clamp to zero seconds because `Intl.RelativeTimeFormat` doesn't
+/// accept sub-second units; the rendered phrasing then depends on the
+/// formatter's [`Numeric`](#Numeric) setting.
+///
+pub fn format_duration(
+  formatter: RelativeTimeFormat,
+  value: Duration,
+) -> String {
+  let #(amount, unit) = decompose(value)
+  format_int(formatter, amount, in: unit)
+}
+
+/// Formats a `gleam/time/duration.Duration` and returns its
+/// decomposition into [`Part`](#Part)s. Uses the same unit
+/// decomposition as [`format_duration`](#format_duration).
+///
+pub fn format_duration_to_parts(
+  formatter: RelativeTimeFormat,
+  value: Duration,
+) -> List(Part) {
+  let #(amount, unit) = decompose(value)
+  format_int_to_parts(formatter, amount, in: unit)
+}
+
+fn decompose(value: Duration) -> #(Int, Unit) {
+  let #(amount, unit) = duration.approximate(value)
+  case unit {
+    duration.Nanosecond | duration.Microsecond | duration.Millisecond -> #(
+      0,
+      Second,
+    )
+    duration.Second -> #(amount, Second)
+    duration.Minute -> #(amount, Minute)
+    duration.Hour -> #(amount, Hour)
+    duration.Day -> #(amount, Day)
+    duration.Week -> #(amount, Week)
+    duration.Month -> #(amount, Month)
+    duration.Year -> #(amount, Year)
+  }
+}
+
+/// The options the runtime resolved for a
+/// [`RelativeTimeFormat`](#RelativeTimeFormat), including the defaults
+/// it filled in. `locale` is the BCP 47 tag chosen from the requested
+/// priority list (e.g., `"en-US"`).
+///
+pub type ResolvedOptions {
+  ResolvedOptions(
+    locale: String,
+    style: LabelStyle,
+    numeric: Numeric,
+    numbering_system: String,
+  )
+}
+
+/// The locale, style, numeric mode, and numbering system the runtime
+/// resolved from the builder's configuration.
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "resolved_options")
+pub fn resolved_options(formatter: RelativeTimeFormat) -> ResolvedOptions
+
+/// Filters `locales` to those the runtime supports for relative-time
+/// formatting, preserving the input order. Returns `Error(Nil)` if any
+/// locale tag is structurally malformed.
+///
+@external(javascript, "./relative_time_format.ffi.mjs", "supported_locales_of")
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

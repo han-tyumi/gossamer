@@ -24,16 +24,20 @@ pub fn dir_test() {
   console.dir("dir item")
 }
 
+pub fn dirxml_test() {
+  console.dirxml("dirxml item")
+}
+
 pub fn table_test() {
   console.table(42)
 }
 
-pub fn assert_true_test() {
-  console.assert_(True, "should not print")
+pub fn log_if_false_true_test() {
+  console.log_if_false(True, "should not print")
 }
 
-pub fn assert_false_test() {
-  console.assert_(False, "assertion failed")
+pub fn log_if_false_false_test() {
+  console.log_if_false(False, "assertion failed")
 }
 
 pub fn count_test() {

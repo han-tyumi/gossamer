@@ -1,0 +1,114 @@
+import {
+  type BitArray,
+  BitArray$BitArray,
+  BitArray$BitArray$data,
+  BitArray$isBitArray,
+  type Result,
+} from "$/prelude.mjs";
+import { pad_to_bytes } from "$/gleam_stdlib/gleam/bit_array.mjs";
+import { toResult } from "~/utils/result.ffi.ts";
+
+/**
+ * Returns the bytes of a `BitArray` typed as `BufferSource` for passing
+ * to Web APIs. Un-aligned bit arrays are zero-padded to the next byte.
+ */
+export function toBufferSource(bitArray: BitArray): BufferSource {
+  // @ts-expect-error denoland/deno#32063
+  return BitArray$BitArray$data(pad_to_bytes(bitArray));
+}
+
+/**
+ * Returns the bytes of a `BitArray` as a `Uint8Array` view. Un-aligned
+ * bit arrays are zero-padded to the next byte.
+ */
+export function toUint8Array(bitArray: BitArray): Uint8Array<ArrayBuffer> {
+  const view = BitArray$BitArray$data(pad_to_bytes(bitArray));
+  // @ts-expect-error BitArray bytes are always ArrayBuffer
+  return new Uint8Array(view.buffer, view.byteOffset, view.byteLength);
+}
+
+/**
+ * Wraps an incoming structured-clone payload so `ArrayBuffer` values are
+ * exposed to Gleam as `BitArray`. Other values pass through unchanged.
+ */
+export function wrapArrayBuffer(value: unknown): unknown {
+  if (value instanceof ArrayBuffer) {
+    return BitArray$BitArray(new Uint8Array(value));
+  }
+  return value;
+}
+
+/**
+ * Unwraps a `BitArray` to a fresh `ArrayBuffer` of its bytes so it can
+ * be sent through structured-clone APIs without losing the prototype.
+ * Other values pass through unchanged.
+ */
+export function unwrapBitArrayForClone(value: unknown): unknown {
+  if (BitArray$isBitArray(value)) {
+    return toUint8Array(value as BitArray).slice().buffer;
+  }
+  return value;
+}
+
+/**
+ * Awaits an `ArrayBuffer`-returning Web API call and wraps the result
+ * as a `BitArray` Result. Sync throws inside `fn` become `Error` rather
+ * than unhandled FFI panics.
+ */
+export function toBitArrayResult(
+  fn: () => Promise<ArrayBuffer>,
+): Promise<Result<BitArray, Error>> {
+  return toResult.fromAsync(async () =>
+    BitArray$BitArray(new Uint8Array(await fn()))
+  );
+}
+
+/**
+ * Wraps a `ReadableStream<Uint8Array>` so each chunk is read as a
+ * `BitArray`.
+ */
+export function toBitArrayStream(
+  source: ReadableStream<Uint8Array>,
+): ReadableStream<BitArray> {
+  return source.pipeThrough(
+    new TransformStream<Uint8Array, BitArray>({
+      transform(chunk, controller) {
+        controller.enqueue(BitArray$BitArray(chunk));
+      },
+    }),
+  );
+}
+
+/**
+ * Wraps a `WritableStream<BufferSource>` so callers write `BitArray`
+ * chunks. Errors on the underlying stream propagate through the
+ * returned writable.
+ */
+export function fromBitArrayStream(
+  target: WritableStream<BufferSource>,
+): WritableStream<BitArray> {
+  const transform = new TransformStream<BitArray, BufferSource>({
+    transform(chunk, controller) {
+      controller.enqueue(toBufferSource(chunk));
+    },
+  });
+  transform.readable.pipeTo(target).catch(() => {});
+  return transform.writable;
+}
+
+/**
+ * Unwraps a `ReadableStream<BitArray>` to a `ReadableStream<Uint8Array>`
+ * so chunks can be passed to Web APIs that expect byte streams.
+ * Un-aligned chunks are zero-padded to the next byte.
+ */
+export function fromBitArrayReadable(
+  source: ReadableStream<BitArray>,
+): ReadableStream<Uint8Array> {
+  return source.pipeThrough(
+    new TransformStream<BitArray, Uint8Array>({
+      transform(chunk, controller) {
+        controller.enqueue(toUint8Array(chunk));
+      },
+    }),
+  );
+}

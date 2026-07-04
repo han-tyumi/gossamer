@@ -1,0 +1,138 @@
+import gleam/list
+import gleam/option.{None, Some}
+import gleam/yielder
+import gleeunit/should
+import gossamer/intl/segmenter
+
+fn segments(
+  of seg: segmenter.Segmenter,
+  in input: String,
+) -> List(segmenter.Segment) {
+  segmenter.segment(seg, input) |> yielder.to_list
+}
+
+pub fn build_default_test() {
+  segmenter.new([]) |> segmenter.build |> should.be_ok
+}
+
+pub fn build_invalid_locale_test() {
+  segmenter.new(["not_a_locale!"])
+  |> segmenter.build
+  |> should.be_error
+}
+
+pub fn segment_grapheme_test() {
+  let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
+  segments(of: seg, in: "ábc")
+  |> list.map(fn(s) { s.value })
+  |> should.equal(["á", "b", "c"])
+}
+
+pub fn segment_word_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  segments(of: seg, in: "Hello, world!")
+  |> list.map(fn(s) { s.value })
+  |> should.equal(["Hello", ",", " ", "world", "!"])
+}
+
+pub fn segment_sentence_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Sentence)
+    |> segmenter.build
+  segments(of: seg, in: "Hi! How are you?")
+  |> list.map(fn(s) { s.value })
+  |> should.equal(["Hi! ", "How are you?"])
+}
+
+pub fn segment_index_test() {
+  let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
+  segments(of: seg, in: "abc")
+  |> list.map(fn(s) { s.index })
+  |> should.equal([0, 1, 2])
+}
+
+pub fn word_like_some_for_word_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  let parts = segments(of: seg, in: "Hello, world!")
+  case parts {
+    [first, ..] -> first.word_like |> should.equal(Some(True))
+    [] -> panic as "expected non-empty segments"
+  }
+}
+
+pub fn word_like_distinguishes_punctuation_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  segments(of: seg, in: "Hi,")
+  |> list.map(fn(s) { s.word_like })
+  |> should.equal([Some(True), Some(False)])
+}
+
+pub fn word_like_none_for_grapheme_test() {
+  let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
+  case segments(of: seg, in: "abc") {
+    [first, ..] -> first.word_like |> should.equal(None)
+    [] -> panic as "expected non-empty segments"
+  }
+}
+
+pub fn word_like_none_for_sentence_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Sentence)
+    |> segmenter.build
+  case segments(of: seg, in: "Hi.") {
+    [first, ..] -> first.word_like |> should.equal(None)
+    [] -> panic as "expected non-empty segments"
+  }
+}
+
+pub fn segment_empty_input_test() {
+  let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
+  segments(of: seg, in: "") |> should.equal([])
+}
+
+pub fn containing_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  let assert Ok(segment) =
+    segmenter.containing(seg, in: "Hello, world!", at_index: 8)
+  segment.value |> should.equal("world")
+}
+
+pub fn containing_out_of_range_test() {
+  let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
+  segmenter.containing(seg, in: "hi", at_index: 99)
+  |> should.equal(Error(Nil))
+}
+
+pub fn resolved_options_test() {
+  let assert Ok(seg) =
+    segmenter.new(["en-US"])
+    |> segmenter.with_granularity(segmenter.Word)
+    |> segmenter.build
+  let options = segmenter.resolved_options(seg)
+  options.locale |> should.equal("en-US")
+  options.granularity |> should.equal(segmenter.Word)
+}
+
+pub fn supported_locales_of_test() {
+  segmenter.supported_locales_of(["en-US", "zz-INVALID"])
+  |> should.equal(Ok(["en-US"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  segmenter.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
+}

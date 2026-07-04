@@ -1,8 +1,23 @@
 import * as $webSocket from "$/gossamer/gossamer/web_socket.mjs";
-import { fromBinaryType, toBinaryType } from "~/gossamer/binary_type.ffi.ts";
-import { toReadyState } from "~/gossamer/ready_state.ffi.ts";
+import { BitArray$BitArray, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { toBufferSource } from "~/utils/bit_array.ffi.ts";
 import { toArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+import { mapIfSome } from "~/utils/option.ffi.ts";
+
+function isValidWebSocketUrl(url: string): boolean {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  // http: and https: are spec-valid; the constructor normalizes them
+  // to ws: and wss:.
+  const allowedSchemes = ["ws:", "wss:", "http:", "https:"];
+  if (!allowedSchemes.includes(parsed.protocol)) return false;
+  if (parsed.hash !== "") return false;
+  return true;
+}
 
 function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
   return $webSocket.CloseEvent$CloseEvent(
@@ -12,101 +27,125 @@ function toCloseEvent(event: CloseEvent): $webSocket.CloseEvent$ {
   );
 }
 
-export const from_url_string: typeof $webSocket.from_url_string = (url) => {
-  return toResult.fromThrows(() => new WebSocket(url));
-};
-
-export const from_url_string_with_protocols:
-  typeof $webSocket.from_url_string_with_protocols = (url, protocols) => {
-    return toResult.fromThrows(() => new WebSocket(url, toArray(protocols)));
-  };
-
-export const from_url: typeof $webSocket.from_url = (url) => {
-  return toResult.fromThrows(() => new WebSocket(url.toString()));
-};
-
-export const from_url_with_protocols:
-  typeof $webSocket.from_url_with_protocols = (url, protocols) => {
-    return toResult.fromThrows(
-      () => new WebSocket(url.toString(), toArray(protocols)),
+function toMessageEvent(data: unknown): $webSocket.WebSocketEvent$ {
+  if (typeof data === "string") {
+    return $webSocket.WebSocketEvent$Text(data);
+  }
+  if (data instanceof ArrayBuffer) {
+    return $webSocket.WebSocketEvent$Binary(
+      BitArray$BitArray(new Uint8Array(data)),
     );
-  };
+  }
+  throw new Error(
+    "gossamer.web_socket: the runtime delivered a binary message that is " +
+      'not an ArrayBuffer despite binaryType being pinned to "arraybuffer". ' +
+      "Please file an issue at https://github.com/han-tyumi/gossamer/issues.",
+  );
+}
 
-export const binary_type: typeof $webSocket.binary_type = (socket) => {
-  return toBinaryType(socket.binaryType);
-};
+function toReadyState(value: number): $webSocket.ReadyState$ {
+  switch (value) {
+    case 0:
+      return $webSocket.ReadyState$Connecting();
+    case 1:
+      return $webSocket.ReadyState$Open();
+    case 2:
+      return $webSocket.ReadyState$Closing();
+    case 3:
+      return $webSocket.ReadyState$Closed();
+    default:
+      return $webSocket.ReadyState$Closed();
+  }
+}
 
-export const set_binary_type: typeof $webSocket.set_binary_type = (
-  socket,
-  value,
+export const build: typeof $webSocket.do_build = (
+  url,
+  protocolsList,
+  on_event,
 ) => {
-  socket.binaryType = fromBinaryType(value);
+  if (!isValidWebSocketUrl(url)) {
+    return Result$Error($webSocket.WebSocketError$InvalidUrl());
+  }
+  const protocols = toArray(protocolsList);
+  let ws: WebSocket;
+  try {
+    ws = new WebSocket(url, protocols);
+  } catch {
+    return Result$Error($webSocket.WebSocketError$InvalidProtocols());
+  }
+
+  ws.binaryType = "arraybuffer";
+  mapIfSome(ws, "onopen", on_event, (handler) => () => {
+    handler($webSocket.WebSocketEvent$Opened(), ws);
+  });
+  mapIfSome(ws, "onmessage", on_event, (handler) => (event) => {
+    handler(toMessageEvent(event.data), ws);
+  });
+  mapIfSome(ws, "onerror", on_event, (handler) => () => {
+    handler($webSocket.WebSocketEvent$Errored(), ws);
+  });
+  mapIfSome(ws, "onclose", on_event, (handler) => (event) => {
+    handler($webSocket.WebSocketEvent$Disconnected(toCloseEvent(event)), ws);
+  });
+
+  return Result$Ok(ws);
 };
 
-export const buffered_amount: typeof $webSocket.buffered_amount = (socket) => {
-  return socket.bufferedAmount;
-};
-
-export const extensions: typeof $webSocket.extensions = (socket) => {
-  return socket.extensions;
-};
-
-export const protocol: typeof $webSocket.protocol = (socket) => {
-  return socket.protocol;
+export const info: typeof $webSocket.info = (socket) => {
+  return $webSocket.Info$Info(
+    socket.url,
+    socket.protocol,
+    socket.extensions,
+  );
 };
 
 export const ready_state: typeof $webSocket.ready_state = (socket) => {
   return toReadyState(socket.readyState);
 };
 
-export const url: typeof $webSocket.url = (socket) => {
-  return socket.url;
+export const buffered_amount: typeof $webSocket.buffered_amount = (socket) => {
+  return socket.bufferedAmount;
 };
 
 export const close: typeof $webSocket.close = (socket) => {
   socket.close();
 };
 
+const utf8 = new TextEncoder();
+
 export const close_with: typeof $webSocket.close_with = (
   socket,
   code,
   reason,
 ) => {
-  return toResult.fromThrows(() => {
-    socket.close(code, reason);
-  });
+  if (code !== 1000 && (code < 3000 || code > 4999)) {
+    return Result$Error($webSocket.WebSocketError$InvalidCloseCode(code));
+  }
+  if (utf8.encode(reason).length > 123) {
+    return Result$Error($webSocket.WebSocketError$CloseReasonTooLong());
+  }
+  socket.close(code, reason);
+  return Result$Ok(undefined);
 };
+
+function checkOpen() {
+  return Result$Error($webSocket.WebSocketError$NotOpen());
+}
 
 export const send_blob: typeof $webSocket.send_blob = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
+  if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
+  socket.send(data);
+  return Result$Ok(undefined);
 };
 
-export const send_bytes: typeof $webSocket.send_bytes = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
+export const send_binary: typeof $webSocket.send_binary = (socket, data) => {
+  if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
+  socket.send(toBufferSource(data));
+  return Result$Ok(undefined);
 };
 
-export const send_string: typeof $webSocket.send_string = (socket, data) => {
-  return toResult.fromThrows(() => {
-    socket.send(data);
-  });
-};
-
-export const on_open: typeof $webSocket.on_open = (socket, handler) => {
-  socket.onopen = () => handler();
-};
-
-export const on_message: typeof $webSocket.on_message = (socket, handler) => {
-  socket.onmessage = (event) => handler(event);
-};
-
-export const on_error: typeof $webSocket.on_error = (socket, handler) => {
-  socket.onerror = () => handler();
-};
-
-export const on_close: typeof $webSocket.on_close = (socket, handler) => {
-  socket.onclose = (event) => handler(toCloseEvent(event));
+export const send_text: typeof $webSocket.send_text = (socket, data) => {
+  if (socket.readyState === WebSocket.CONNECTING) return checkOpen();
+  socket.send(data);
+  return Result$Ok(undefined);
 };

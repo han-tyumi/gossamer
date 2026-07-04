@@ -1,18 +1,12 @@
-import gleam/option.{None}
+import gleam/javascript/promise
+import gleam/option.{None, Some}
 import gleeunit/should
-import gossamer/encoding
-import gossamer/promise
-import gossamer/readable_stream
-import gossamer/readable_stream/default_controller
-import gossamer/readable_stream/read_result
-import gossamer/readable_stream/reader
-import gossamer/text_decoder_stream
-import gossamer/text_encoder_stream
-
-pub fn text_encoder_stream_new_test() {
-  let encoder = text_encoder_stream.new()
-  text_encoder_stream.encoding(encoder) |> should.equal(encoding.Utf8)
-}
+import gossamer/encoding/text_decoder_stream
+import gossamer/encoding/text_encoder_stream
+import gossamer/stream/readable_stream
+import gossamer/stream/readable_stream/default_controller
+import gossamer/stream/readable_stream/reader
+import runtime
 
 pub fn text_encoder_stream_readable_writable_test() {
   let encoder = text_encoder_stream.new()
@@ -20,26 +14,47 @@ pub fn text_encoder_stream_readable_writable_test() {
   let _writable = text_encoder_stream.writable(encoder)
 }
 
-pub fn text_decoder_stream_new_test() {
-  let decoder = text_decoder_stream.new()
-  text_decoder_stream.encoding(decoder) |> should.equal(encoding.Utf8)
+pub fn text_decoder_stream_build_test() {
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
+  text_decoder_stream.encoding(decoder) |> should.equal("utf-8")
   text_decoder_stream.is_fatal(decoder) |> should.be_false
   text_decoder_stream.is_ignore_bom(decoder) |> should.be_false
 }
 
-pub fn text_decoder_stream_new_with_test() {
-  let assert Ok(decoder) = text_decoder_stream.new_with("utf-8", [])
-  text_decoder_stream.encoding(decoder) |> should.equal(encoding.Utf8)
+pub fn text_decoder_stream_build_invalid_test() {
+  text_decoder_stream.new("not-a-real-encoding")
+  |> text_decoder_stream.build
+  |> should.be_error
+}
+
+pub fn text_decoder_stream_build_legacy_single_byte_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  text_decoder_stream.new("iso-8859-2")
+  |> text_decoder_stream.build
+  |> should.be_ok
+}
+
+/// Bun's ICU data omits 16 legacy single-byte encodings, so building a
+/// stream decoder for one returns `UnsupportedEncoding` where Node and
+/// Deno succeed.
+pub fn text_decoder_stream_build_legacy_single_byte_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  text_decoder_stream.new("iso-8859-2")
+  |> text_decoder_stream.build
+  |> should.be_error
 }
 
 pub fn text_decoder_stream_readable_writable_test() {
-  let decoder = text_decoder_stream.new()
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
   let _readable = text_decoder_stream.readable(decoder)
   let _writable = text_decoder_stream.writable(decoder)
 }
 
 pub fn text_decoder_stream_read_write_pair_test() {
-  let decoder = text_decoder_stream.new()
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
   let #(_readable, _writable) = text_decoder_stream.read_write_pair(decoder)
 }
 
@@ -60,10 +75,11 @@ pub fn text_encode_decode_stream_roundtrip_test() {
         text_encoder_stream.readable(encoder),
         text_encoder_stream.writable(encoder),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
-  let decoder = text_decoder_stream.new()
+  let assert Ok(decoder) =
+    text_decoder_stream.new("utf-8") |> text_decoder_stream.build
 
   let assert Ok(decoded) =
     readable_stream.pipe_through(
@@ -72,15 +88,15 @@ pub fn text_encode_decode_stream_roundtrip_test() {
         text_decoder_stream.readable(decoder),
         text_decoder_stream.writable(decoder),
       ),
-      [],
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(r) = readable_stream.get_reader(decoded)
 
-  use result <- promise.then(reader.read(r))
-  should.equal(result, Ok(read_result.Value("hello stream")))
+  use result <- promise.await(reader.read(r))
+  should.equal(result, Ok(Some("hello stream")))
 
-  use result <- promise.then(reader.read(r))
-  should.equal(result, Ok(read_result.Done(None)))
+  use result <- promise.await(reader.read(r))
+  should.equal(result, Ok(None))
   promise.resolve(Nil)
 }

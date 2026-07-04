@@ -1,51 +1,61 @@
+import gleam/bit_array
+import gleam/javascript/promise
+import gleam/order
 import gleam/string
+import gleam/time/timestamp
 import gleeunit/should
 import gossamer/array_buffer
 import gossamer/blob
 import gossamer/file
-import gossamer/promise
-import gossamer/uint8_array
 
 pub fn file_from_strings_test() {
   let f = file.from_strings(["hello", " ", "world"], "test.txt")
-  should.equal(file.name(f), "test.txt")
+  should.equal(f.name, "test.txt")
 
-  let b = file.to_blob(f)
-  use text <- promise.then(blob.text(b))
+  let b = f.blob
+  use text <- promise.await(blob.text(b))
   should.equal(text, Ok("hello world"))
   promise.resolve(Nil)
 }
 
 pub fn file_from_blob_test() {
-  let b = blob.from_string("blob content")
+  let b = blob.from_string("blob content", content_type: "")
   let f = file.from_blob(b, "from_blob.txt")
-  should.equal(file.name(f), "from_blob.txt")
+  should.equal(f.name, "from_blob.txt")
 
-  let converted = file.to_blob(f)
-  use text <- promise.then(blob.text(converted))
+  let converted = f.blob
+  use text <- promise.await(blob.text(converted))
   should.equal(text, Ok("blob content"))
   promise.resolve(Nil)
 }
 
 pub fn file_last_modified_test() {
   let f = file.from_strings(["data"], "modified.txt")
-  should.be_true(file.last_modified(f) > 0)
+  timestamp.compare(f.last_modified, timestamp.from_unix_seconds(0))
+  |> should.equal(order.Gt)
 }
 
-pub fn file_from_strings_with_test() {
+pub fn file_set_mime_type_from_strings_test() {
   let f =
-    file.from_strings_with(["hello"], "typed.txt", [
-      file.Type("text/plain"),
-    ])
-  file.name(f) |> should.equal("typed.txt")
-  should.be_true(string.starts_with(file.type_(f), "text/plain"))
+    file.from_strings(["hello"], "typed.txt")
+    |> file.set_mime_type("text/plain")
+  f.name |> should.equal("typed.txt")
+  should.be_true(string.starts_with(f.mime_type, "text/plain"))
 }
 
-pub fn file_from_blob_with_test() {
-  let b = blob.from_string("blob data")
-  let f = file.from_blob_with(b, "blob.txt", [file.Type("text/plain")])
-  file.name(f) |> should.equal("blob.txt")
-  should.be_true(string.starts_with(file.type_(f), "text/plain"))
+pub fn file_set_mime_type_from_blob_test() {
+  let b = blob.from_string("blob data", content_type: "")
+  let f = file.from_blob(b, "blob.txt") |> file.set_mime_type("text/plain")
+  f.name |> should.equal("blob.txt")
+  should.be_true(string.starts_with(f.mime_type, "text/plain"))
+}
+
+pub fn file_set_last_modified_test() {
+  let epoch = timestamp.from_unix_seconds(0)
+  let f =
+    file.from_strings(["data"], "modified.txt")
+    |> file.set_last_modified(epoch)
+  f.last_modified |> should.equal(epoch)
 }
 
 pub fn file_size_test() {
@@ -55,12 +65,12 @@ pub fn file_size_test() {
 
 pub fn file_type_test() {
   let f = file.from_strings(["data"], "no-type.txt")
-  file.type_(f) |> should.equal("")
+  f.mime_type |> should.equal("")
 }
 
 pub fn file_array_buffer_test() {
   let f = file.from_strings(["hi"], "buf.txt")
-  use result <- promise.then(file.array_buffer(f))
+  use result <- promise.await(file.array_buffer(f))
   let assert Ok(buffer) = result
   array_buffer.byte_length(buffer) |> should.equal(2)
   promise.resolve(Nil)
@@ -68,24 +78,24 @@ pub fn file_array_buffer_test() {
 
 pub fn file_bytes_test() {
   let f = file.from_strings(["abc"], "bytes.txt")
-  use result <- promise.then(file.bytes(f))
+  use result <- promise.await(file.bytes(f))
   let assert Ok(bytes) = result
-  uint8_array.byte_length(bytes) |> should.equal(3)
+  bit_array.byte_size(bytes) |> should.equal(3)
   promise.resolve(Nil)
 }
 
 pub fn file_slice_test() {
   let f = file.from_strings(["hello world"], "slice.txt")
-  let sliced = file.slice(f, 0, 5)
-  use text <- promise.then(blob.text(sliced))
+  let sliced = file.slice(f, 0, 5, content_type: "")
+  use text <- promise.await(blob.text(sliced))
   should.equal(text, Ok("hello"))
   promise.resolve(Nil)
 }
 
 pub fn file_slice_with_type_test() {
   let f = file.from_strings(["hello world"], "slice-type.txt")
-  let sliced = file.slice_with_type(f, 0, 5, "text/plain")
-  should.be_true(string.starts_with(blob.type_(sliced), "text/plain"))
+  let sliced = file.slice(f, 0, 5, content_type: "text/plain")
+  should.be_true(string.starts_with(blob.mime_type(sliced), "text/plain"))
 }
 
 pub fn file_stream_test() {
@@ -95,7 +105,7 @@ pub fn file_stream_test() {
 
 pub fn file_text_test() {
   let f = file.from_strings(["file text content"], "text.txt")
-  use result <- promise.then(file.text(f))
+  use result <- promise.await(file.text(f))
   should.equal(result, Ok("file text content"))
   promise.resolve(Nil)
 }

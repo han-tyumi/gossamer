@@ -1,17 +1,17 @@
+import gleam/bit_array
+import gleam/javascript/promise
+import gleam/option.{None, Some}
 import gleeunit/should
-import gossamer/compression_format
-import gossamer/compression_stream
-import gossamer/decompression_stream
-import gossamer/promise
-import gossamer/readable_stream
-import gossamer/readable_stream/default_controller
-import gossamer/readable_stream/read_result
-import gossamer/readable_stream/reader
-import gossamer/text_decoder
-import gossamer/text_encoder
+import gossamer/compression
+import gossamer/compression/compression_stream
+import gossamer/compression/decompression_stream
+import gossamer/stream
+import gossamer/stream/readable_stream
+import gossamer/stream/readable_stream/default_controller
+import gossamer/stream/readable_stream/reader
 
-pub fn gzip_round_trip_test() {
-  let data = text_encoder.encode("Hello, compression!")
+fn round_trip(format: compression.CompressionFormat) {
+  let data = <<"Hello, compression!":utf8>>
 
   let assert Ok(input) =
     readable_stream.from_start(fn(controller) {
@@ -20,40 +20,71 @@ pub fn gzip_round_trip_test() {
       Nil
     })
 
-  let assert Ok(compressor) = compression_stream.new(compression_format.Gzip)
-  let assert Ok(decompressor) =
-    decompression_stream.new(compression_format.Gzip)
+  let compressor = compression_stream.new(format)
+  let decompressor = decompression_stream.new(format)
 
   let assert Ok(first) =
     input
     |> readable_stream.pipe_through(
-      #(
-        compression_stream.readable(compressor),
-        compression_stream.writable(compressor),
-      ),
-      [],
+      compression_stream.read_write_pair(compressor),
+      readable_stream.pipe_options(),
     )
   let assert Ok(output) =
     first
     |> readable_stream.pipe_through(
-      #(
-        decompression_stream.readable(decompressor),
-        decompression_stream.writable(decompressor),
-      ),
-      [],
+      decompression_stream.read_write_pair(decompressor),
+      readable_stream.pipe_options(),
     )
 
   let assert Ok(reader) = readable_stream.get_reader(output)
 
-  use result <- promise.then(reader.read(reader))
+  use result <- promise.map(reader.read(reader))
   let assert Ok(read) = result
   case read {
-    read_result.Value(chunk) -> {
-      let text = text_decoder.decode(chunk)
+    Some(chunk) -> {
+      let assert Ok(text) = bit_array.to_string(chunk)
       should.equal(text, "Hello, compression!")
     }
-    read_result.Done(_) -> {
-      should.fail()
-    }
+    None -> should.fail()
   }
+}
+
+pub fn deflate_round_trip_test() {
+  round_trip(compression.Deflate)
+}
+
+pub fn deflate_raw_round_trip_test() {
+  round_trip(compression.DeflateRaw)
+}
+
+pub fn gzip_round_trip_test() {
+  round_trip(compression.Gzip)
+}
+
+pub fn brotli_round_trip_test() {
+  round_trip(compression.Brotli)
+}
+
+pub fn decompress_corrupt_input_test() {
+  let assert Ok(input) =
+    readable_stream.from_start(fn(controller) {
+      let _ = default_controller.enqueue(controller, <<1, 2, 3, 4, 5>>)
+      let _ = default_controller.close(controller)
+      Nil
+    })
+
+  let assert Ok(output) =
+    input
+    |> readable_stream.pipe_through(
+      decompression_stream.read_write_pair(decompression_stream.new(
+        compression.Gzip,
+      )),
+      readable_stream.pipe_options(),
+    )
+
+  let assert Ok(r) = readable_stream.get_reader(output)
+
+  use result <- promise.map(reader.read(r))
+  let assert Error(stream.Errored(_)) = result
+  Nil
 }

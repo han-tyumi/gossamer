@@ -1,7 +1,7 @@
 name = "gossamer"
-version = "9.2.0"
-gleam = ">= 1.14.0"
-description = "Web API bindings for Gleam"
+version = "10.0.0"
+gleam = ">= 1.15.0"
+description = "Web Platform and ECMAScript API bindings for Gleam's JavaScript target"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "han-tyumi", repo = "gossamer" }
 
@@ -9,13 +9,28 @@ target = "javascript"
 
 [javascript]
 typescript_declarations = true
+source_maps = true
 
 [javascript.deno]
 allow_read = true
 allow_net = true
 
+[documentation]
+pages = [
+  { title = "Coverage", path = "coverage.html", source = "./docs/coverage.md" },
+  { title = "Conventions", path = "conventions.html", source = "./docs/conventions.md" },
+  { title = "Runtime gaps", path = "runtime-gaps.html", source = "./docs/runtime-gaps.md" },
+]
+
 [dependencies]
-gleam_stdlib = ">= 0.44.0 and < 2.0.0"
+gleam_stdlib = ">= 0.45.0 and < 2.0.0"
+gleam_http = ">= 4.1.0 and < 5.0.0"
+gleam_fetch = ">= 1.1.1 and < 2.0.0"
+gleam_javascript = ">= 1.0.0 and < 2.0.0"
+gleam_time = ">= 1.2.0 and < 2.0.0"
+gleam_regexp = ">= 1.0.0 and < 2.0.0"
+gleam_yielder = ">= 1.0.0 and < 2.0.0"
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
+gleam_crypto = ">= 1.5.1 and < 2.0.0"

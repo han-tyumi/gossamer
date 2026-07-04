@@ -1,6 +1,6 @@
 import type * as $console from "$/gossamer/gossamer/console.mjs";
 
-export const assert_: typeof $console.assert_ = (condition, data) => {
+export const log_if_false: typeof $console.log_if_false = (condition, data) => {
   console.assert(condition, data);
 };
 
@@ -22,6 +22,10 @@ export const debug: typeof $console.debug = (data) => {
 
 export const dir: typeof $console.dir = (item) => {
   console.dir(item);
+};
+
+export const dirxml: typeof $console.dirxml = (item) => {
+  console.dirxml(item);
 };
 
 export const error: typeof $console.error = (data) => {

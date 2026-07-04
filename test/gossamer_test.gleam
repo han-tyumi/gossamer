@@ -1,5 +1,80 @@
+import gleam/javascript/promise
+import gleam/time/duration
 import gleeunit
+import gleeunit/should
+import gossamer
 
 pub fn main() {
   gleeunit.main()
+}
+
+pub fn encode_base64_test() {
+  gossamer.encode_base64("Hello") |> should.equal(Ok("SGVsbG8="))
+}
+
+pub fn decode_base64_test() {
+  gossamer.decode_base64("SGVsbG8=") |> should.equal(Ok("Hello"))
+}
+
+pub fn base64_roundtrip_test() {
+  let assert Ok(encoded) = gossamer.encode_base64("roundtrip test")
+  let assert Ok(decoded) = gossamer.decode_base64(encoded)
+  should.equal(decoded, "roundtrip test")
+}
+
+pub fn decode_base64_invalid_test() {
+  let assert Error(_) = gossamer.decode_base64("!!!invalid!!!")
+}
+
+pub fn encode_base64_non_latin1_test() {
+  let assert Error(_) = gossamer.encode_base64("日本語")
+}
+
+pub fn user_agent_test() {
+  let agent = gossamer.user_agent()
+  should.be_true(agent != "")
+}
+
+pub fn hardware_concurrency_test() {
+  let count = gossamer.hardware_concurrency()
+  should.be_true(count >= 1)
+}
+
+pub fn set_timeout_and_clear_test() {
+  let #(p, resolve) = promise.start()
+
+  let id =
+    gossamer.set_timeout(duration.milliseconds(10), fn() {
+      resolve("fired")
+      Nil
+    })
+
+  // Verify we get a valid timer id.
+  should.be_true(id >= 0)
+
+  use value <- promise.map(p)
+  should.equal(value, "fired")
+}
+
+pub fn clear_timeout_test() {
+  let id = gossamer.set_timeout(duration.seconds(100), fn() { Nil })
+  gossamer.clear_timeout(id)
+}
+
+pub fn set_interval_and_clear_test() {
+  let id = gossamer.set_interval(duration.seconds(100), fn() { Nil })
+  should.be_true(id >= 0)
+  gossamer.clear_interval(id)
+}
+
+pub fn queue_microtask_test() {
+  let #(p, resolve) = promise.start()
+
+  gossamer.queue_microtask(fn() {
+    resolve("microtask ran")
+    Nil
+  })
+
+  use value <- promise.map(p)
+  should.equal(value, "microtask ran")
 }

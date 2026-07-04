@@ -1,5 +1,5 @@
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import * as $runtime from "$/gossamer/runtime.mjs";
-import { toResult } from "~/utils/result.ffi.ts";
 
 export const current: typeof $runtime.current = () => {
   if ("Deno" in globalThis) return $runtime.Runtime$Deno();
@@ -7,6 +7,17 @@ export const current: typeof $runtime.current = () => {
   return $runtime.Runtime$Node();
 };
 
-export const catching: typeof $runtime.catching = (thunk) => {
-  return toResult.fromThrows(thunk);
+export const is_macos: typeof $runtime.is_macos = () => {
+  return globalThis.process?.platform === "darwin" ||
+    globalThis.Deno?.build.os === "darwin";
+};
+
+export const catch_panic: typeof $runtime.catch_panic = (thunk) => {
+  try {
+    return Result$Ok(thunk());
+  } catch (error) {
+    return Result$Error(
+      error instanceof Error ? error.message : String(error),
+    );
+  }
 };

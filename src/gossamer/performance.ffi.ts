@@ -1,53 +1,47 @@
+import { kind_to_name } from "$/gossamer/gossamer/performance_entry.mjs";
 import type * as $performance from "$/gossamer/gossamer/performance.mjs";
-import { fromArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
+import { project } from "~/gossamer/performance_entry.ffi.ts";
+import { fromArrayMapped } from "~/utils/list.ffi.ts";
+import { msToDuration, msToTimestamp } from "~/utils/time.ffi.ts";
 
 export const now: typeof $performance.now = () => {
-  return performance.now();
+  return msToDuration(performance.now());
 };
 
 export const time_origin: typeof $performance.time_origin = () => {
-  return performance.timeOrigin;
-};
-
-export const mark: typeof $performance.mark = (name) => {
-  return toResult.fromThrows(() => performance.mark(name));
-};
-
-export const measure: typeof $performance.measure = (
-  name,
-  startMark,
-  endMark,
-) => {
-  return toResult.fromThrows(() =>
-    performance.measure(name, startMark, endMark)
-  );
+  return msToTimestamp(performance.timeOrigin);
 };
 
 export const clear_marks: typeof $performance.clear_marks = () => {
   performance.clearMarks();
 };
 
+export const clear_marks_by_name: typeof $performance.clear_marks_by_name = (
+  name,
+) => {
+  performance.clearMarks(name);
+};
+
 export const clear_measures: typeof $performance.clear_measures = () => {
   performance.clearMeasures();
 };
 
-export const get_entries: typeof $performance.get_entries = () => {
-  return fromArray(performance.getEntries());
+export const clear_measures_by_name:
+  typeof $performance.clear_measures_by_name = (name) => {
+    performance.clearMeasures(name);
+  };
+
+export const entries: typeof $performance.entries = () => {
+  return fromArrayMapped(performance.getEntries(), project);
 };
 
-export const get_entries_by_name: typeof $performance.get_entries_by_name = (
-  name,
-) => {
-  return fromArray(performance.getEntriesByName(name));
+export const entries_by_name: typeof $performance.entries_by_name = (name) => {
+  return fromArrayMapped(performance.getEntriesByName(name), project);
 };
 
-export const get_entries_by_type: typeof $performance.get_entries_by_type = (
-  entryType,
-) => {
-  return fromArray(performance.getEntriesByType(entryType));
-};
-
-export const to_json: typeof $performance.to_json = () => {
-  return performance.toJSON();
+export const entries_by_kind: typeof $performance.entries_by_kind = (kind) => {
+  return fromArrayMapped(
+    performance.getEntriesByType(kind_to_name(kind)),
+    project,
+  );
 };

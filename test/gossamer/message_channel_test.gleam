@@ -1,78 +1,61 @@
 import gleam/dynamic/decode
+import gleam/javascript/promise
 import gleeunit/should
+import gossamer/array_buffer
 import gossamer/message_channel
-import gossamer/message_event
 import gossamer/message_port
-import gossamer/promise
 
 pub fn new_test() {
-  let channel = message_channel.new()
-  let _port1 = message_channel.port1(channel)
-  let _port2 = message_channel.port2(channel)
+  let #(_port1, _port2) = message_channel.new()
 }
 
 pub fn post_message_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  let port2 = message_channel.port2(channel)
+  let #(port1, port2) = message_channel.new()
 
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
-  message_port.on_message(port2, fn(event) {
-    let assert Ok(value) = decode.run(message_event.data(event), decode.string)
-    resolvers.resolve(value)
+  message_port.set_on_message(port2, fn(data, _port) {
+    let assert Ok(value) = decode.run(data, decode.string)
+    resolve(value)
     Nil
   })
 
   let assert Ok(_) = message_port.post_message(port1, "hello from port1")
 
-  use value <- promise.then(resolvers.promise)
-  should.equal(value, Ok("hello from port1"))
+  use value <- promise.map(p)
+  should.equal(value, "hello from port1")
   message_port.close(port1)
   message_port.close(port2)
-  promise.resolve(Nil)
 }
 
-pub fn start_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  message_port.start(port1)
+pub fn post_message_non_cloneable_test() {
+  let #(port1, port2) = message_channel.new()
+  message_port.post_message(port1, fn() { Nil }) |> should.be_error
   message_port.close(port1)
+  message_port.close(port2)
 }
 
 pub fn close_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
+  let #(port1, _port2) = message_channel.new()
   message_port.close(port1)
 }
 
-pub fn message_event_properties_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  let port2 = message_channel.port2(channel)
+pub fn post_message_array_buffer_wraps_as_bit_array_test() {
+  let #(port1, port2) = message_channel.new()
 
-  let resolvers = promise.with_resolvers()
+  let #(p, resolve) = promise.start()
 
-  message_port.on_message(port2, fn(event) {
-    let message_event.Fields(origin:, last_event_id:, ..) =
-      message_event.to_fields(event)
-    origin |> should.equal("")
-    last_event_id |> should.equal("")
-    resolvers.resolve(Nil)
+  message_port.set_on_message(port2, fn(data, _port) {
+    let assert Ok(bytes) = decode.run(data, decode.bit_array)
+    resolve(bytes)
     Nil
   })
 
-  let assert Ok(_) = message_port.post_message(port1, "test")
+  let buffer = array_buffer.from_bit_array(<<1, 2, 3>>)
+  let assert Ok(_) = message_port.post_message(port1, buffer)
 
-  use _ <- promise.then(resolvers.promise)
+  use bytes <- promise.map(p)
+  should.equal(bytes, <<1, 2, 3>>)
   message_port.close(port1)
   message_port.close(port2)
-  promise.resolve(Nil)
-}
-
-pub fn on_message_error_test() {
-  let channel = message_channel.new()
-  let port1 = message_channel.port1(channel)
-  message_port.on_message_error(port1, fn(_event) { Nil })
-  message_port.close(port1)
 }
