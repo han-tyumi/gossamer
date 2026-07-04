@@ -46,7 +46,7 @@ format:
 # --target sidesteps a compiler defect: the docs command resets the
 # prod build cache for Erlang unless a target is given, so on this
 # JavaScript-target package a second warm-cache run renders no module
-# pages (gleam 1.16.0-1.17.0).
+# pages. Tracked at https://github.com/gleam-lang/gleam/issues/5941.
 [group('release')]
 docs:
     gleam docs build --target javascript
