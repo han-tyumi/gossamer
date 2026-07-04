@@ -273,22 +273,12 @@ export const format_duration: typeof $durationFormat.do_format_duration = (
   formatter,
   parts,
 ) => {
-  try {
-    return Result$Ok(formatter.format(toDuration(parts)));
-  } catch {
-    return Result$Error(undefined);
-  }
+  return formatter.format(toDuration(parts));
 };
 
 export const format_duration_to_parts:
   typeof $durationFormat.do_format_duration_to_parts = (formatter, parts) => {
-    try {
-      return Result$Ok(
-        fromArrayMapped(formatter.formatToParts(toDuration(parts)), toPart),
-      );
-    } catch {
-      return Result$Error(undefined);
-    }
+    return fromArrayMapped(formatter.formatToParts(toDuration(parts)), toPart);
   };
 
 export const resolved_options: typeof $durationFormat.resolved_options = (

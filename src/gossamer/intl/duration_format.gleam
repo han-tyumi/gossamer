@@ -560,15 +560,10 @@ pub fn format_to_parts(
 /// Formats a `gleam/time/duration.Duration` as a locale-aware string,
 /// decomposing it into hours through nanoseconds via
 /// [`from_duration`](#from_duration). Calendar fields stay absent since
-/// `Duration` is elapsed time. Unlike [`format`](#format) this cannot
-/// error on sign mixing — the decomposition always shares a single
-/// sign — but returns an error when the decomposed duration exceeds the
-/// limits `Intl.DurationFormat` supports (about 285 million years).
+/// `Duration` is elapsed time. Unlike [`format`](#format) this never
+/// errors — the decomposition always shares a single sign.
 ///
-pub fn format_duration(
-  formatter: DurationFormat,
-  value: Duration,
-) -> Result(String, Nil) {
+pub fn format_duration(formatter: DurationFormat, value: Duration) -> String {
   do_format_duration(formatter, from_duration(value))
 }
 
@@ -577,17 +572,16 @@ pub fn format_duration(
 pub fn do_format_duration(
   formatter: DurationFormat,
   parts: DurationParts,
-) -> Result(String, Nil)
+) -> String
 
 /// Formats a `gleam/time/duration.Duration` and returns its
 /// decomposition into [`Part`](#Part)s. Uses the same hours-through-
-/// nanoseconds decomposition as [`format_duration`](#format_duration),
-/// with the same error condition.
+/// nanoseconds decomposition as [`format_duration`](#format_duration).
 ///
 pub fn format_duration_to_parts(
   formatter: DurationFormat,
   value: Duration,
-) -> Result(List(Part), Nil) {
+) -> List(Part) {
   do_format_duration_to_parts(formatter, from_duration(value))
 }
 
@@ -596,7 +590,7 @@ pub fn format_duration_to_parts(
 pub fn do_format_duration_to_parts(
   formatter: DurationFormat,
   parts: DurationParts,
-) -> Result(List(Part), Nil)
+) -> List(Part)
 
 /// The options the runtime resolved for a
 /// [`DurationFormat`](#DurationFormat), including the per-unit styles and
