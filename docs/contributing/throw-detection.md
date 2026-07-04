@@ -128,15 +128,23 @@ Clamping applies to quantity parameters only. **Content-derived values are never
 silently defaulted** — a malformed locale tag, key, or URL string means
 something the caller needs surfaced, not absorbed.
 
-**3. Documented panic** for absurd-magnitude engine limits — bounds a program
-only reaches when something upstream is already wrong (the JS `Date` range, the
-ECMA-402 duration limit, the maximum `ArrayBuffer` length). These aren't
-realistic inputs, so a `Result` would add unwrap noise on every honest call.
-Document the panic condition on the binding instead.
+**3. Documented panic** is reserved for two cases. Runtime compatibility — a
+capability missing on a minority runtime, where a `Result` would tax the
+runtimes that work (see
+[Handling runtime divergence](../../CONTRIBUTING.md#handling-runtime-divergence)).
+And engine capacity — allocation-style limits such as the maximum `ArrayBuffer`
+length or the `BigInt` size cap, which the stdlib convention treats like any
+other resource exhaustion and lets crash (`string.repeat` at the engine's
+maximum string length behaves the same way). Document the panic condition on the
+binding.
 
-**4. `Result`** for realistic-input failures — malformed input a caller may
-plausibly supply (locale tags, patterns, key data) and state errors (locked
-streams, unusable keys).
+**4. `Result`** for deterministic input-domain failures — anything knowable from
+the input alone: malformed input a caller may plausibly supply (locale tags,
+patterns, key data), state errors (locked streams, unusable keys), and
+spec-constant domain limits even when unrealistic (the JS `Date` range, the
+ECMA-402 duration limit). The stdlib guards every deterministic input failure in
+its own FFI (`bit_array_to_string`, `percent_decode`, `parse_query`,
+`base64_decode`); gossamer follows suit.
 
 - Use `Result(T, ModuleError)` for synchronous throws.
 - Use `Promise(Result(T, ModuleError))` for rejectable Promises.
@@ -198,10 +206,11 @@ on descriptive errors.
 - **Content is never clamped.** Substituting a default for a malformed locale
   tag or URL string masks bugs — the silent wrong value propagates. Malformed
   content is a realistic input and returns `Result`.
-- **Engine limits aren't realistic failure modes.** Wrapping the JS `Date` range
-  or the maximum `ArrayBuffer` length in `Result` forces error handling nobody
-  can meaningfully write. A documented panic keeps the signature honest for the
-  realistic input domain.
+- **The panic line is compatibility and capacity, not magnitude.** A
+  deterministic domain limit is knowable from the input, so it returns `Result`
+  no matter how unrealistic the input — that's the stdlib's own FFI posture.
+  Capacity failures (allocation limits) depend on the engine, not the input, and
+  no ecosystem library wraps resource exhaustion.
 
 ## See also
 
