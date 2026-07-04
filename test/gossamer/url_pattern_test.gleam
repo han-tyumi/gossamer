@@ -11,6 +11,13 @@ pub fn build_test() {
   url_pattern.pathname(pattern) |> should.equal("/foo/:id")
 }
 
+pub fn build_invalid_pattern_test() {
+  url_pattern.new()
+  |> url_pattern.with_pathname("{")
+  |> url_pattern.build
+  |> should.be_error
+}
+
 pub fn parse_test() {
   let assert Ok(pattern) =
     url_pattern.parse(
@@ -31,6 +38,15 @@ pub fn parse_with_base_test() {
     )
   url_pattern.hostname(pattern) |> should.equal("example.com")
   url_pattern.pathname(pattern) |> should.equal("/foo/*")
+}
+
+pub fn parse_invalid_base_test() {
+  url_pattern.parse(
+    "/foo/*",
+    relative_to: Some("not a url"),
+    ignore_case: False,
+  )
+  |> should.be_error
 }
 
 pub fn build_ignore_case_test() {

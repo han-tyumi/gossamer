@@ -28,6 +28,13 @@ pub fn post_message_test() {
   message_port.close(port2)
 }
 
+pub fn post_message_non_cloneable_test() {
+  let #(port1, port2) = message_channel.new()
+  message_port.post_message(port1, fn() { Nil }) |> should.be_error
+  message_port.close(port1)
+  message_port.close(port2)
+}
+
 pub fn close_test() {
   let #(port1, _port2) = message_channel.new()
   message_port.close(port1)

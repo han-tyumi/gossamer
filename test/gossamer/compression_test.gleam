@@ -5,6 +5,7 @@ import gleeunit/should
 import gossamer/compression
 import gossamer/compression/compression_stream
 import gossamer/compression/decompression_stream
+import gossamer/stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/reader
@@ -48,10 +49,42 @@ fn round_trip(format: compression.CompressionFormat) {
   }
 }
 
+pub fn deflate_round_trip_test() {
+  round_trip(compression.Deflate)
+}
+
+pub fn deflate_raw_round_trip_test() {
+  round_trip(compression.DeflateRaw)
+}
+
 pub fn gzip_round_trip_test() {
   round_trip(compression.Gzip)
 }
 
 pub fn brotli_round_trip_test() {
   round_trip(compression.Brotli)
+}
+
+pub fn decompress_corrupt_input_test() {
+  let assert Ok(input) =
+    readable_stream.from_start(fn(controller) {
+      let _ = default_controller.enqueue(controller, <<1, 2, 3, 4, 5>>)
+      let _ = default_controller.close(controller)
+      Nil
+    })
+
+  let assert Ok(output) =
+    input
+    |> readable_stream.pipe_through(
+      decompression_stream.read_write_pair(decompression_stream.new(
+        compression.Gzip,
+      )),
+      readable_stream.pipe_options(),
+    )
+
+  let assert Ok(r) = readable_stream.get_reader(output)
+
+  use result <- promise.map(reader.read(r))
+  let assert Error(stream.Errored(_)) = result
+  Nil
 }

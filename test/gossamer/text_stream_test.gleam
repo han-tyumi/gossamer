@@ -6,6 +6,7 @@ import gossamer/encoding/text_encoder_stream
 import gossamer/stream/readable_stream
 import gossamer/stream/readable_stream/default_controller
 import gossamer/stream/readable_stream/reader
+import runtime
 
 pub fn text_encoder_stream_readable_writable_test() {
   let encoder = text_encoder_stream.new()
@@ -23,6 +24,23 @@ pub fn text_decoder_stream_build_test() {
 
 pub fn text_decoder_stream_build_invalid_test() {
   text_decoder_stream.new("not-a-real-encoding")
+  |> text_decoder_stream.build
+  |> should.be_error
+}
+
+pub fn text_decoder_stream_build_legacy_single_byte_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  text_decoder_stream.new("iso-8859-2")
+  |> text_decoder_stream.build
+  |> should.be_ok
+}
+
+/// Bun's ICU data omits 16 legacy single-byte encodings, so building a
+/// stream decoder for one returns `UnsupportedEncoding` where Node and
+/// Deno succeed.
+pub fn text_decoder_stream_build_legacy_single_byte_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  text_decoder_stream.new("iso-8859-2")
   |> text_decoder_stream.build
   |> should.be_error
 }

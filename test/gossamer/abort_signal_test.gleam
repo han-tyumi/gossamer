@@ -5,6 +5,7 @@ import gleam/option.{None}
 import gleam/time/duration
 import gleeunit/should
 import gossamer/abort_signal.{type AbortSignal, Default, Reason, Timeout}
+import runtime
 
 @external(javascript, "./abort_signal_test.ffi.mjs", "null_aborted_signal")
 fn null_aborted_signal() -> AbortSignal
@@ -29,6 +30,23 @@ pub fn timeout_creates_unaborted_signal_test() {
 pub fn timeout_negative_clamps_to_zero_test() {
   let signal = abort_signal.timeout(duration.milliseconds(-1))
   abort_signal.is_aborted(signal) |> should.be_false
+}
+
+pub fn timeout_above_u32_max_test() {
+  use <- runtime.skip_on(runtime.Node)
+  let signal = abort_signal.timeout(duration.milliseconds(4_294_967_296))
+  abort_signal.is_aborted(signal) |> should.be_false
+}
+
+/// Node rejects `AbortSignal.timeout` delays above the unsigned 32-bit
+/// millisecond bound where Deno and Bun accept values up to
+/// `9_007_199_254_740_991`.
+pub fn timeout_above_u32_max_node_divergence_test() {
+  use <- runtime.only_on(runtime.Node)
+  runtime.catch_panic(fn() {
+    abort_signal.timeout(duration.milliseconds(4_294_967_296))
+  })
+  |> should.be_error
 }
 
 pub fn reason_on_aborted_signal_test() {

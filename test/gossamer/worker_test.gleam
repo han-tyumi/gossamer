@@ -56,6 +56,23 @@ pub fn post_message_non_cloneable_test() {
   worker.terminate(w)
 }
 
+pub fn worker_parent_post_message_non_cloneable_test() {
+  let #(p, resolve) = promise.start()
+
+  let assert Ok(w) =
+    worker.new("gossamer/worker_parent_non_cloneable_fixture")
+    |> worker.with_on_message(fn(data, _worker) {
+      let assert Ok(value) = decode.run(data, decode.string)
+      resolve(value)
+      Nil
+    })
+    |> worker.build
+
+  use value <- promise.map(p)
+  value |> should.equal("non-cloneable-error")
+  worker.terminate(w)
+}
+
 pub fn transfer_port_to_worker_test() {
   let #(port1, port2) = message_channel.new()
   let #(p, resolve) = promise.start()
