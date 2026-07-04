@@ -1,5 +1,3 @@
-set dotenv-load
-
 [group('build')]
 bootstrap:
     lefthook install
@@ -67,6 +65,10 @@ gate: clean build check test examples docs
 release:
     #!/usr/bin/env bash
     set -euo pipefail
+    if [ -n "${HEXPM_API_KEY:-}" ]; then
+        echo "HEXPM_API_KEY is already set in the environment — it would shadow the Keychain key and the OAuth login. Unset it and re-run." >&2
+        exit 1
+    fi
     export GITHUB_TOKEN="$(gh auth token)"
     gh api repos/han-tyumi/gossamer --jq .id > /dev/null \
       || { echo "GitHub credentials failed — run gh auth login" >&2; exit 1; }
