@@ -22,8 +22,8 @@ pub type Writer(a)
 pub fn closed(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))
 
 /// The room remaining in the stream's internal queue. Returns an error
-/// if the stream has errored or is erroring; a closed stream reports
-/// `Bounded(0)`.
+/// if the stream has errored or is erroring, or if the writer's lock
+/// has been released; a closed stream reports `Bounded(0)`.
 ///
 @external(javascript, "./writer.ffi.mjs", "desired_size")
 pub fn desired_size(writer: Writer(a)) -> Result(DesiredSize, Nil)
@@ -46,7 +46,7 @@ pub fn abort(
 
 /// Closes the stream after all writes complete. Returns `Errored` if
 /// the underlying sink's close callback throws or returns a rejecting
-/// promise.
+/// promise, or if the stream is already closing or closed.
 ///
 @external(javascript, "./writer.ffi.mjs", "close")
 pub fn close(writer: Writer(a)) -> Promise(Result(Nil, StreamLifecycleError))

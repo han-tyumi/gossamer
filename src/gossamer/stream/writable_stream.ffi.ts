@@ -49,6 +49,7 @@ export const abort: typeof $writableStream.abort = (
   stream: WritableStream,
   reason,
 ) => {
+  if (stream.locked) return Promise.resolve(lockedError());
   return stream.abort(reason).then(
     () => Result$Ok(undefined),
     (err) => erroredError(err),
@@ -56,6 +57,7 @@ export const abort: typeof $writableStream.abort = (
 };
 
 export const close: typeof $writableStream.close = (stream: WritableStream) => {
+  if (stream.locked) return Promise.resolve(lockedError());
   return stream.close().then(
     () => Result$Ok(undefined),
     (err) => erroredError(err),

@@ -228,9 +228,10 @@ pub fn controlled() -> #(ReadableStream(a), DefaultController(a))
 @external(javascript, "./readable_stream.ffi.mjs", "is_locked")
 pub fn is_locked(stream: ReadableStream(a)) -> Bool
 
-/// Signals consumer disinterest in the stream. Returns `Errored` if
-/// the underlying source's cancel callback throws or returns a
-/// rejecting promise; the thrown or rejection value is the reason.
+/// Signals consumer disinterest in the stream. Returns `Locked` if
+/// the stream is locked to a reader, or `Errored` if the underlying
+/// source's cancel callback throws or returns a rejecting promise;
+/// the thrown or rejection value is the reason.
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "cancel")
 pub fn cancel(
@@ -280,11 +281,14 @@ pub fn tee(
 /// Returns an
 /// [`AsyncYielder`](../async_yielder.html#AsyncYielder)
 /// that reads from the stream. The yielder locks the stream until
-/// reading completes. Equivalent to JavaScript's
-/// `ReadableStream.values` (or `stream[Symbol.asyncIterator]()`).
+/// reading completes. Returns `Locked` if the stream is already locked.
+/// Equivalent to JavaScript's `ReadableStream.values` (or
+/// `stream[Symbol.asyncIterator]()`).
 ///
 @external(javascript, "./readable_stream.ffi.mjs", "to_async_yielder")
-pub fn to_async_yielder(stream: ReadableStream(a)) -> AsyncYielder(a)
+pub fn to_async_yielder(
+  stream: ReadableStream(a),
+) -> Result(AsyncYielder(a), StreamLifecycleError)
 
 /// Consumes a byte stream and decodes the assembled bytes as UTF-8.
 /// Invalid bytes are replaced with U+FFFD. Returns `Locked` if the

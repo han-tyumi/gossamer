@@ -19,7 +19,13 @@ export const closed: typeof $writer.closed = (
 export const desired_size: typeof $writer.desired_size = (
   writer: WritableStreamDefaultWriter,
 ) => {
-  return toDesiredSize(writer.desiredSize);
+  // The desiredSize getter throws once the writer's lock has been
+  // released.
+  try {
+    return toDesiredSize(writer.desiredSize);
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const ready: typeof $writer.ready = (

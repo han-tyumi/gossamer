@@ -111,6 +111,7 @@ export const cancel: typeof $readableStream.cancel = (
   stream: ReadableStream,
   reason,
 ) => {
+  if (stream.locked) return Promise.resolve(lockedError());
   return stream.cancel(reason).then(
     () => Result$Ok(undefined),
     (err) => erroredError(err),
@@ -177,7 +178,8 @@ export const tee: typeof $readableStream.tee = (stream: ReadableStream) => {
 export const to_async_yielder: typeof $readableStream.to_async_yielder = <T>(
   stream: ReadableStream<T>,
 ) => {
-  return jsAsyncIteratorAsAsyncYielder(stream.values());
+  if (stream.locked) return lockedError();
+  return Result$Ok(jsAsyncIteratorAsAsyncYielder(stream.values()));
 };
 
 export const read_text: typeof $readableStream.read_text = async (stream) => {
