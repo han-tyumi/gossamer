@@ -50,7 +50,7 @@ docs:
     gleam docs build
 
 [group('release')]
-gate: clean build check test examples
+gate: clean build check test examples docs
 
 [group('build')]
 watch +recipes:
