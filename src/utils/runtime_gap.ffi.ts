@@ -22,7 +22,12 @@ export function ensureMethod(
   binding: string,
   issueUrl?: string,
 ): void {
-  if (isIndexable(obj) && typeof obj[method] === "function") return;
+  // Host objects are usually constructors, so function values must pass
+  // the guard alongside plain objects.
+  if (
+    (isIndexable(obj) || typeof obj === "function") &&
+    typeof Reflect.get(obj, method) === "function"
+  ) return;
   const suffix = issueUrl ? ` - see ${issueUrl}` : "";
   throw new Error(
     `gossamer.${binding} is unavailable on this runtime${suffix}`,
