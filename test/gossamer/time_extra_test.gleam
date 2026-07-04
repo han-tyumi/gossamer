@@ -34,3 +34,17 @@ pub fn weekday_from_int_out_of_range_test() {
   time_extra.weekday_from_int(0) |> should.be_error()
   time_extra.weekday_from_int(8) |> should.be_error()
 }
+
+pub fn to_utc_string_beyond_js_date_range_test() {
+  // Beyond the range JavaScript dates support (|ms| > 8.64e15); the
+  // arithmetic implementation covers the full Timestamp range.
+  timestamp.from_unix_seconds(9_000_000_000_000_000)
+  |> time_extra.to_utc_string
+  |> should.equal("Wed, 24 Jul 285200616 16:00:00 GMT")
+}
+
+pub fn day_of_week_beyond_js_date_range_test() {
+  timestamp.from_unix_seconds(9_000_000_000_000_000)
+  |> time_extra.day_of_week(calendar.utc_offset)
+  |> should.equal(time_extra.Wednesday)
+}
