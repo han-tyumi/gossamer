@@ -560,8 +560,9 @@ pub fn format_to_parts(
 /// Formats a `gleam/time/duration.Duration` as a locale-aware string,
 /// decomposing it into hours through nanoseconds via
 /// [`from_duration`](#from_duration). Calendar fields stay absent since
-/// `Duration` is elapsed time. Unlike [`format`](#format) this never
-/// errors — the decomposition always shares a single sign.
+/// `Duration` is elapsed time. Unlike [`format`](#format) this cannot
+/// error on sign mixing — the decomposition always shares a single
+/// sign.
 ///
 pub fn format_duration(formatter: DurationFormat, value: Duration) -> String {
   do_format_duration(formatter, from_duration(value))
