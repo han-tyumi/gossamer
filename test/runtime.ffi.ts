@@ -7,6 +7,11 @@ export const current: typeof $runtime.current = () => {
   return $runtime.Runtime$Node();
 };
 
+export const is_macos: typeof $runtime.is_macos = () => {
+  return globalThis.process?.platform === "darwin" ||
+    globalThis.Deno?.build.os === "darwin";
+};
+
 export const catch_panic: typeof $runtime.catch_panic = (thunk) => {
   try {
     return Result$Ok(thunk());

@@ -297,8 +297,12 @@ pub fn format_to_parts_year_name_test() {
   list.contains(kinds, date_time_format.YearName) |> should.be_true
 }
 
+fn bun_on_macos() -> Bool {
+  runtime.current() == runtime.Bun && runtime.is_macos()
+}
+
 pub fn format_to_parts_related_year_test() {
-  use <- runtime.skip_on(runtime.Bun)
+  use <- runtime.skip_when(bun_on_macos())
   let assert Ok(fmt) =
     date_time_format.new(["zh-u-ca-chinese"])
     |> date_time_format.with_time_zone("UTC")
@@ -309,10 +313,11 @@ pub fn format_to_parts_related_year_test() {
   list.contains(kinds, date_time_format.RelatedYear) |> should.be_true
 }
 
-/// Bun omits the `relatedYear` segment for year-only Chinese-calendar
-/// formats where Node and Deno emit it before `yearName`.
-pub fn format_to_parts_related_year_bun_divergence_test() {
-  use <- runtime.only_on(runtime.Bun)
+/// Bun on macOS omits the `relatedYear` segment for year-only
+/// Chinese-calendar formats where every other runtime/OS pairing emits
+/// it before `yearName`.
+pub fn format_to_parts_related_year_bun_macos_divergence_test() {
+  use <- runtime.only_when(bun_on_macos())
   let assert Ok(fmt) =
     date_time_format.new(["zh-u-ca-chinese"])
     |> date_time_format.with_time_zone("UTC")

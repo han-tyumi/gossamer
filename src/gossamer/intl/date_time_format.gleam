@@ -140,10 +140,10 @@ pub type PartKind {
   Year
 
   /// The Gregorian year that contains the formatted date, emitted
-  /// alongside `YearName` for non-Gregorian calendars. On Bun,
-  /// year-only Chinese-calendar formats omit this segment where Node
-  /// and Deno emit it before `YearName`; option sets that include a
-  /// month or day emit it on all three runtimes.
+  /// alongside `YearName` for non-Gregorian calendars. On Bun on macOS,
+  /// year-only Chinese-calendar formats omit this segment where every
+  /// other runtime/OS pairing emits it before `YearName`; option sets
+  /// that include a month or day emit it everywhere.
   RelatedYear
 
   /// The locale-specific year name (e.g., `"丙午"` for Chinese

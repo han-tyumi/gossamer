@@ -30,9 +30,10 @@ versions than those are considered unsupported.
   like `"en-US"`. Node and Deno normalize the same input to `"en"`. Other Intl
   formatters (`number_format`, etc.) keep `"en-US"` across all three.
 - **`date_time_format.format_to_parts`** for the Chinese calendar
-  (`zh-u-ca-chinese`) with year-only options — omits the `RelatedYear` segment
-  that Node and Deno emit before `YearName`. Option sets that include a month or
-  day emit `RelatedYear` on all three runtimes.
+  (`zh-u-ca-chinese`) with year-only options — on macOS, omits the `RelatedYear`
+  segment that every other runtime/OS pairing emits before `YearName` (Bun's
+  JavaScriptCore links the system ICU on macOS and bundles its own on Linux).
+  Option sets that include a month or day emit `RelatedYear` everywhere.
 - **`date_time_format.format_range`** — uses regular U+0020 spaces around the en
   dash. Node and Deno use thin (U+2009) spaces. Assert via substring rather than
   strict equality if you compare formatted output across runtimes.
