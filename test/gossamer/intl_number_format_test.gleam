@@ -271,5 +271,10 @@ pub fn resolved_options_test() {
 
 pub fn supported_locales_of_test() {
   number_format.supported_locales_of(["en-US", "zz-INVALID"])
-  |> should.equal(["en-US"])
+  |> should.equal(Ok(["en-US"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  number_format.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
 }

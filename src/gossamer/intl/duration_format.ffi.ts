@@ -2,10 +2,11 @@ import * as $durationFormat from "$/gossamer/gossamer/intl/duration_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   fromLabelStyle,
+  supportedLocalesOf,
   toLabelStyle,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import {
   mapIfSome,
   mapOption,
@@ -314,5 +315,5 @@ export const resolved_options: typeof $durationFormat.resolved_options = (
 
 export const supported_locales_of: typeof $durationFormat.supported_locales_of =
   (locales) => {
-    return fromArray(Intl.DurationFormat.supportedLocalesOf(toArray(locales)));
+    return supportedLocalesOf(Intl.DurationFormat.supportedLocalesOf, locales);
   };

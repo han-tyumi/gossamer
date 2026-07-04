@@ -2,10 +2,11 @@ import * as $listFormat from "$/gossamer/gossamer/intl/list_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   fromLabelStyle,
+  supportedLocalesOf,
   toLabelStyle,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome } from "~/utils/option.ffi.ts";
 
 function toKind(
@@ -86,5 +87,5 @@ export const resolved_options: typeof $listFormat.resolved_options = (
 export const supported_locales_of: typeof $listFormat.supported_locales_of = (
   locales,
 ) => {
-  return fromArray(Intl.ListFormat.supportedLocalesOf(toArray(locales)));
+  return supportedLocalesOf(Intl.ListFormat.supportedLocalesOf, locales);
 };

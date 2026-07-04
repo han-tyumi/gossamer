@@ -134,15 +134,17 @@ pub fn do_build(
 /// if no name is registered for it in the formatter's locale.
 /// Equivalent to JavaScript's default `fallback: "code"` mode. For a
 /// strict lookup that distinguishes the two cases, use
-/// [`find`](#find).
+/// [`find`](#find). Returns `Error(Nil)` if `code` isn't well-formed
+/// for the formatter's [`Kind`](#Kind).
 ///
 @external(javascript, "./display_names.ffi.mjs", "of")
-pub fn of(formatter: DisplayNames, code: String) -> String
+pub fn of(formatter: DisplayNames, code: String) -> Result(String, Nil)
 
 /// Looks up the localized name for the given code. Returns
 /// `Error(Nil)` if no name is registered for the code in the
-/// formatter's locale. Equivalent to JavaScript's
-/// `fallback: "none"` mode.
+/// formatter's locale or `code` isn't well-formed for the formatter's
+/// [`Kind`](#Kind). Equivalent to JavaScript's `fallback: "none"`
+/// mode.
 ///
 @external(javascript, "./display_names.ffi.mjs", "find")
 pub fn find(formatter: DisplayNames, code: String) -> Result(String, Nil)
@@ -169,7 +171,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(formatter: DisplayNames) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for display
-/// names, preserving the input order.
+/// names, preserving the input order. Returns `Error(Nil)` if any
+/// locale tag is structurally malformed.
 ///
 @external(javascript, "./display_names.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

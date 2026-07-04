@@ -134,7 +134,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(formatter: ListFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for list
-/// formatting, preserving the input order.
+/// formatting, preserving the input order. Returns `Error(Nil)` if any
+/// locale tag is structurally malformed.
 ///
 @external(javascript, "./list_format.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

@@ -191,7 +191,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(collator: Collator) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for collation,
-/// preserving the input order.
+/// preserving the input order. Returns `Error(Nil)` if any locale tag
+/// is structurally malformed.
 ///
 @external(javascript, "./collator.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

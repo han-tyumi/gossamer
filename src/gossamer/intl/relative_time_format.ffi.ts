@@ -2,10 +2,11 @@ import * as $relativeTimeFormat from "$/gossamer/gossamer/intl/relative_time_for
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   fromLabelStyle,
+  supportedLocalesOf,
   toLabelStyle,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, mapOption } from "~/utils/option.ffi.ts";
 
 function toNumeric(numeric: $relativeTimeFormat.Numeric$): "always" | "auto" {
@@ -138,7 +139,8 @@ export const supported_locales_of:
   typeof $relativeTimeFormat.supported_locales_of = (
     locales,
   ) => {
-    return fromArray(
-      Intl.RelativeTimeFormat.supportedLocalesOf(toArray(locales)),
+    return supportedLocalesOf(
+      Intl.RelativeTimeFormat.supportedLocalesOf,
+      locales,
     );
   };

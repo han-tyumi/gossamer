@@ -101,8 +101,8 @@ pub fn segment(segmenter: Segmenter, input: String) -> Yielder(Segment)
 @external(javascript, "./segmenter.ffi.mjs", "containing")
 pub fn containing(
   segmenter: Segmenter,
-  input: String,
-  index: Int,
+  in input: String,
+  at_index index: Int,
 ) -> Result(Segment, Nil)
 
 /// The options the runtime resolved for a [`Segmenter`](#Segmenter),
@@ -120,7 +120,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(segmenter: Segmenter) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for segmentation,
-/// preserving the input order.
+/// preserving the input order. Returns `Error(Nil)` if any locale tag
+/// is structurally malformed.
 ///
 @external(javascript, "./segmenter.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

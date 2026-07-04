@@ -2,10 +2,11 @@ import * as $displayNames from "$/gossamer/gossamer/intl/display_names.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   fromLabelStyle,
+  supportedLocalesOf,
   toLabelStyle,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
-import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, mapOption } from "~/utils/option.ffi.ts";
 
 function toKind(kind: $displayNames.Kind$): Intl.DisplayNamesType {
@@ -74,12 +75,21 @@ export const build: typeof $displayNames.do_build = (
   }
 };
 
-export const of: typeof $displayNames.of = (formatter, code) =>
-  formatter.of(code) ?? code;
+export const of: typeof $displayNames.of = (formatter, code) => {
+  try {
+    return Result$Ok(formatter.of(code) ?? code);
+  } catch {
+    return Result$Error(undefined);
+  }
+};
 
 export const find: typeof $displayNames.find = (formatter, code) => {
-  const result = formatter.of(code);
-  return result === undefined ? Result$Error(undefined) : Result$Ok(result);
+  try {
+    const result = formatter.of(code);
+    return result === undefined ? Result$Error(undefined) : Result$Ok(result);
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const resolved_options: typeof $displayNames.resolved_options = (
@@ -97,5 +107,5 @@ export const resolved_options: typeof $displayNames.resolved_options = (
 export const supported_locales_of: typeof $displayNames.supported_locales_of = (
   locales,
 ) => {
-  return fromArray(Intl.DisplayNames.supportedLocalesOf(toArray(locales)));
+  return supportedLocalesOf(Intl.DisplayNames.supportedLocalesOf, locales);
 };

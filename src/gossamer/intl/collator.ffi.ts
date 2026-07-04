@@ -3,10 +3,11 @@ import * as $collator from "$/gossamer/gossamer/intl/collator.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import {
   fromCaseFirst,
+  supportedLocalesOf,
   toCaseFirst,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
-import { fromArray, toArray } from "~/utils/list.ffi.ts";
+import { toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome } from "~/utils/option.ffi.ts";
 
 function toUsage(usage: $collator.Usage$): "sort" | "search" {
@@ -90,5 +91,5 @@ export const resolved_options: typeof $collator.resolved_options = (
 export const supported_locales_of: typeof $collator.supported_locales_of = (
   locales,
 ) => {
-  return fromArray(Intl.Collator.supportedLocalesOf(toArray(locales)));
+  return supportedLocalesOf(Intl.Collator.supportedLocalesOf, locales);
 };

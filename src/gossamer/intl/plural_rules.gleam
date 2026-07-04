@@ -292,10 +292,11 @@ pub fn select_int_range(
 /// including the defaults it filled in and the
 /// [`plural_categories`](#PluralCategory) the locale actually uses.
 /// `locale` is the BCP 47 tag chosen from the requested priority list;
-/// the runtime may normalize regional tags to the language tag when
-/// plural rules don't differ by region (`"en-US"` typically resolves to
-/// `"en"`). The fraction- and significant-digit fields are `Some` only
-/// when the corresponding precision mode is in effect.
+/// Node and Deno normalize regional tags to the language tag when
+/// plural rules don't differ by region (`"en-US"` resolves to `"en"`)
+/// where Bun keeps the full input tag. The fraction- and
+/// significant-digit fields are `Some` only when the corresponding
+/// precision mode is in effect.
 ///
 pub type ResolvedOptions {
   ResolvedOptions(
@@ -321,7 +322,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(rules: PluralRules) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for plural-rules
-/// selection, preserving the input order.
+/// selection, preserving the input order. Returns `Error(Nil)` if any
+/// locale tag is structurally malformed.
 ///
 @external(javascript, "./plural_rules.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

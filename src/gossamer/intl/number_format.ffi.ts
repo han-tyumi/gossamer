@@ -1,8 +1,12 @@
 import * as $intl from "$/gossamer/gossamer/intl.mjs";
 import * as $numberFormat from "$/gossamer/gossamer/intl/number_format.mjs";
 import { Result$Error, Result$Ok } from "$/prelude.mjs";
-import { fromRangeSource, toLocaleMatcher } from "~/utils/intl.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import {
+  fromRangeSource,
+  supportedLocalesOf,
+  toLocaleMatcher,
+} from "~/utils/intl.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import {
   mapIfSome,
   mapOption,
@@ -454,5 +458,5 @@ export const resolved_options: typeof $numberFormat.resolved_options = (
 export const supported_locales_of: typeof $numberFormat.supported_locales_of = (
   locales,
 ) => {
-  return fromArray(Intl.NumberFormat.supportedLocalesOf(toArray(locales)));
+  return supportedLocalesOf(Intl.NumberFormat.supportedLocalesOf, locales);
 };

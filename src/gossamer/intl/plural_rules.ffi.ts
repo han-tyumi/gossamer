@@ -8,8 +8,8 @@ import {
   toRoundingPriority,
   toTrailingZeroDisplay,
 } from "~/gossamer/intl/number_format.ffi.ts";
-import { toLocaleMatcher } from "~/utils/intl.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { supportedLocalesOf, toLocaleMatcher } from "~/utils/intl.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import { mapIfSome, setIfSome, toOption } from "~/utils/option.ffi.ts";
 
 function toKind(kind: $pluralRules.Kind$): "cardinal" | "ordinal" {
@@ -119,5 +119,5 @@ export const resolved_options: typeof $pluralRules.resolved_options = (
 export const supported_locales_of: typeof $pluralRules.supported_locales_of = (
   locales,
 ) => {
-  return fromArray(Intl.PluralRules.supportedLocalesOf(toArray(locales)));
+  return supportedLocalesOf(Intl.PluralRules.supportedLocalesOf, locales);
 };

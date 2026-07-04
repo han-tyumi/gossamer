@@ -140,7 +140,10 @@ pub type PartKind {
   Year
 
   /// The Gregorian year that contains the formatted date, emitted
-  /// alongside `YearName` for non-Gregorian calendars.
+  /// alongside `YearName` for non-Gregorian calendars. On Bun,
+  /// year-only Chinese-calendar formats omit this segment where Node
+  /// and Deno emit it before `YearName`; option sets that include a
+  /// month or day emit it on all three runtimes.
   RelatedYear
 
   /// The locale-specific year name (e.g., `"丙午"` for Chinese
@@ -432,7 +435,9 @@ pub fn do_build(
   time_style: Option(Style),
 ) -> Result(DateTimeFormat, Nil)
 
-/// Formats `timestamp` as a locale-aware date/time string.
+/// Formats `timestamp` as a locale-aware date/time string. Panics
+/// when the timestamp is outside the range JavaScript dates support
+/// (about plus or minus 273,790 years).
 ///
 pub fn format(formatter: DateTimeFormat, timestamp: Timestamp) -> String {
   do_format(formatter, timestamp.to_unix_seconds(timestamp))
@@ -443,6 +448,8 @@ pub fn format(formatter: DateTimeFormat, timestamp: Timestamp) -> String {
 pub fn do_format(formatter: DateTimeFormat, unix_seconds: Float) -> String
 
 /// Formats `timestamp` and returns its decomposition into segments.
+/// Panics when the timestamp is outside the range JavaScript dates
+/// support (about plus or minus 273,790 years).
 ///
 pub fn format_to_parts(
   formatter: DateTimeFormat,
@@ -461,6 +468,11 @@ pub fn do_format_to_parts(
 /// Formats `start`-`end` as a locale-aware date/time range. Passing
 /// `end` earlier than `start` is well-defined and produces output —
 /// the resulting string may not be meaningful but does not error.
+/// Panics when either timestamp is outside the range JavaScript dates
+/// support (about plus or minus 273,790 years). On Bun the spaces
+/// around the en dash are regular spaces where Node and Deno use thin
+/// (U+2009) spaces; compare output across runtimes by substring rather
+/// than strict equality.
 ///
 pub fn format_range(
   formatter: DateTimeFormat,
@@ -483,7 +495,9 @@ pub fn do_format_range(
 ) -> String
 
 /// Formats `start`-`end` and returns its decomposition into segments
-/// tagged by which side of the range produced each one.
+/// tagged by which side of the range produced each one. Panics when
+/// either timestamp is outside the range JavaScript dates support
+/// (about plus or minus 273,790 years).
 ///
 pub fn format_range_to_parts(
   formatter: DateTimeFormat,
@@ -544,7 +558,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(formatter: DateTimeFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for date/time
-/// formatting, preserving the input order.
+/// formatting, preserving the input order. Returns `Error(Nil)` if any
+/// locale tag is structurally malformed.
 ///
 @external(javascript, "./date_time_format.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)

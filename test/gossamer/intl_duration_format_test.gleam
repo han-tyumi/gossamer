@@ -202,7 +202,12 @@ pub fn format_to_parts_group_kind_test() {
 
 pub fn supported_locales_of_test() {
   duration_format.supported_locales_of(["en-US", "fr"])
-  |> should.equal(["en-US", "fr"])
+  |> should.equal(Ok(["en-US", "fr"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  duration_format.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
 }
 
 pub fn resolved_options_test() {

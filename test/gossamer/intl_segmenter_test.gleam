@@ -106,13 +106,15 @@ pub fn containing_test() {
     segmenter.new(["en"])
     |> segmenter.with_granularity(segmenter.Word)
     |> segmenter.build
-  let assert Ok(segment) = segmenter.containing(seg, "Hello, world!", 8)
+  let assert Ok(segment) =
+    segmenter.containing(seg, in: "Hello, world!", at_index: 8)
   segment.value |> should.equal("world")
 }
 
 pub fn containing_out_of_range_test() {
   let assert Ok(seg) = segmenter.new(["en"]) |> segmenter.build
-  segmenter.containing(seg, "hi", 99) |> should.equal(Error(Nil))
+  segmenter.containing(seg, in: "hi", at_index: 99)
+  |> should.equal(Error(Nil))
 }
 
 pub fn resolved_options_test() {
@@ -127,5 +129,10 @@ pub fn resolved_options_test() {
 
 pub fn supported_locales_of_test() {
   segmenter.supported_locales_of(["en-US", "zz-INVALID"])
-  |> should.equal(["en-US"])
+  |> should.equal(Ok(["en-US"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  segmenter.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
 }

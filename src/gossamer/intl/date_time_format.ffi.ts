@@ -4,11 +4,12 @@ import {
   fromHourCycle,
   fromLabelStyle,
   fromRangeSource,
+  supportedLocalesOf,
   toHourCycle,
   toLabelStyle,
   toLocaleMatcher,
 } from "~/utils/intl.ffi.ts";
-import { fromArray, fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
+import { fromArrayMapped, toArray } from "~/utils/list.ffi.ts";
 import {
   mapIfSome,
   mapOption,
@@ -327,5 +328,5 @@ export const resolved_options: typeof $dateTimeFormat.resolved_options = (
 
 export const supported_locales_of: typeof $dateTimeFormat.supported_locales_of =
   (locales) => {
-    return fromArray(Intl.DateTimeFormat.supportedLocalesOf(toArray(locales)));
+    return supportedLocalesOf(Intl.DateTimeFormat.supportedLocalesOf, locales);
   };

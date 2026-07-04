@@ -1,4 +1,17 @@
 import * as $intl from "$/gossamer/gossamer/intl.mjs";
+import { type List, type Result, Result$Error, Result$Ok } from "$/prelude.mjs";
+import { fromArray, toArray } from "~/utils/list.ffi.ts";
+
+export function supportedLocalesOf(
+  lookup: (locales: string[]) => string[],
+  locales: List<string>,
+): Result<List<string>, undefined> {
+  try {
+    return Result$Ok(fromArray(lookup(toArray(locales))));
+  } catch {
+    return Result$Error(undefined);
+  }
+}
 
 export function toLocaleMatcher(
   matcher: $intl.LocaleMatcher$,

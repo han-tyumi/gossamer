@@ -137,7 +137,12 @@ pub fn resolved_options_test() {
 
 pub fn supported_locales_of_test() {
   relative_time_format.supported_locales_of(["en-US", "zz-INVALID"])
-  |> should.equal(["en-US"])
+  |> should.equal(Ok(["en-US"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  relative_time_format.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
 }
 
 pub fn format_duration_past_test() {

@@ -5,6 +5,7 @@ import gleam/time/timestamp.{type Timestamp}
 import gleeunit/should
 import gossamer/intl
 import gossamer/intl/date_time_format
+import runtime
 
 // 2025-05-15T14:30:45.123Z — a fixed UTC instant used across tests.
 fn fixed() -> Timestamp {
@@ -291,6 +292,32 @@ pub fn format_to_parts_year_name_test() {
   list.contains(kinds, date_time_format.YearName) |> should.be_true
 }
 
+pub fn format_to_parts_related_year_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  let assert Ok(fmt) =
+    date_time_format.new(["zh-u-ca-chinese"])
+    |> date_time_format.with_time_zone("UTC")
+    |> date_time_format.with_year(date_time_format.Numeric)
+    |> date_time_format.build
+  let parts = date_time_format.format_to_parts(fmt, fixed())
+  let kinds = list.map(parts, fn(p) { p.kind })
+  list.contains(kinds, date_time_format.RelatedYear) |> should.be_true
+}
+
+/// Bun omits the `relatedYear` segment for year-only Chinese-calendar
+/// formats where Node and Deno emit it before `yearName`.
+pub fn format_to_parts_related_year_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  let assert Ok(fmt) =
+    date_time_format.new(["zh-u-ca-chinese"])
+    |> date_time_format.with_time_zone("UTC")
+    |> date_time_format.with_year(date_time_format.Numeric)
+    |> date_time_format.build
+  let parts = date_time_format.format_to_parts(fmt, fixed())
+  let kinds = list.map(parts, fn(p) { p.kind })
+  list.contains(kinds, date_time_format.RelatedYear) |> should.be_false
+}
+
 pub fn format_range_test() {
   let assert Ok(fmt) =
     utc_format()
@@ -364,5 +391,10 @@ pub fn resolved_options_test() {
 
 pub fn supported_locales_of_test() {
   date_time_format.supported_locales_of(["en-US", "zz-INVALID"])
-  |> should.equal(["en-US"])
+  |> should.equal(Ok(["en-US"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  date_time_format.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
 }

@@ -2,6 +2,7 @@ import gleam/list
 import gleeunit/should
 import gossamer/intl
 import gossamer/intl/plural_rules
+import runtime
 
 pub fn build_default_test() {
   plural_rules.new([]) |> plural_rules.build |> should.be_ok
@@ -105,7 +106,28 @@ pub fn resolved_options_test() {
   list.contains(options.plural_categories, plural_rules.Other) |> should.be_true
 }
 
+pub fn resolved_options_locale_normalization_test() {
+  use <- runtime.skip_on(runtime.Bun)
+  let assert Ok(rules) = plural_rules.new(["en-US"]) |> plural_rules.build
+  let options = plural_rules.resolved_options(rules)
+  options.locale |> should.equal("en")
+}
+
+/// Bun keeps the full input tag where Node and Deno normalize regional
+/// tags to the language tag.
+pub fn resolved_options_locale_normalization_bun_divergence_test() {
+  use <- runtime.only_on(runtime.Bun)
+  let assert Ok(rules) = plural_rules.new(["en-US"]) |> plural_rules.build
+  let options = plural_rules.resolved_options(rules)
+  options.locale |> should.equal("en-US")
+}
+
 pub fn supported_locales_of_test() {
   plural_rules.supported_locales_of(["en-US", "zz-INVALID"])
-  |> should.equal(["en-US"])
+  |> should.equal(Ok(["en-US"]))
+}
+
+pub fn supported_locales_of_malformed_tag_test() {
+  plural_rules.supported_locales_of(["not_a_locale!"])
+  |> should.be_error
 }

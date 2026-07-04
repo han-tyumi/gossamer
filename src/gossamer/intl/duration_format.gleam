@@ -560,8 +560,10 @@ pub fn format_to_parts(
 /// Formats a `gleam/time/duration.Duration` as a locale-aware string,
 /// decomposing it into hours through nanoseconds via
 /// [`from_duration`](#from_duration). Calendar fields stay absent since
-/// `Duration` is elapsed time. Unlike [`format`](#format) this never
-/// errors — the decomposition always shares a single sign.
+/// `Duration` is elapsed time. Unlike [`format`](#format) this cannot
+/// error on sign mixing — the decomposition always shares a single
+/// sign. Panics when the decomposed duration exceeds the limits
+/// `Intl.DurationFormat` supports (about 285 million years).
 ///
 pub fn format_duration(formatter: DurationFormat, value: Duration) -> String {
   do_format_duration(formatter, from_duration(value))
@@ -577,6 +579,8 @@ pub fn do_format_duration(
 /// Formats a `gleam/time/duration.Duration` and returns its
 /// decomposition into [`Part`](#Part)s. Uses the same hours-through-
 /// nanoseconds decomposition as [`format_duration`](#format_duration).
+/// Panics when the decomposed duration exceeds the limits
+/// `Intl.DurationFormat` supports (about 285 million years).
 ///
 pub fn format_duration_to_parts(
   formatter: DurationFormat,
@@ -636,7 +640,8 @@ pub type ResolvedOptions {
 pub fn resolved_options(formatter: DurationFormat) -> ResolvedOptions
 
 /// Filters `locales` to those the runtime supports for duration
-/// formatting, preserving the input order.
+/// formatting, preserving the input order. Returns `Error(Nil)` if any
+/// locale tag is structurally malformed.
 ///
 @external(javascript, "./duration_format.ffi.mjs", "supported_locales_of")
-pub fn supported_locales_of(locales: List(String)) -> List(String)
+pub fn supported_locales_of(locales: List(String)) -> Result(List(String), Nil)
