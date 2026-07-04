@@ -260,17 +260,25 @@ export const format: typeof $dateTimeFormat.do_format = (
   formatter,
   unixSeconds,
 ) => {
-  return formatter.format(dateFromUnixSeconds(unixSeconds));
+  try {
+    return Result$Ok(formatter.format(dateFromUnixSeconds(unixSeconds)));
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const format_to_parts: typeof $dateTimeFormat.do_format_to_parts = (
   formatter,
   unixSeconds,
 ) => {
-  return fromArrayMapped(
-    formatter.formatToParts(dateFromUnixSeconds(unixSeconds)),
-    toPart,
-  );
+  try {
+    return Result$Ok(fromArrayMapped(
+      formatter.formatToParts(dateFromUnixSeconds(unixSeconds)),
+      toPart,
+    ));
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const format_range: typeof $dateTimeFormat.do_format_range = (
@@ -278,10 +286,14 @@ export const format_range: typeof $dateTimeFormat.do_format_range = (
   fromSeconds,
   toSeconds,
 ) => {
-  return formatter.formatRange(
-    dateFromUnixSeconds(fromSeconds),
-    dateFromUnixSeconds(toSeconds),
-  );
+  try {
+    return Result$Ok(formatter.formatRange(
+      dateFromUnixSeconds(fromSeconds),
+      dateFromUnixSeconds(toSeconds),
+    ));
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const format_range_to_parts:
@@ -290,13 +302,17 @@ export const format_range_to_parts:
     fromSeconds,
     toSeconds,
   ) => {
-    return fromArrayMapped(
-      formatter.formatRangeToParts(
-        dateFromUnixSeconds(fromSeconds),
-        dateFromUnixSeconds(toSeconds),
-      ),
-      toRangePart,
-    );
+    try {
+      return Result$Ok(fromArrayMapped(
+        formatter.formatRangeToParts(
+          dateFromUnixSeconds(fromSeconds),
+          dateFromUnixSeconds(toSeconds),
+        ),
+        toRangePart,
+      ));
+    } catch {
+      return Result$Error(undefined);
+    }
   };
 
 export const resolved_options: typeof $dateTimeFormat.resolved_options = (

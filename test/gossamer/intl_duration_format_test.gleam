@@ -244,14 +244,14 @@ pub fn format_duration_test() {
     |> duration_format.with_style(duration_format.StyleLong)
     |> duration_format.build
   duration_format.format_duration(formatter, duration.hours(2))
-  |> should.equal("2 hours")
+  |> should.equal(Ok("2 hours"))
 }
 
 pub fn format_duration_to_parts_test() {
   let assert Ok(formatter) =
     duration_format.new(["en-US"]) |> duration_format.build
   duration_format.format_duration_to_parts(formatter, duration.hours(2))
-  |> should.not_equal([])
+  |> should.not_equal(Ok([]))
 }
 
 pub fn from_duration_with_subseconds_test() {
@@ -276,4 +276,10 @@ pub fn from_duration_negative_whole_seconds_test() {
   parts.minutes |> should.equal(-1)
   parts.seconds |> should.equal(-40)
   parts.milliseconds |> should.equal(0)
+}
+
+pub fn format_duration_beyond_intl_limit_test() {
+  let assert Ok(fmt) = duration_format.new(["en"]) |> duration_format.build
+  duration_format.format_duration(fmt, duration.seconds(9_007_199_254_740_992))
+  |> should.be_error
 }

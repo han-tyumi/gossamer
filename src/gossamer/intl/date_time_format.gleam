@@ -435,26 +435,32 @@ pub fn do_build(
   time_style: Option(Style),
 ) -> Result(DateTimeFormat, Nil)
 
-/// Formats `timestamp` as a locale-aware date/time string. Panics
-/// when the timestamp is outside the range JavaScript dates support
-/// (about plus or minus 273,790 years).
+/// Formats `timestamp` as a locale-aware date/time string. Returns an
+/// error when the timestamp is outside the range JavaScript dates
+/// support (about plus or minus 273,790 years).
 ///
-pub fn format(formatter: DateTimeFormat, timestamp: Timestamp) -> String {
+pub fn format(
+  formatter: DateTimeFormat,
+  timestamp: Timestamp,
+) -> Result(String, Nil) {
   do_format(formatter, timestamp.to_unix_seconds(timestamp))
 }
 
 @external(javascript, "./date_time_format.ffi.mjs", "format")
 @internal
-pub fn do_format(formatter: DateTimeFormat, unix_seconds: Float) -> String
+pub fn do_format(
+  formatter: DateTimeFormat,
+  unix_seconds: Float,
+) -> Result(String, Nil)
 
 /// Formats `timestamp` and returns its decomposition into segments.
-/// Panics when the timestamp is outside the range JavaScript dates
-/// support (about plus or minus 273,790 years).
+/// Returns an error when the timestamp is outside the range JavaScript
+/// dates support (about plus or minus 273,790 years).
 ///
 pub fn format_to_parts(
   formatter: DateTimeFormat,
   timestamp: Timestamp,
-) -> List(Part) {
+) -> Result(List(Part), Nil) {
   do_format_to_parts(formatter, timestamp.to_unix_seconds(timestamp))
 }
 
@@ -463,13 +469,13 @@ pub fn format_to_parts(
 pub fn do_format_to_parts(
   formatter: DateTimeFormat,
   unix_seconds: Float,
-) -> List(Part)
+) -> Result(List(Part), Nil)
 
 /// Formats `start`-`end` as a locale-aware date/time range. Passing
 /// `end` earlier than `start` is well-defined and produces output —
 /// the resulting string may not be meaningful but does not error.
-/// Panics when either timestamp is outside the range JavaScript dates
-/// support (about plus or minus 273,790 years). On Bun the spaces
+/// Returns an error when either timestamp is outside the range
+/// JavaScript dates support (about plus or minus 273,790 years). On Bun the spaces
 /// around the en dash are regular spaces where Node and Deno use thin
 /// (U+2009) spaces; compare output across runtimes by substring rather
 /// than strict equality.
@@ -478,7 +484,7 @@ pub fn format_range(
   formatter: DateTimeFormat,
   from start: Timestamp,
   to end: Timestamp,
-) -> String {
+) -> Result(String, Nil) {
   do_format_range(
     formatter,
     timestamp.to_unix_seconds(start),
@@ -492,18 +498,18 @@ pub fn do_format_range(
   formatter: DateTimeFormat,
   start_seconds: Float,
   end_seconds: Float,
-) -> String
+) -> Result(String, Nil)
 
 /// Formats `start`-`end` and returns its decomposition into segments
-/// tagged by which side of the range produced each one. Panics when
-/// either timestamp is outside the range JavaScript dates support
+/// tagged by which side of the range produced each one. Returns an error
+/// when either timestamp is outside the range JavaScript dates support
 /// (about plus or minus 273,790 years).
 ///
 pub fn format_range_to_parts(
   formatter: DateTimeFormat,
   from start: Timestamp,
   to end: Timestamp,
-) -> List(RangePart) {
+) -> Result(List(RangePart), Nil) {
   do_format_range_to_parts(
     formatter,
     timestamp.to_unix_seconds(start),
@@ -517,7 +523,7 @@ pub fn do_format_range_to_parts(
   formatter: DateTimeFormat,
   start_seconds: Float,
   end_seconds: Float,
-) -> List(RangePart)
+) -> Result(List(RangePart), Nil)
 
 /// The options the runtime resolved for a
 /// [`DateTimeFormat`](#DateTimeFormat), including the defaults it filled
