@@ -1,7 +1,7 @@
-//// Top-level cross-runtime APIs: timers, base64, structured cloning,
-//// and more. Domain-specific APIs live in submodules (see
-//// `gossamer/url`, `gossamer/stream/readable_stream`, `gossamer/fetch_extra`,
-//// etc.).
+//// Top-level cross-runtime APIs: timers, base64, microtask
+//// scheduling, and navigator info. Domain-specific APIs live in
+//// submodules (see `gossamer/url`, `gossamer/stream/readable_stream`,
+//// `gossamer/fetch_extra`, etc.).
 
 import gleam/time/duration.{type Duration}
 

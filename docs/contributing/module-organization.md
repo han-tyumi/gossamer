@@ -8,7 +8,7 @@ How to decide where a type lives in gossamer.
 later is small; the cost of fragmentation up front is real.
 
 Grounded in the official
-[Gleam conventions doc](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/#fragmented-modules),
+[Gleam conventions doc](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/#fragmented-modules),
 "Fragmented modules":
 
 > Do not prematurely split up modules into multiple smaller modules, and do not
@@ -188,5 +188,5 @@ ArrayBuffer / Uint8Array
 
 - [Typed variants](./typed-variants.md) — naming variants within a module.
 - [Builder patterns](./builder-patterns.md) — where builder records live.
-- [Gleam's "Fragmented modules" anti-pattern](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/#fragmented-modules)
+- [Gleam's "Fragmented modules" anti-pattern](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/#fragmented-modules)
   — the official source.

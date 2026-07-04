@@ -61,7 +61,9 @@ pub fn set_detail(mark: Mark, detail: Dynamic) -> Mark {
 }
 
 /// Records the mark on the performance timeline. Returns the
-/// [`Mark`](#Mark) unchanged.
+/// [`Mark`](#Mark) unchanged. In browser page contexts, panics when
+/// the mark's name matches a read-only attribute of the legacy
+/// `PerformanceTiming` interface (e.g. `"navigationStart"`).
 ///
 pub fn record(mark: Mark) -> Mark {
   do_record(mark.name, mark.start_time, mark.detail)

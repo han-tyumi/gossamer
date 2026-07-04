@@ -14,7 +14,7 @@ links the parameter to the action.
   dominant ecosystem pattern.
 - **Verbs where the sentence is complete:** `clone(request)`, `reverse(array)`,
   `close(stream)`.
-- **Predicates:** `is_locked(stream)`, `can_parse(url)`.
+- **Predicates:** `is_locked(stream)`, `is_aborted(signal)`.
 - **Constructors and static methods:** `resolve(value)`, `new(url)`.
 - **Record-field setters** (record-builder shape): positional, no labels.
   `set_host(req: Request(body), host: String)` mirrors `gleam_http`.
@@ -73,5 +73,5 @@ callers to return `Nil`.
   these labels attach to.
 - [Builder patterns](./builder-patterns.md) — `with_<field>` and `set_<field>`
   setters use distinct label conventions.
-- [Gleam's "Use labelled arguments where helpful"](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/#use-labelled-arguments-where-helpful)
-  — the official guidance gossamer's framework builds on.
+- [Labelled arguments](https://tour.gleam.run/functions/labelled-arguments/) in
+  the Gleam language tour — the language feature this framework applies.

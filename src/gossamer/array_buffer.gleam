@@ -16,7 +16,8 @@
 pub type ArrayBuffer
 
 /// Creates a fixed-size `ArrayBuffer` of `byte_length` bytes. A
-/// non-positive `byte_length` returns an empty buffer.
+/// non-positive `byte_length` returns an empty buffer. Panics when
+/// `byte_length` exceeds the engine's maximum buffer size.
 ///
 @external(javascript, "./array_buffer.ffi.mjs", "new_")
 pub fn new(byte_length: Int) -> ArrayBuffer

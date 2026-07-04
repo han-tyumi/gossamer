@@ -204,6 +204,8 @@ runtime ships it yet.
 | console                                                | [`gossamer/console`](./gossamer/console.html)                           |
 | Performance                                            | [`gossamer/performance`](./gossamer/performance.html)                   |
 | PerformanceEntry                                       | [`gossamer/performance_entry`](./gossamer/performance_entry.html)       |
+| PerformanceMark                                        | [`gossamer/performance/mark`](./gossamer/performance/mark.html)         |
+| PerformanceMeasure                                     | [`gossamer/performance/measure`](./gossamer/performance/measure.html)   |
 | PerformanceObserver                                    | [`gossamer/performance_observer`](./gossamer/performance_observer.html) |
 
 `reportError` is not bound — runtime support is uneven and Gleam consumers have
@@ -302,7 +304,7 @@ formatter submodules, plus `canonical_locales` (BCP 47 tag canonicalization) and
 the per-category enumeration helpers `calendars`, `collations`, `currencies`,
 `numbering_systems`, `time_zones`, and `units`.
 
-Not bound: `Intl.Locale.prototype.variants` (absent on Node and Deno).
+Not bound: `Intl.Locale.prototype.variants` (absent on Node).
 
 ### Delegated
 

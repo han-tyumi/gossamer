@@ -8,6 +8,9 @@
 //// not exposed publicly — observable mutation lives on the JavaScript
 //// side. Build iterators on the Gleam side by composing a `Yielder`
 //// and bridging via [`from_yielder`](#from_yielder).
+////
+//// Throws from the underlying iterator's `next()` propagate as panics
+//// at the pull site.
 
 import gleam/yielder.{type Yielder}
 
@@ -27,6 +30,11 @@ pub fn from_yielder(yielder: Yielder(a)) -> Iterator(a)
 /// Wraps the iterator as a `Yielder`. The iterator is consumed lazily
 /// as values are pulled from the yielder; pair with `yielder.to_list`
 /// for eager materialization.
+///
+/// > **Warning**: the returned yielder shares the iterator's state, so
+/// > it is single-pass. Pulling from it (or any yielder derived from
+/// > it) advances the underlying iterator, so it can't be replayed
+/// > like an ordinary `Yielder`.
 ///
 @external(javascript, "./iterator.ffi.mjs", "to_yielder")
 pub fn to_yielder(iterator: Iterator(a)) -> Yielder(a)

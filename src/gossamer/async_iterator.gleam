@@ -38,11 +38,18 @@ pub fn from_async_yielder(yielder: AsyncYielder(a)) -> AsyncIterator(a)
 /// [`async_yielder.to_list`](async_yielder.html#to_list) for eager
 /// materialization.
 ///
+/// > **Warning**: the returned yielder shares the iterator's state, so
+/// > it is single-pass. Pulling from it (or any yielder derived from
+/// > it) advances the underlying iterator, so it can't be replayed
+/// > like an ordinary `AsyncYielder`.
+///
 @external(javascript, "./async_iterator.ffi.mjs", "to_async_yielder")
 pub fn to_async_yielder(iterator: AsyncIterator(a)) -> AsyncYielder(a)
 
-/// Consumes the iterator, calling `fun` on each yielded value.
-/// Equivalent to JavaScript's `for await...of` loop.
+/// Consumes the iterator, calling `fun` on each yielded value. A
+/// `Promise` returned by the callback is awaited before the next
+/// element is pulled. Equivalent to JavaScript's `for await...of`
+/// loop.
 ///
 @external(javascript, "./async_iterator.ffi.mjs", "each")
 pub fn each(

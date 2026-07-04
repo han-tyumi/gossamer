@@ -104,10 +104,10 @@ constructors:
 
 ## Module layout
 
-- `src/gossamer.gleam` — Top-level Web APIs (`fetch`, timers, `alert` /
-  `confirm` / `prompt`).
-- `src/gossamer/` — Web API submodules (`promise`, `url`, `headers`, streams,
-  crypto, etc.).
+- `src/gossamer.gleam` — Top-level globals (timers, base64, `queueMicrotask`,
+  `navigator.userAgent` / `navigator.hardwareConcurrency`).
+- `src/gossamer/` — API submodules (`url`, `blob`, `fetch_extra`, streams,
+  crypto, intl, etc.).
 
 See [Module organization](./module-organization.md) for rules on which types
 share a module and which get their own.

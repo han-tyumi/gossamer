@@ -30,7 +30,8 @@ domain. Pattern match concrete variants rather than inspecting a generic dynamic
 payload:
 
 ```gleam
-case subtle.derive_bits(algorithm, key, length) {
+use result <- promise.await(subtle.derive_bits(algorithm, key, length))
+case result {
   Ok(bits) -> use_bits(bits)
   Error(crypto.AlgorithmNotSupported) -> fall_back()
   Error(crypto.InvalidAccess) -> abort()
@@ -45,7 +46,7 @@ a closed set.
 This follows
 [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
 and aligns with the
-[Gleam conventions doc](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/#design-descriptive-errors)
+[Gleam conventions doc](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/#design-descriptive-errors)
 on descriptive errors.
 
 ## Transit types for JS interop
@@ -64,7 +65,7 @@ Prefer the canonical Gleam type when you control the data flow:
 | `Map`                        | [`gleam/dict`](https://hexdocs.pm/gleam_stdlib/gleam/dict.html)    |
 | `Set`                        | [`gleam/set`](https://hexdocs.pm/gleam_stdlib/gleam/set.html)      |
 | `Iterator`                   | [`gleam_yielder.Yielder`](https://hexdocs.pm/gleam_yielder/)       |
-| `AsyncIterator`              | (no Gleam counterpart; consume via the binding's helpers)          |
+| `AsyncIterator`              | [`gossamer/async_yielder`](./gossamer/async_yielder.html)          |
 
 Each transit binding ships `from_*` / `to_*` bridges
 (`uint8_array.to_bit_array`, `map.from_dict`, etc.) so crossing the boundary is
@@ -73,15 +74,17 @@ inside your code; reach for the transit type only when a JS API forces you to.
 
 ## Pure-functional API
 
-The public Gleam API is pure-functional. Setters return new values; the
-underlying JS objects (`URL`, `Headers`, `FormData`, etc.) are cloned at the FFI
-boundary when mutation would otherwise be observable. Gleam code sees value
+The public Gleam API is pure-functional. Setters return new values; where the
+underlying JS object is mutable (`FormData`, for example), it is cloned at the
+FFI boundary when mutation would otherwise be observable. Gleam code sees value
 semantics:
 
 ```gleam
-let headers_a = headers.new() |> headers.set("x-foo", "1")
-let headers_b = headers_a |> headers.set("x-foo", "2")
-// headers_a is unchanged; headers_b is the new value
+let form_a =
+  form_data.new()
+  |> form_data_extra.append_file("avatar", small_file)
+let form_b = form_a |> form_data_extra.append_file("avatar", large_file)
+// form_a still has one "avatar" entry; form_b has two
 ```
 
 This costs one clone per setter, traded for the consistency of treating gossamer
@@ -95,5 +98,5 @@ Gleam API will never expose observable mutation.
   bindings.
 - [Coverage](./coverage.html) — what gossamer wraps and what it delegates to
   ecosystem packages.
-- [Gleam's official conventions, patterns, and anti-patterns](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/)
+- [Gleam's official conventions, patterns, and anti-patterns](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/)
   — the general Gleam idioms gossamer's patterns build on.

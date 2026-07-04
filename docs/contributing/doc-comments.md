@@ -2,7 +2,7 @@
 
 Style guide for `///` and `////` doc comments on public types, functions, and
 modules in gossamer. Distilled from the official
-[Gleam conventions doc](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/),
+[Gleam conventions doc](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/),
 [`gleam_stdlib`](https://hexdocs.pm/gleam_stdlib/) (the canonical minimalist
 baseline), [`lustre`](https://hexdocs.pm/lustre/) (canonical rich narrative
 style), and the broader ecosystem —
@@ -28,7 +28,7 @@ the ecosystem.
 **Always add at least a one-sentence doc on every public type, function,
 constant, and module.** Matches `gleam_stdlib` and `lustre` practice, and the
 official Gleam conventions doc's
-[Comment liberally](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/#comment-liberally):
+[Comment liberally](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/#comment-liberally):
 
 > Make liberal use of comments. Code is read more often than it is written and
 > readers benefit from comments that explain the why and the how, not just the
@@ -140,7 +140,7 @@ Inline, not a separate section. Idioms:
       /// ## Examples
       ///
       /// ```gleam
-      /// assert url.can_parse("https://example.com") == True
+      /// assert url.is_valid("https://example.com", relative_to: None) == True
       /// ```
 
 - For FFI-wrapped constructors where equality on an opaque return is awkward, a
@@ -149,7 +149,12 @@ Inline, not a separate section. Idioms:
       /// ## Examples
       ///
       /// ```gleam
-      /// let assert Ok(stream) = compression_stream.new(compression.Gzip)
+      /// let assert Ok(pattern) =
+      ///   url_pattern.parse(
+      ///     "/users/:id",
+      ///     relative_to: Some("https://example.com"),
+      ///     ignore_case: False,
+      ///   )
       /// ```
 
 - For functions whose output is non-deterministic (random, timestamps) or

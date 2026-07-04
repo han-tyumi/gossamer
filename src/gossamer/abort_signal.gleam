@@ -18,12 +18,14 @@ import gleam/time/duration.{type Duration}
 pub type AbortSignal
 
 /// Why a signal aborted. JavaScript-supplied aborts classify by the
-/// underlying value — a no-arg `controller.abort()` surfaces as
-/// `Default`, a `TimeoutError` `DOMException` as `Timeout`, and any
-/// other value as `Reason(value)`.
+/// underlying value — an `AbortError` `DOMException` (including the
+/// no-argument `controller.abort()` default) surfaces as `Default`, a
+/// `TimeoutError` `DOMException` as `Timeout`, and any other value as
+/// `Reason(value)`.
 ///
 pub type AbortReason {
-  /// Aborted with no specific reason given.
+  /// Aborted with an `AbortError` `DOMException`, the default when no
+  /// specific reason is given.
   Default
 
   /// Aborted because a [`timeout`](#timeout) signal expired.

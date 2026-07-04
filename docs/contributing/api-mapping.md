@@ -53,11 +53,11 @@ Use the Web API method name, `snake_cased`.
 
 ## Static methods
 
-| JS pattern             | Gleam pattern          | Example      |
-| ---------------------- | ---------------------- | ------------ |
-| `Promise.all(list)`    | `promise.all(list)`    | Direct name  |
-| `Promise.resolve(val)` | `promise.resolve(val)` | Direct name  |
-| `URL.canParse(str)`    | `url.can_parse(str)`   | `snake_case` |
+| JS pattern             | Gleam pattern                          | Example                   |
+| ---------------------- | -------------------------------------- | ------------------------- |
+| `Promise.all(list)`    | `promise.all(list)`                    | Direct name               |
+| `Promise.resolve(val)` | `promise.resolve(val)`                 | Direct name               |
+| `URL.canParse(str)`    | `url.is_valid(str, relative_to: None)` | Boolean gets `is_` prefix |
 
 Static methods become module functions. No subject argument.
 

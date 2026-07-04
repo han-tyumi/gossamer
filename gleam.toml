@@ -1,7 +1,7 @@
 name = "gossamer"
 version = "9.2.0"
 gleam = ">= 1.15.0"
-description = "Web API bindings for Gleam"
+description = "Web Platform and ECMAScript API bindings for Gleam's JavaScript target"
 licences = ["Apache-2.0"]
 repository = { type = "github", user = "han-tyumi", repo = "gossamer" }
 

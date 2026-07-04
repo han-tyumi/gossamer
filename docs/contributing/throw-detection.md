@@ -1,9 +1,10 @@
 # Throw detection
 
 Gossamer's "no unsafe variants" philosophy requires every throwable JS API to be
-wrapped in `Result` at the FFI boundary. But JS throws aren't visible in method
-signatures — they're documented in spec algorithms and MDN exception sections.
-This page is the process to catch them at binding time.
+handled deliberately at the FFI boundary — most commonly wrapped in `Result`.
+But JS throws aren't visible in method signatures — they're documented in spec
+algorithms and MDN exception sections. This page is the process to catch them at
+binding time.
 
 Companion to [runtime gaps](../runtime-gaps.md) and
 [Handling runtime divergence](../../CONTRIBUTING.md#handling-runtime-divergence).
@@ -32,7 +33,8 @@ When binding a Web API method, ask:
 5. **Spec algorithm "throw":** Grep the spec for "throw" — WHATWG, W3C, TC39
    algorithms describe throws in prose steps.
 
-**If any answer is yes → wrap in `Result` at the FFI.**
+**If any answer is yes → the function has a failure path; pick its handling from
+the policy below.**
 
 Default bias: **assume it throws until proven otherwise.** Cheaper to wrap
 unnecessarily than to leak an exception.
@@ -109,21 +111,42 @@ When a function has a throw condition, apply these in order:
 - `readable_stream.from_yielder` accepts a `Yielder` (can't be non-iterable).
 - Applies at the API shape level — no runtime checks.
 
-**2. `Result`** for remaining throw paths.
+**2. Clamp non-positive length, count, and time-offset parameters** to the empty
+value, matching the stdlib convention (`string.repeat(s, -1)` returns `""`;
+`list.take(list, -1)` returns `[]`). A negative quantity is a programmer error
+with a harmless identity result; a `Result` wrap would tax every call site for a
+failure that carries no information. Document the clamp on the binding
+("Negative inputs are clamped to zero."). Sanctioned clamps:
+
+- The `performance` family — `mark.at`, `mark.set_start_time`,
+  `measure.between`, `measure.set_start_time`, and `measure.set_duration` clamp
+  negative times to zero.
+- `array_buffer.new` — a non-positive `byte_length` returns an empty buffer.
+- `big_int.as_int_n` / `as_uint_n` — a `bits` of `0` or less yields `0`.
+
+Clamping applies to quantity parameters only. **Content-derived values are never
+silently defaulted** — a malformed locale tag, key, or URL string means
+something the caller needs surfaced, not absorbed.
+
+**3. Documented panic** for absurd-magnitude engine limits — bounds a program
+only reaches when something upstream is already wrong (the JS `Date` range, the
+ECMA-402 duration limit, the maximum `ArrayBuffer` length). These aren't
+realistic inputs, so a `Result` would add unwrap noise on every honest call.
+Document the panic condition on the binding instead.
+
+**4. `Result`** for realistic-input failures — malformed input a caller may
+plausibly supply (locale tags, patterns, key data) and state errors (locked
+streams, unusable keys).
 
 - Use `Result(T, ModuleError)` for synchronous throws.
 - Use `Promise(Result(T, ModuleError))` for rejectable Promises.
 - Wrap at the FFI boundary using `toResult.fromThrows` or `toResult.fromPromise`
   in `src/utils/result.ffi.ts`.
+- Users opt out with `let assert Ok(_) = ...` when confident.
 
-**Do not silently clip or default invalid runtime inputs.** No `-1 → 0`
-conversions in FFI. The library's principle is consistency: if JS throws, the
-function returns `Result`. Users opt in with `let assert Ok(_) = ...` when
-confident.
-
-Type-prevention is separate from clipping — it's a design-time choice (stronger
-types), not a runtime silent fix. Type-prevention is encouraged. Clipping is
-not.
+Type-prevention and clamping are design-time choices with documented outcomes,
+not silent fixes. Don't add clamp sites beyond quantity parameters without
+recording them in the sanctioned list above.
 
 ## Typed error variants
 
@@ -157,30 +180,28 @@ Mixed payload rule:
   multiple cases within a category.
 
 The variants mirror the JS spec's failure modes (`NotSupportedError`,
-`InvalidAccessError`, `OperationError`, etc.) wrapped as Gleam constructors,
-each closed to a fixed set.
+`InvalidAccessError`, `OperationError`, etc.) as named Gleam variants, each type
+a closed set.
 
 This follows
 [`gleam/fetch.FetchError`](https://hexdocs.pm/gleam_fetch/gleam/fetch.html#FetchError)
 and aligns with the
-[Gleam conventions doc](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/#design-descriptive-errors)
+[Gleam conventions doc](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/#design-descriptive-errors)
 on descriptive errors.
 
-## Rationale for no clipping
+## Rationale for the clamp / panic / `Result` split
 
-Considered and rejected:
-
-- Makes one-off functions inconsistent (why does `string.repeat(-1)` return `""`
-  but `uint8_array.from_length(-1)` return `Error`?).
-- Risks masking bugs (silent empty buffer propagating through binary code).
-- Adds documentation burden (every clipped function needs a note about its
-  divergence).
-
-Benefits of `Result`-only:
-
-- One mental model: JS throws → `Result`.
-- No divergence documentation per function.
-- Users handle errors explicitly or opt out with `let assert`.
+- **Clamping quantities matches the stdlib.** `string.repeat`, `list.repeat`,
+  `list.take`, and `list.drop` all absorb non-positive counts. A binding that
+  `Result`-wrapped the same shape would be the inconsistent one, and every
+  caller would pay an unwrap for a programmer-error path.
+- **Content is never clamped.** Substituting a default for a malformed locale
+  tag or URL string masks bugs — the silent wrong value propagates. Malformed
+  content is a realistic input and returns `Result`.
+- **Engine limits aren't realistic failure modes.** Wrapping the JS `Date` range
+  or the maximum `ArrayBuffer` length in `Result` forces error handling nobody
+  can meaningfully write. A documented panic keeps the signature honest for the
+  realistic input domain.
 
 ## See also
 

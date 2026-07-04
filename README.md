@@ -50,8 +50,12 @@ Per-binding docs flag cross-runtime gaps where a runtime departs from spec.
 ## Installation
 
 ```sh
-gleam add gossamer
+gleam add gossamer gleam_fetch gleam_http gleam_javascript
 ```
+
+gossamer's API composes with the canonical ecosystem types, so code using it —
+including the example below — typically imports `gleam_fetch`, `gleam_http`, and
+`gleam_javascript` directly; add them as direct dependencies alongside gossamer.
 
 ## Usage
 

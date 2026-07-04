@@ -64,8 +64,9 @@ pub type ResponseType {
   /// hidden.
   ResponseOpaque
 
-  /// An opaque redirect response with `redirect: ResponseError`-like
-  /// behavior. The body is hidden.
+  /// A redirect response received when the request was made with
+  /// redirect mode `RedirectManual` and the server replied with a
+  /// redirect. The body is hidden.
   ResponseOpaqueRedirect
 }
 
@@ -326,6 +327,9 @@ pub fn is_response_redirected(response: Response(FetchBody)) -> Bool
 pub fn is_response_body_used(response: Response(FetchBody)) -> Bool
 
 /// The [response type](https://developer.mozilla.org/en-US/docs/Web/API/Response/type).
+/// On Bun, responses fetched from synthetic sources such as `data:`
+/// URLs report `ResponseDefault` where Node and Deno report
+/// `ResponseBasic`.
 ///
 @external(javascript, "./fetch_extra.ffi.mjs", "response_type")
 pub fn response_type(response: Response(FetchBody)) -> ResponseType

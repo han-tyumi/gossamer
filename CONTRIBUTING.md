@@ -36,10 +36,13 @@ just watch build test
 
 ## Commits and releases
 
-Commits use [Conventional Commits](https://www.conventionalcommits.org/).
-[knope](https://knope.tech/) reads them to generate the changelog and bump the
-version — see `knope.toml` for the release workflow. Run `knope release` from a
-clean `main` to release.
+Commits use [Conventional Commits](https://www.conventionalcommits.org/) —
+they're the raw material for the hand-written changelog. To release, commit the
+new version in `gleam.toml` together with its `CHANGELOG.md` section, then run
+[knope](https://knope.tech/)'s `release` workflow from a clean `main`. knope
+gates (branch, clean tree, `just gate`, README badge sync), tags the version
+from `gleam.toml`, creates the GitHub release from the matching `CHANGELOG.md`
+section, and publishes — see `knope.toml` for the workflow.
 
 ## Conventions for adding bindings
 

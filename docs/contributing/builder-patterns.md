@@ -322,5 +322,5 @@ pub fn send(
   `from_<type>`).
 - [Conventions](../conventions.md) — the user-facing summary of gossamer's API
   patterns.
-- [Gleam's conventions, patterns, and anti-patterns](https://gleam.run/writing-gleam/conventions-patterns-and-anti-patterns/)
+- [Gleam's conventions, patterns, and anti-patterns](https://gleam.run/documentation/conventions-patterns-and-anti-patterns/)
   — the general Gleam idioms gossamer's patterns build on.

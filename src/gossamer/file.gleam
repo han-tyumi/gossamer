@@ -1,6 +1,6 @@
 //// `Blob`s annotated with a filename and last-modified timestamp.
 //// Typical use is form uploads — pair with
-//// [`gleam/fetch/form_data.append_file`](https://hexdocs.pm/gleam_fetch/gleam/fetch/form_data.html#append_file).
+//// [`form_data_extra.append_file`](./form_data_extra.html#append_file).
 //// Construct with [`from_strings`](#from_strings) for text content or
 //// [`from_blob`](#from_blob) to wrap existing bytes.
 
@@ -38,7 +38,8 @@ pub fn set_blob(file: File, blob: Blob) -> File {
   File(..file, blob:)
 }
 
-/// Sets the filename used by `gleam/fetch/form_data.append_file`'s
+/// Sets the filename used by
+/// [`form_data_extra.append_file`](./form_data_extra.html#append_file)'s
 /// multipart `Content-Disposition` header.
 ///
 pub fn set_name(file: File, name: String) -> File {

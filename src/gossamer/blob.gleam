@@ -92,8 +92,10 @@ pub fn to_object_url(blob: Blob) -> String
 
 /// Revokes an object URL previously created with
 /// [`to_object_url`](#to_object_url). Call this to release the
-/// reference once the URL is no longer needed. Equivalent to
-/// JavaScript's `URL.revokeObjectURL`.
+/// reference once the URL is no longer needed. Unparseable URL strings
+/// are a silent no-op on every runtime (Deno throws where the spec
+/// no-ops; the FFI absorbs the throw). Equivalent to JavaScript's
+/// `URL.revokeObjectURL`.
 ///
 @external(javascript, "./blob.ffi.mjs", "revoke_object_url")
 pub fn revoke_object_url(url: String) -> Nil
