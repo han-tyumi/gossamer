@@ -103,7 +103,11 @@ export const absolute_value: typeof $bigInt.absolute_value = (x) =>
 
 export const power: typeof $bigInt.power = (base, exponent) => {
   if (exponent < 0n) return Result$Error(undefined);
-  return Result$Ok(base ** exponent);
+  try {
+    return Result$Ok(base ** exponent);
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const compare: typeof $bigInt.compare = (a, b) => {
@@ -136,7 +140,11 @@ export const bitwise_not: typeof $bigInt.bitwise_not = (x) => ~x;
 
 export const bitwise_shift_left: typeof $bigInt.bitwise_shift_left = (x, y) => {
   if (y < 0n) return Result$Error(undefined);
-  return Result$Ok(x << y);
+  try {
+    return Result$Ok(x << y);
+  } catch {
+    return Result$Error(undefined);
+  }
 };
 
 export const bitwise_shift_right: typeof $bigInt.bitwise_shift_right = (

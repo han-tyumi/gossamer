@@ -19,8 +19,10 @@ function withRange(
 }
 
 export const cbrt: typeof $float_extra.cbrt = (value) => Math.cbrt(value);
+// Folded pairwise rather than spread: spreading a large list as
+// arguments overflows the call stack.
 export const hypot: typeof $float_extra.hypot = (values) =>
-  Math.hypot(...toArray(values));
+  toArray(values).reduce((acc, value) => Math.hypot(acc, value), 0);
 export const fround: typeof $float_extra.fround = (value) => Math.fround(value);
 export const f16round: typeof $float_extra.f16round = (value) =>
   Math.f16round(value);

@@ -2,8 +2,8 @@ import {
   fold as gleam_set_fold,
   from_list as gleam_set_from_list,
 } from "$/gleam_stdlib/gleam/set.mjs";
+import { from_list as yielder_from_list } from "$/gleam_yielder/gleam/yielder.mjs";
 import type * as $set from "$/gossamer/gossamer/set.mjs";
-import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
 
 export const new_: typeof $set.new$ = <T>() => {
@@ -39,6 +39,8 @@ export const has: typeof $set.has = (set, value) => {
   return set.has(value);
 };
 
+// Snapshot into a list-backed Yielder: wrapping the live JS iterator
+// would drain it on first traversal, making the Yielder one-shot.
 export const values: typeof $set.values = (set) => {
-  return jsIteratorAsYielder(set.values());
+  return yielder_from_list(fromArray(Array.from(set.values())));
 };

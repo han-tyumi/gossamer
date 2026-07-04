@@ -139,7 +139,8 @@ pub fn negate(x: BigInt) -> BigInt
 pub fn absolute_value(x: BigInt) -> BigInt
 
 /// Raises `base` to the power of `exponent`. Returns `Error(Nil)` if
-/// `exponent` is negative (the result would be fractional).
+/// `exponent` is negative (the result would be fractional), or if the
+/// result would exceed the runtime's `BigInt` size limit.
 ///
 @external(javascript, "./big_int.ffi.mjs", "power")
 pub fn power(base: BigInt, of exponent: BigInt) -> Result(BigInt, Nil)
@@ -212,7 +213,8 @@ pub fn bitwise_exclusive_or(x: BigInt, y: BigInt) -> BigInt
 pub fn bitwise_not(x: BigInt) -> BigInt
 
 /// Shifts `x` left by `y` bits. Returns `Error(Nil)` if `y` is
-/// negative.
+/// negative, or if the result would exceed the runtime's `BigInt`
+/// size limit.
 ///
 @external(javascript, "./big_int.ffi.mjs", "bitwise_shift_left")
 pub fn bitwise_shift_left(x: BigInt, y: BigInt) -> Result(BigInt, Nil)

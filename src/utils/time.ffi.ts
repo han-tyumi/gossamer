@@ -13,7 +13,7 @@ import {
 
 export function msToTimestamp(ms: number): Timestamp$ {
   const seconds = Math.floor(ms / 1000);
-  const nanoseconds = (ms - seconds * 1000) * 1_000_000;
+  const nanoseconds = Math.round((ms - seconds * 1000) * 1_000_000);
   return from_unix_seconds_and_nanoseconds(seconds, nanoseconds);
 }
 

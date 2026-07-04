@@ -40,6 +40,19 @@ function walk(value: unknown, acc: MessagePort[], seen: WeakSet<object>): void {
     return;
   }
 
+  if (value instanceof Map) {
+    for (const [key, item] of value) {
+      walk(key, acc, seen);
+      walk(item, acc, seen);
+    }
+    return;
+  }
+
+  if (value instanceof Set) {
+    for (const item of value) walk(item, acc, seen);
+    return;
+  }
+
   for (const key of Object.keys(value)) {
     walk((value as Record<string, unknown>)[key], acc, seen);
   }

@@ -64,3 +64,15 @@ pub fn entries_test() {
   |> yielder.to_list
   |> should.equal([#("a", 1), #("b", 2)])
 }
+
+pub fn get_nil_value_test() {
+  let m = map.from_list([#("a", Nil)])
+  map.get(m, "a") |> should.equal(Ok(Nil))
+  map.get(m, "b") |> should.equal(Error(Nil))
+}
+
+pub fn keys_retraversable_test() {
+  let keys = map.from_list([#("a", 1), #("b", 2)]) |> map.keys
+  keys |> yielder.to_list |> should.equal(["a", "b"])
+  keys |> yielder.to_list |> should.equal(["a", "b"])
+}

@@ -2,10 +2,10 @@ import {
   fold as dict_fold,
   from_list as dict_from_list,
 } from "$/gleam_stdlib/gleam/dict.mjs";
+import { from_list as yielder_from_list } from "$/gleam_yielder/gleam/yielder.mjs";
 import type * as $map from "$/gossamer/gossamer/map.mjs";
-import { jsIteratorAsYielder } from "~/utils/iteration.ffi.ts";
+import { Result$Error, Result$Ok } from "$/prelude.mjs";
 import { fromArray, toArray } from "~/utils/list.ffi.ts";
-import { toResult } from "~/utils/result.ffi.ts";
 
 export const new_: typeof $map.new$ = <K, V>() => {
   return new Map<K, V>();
@@ -37,21 +37,27 @@ export const size: typeof $map.size = (map) => {
 };
 
 export const get: typeof $map.get = (map, key) => {
-  return toResult(map.get(key));
+  // Gate on presence rather than value shape: a stored Gleam Nil is
+  // undefined at runtime and must still report Ok.
+  if (!map.has(key)) return Result$Error(undefined);
+  return Result$Ok(map.get(key));
 };
 
 export const has: typeof $map.has = (map, key) => {
   return map.has(key);
 };
 
+// Snapshot into a list-backed Yielder: wrapping the live JS iterator
+// would drain it on first traversal, making the Yielder one-shot.
+
 export const keys: typeof $map.keys = (map) => {
-  return jsIteratorAsYielder(map.keys());
+  return yielder_from_list(fromArray(Array.from(map.keys())));
 };
 
 export const values: typeof $map.values = (map) => {
-  return jsIteratorAsYielder(map.values());
+  return yielder_from_list(fromArray(Array.from(map.values())));
 };
 
 export const entries: typeof $map.entries = (map) => {
-  return jsIteratorAsYielder(map.entries());
+  return yielder_from_list(fromArray(Array.from(map.entries())));
 };

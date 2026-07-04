@@ -83,3 +83,11 @@ pub fn roundtrip_test() {
   let assert Ok(parsed) = json.stringify(value) |> json.parse
   should.equal(parsed, value)
 }
+
+pub fn roundtrip_proto_member_test() {
+  let value = json.Object(dict.from_list([#("__proto__", json.String("kept"))]))
+  json.stringify(value)
+  |> should.equal("{\"__proto__\":\"kept\"}")
+  let assert Ok(parsed) = json.stringify(value) |> json.parse
+  should.equal(parsed, value)
+}
